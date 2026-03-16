@@ -75,9 +75,10 @@
         </dependency>
 
         <!-- ===== Thymeleaf + Spring Security Integration ===== -->
+        <!-- Artifact-Name ggf. anpassen wenn Spring Boot 4 BOM andere Koordinaten verwendet -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity7</artifactId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
         <!-- ===== Spring Modulith ===== -->
