@@ -52,4 +52,5 @@ logs/
 .env.local
 
 ### Claude Code ###
-.claude/
+.claude/*
+!.claude/skills/
