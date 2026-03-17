@@ -46,28 +46,28 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 0.6 Frontend-Build (Vite + apiFetch)
-- [ ] `frontend/package.json` mit Vite als devDependency, `build`-Script
-- [ ] `frontend/vite.config.js`: Einstiegspunkt `src/main.js`, Output `../src/main/resources/static/generated/`
-- [ ] `frontend/src/main.js`: `apiFetch(url, options)` – liest CSRF-Token aus Cookie `XSRF-TOKEN`, setzt Header `X-XSRF-TOKEN` bei nicht-GET-Requests; exportiert `apiFetch` als globale Funktion auf `window`
-- [ ] Test: `./mvnw compile` baut durch (exec-Plugin: npm install + npm run build)
-- [ ] Git-Commit
+- [x] `frontend/package.json` mit Vite als devDependency, `build`-Script
+- [x] `frontend/vite.config.js`: Einstiegspunkt `src/main.js`, Output `../src/main/resources/static/generated/`
+- [x] `frontend/src/main.js`: `apiFetch(url, options)` – liest CSRF-Token aus Cookie `XSRF-TOKEN`, setzt Header `X-XSRF-TOKEN` bei nicht-GET-Requests; exportiert `apiFetch` als globale Funktion auf `window`
+- [x] Test: `./mvnw compile` baut durch (exec-Plugin: npm install + npm run build)
+- [x] Git-Commit
 
 ### 0.7 Custom Element `<ps-modal>`
-- [ ] `frontend/src/ps-modal.js`: Light-DOM Custom Element; Attribute `open` zeigt/verbirgt Modal; Escape-Key schließt; Klick auf Overlay schließt; emittiert `ps-modal-close` Event; Methoden `show()`, `close()`; AJAX-Form-Submit via `apiFetch` mit optionalem `data-confirm-url`-Attribut
-- [ ] Test: `./mvnw compile` (npm build muss durchlaufen)
-- [ ] Git-Commit
+- [x] `frontend/src/ps-modal.js`: Light-DOM Custom Element; Attribute `open` zeigt/verbirgt Modal; Escape-Key schließt; Klick auf Overlay schließt; emittiert `ps-modal-close` Event; Methoden `show()`, `close()`; AJAX-Form-Submit via `apiFetch` mit optionalem `data-confirm-url`-Attribut
+- [x] Test: `./mvnw compile` (npm build muss durchlaufen)
+- [x] Git-Commit
 
 ### 0.8 Custom Element `<ps-dirty-banner>`
-- [ ] `frontend/src/ps-dirty-banner.js`: beobachtet `input`/`change`-Events auf dem nächstgelegenen `<form>` via Event-Delegation; setzt/entfernt CSS-Klasse `visible` auf dem Banner-Element mit `data-dirty-banner`-Attribut; setzt Dirty-State zurück nach erfolgreichem Form-Submit
-- [ ] Git-Commit
+- [x] `frontend/src/ps-dirty-banner.js`: beobachtet `input`/`change`-Events auf dem nächstgelegenen `<form>` via Event-Delegation; setzt/entfernt CSS-Klasse `visible` auf dem Banner-Element mit `data-dirty-banner`-Attribut; setzt Dirty-State zurück nach erfolgreichem Form-Submit
+- [x] Git-Commit
 
 ### 0.9 Custom Element `<ps-infinite-scroll>`
-- [ ] `frontend/src/ps-infinite-scroll.js`: Attribute `data-next-url` und `data-target`; `IntersectionObserver` auf einem Sentinel-Element am Listenende; bei Sichtbarkeit: `apiFetch(data-next-url)` → HTML-Fragment in `data-target` einhängen; aktualisiert `data-next-url` aus Response-Header `X-Next-Url` (oder entfernt Observer wenn kein weiterer Header)
-- [ ] Git-Commit
+- [x] `frontend/src/ps-infinite-scroll.js`: Attribute `data-next-url` und `data-target`; `IntersectionObserver` auf einem Sentinel-Element am Listenende; bei Sichtbarkeit: `apiFetch(data-next-url)` → HTML-Fragment in `data-target` einhängen; aktualisiert `data-next-url` aus Response-Header `X-Next-Url` (oder entfernt Observer wenn kein weiterer Header)
+- [x] Git-Commit
 
 ### 0.10 Custom Element `<ps-chat-input>`
-- [ ] `frontend/src/ps-chat-input.js`: wraps `<textarea>` + Send-Button; Textarea-Autosize (max 6 Zeilen); Enter → submit, Shift+Enter → Zeilenumbruch; während `pending`-Attribut gesetzt: Button disabled + Textarea readonly; emittiert `ps-send`-Event mit `detail.text`
-- [ ] Git-Commit
+- [x] `frontend/src/ps-chat-input.js`: wraps `<textarea>` + Send-Button; Textarea-Autosize (max 6 Zeilen); Enter → submit, Shift+Enter → Zeilenumbruch; während `pending`-Attribut gesetzt: Button disabled + Textarea readonly; emittiert `ps-send`-Event mit `detail.text`
+- [x] Git-Commit
 
 ### 0.11 Stammdaten-Enums (Shared Domain)
 - [x] Enum `ContactType` (`EMAIL, WEB, XING, GULP, TELEFON, FAX`) mit `getLabel()`, `buildLink(String value)` im Paket `de.mirkosertic.powerstaff.shared`

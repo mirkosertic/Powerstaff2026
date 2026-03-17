@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "echo 'Frontend not yet set up – skipped'"
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
   }
 }
