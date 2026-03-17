@@ -201,20 +201,20 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 2.10 Partner – Thymeleaf Template: Hauptformular
-- [ ] `partner/form.html`: bindet `fragments/layout.html`; `fragments/toolbar.html` mit Navigations-Buttons (Erste, Zurück, Weiter, Letzte, ID-Eingabe), Neu-Button, Speichern-Button, Löschen-Button; Formular-Karten für Adresse, Kontaktinformationen, Kommentar, Konditionen; Audit-Info-Zeile (Erfasst am/von, Geändert am/von); bindet `fragments/contact-list.html` für Kontaktmöglichkeiten
-- [ ] Banner: Kontaktsperre-Banner (rot, `th:if="${partner.contactforbidden}"`) + `<ps-dirty-banner>`-Integration
-- [ ] Git-Commit
+- [x] `partner/form.html`: bindet `fragments/layout.html`; `fragments/toolbar.html` mit Navigations-Buttons (Erste, Zurück, Weiter, Letzte, ID-Eingabe), Neu-Button, Speichern-Button, Löschen-Button; Formular-Karten für Adresse, Kontaktinformationen, Kommentar, Konditionen; Audit-Info-Zeile (Erfasst am/von, Geändert am/von); bindet `fragments/contact-list.html` für Kontaktmöglichkeiten
+- [x] Banner: Kontaktsperre-Banner (rot, `th:if="${partner.contactforbidden}"`) + `<ps-dirty-banner>`-Integration
+- [x] Git-Commit
 
 ### 2.11 Partner – Thymeleaf Template: Sublisten und Suche
-- [ ] `partner/form.html` ergänzt: Freiberufler-Zuordnungs-Karte (fcard `col-wide`): Tabelle (code, name1, name2, company, availabilityAsDate, salaryLong, Löschen-Button), Zuordnen-Eingabefeld + Button, Neu-Freiberufler-Button; Projekte-Karte (fcard `col-wide`): Tabelle (projectNumber, descriptionShort, workplace, startDate, status), Neu-Projekt-Button
-- [ ] `partner/search-results.html` (reines Fragment, kein vollständiges HTML): Treffertabelle (company, name1, name2, city) mit sortierbaren Spalten-Headern (Links mit `?sort=`-Parameter), Gesamtanzahl, `<ps-infinite-scroll>`-Sentinel, Leer-Hinweis
-- [ ] Git-Commit
+- [x] `partner/form.html` ergänzt: Freiberufler-Zuordnungs-Karte (fcard `col-wide`): Tabelle (code, name1, name2, company, availabilityAsDate, salaryLong, Löschen-Button), Zuordnen-Eingabefeld + Button, Neu-Freiberufler-Button; Projekte-Karte (fcard `col-wide`): Tabelle (projectNumber, descriptionShort, workplace, startDate, status), Neu-Projekt-Button
+- [x] `partner/search-results.html` (reines Fragment, kein vollständiges HTML): Treffertabelle (company, name1, name2, city) mit sortierbaren Spalten-Headern (Links mit `?sort=`-Parameter), Gesamtanzahl, `<ps-infinite-scroll>`-Sentinel, Leer-Hinweis
+- [x] Git-Commit
 
 ### 2.12 Partner – Thymeleaf Template: Kontakthistorie und Modals
-- [ ] `partner/form.html` ergänzt: Kontakthistorie-Sektion (Liste der `PartnerHistory`-Einträge: Typ, Erfasst am/von, Geändert am/von wenn abweichend, Beschreibungstext, Bearbeiten- und Löschen-Button)
-- [ ] Modale eingebettet in `form.html` via `fragments/modal.html`: Löschen-Bestätigung (Partner), Löschen-Bestätigung (Freiberufler-Zuordnung aufheben), Projektliste-Fehler-Dialog (Löschen verhindert), Freelancer-Konflikt-Dialog (bereits anderem Partner zugeordnet), Kontaktmöglichkeit-Modal (Neuanlage/Bearbeitung), Kontakthistorie-Modal (Neuanlage/Bearbeitung), Optimistic-Locking-Konflikt-Dialog
-- [ ] Test: `@WebMvcTest PartnerControllerIT` ergänzt: Template rendert vollständig mit/ohne Partner-Daten; alle `th:`-Attribute greifen korrekt
-- [ ] Git-Commit
+- [x] `partner/form.html` ergänzt: Kontakthistorie-Sektion (Liste der `PartnerHistory`-Einträge: Typ, Erfasst am/von, Geändert am/von wenn abweichend, Beschreibungstext, Bearbeiten- und Löschen-Button)
+- [x] Modale eingebettet in `form.html` via `fragments/modal.html`: Löschen-Bestätigung (Partner), Löschen-Bestätigung (Freiberufler-Zuordnung aufheben), Projektliste-Fehler-Dialog (Löschen verhindert), Freelancer-Konflikt-Dialog (bereits anderem Partner zugeordnet), Kontaktmöglichkeit-Modal (Neuanlage/Bearbeitung), Kontakthistorie-Modal (Neuanlage/Bearbeitung), Optimistic-Locking-Konflikt-Dialog
+- [x] Test: `@WebMvcTest PartnerControllerIT` ergänzt: Template rendert vollständig mit/ohne Partner-Daten; alle `th:`-Attribute greifen korrekt
+- [x] Git-Commit
 
 ---
 
