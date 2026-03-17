@@ -27,9 +27,9 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 0.3 CSS – Design Tokens und Layout
-- [ ] `src/main/resources/static/css/base.css`: alle CSS Custom Properties (Design Tokens §2), Typografie-Reset §3, Box-Sizing-Reset
-- [ ] `src/main/resources/static/css/layout.css`: Shell-Layout §4 (sticky App-Shell, sticky Toolbar, scrollbarer Content), App-Nav §5 (dunkle Leiste, aktiver Menüpunkt), Form-Toolbar §6, Banners §7 (info, warning, error)
-- [ ] Git-Commit
+- [x] `src/main/resources/static/css/base.css`: alle CSS Custom Properties (Design Tokens §2), Typografie-Reset §3, Box-Sizing-Reset
+- [x] `src/main/resources/static/css/layout.css`: Shell-Layout §4 (sticky App-Shell, sticky Toolbar, scrollbarer Content), App-Nav §5 (dunkle Leiste, aktiver Menüpunkt), Form-Toolbar §6, Banners §7 (info, warning, error)
+- [x] Git-Commit
 
 ### 0.4 CSS – Komponenten
 - [ ] `src/main/resources/static/css/components.css`: fcard §8, field-grids §9 (col-1 bis col-wide), Input/Select/Textarea §9, Buttons §10 (btn-primary, btn-secondary, btn-danger, btn-sm), Checkboxen §11 (Pill-Style), Subsection-Label & Divider §12

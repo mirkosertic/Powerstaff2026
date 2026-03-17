@@ -122,9 +122,10 @@ spring.sql.init.mode=always
 ## Commit-Konvention
 
 Nach jedem abgeschlossenen Task in `TASKS.md`:
-1. Task in `TASKS.md` als erledigt markieren (`[x]`)
-2. Git-Commit mit aussagekräftiger Message
-3. Commit-Message endet mit `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>`
+1. `./mvnw clean verify` muss erfolgreich durchlaufen. 
+2. Task in `TASKS.md` als erledigt markieren (`[x]`)
+3. Git-Commit mit aussagekräftiger Message
+4. Commit-Message endet mit `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>`
 
 Kein `git push` – das macht der Entwickler manuell.
 

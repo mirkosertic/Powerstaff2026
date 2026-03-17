@@ -1,0 +1,173 @@
+/* =============================================================================
+   base.css – Design Tokens, Typografie-Reset, Box-Sizing
+   Powerstaff 2026 · UI Design System §2 + §3
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   Box-Sizing Reset
+   ----------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* -----------------------------------------------------------------------------
+   Design Tokens (§2)
+   ----------------------------------------------------------------------------- */
+:root {
+  /* Oberflächen */
+  --bg:        #eaecf0;
+  --surface:   #f9fafb;
+  --surface-2: #f1f3f6;
+  --surface-3: #ffffff;
+
+  /* Rahmen */
+  --border:   #c8cdd6;
+  --border-l: #dde1e8;
+
+  /* Text */
+  --text:   #1c2333;
+  --text-2: #4a5568;
+  --text-3: #8896aa;
+
+  /* Primärfarbe */
+  --pri:      #2563a8;
+  --pri-d:    #1a4a82;
+  --pri-l:    #e8f0fb;
+  --pri-ring: rgba(37, 99, 168, .2);
+
+  /* Status */
+  --danger:      #b91c1c;
+  --danger-l:    #fef2f2;
+  --warn-bg:     #fffbeb;
+  --warn-border: #d97706;
+  --warn-text:   #7c4a03;
+  --ok-bg:       #f0fdf4;
+  --ok-border:   #16a34a;
+  --ok-text:     #14532d;
+
+  /* Abstände & Schatten */
+  --r:         5px;
+  --r-l:       8px;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, .06);
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, .1);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, .15);
+
+  /* Dimensionen */
+  --nav-h:     44px;
+  --toolbar-h: 50px;
+}
+
+/* -----------------------------------------------------------------------------
+   Typografie-Reset (§3)
+   ----------------------------------------------------------------------------- */
+html {
+  font-size: 14px;
+  line-height: 1.55;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Primärtext / Input-Werte */
+p, span, td, li, input, select, textarea, button {
+  font-size: .88rem;
+}
+
+/* Labels */
+label {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--text-2);
+  display: block;
+  margin-bottom: 3px;
+}
+
+/* Links */
+a {
+  color: var(--pri);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Headings reset */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Paragraph reset */
+p {
+  margin: 0;
+}
+
+/* Input / Select / Textarea Basis */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="search"],
+select,
+textarea {
+  width: 100%;
+  padding: 5px 8px;
+  font-size: .88rem;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--pri);
+  box-shadow: 0 0 0 3px var(--pri-ring);
+  background: var(--surface-3);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-3);
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Euro-Wrapper */
+.ew {
+  position: relative;
+}
+.ew::after {
+  content: "€";
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3);
+  font-size: .85rem;
+  pointer-events: none;
+}
+.ew input {
+  padding-right: 22px;
+}
+
+/* Hilfsklasse: Margin-Bottom zwischen Field-Grid-Zeilen */
+.mb {
+  margin-bottom: 10px;
+}
