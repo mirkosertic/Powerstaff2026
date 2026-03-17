@@ -198,6 +198,36 @@ Jeder Eintrag wird in der Listenansicht mit folgenden Informationen angezeigt:
 * **Zuletzt geändert am** (`lastModificationDate`) und **von** (`lastModificationUserID`) – nur wenn abweichend von der Erfassung
 * **Text** (`description`) – vollständig, da mehrzeilige Einträge möglich sind
 
+### Speicherverhalten
+
+Änderungen an Historieneinträgen (Hinzufügen, Bearbeiten, Löschen) werden **ausschließlich beim
+Drücken des Speichern-Buttons** persistent gespeichert – in derselben Transaktion wie die
+Projekt-Stammdaten. Bis dahin existieren die Änderungen nur im Client-State (JavaScript).
+
+Dies gilt auch für neue Projekte: Historieneinträge können bereits vor dem ersten Speichern erfasst werden.
+
+Da Projekt-Historieneinträge **keine Typisierung** haben, enthält jedes JSON-Element nur `id` und
+`description`:
+
+```json
+[
+  { "id": 5,    "description": "Anforderungen besprochen" },
+  { "id": null, "description": "Neuer Eintrag" }
+]
+```
+
+Die Historieneinträge werden als JSON-Array im versteckten Formularfeld `historyJson` übertragen.
+
+* `id` ist `null` für neu angelegte Einträge.
+* `id` ist eine positive Ganzzahl für bestehende, beibehaltene oder geänderte Einträge.
+* Einträge, die in der DB-Liste vorhanden waren, im gesendeten Array aber **fehlen**, werden gelöscht.
+
+Der Server führt beim Speichern eine **Replace-Logik** durch:
+DELETE für fehlende IDs, UPDATE für vorhandene IDs, INSERT für `id == null`.
+
+**Audit-Felder:** `creationDate`/`creationUser` werden beim INSERT durch das Spring-Auditing gesetzt
+und danach nicht mehr verändert. `changedDate`/`changedUser` werden bei jedem UPDATE aktualisiert.
+
 Die Kontakthistorie der Projekte wird in der Tabelle `project_history` gespeichert:
 
 | Feld                     | Datenbankspalte | Datentyp   | Länge     | Prüfungen                                     | Label für die UI                 | Hinweise                              |
@@ -251,9 +281,15 @@ geöffnet:
 - `status` auf „Offen" (Wert `1`) vorbelegt
 - Alle übrigen Felder leer
 
+**Unified Save:** Sämtliche Änderungen am Formular – Stammdaten und Historieneinträge –
+werden **ausschließlich beim Drücken des Speichern-Buttons** in einer einzigen Transaktion persistiert.
+Kein AJAX-Endpunkt für Historieneinträge schreibt direkt in die Datenbank; alle Mutationen
+werden client-seitig im JavaScript-State gehalten und erst mit dem Speichern-Submit an den Server übertragen.
+Dies gilt einheitlich für neue und bestehende Projekte.
+
 Folgende Aktionen werden zusätzlich zur Navigation angeboten:
 
-* Speichere die aktuellen Daten
+* Speichere die aktuellen Daten (Stammdaten + Historieneinträge in einer Transaktion)
 * Lösche das aktuelle Projekt inkl. aller verknüpften Informationen
 
 **Löschen**: Vor dem Löschen wird ein modaler Bestätigungsdialog angezeigt mit dem Text:
@@ -354,6 +390,31 @@ Sachbearbeiter ans Ende der Liste scrollt (Infinite Scrolling).
 Die einzelnen QBE-Felder werden durch einen `AND`-Ausdruck miteinander kombiniert. Innerhalb eines Textfeldes
 wird eine LIKE-Suche gestartet; aus dem Suchausdruck `München` wird somit die SQL-Abfrage `LIKE '%München%'`.
 Der `status`-Filter wird als exakter Vergleich (`=`) ausgeführt.
+
+## Technische Hinweise zur Implementierung
+
+### Speichern-Endpunkt
+
+`POST /projekt/save` empfängt neben den Stammdaten-Feldern ein zusätzliches Formularfeld:
+
+* `historyJson` – JSON-Array der aktuellen Historieneinträge (siehe oben, kein `typeId`)
+
+Der Controller deserialisiert das Array und führt die Replace-Logik in einer Transaktion mit dem
+Projekt-Save durch.
+
+### Entfallende AJAX-Endpunkte
+
+Da alle Mutationen über den Speichern-Endpunkt laufen, entfällt ein separater AJAX-Controller für
+Historieneinträge. Sollte ein solcher Endpunkt existieren, wird er entfernt.
+
+### Client-seitiger State
+
+Das Formular hält den aktuellen Stand der Historieneinträge als JavaScript-Array. Das modale Formular
+für Neuanlage/Bearbeitung mutiert ausschließlich diesen lokalen State und rendert die Liste neu.
+Vor dem Absenden serialisiert das Formular das Array in das versteckte `historyJson`-Feld.
+
+Gelöschte Einträge werden aus dem lokalen Array entfernt; da sie nicht im gesendeten JSON erscheinen,
+löscht der Server sie automatisch (Replace-Logik).
 
 ## Offene Punkte
 

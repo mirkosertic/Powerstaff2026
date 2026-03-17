@@ -105,6 +105,38 @@ Zu einem Kunden können beliebig viele Kontaktmöglichkeiten hinzugefügt, bearb
 Typen, Darstellungsregeln, Sortierreihenfolge sowie das modale Formular für Neuanlage/Bearbeitung
 sind in [STAMMDATEN.md](STAMMDATEN.md) beschrieben.
 
+### Speicherverhalten
+
+Änderungen an Kontaktmöglichkeiten (Hinzufügen, Bearbeiten, Löschen) werden **ausschließlich beim
+Drücken des Speichern-Buttons** persistent gespeichert – gemeinsam mit den Kunden-Stammdaten in
+einer einzigen Transaktion. Bis dahin werden die Änderungen nur im Client-State (JavaScript) gehalten
+und in der UI dargestellt, ohne die Datenbank zu berühren.
+
+Dies gilt sowohl für bestehende Kunden (Bearbeitung) als auch für neue Kunden (Neuanlage). Bei einem
+neuen Kunden können daher Kontaktmöglichkeiten bereits vor dem ersten Speichern erfasst werden; sie
+werden beim Speichern des Kunden zusammen mit den Stammdaten angelegt.
+
+Die Kontaktmöglichkeiten werden als JSON-Array im versteckten Formularfeld `contactsJson` an den
+Server übertragen. Jedes Element enthält:
+
+```json
+[
+  { "id": 17, "type": "EMAIL",   "value": "info@example.com" },
+  { "id": null, "type": "TELEFON", "value": "+49 89 123456" }
+]
+```
+
+* `id` ist `null` für neu angelegte Einträge (Server erzeugt die ID beim INSERT).
+* `id` ist eine positive Ganzzahl für bestehende Einträge, die beibehalten oder geändert wurden.
+* Einträge, die in der ursprünglichen DB-Liste vorhanden waren, im gesendeten Array aber **fehlen**,
+  werden vom Server gelöscht.
+
+Der Server führt beim Speichern eine vollständige **Replace-Logik** durch:
+1. Alle existierenden `kunde_contact`-Einträge mit `kunde_id = :id` werden geladen.
+2. Einträge, deren `id` nicht im gesendeten Array enthalten ist → DELETE.
+3. Einträge mit `id != null` → UPDATE (type, value).
+4. Einträge mit `id == null` → INSERT.
+
 Die Kontaktmöglichkeiten der Kunden werden in der Tabelle `kunde_contact` gespeichert:
 
 | Feld                     | Datenbankspalte | Datentyp   | Länge | Prüfungen                                   | Hinweise                                                    |
@@ -138,6 +170,35 @@ mit folgenden Informationen angezeigt:
 * **Erfasst am** (`creationDate`) und **von** (`creationUserID`)
 * **Zuletzt geändert am** (`lastModificationDate`) und **von** (`lastModificationUserID`) – nur wenn abweichend von der Erfassung
 * **Text** (`description`) – vollständig, da mehrzeilige Einträge möglich sind
+
+### Speicherverhalten
+
+Identisch zu den Kontaktmöglichkeiten: Änderungen an Historieneinträgen (Hinzufügen, Bearbeiten, Löschen)
+werden **ausschließlich beim Drücken des Speichern-Buttons** persistent gespeichert – in derselben
+Transaktion wie die Kunden-Stammdaten. Bis dahin existieren die Änderungen nur im Client-State.
+
+Dies gilt auch für neue Kunden: Historieneinträge können bereits vor dem ersten Speichern erfasst werden.
+
+Die Historieneinträge werden als JSON-Array im versteckten Formularfeld `historyJson` übertragen.
+Jedes Element enthält:
+
+```json
+[
+  { "id": 5,    "typeId": 2, "description": "Telefonat geführt" },
+  { "id": null, "typeId": 1, "description": "Neuer Eintrag" }
+]
+```
+
+* `id` ist `null` für neu angelegte Einträge.
+* `id` ist eine positive Ganzzahl für bestehende, beibehaltene oder geänderte Einträge.
+* Einträge, die in der DB-Liste vorhanden waren, im gesendeten Array aber **fehlen**, werden gelöscht.
+
+Der Server führt beim Speichern dieselbe **Replace-Logik** wie bei Kontaktmöglichkeiten durch:
+DELETE für fehlende IDs, UPDATE für vorhandene IDs, INSERT für `id == null`.
+
+**Audit-Felder bei Historieneinträgen:** `creationDate`/`creationUser` werden beim INSERT durch das
+Spring-Auditing gesetzt und danach nicht mehr verändert. `changedDate`/`changedUser` werden bei
+jedem UPDATE aktualisiert.
 
 Die Kontakthistorie der Kunden wird in der Tabelle `kunde_history` gespeichert:
 
@@ -182,10 +243,16 @@ Das Formular kennt keinen expliziten Modus. Die einzige Unterscheidung ist, ob f
 eine Datenbank-ID existiert (bestehender Kunde) oder nicht (leeres Formular). Ein leeres Formular kann
 sowohl für die Neuanlage als auch für eine QBE-Suche genutzt werden.
 
+**Unified Save:** Sämtliche Änderungen am Formular – Stammdaten, Kontaktmöglichkeiten und Historieneinträge –
+werden **ausschließlich beim Drücken des Speichern-Buttons** in einer einzigen Transaktion persistiert.
+Kein AJAX-Endpunkt für Kontakte oder Historieneinträge schreibt direkt in die Datenbank; alle Mutationen
+werden client-seitig im JavaScript-State gehalten und erst mit dem Speichern-Submit an den Server übertragen.
+Dies gilt einheitlich für neue und bestehende Kunden.
+
 Folgende Aktionen werden zusätzlich zur Navigation angeboten:
 
 * Erstelle neuen Kunden (leert das Formular)
-* Speichere die aktuellen Daten
+* Speichere die aktuellen Daten (Stammdaten + Kontakte + Historieneinträge in einer Transaktion)
 * Lösche den aktuellen Kunden inkl. aller verknüpften Informationen
 
 **Löschen**: Vor dem Löschen prüft das System, ob dem Kunden Projekte zugeordnet sind
@@ -273,6 +340,33 @@ Sachbearbeiter ans Ende der Liste scrollt (Infinite Scrolling).
 Die einzelnen QBE-Felder werden durch einen `AND`-Ausdruck miteinander kombiniert. Innerhalb eines Feldes wird
 eine LIKE-Suche im Fall von Zeichenfolgen gestartet; aus dem Suchausdruck `HAM` wird somit die SQL-Abfrage
 `LIKE '%HAM%'`.
+
+## Technische Hinweise zur Implementierung
+
+### Speichern-Endpunkt
+
+`POST /kunde/save` empfängt neben den Stammdaten-Feldern zwei zusätzliche Formularfelder:
+
+* `contactsJson` – JSON-Array der aktuellen Kontaktmöglichkeiten (siehe oben)
+* `historyJson` – JSON-Array der aktuellen Historieneinträge (siehe oben)
+
+Der Controller deserialisiert beide Arrays und führt die Replace-Logik in einer Transaktion mit dem
+Kunden-Save durch.
+
+### Entfallende AJAX-Endpunkte
+
+Da alle Mutationen über den Speichern-Endpunkt laufen, entfallen separate AJAX-Controller für Kontakte
+und Historieneinträge. Sollten solche Endpunkte existieren, werden sie entfernt.
+
+### Client-seitiger State
+
+Das Formular hält den aktuellen Stand von Kontaktmöglichkeiten und Historieneinträgen als
+JavaScript-Arrays. Modale Formulare für Neuanlage/Bearbeitung mutieren ausschließlich diesen
+lokalen State und rendern die Listen neu. Vor dem Absenden serialisiert das Formular beide Arrays
+in die versteckten JSON-Felder.
+
+Gelöschte Einträge werden aus dem lokalen Array entfernt; da sie nicht im gesendeten JSON erscheinen,
+löscht der Server sie automatisch (Replace-Logik).
 
 ## Offene Punkte
 
