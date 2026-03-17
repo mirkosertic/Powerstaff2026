@@ -1725,3 +1725,47 @@ Alle HTTP-Endpunkte der Anwendung sind zustandslos (kein `HttpSession`). Stattde
   als Query-Parameter kodiert (null-Felder werden weggelassen)
 - `@CookieValue(required = false)` für optionale Cookie-Lesezugriffe verwenden
 
+---
+
+### ADR-018: Kein JdbcClient und kein direkter Tabellenzugriff in Controllers
+
+**Status:** Akzeptiert
+
+**Kontext:**
+Im initialen `PartnerController` wurden drei Freelancer-Zuordnungs-Endpunkte
+(`assign-freelancer`, `confirm-reassign-freelancer`, `remove-freelancer`) direkt mit
+`JdbcClient` implementiert: Lookup per Code, gezielter `UPDATE freelancer SET partner_id`
+und Abfrage des Partner-Namens für die Konfliktmeldung. Das verletzt zwei Architekturprinzipien
+gleichzeitig: (1) Controller dürfen keine Datenbanklogik enthalten; (2) das Partner-Modul darf
+nicht direkt auf Tabellen des Freelancer-Moduls zugreifen.
+
+**Entscheidung:**
+Controllers sind dünne Adapter zwischen HTTP und dem Service-Layer. Sie dürfen:
+- `CommandService`-Methoden aufrufen (schreibende Operationen)
+- `QueryService`-Methoden aufrufen (lesende Operationen für das Rendering)
+
+Sie dürfen **nicht**:
+- `JdbcClient` injizieren und SQL ausführen
+- `Repository`-Interfaces direkt injizieren
+- Tabellen eines anderen Moduls adressieren (weder per JdbcClient noch per Repository)
+
+Cross-Modul-Operationen laufen ausschließlich über öffentliche Service-Methoden des Zielmoduls.
+Für die Freelancer-Zuordnung wurde `FreelancerCommandService` mit `findByCode`,
+`assignToPartner` und `removeFromPartner` eingeführt. Der `PartnerController` nutzt diesen
+Service; der Freelancer-interne `JdbcClient` bleibt innerhalb des Freelancer-Moduls.
+
+**Begründung:**
+- Modulgrenze: Das Freelancer-Modul ist Eigentümer der `freelancer`-Tabelle. Jede
+  Schreiboperation darauf muss durch das Freelancer-Modul laufen.
+- Testbarkeit: Controller-Tests (`@SpringBootTest(webEnvironment = MOCK)`) können Service-Mocks
+  verwenden, ohne echte SQL-Ausführung.
+- Single Responsibility: SQL-Logik gehört in Services, nicht in Controllers.
+
+**Konsequenzen:**
+- `JdbcClient` ist in Controllers **verboten** (kein `@Autowired JdbcClient`)
+- Jedes Modul, das Daten eines anderen Moduls mutieren muss, stellt dafür einen öffentlichen
+  `CommandService` bereit
+- Lesende Cross-Modul-Abfragen (z. B. `findFreelancersByPartner` im `PartnerQueryService`)
+  sind weiterhin erlaubt — die Query-Seite darf per CQRS (ADR-002) denormalisierte Abfragen
+  über Modulgrenzen hinweg stellen
+

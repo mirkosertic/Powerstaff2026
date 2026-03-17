@@ -119,6 +119,14 @@ spring.sql.init.mode=always
 // ❌ HttpSession in Controllers (ADR-017)
 // session.getAttribute(...), session.setAttribute(...)
 // Stattdessen: Cookie für "last viewed", URL-Parameter für Suchkriterien-Pagination
+
+// ❌ JdbcClient oder Repository direkt in Controllers
+// jdbcClient.sql("SELECT ...") in einem @Controller
+// Stattdessen: immer über CommandService oder QueryService delegieren
+
+// ❌ Cross-Modul-Tabellenzugriff (ADR-002)
+// Modul A darf nicht direkt auf Tabellen von Modul B zugreifen
+// Stattdessen: öffentliche Service-Methoden des Zielmoduls aufrufen
 ```
 
 ---

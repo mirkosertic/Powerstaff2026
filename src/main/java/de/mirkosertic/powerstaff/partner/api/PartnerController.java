@@ -3,6 +3,8 @@ package de.mirkosertic.powerstaff.partner.api;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
+import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService;
+import de.mirkosertic.powerstaff.freelancer.command.FreelancerLookupResult;
 import de.mirkosertic.powerstaff.partner.command.Partner;
 import de.mirkosertic.powerstaff.partner.command.PartnerCommandService;
 import de.mirkosertic.powerstaff.partner.command.PartnerContactEntry;
@@ -16,7 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -44,16 +45,16 @@ public class PartnerController {
 
     private final PartnerCommandService commandService;
     private final PartnerQueryService queryService;
-    private final JdbcClient jdbcClient;
+    private final FreelancerCommandService freelancerCommandService;
     private final ObjectMapper objectMapper;
 
     public PartnerController(PartnerCommandService commandService,
                              PartnerQueryService queryService,
-                             JdbcClient jdbcClient,
+                             FreelancerCommandService freelancerCommandService,
                              ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
-        this.jdbcClient = jdbcClient;
+        this.freelancerCommandService = freelancerCommandService;
         this.objectMapper = objectMapper;
     }
 
@@ -233,42 +234,23 @@ public class PartnerController {
     public ResponseEntity<?> assignFreelancer(@PathVariable long id,
                                               @RequestBody Map<String, String> body) {
         String code = body.get("code");
-        var freelancerOpt = jdbcClient
-                .sql("SELECT id, partner_id, company FROM freelancer WHERE code = :code")
-                .param("code", code)
-                .query((rs, rowNum) -> Map.of(
-                        "id", rs.getLong("id"),
-                        "partnerId", rs.getObject("partner_id"),
-                        "company", rs.getString("company") != null ? rs.getString("company") : ""))
-                .optional();
+        FreelancerLookupResult freelancer = freelancerCommandService.findByCode(code).orElse(null);
 
-        if (freelancerOpt.isEmpty()) {
+        if (freelancer == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("notFound", true));
         }
 
-        @SuppressWarnings("unchecked")
-        var freelancer = (Map<String, Object>) freelancerOpt.get();
-        Object existingPartnerId = freelancer.get("partnerId");
-
-        if (existingPartnerId != null && !existingPartnerId.equals(id)) {
-            String otherCompany = jdbcClient
-                    .sql("SELECT company FROM partner WHERE id = :partnerId")
-                    .param("partnerId", existingPartnerId)
-                    .query(String.class)
-                    .optional()
+        if (freelancer.partnerId() != null && freelancer.partnerId() != id) {
+            String otherCompany = queryService.findById(freelancer.partnerId())
+                    .map(p -> p.company())
                     .orElse("Unbekannter Partner");
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("otherPartner", otherCompany,
-                                 "freelancerId", freelancer.get("id")));
+                                 "freelancerId", freelancer.id()));
         }
 
-        Long freelancerId = (Long) freelancer.get("id");
-        jdbcClient.sql("UPDATE freelancer SET partner_id = :partnerId WHERE id = :freelancerId")
-                .param("partnerId", id)
-                .param("freelancerId", freelancerId)
-                .update();
-
+        freelancerCommandService.assignToPartner(freelancer.id(), id);
         List<PartnerFreelancerView> updated = queryService.findFreelancersByPartner(id);
         return ResponseEntity.ok(Map.of("ok", true, "freelancers", updated));
     }
@@ -277,11 +259,8 @@ public class PartnerController {
     @ResponseBody
     public ResponseEntity<?> confirmReassignFreelancer(@PathVariable long id,
                                                        @RequestBody Map<String, Long> body) {
-        Long freelancerId = body.get("freelancerId");
-        jdbcClient.sql("UPDATE freelancer SET partner_id = :partnerId WHERE id = :freelancerId")
-                .param("partnerId", id)
-                .param("freelancerId", freelancerId)
-                .update();
+        long freelancerId = body.get("freelancerId");
+        freelancerCommandService.assignToPartner(freelancerId, id);
         List<PartnerFreelancerView> updated = queryService.findFreelancersByPartner(id);
         return ResponseEntity.ok(Map.of("ok", true, "freelancers", updated));
     }
@@ -290,10 +269,7 @@ public class PartnerController {
     @ResponseBody
     public ResponseEntity<?> removeFreelancer(@PathVariable long id,
                                               @PathVariable long freelancerId) {
-        jdbcClient.sql("UPDATE freelancer SET partner_id = NULL WHERE id = :freelancerId AND partner_id = :partnerId")
-                .param("freelancerId", freelancerId)
-                .param("partnerId", id)
-                .update();
+        freelancerCommandService.removeFromPartner(freelancerId, id);
         List<PartnerFreelancerView> updated = queryService.findFreelancersByPartner(id);
         return ResponseEntity.ok(Map.of("ok", true, "freelancers", updated));
     }

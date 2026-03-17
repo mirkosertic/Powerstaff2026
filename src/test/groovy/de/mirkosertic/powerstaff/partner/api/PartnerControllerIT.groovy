@@ -1,6 +1,8 @@
 package de.mirkosertic.powerstaff.partner.api
 
 import de.mirkosertic.powerstaff.AbstractContainerBaseIT
+import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService
+import de.mirkosertic.powerstaff.freelancer.command.FreelancerLookupResult
 import de.mirkosertic.powerstaff.partner.command.Partner
 import de.mirkosertic.powerstaff.partner.command.PartnerCommandService
 import de.mirkosertic.powerstaff.partner.command.PartnerHasProjectsException
@@ -53,6 +55,9 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
     @MockitoBean
     PartnerQueryService queryService
 
+    @MockitoBean
+    FreelancerCommandService freelancerCommandService
+
     def setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .apply(springSecurity())
@@ -91,6 +96,10 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
                 new PartnerSearchResult(1L, "Test GmbH", null, null, "Berlin")
         ])
         when(queryService.countSearch(any())).thenReturn(1L)
+
+        when(freelancerCommandService.findByCode("FL-001")).thenReturn(Optional.of(new FreelancerLookupResult(10L, null, "Test Freelancer GmbH")))
+        when(freelancerCommandService.findByCode("UNKNOWN")).thenReturn(Optional.empty())
+        when(freelancerCommandService.findByCode("FL-OTHER")).thenReturn(Optional.of(new FreelancerLookupResult(11L, 99L, "Anderer Freelancer GmbH")))
     }
 
     def "GET /partner ohne Cookie leitet auf ersten Partner weiter (302)"() {
@@ -282,5 +291,83 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
 
         then:
         result.andExpect(status().isOk())
+    }
+
+    // -------------------------------------------------------------------------
+    // Freelancer-Zuordnung
+    // -------------------------------------------------------------------------
+
+    def "POST /partner/42/assign-freelancer mit bekanntem Code liefert 200"() {
+        when:
+        def result = mockMvc.perform(
+                post("/partner/42/assign-freelancer")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content('{"code":"FL-001"}'))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(jsonPath('$.ok').value(true))
+    }
+
+    def "POST /partner/42/assign-freelancer mit unbekanntem Code liefert 404"() {
+        when:
+        def result = mockMvc.perform(
+                post("/partner/42/assign-freelancer")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content('{"code":"UNKNOWN"}'))
+
+        then:
+        result.andExpect(status().isNotFound())
+              .andExpect(jsonPath('$.notFound').value(true))
+    }
+
+    def "POST /partner/42/assign-freelancer mit Freelancer der anderem Partner zugeordnet ist liefert 409"() {
+        given:
+        when(queryService.findById(99L)).thenReturn(Optional.of(new PartnerDetailView(
+                99L, 0L, null, null, null, null,
+                "Anderer Partner GmbH", null, null, null, null, null, null,
+                false, false, null, null, null)))
+
+        when:
+        def result = mockMvc.perform(
+                post("/partner/42/assign-freelancer")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content('{"code":"FL-OTHER"}'))
+
+        then:
+        result.andExpect(status().isConflict())
+              .andExpect(jsonPath('$.otherPartner').value("Anderer Partner GmbH"))
+    }
+
+    def "POST /partner/42/confirm-reassign-freelancer liefert 200"() {
+        when:
+        def result = mockMvc.perform(
+                post("/partner/42/confirm-reassign-freelancer")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content('{"freelancerId":10}'))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(jsonPath('$.ok').value(true))
+    }
+
+    def "POST /partner/42/remove-freelancer/10 liefert 200"() {
+        when:
+        def result = mockMvc.perform(
+                post("/partner/42/remove-freelancer/10")
+                        .with(csrf())
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(jsonPath('$.ok').value(true))
     }
 }
