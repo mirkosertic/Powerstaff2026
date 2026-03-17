@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Fragment: Suchergebnis-Tabelle für Partner-QBE-Suche.
+  Eingebunden via th:replace in der Suche-Modal oder auf der Seite.
+-->
+<div th:fragment="results">
+
+  <p th:if="${totalCount != null}">
+    <strong th:text="${totalCount}">0</strong> Treffer gefunden.
+  </p>
+
+  <table class="data-table" th:if="${results != null and !results.isEmpty()}">
+    <thead>
+      <tr>
+        <th>Firma</th>
+        <th>Name 1</th>
+        <th>Name 2</th>
+        <th>Ort</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="result : ${results}">
+        <td>
+          <a th:href="@{/partner/{id}(id=${result.id})}" th:text="${result.company}"></a>
+        </td>
+        <td th:text="${result.name1}"></td>
+        <td th:text="${result.name2}"></td>
+        <td th:text="${result.city}"></td>
+        <td>
+          <a class="btn btn-sm btn-secondary" th:href="@{/partner/{id}(id=${result.id})}">Öffnen</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p th:if="${results == null or results.isEmpty()}">Keine Treffer gefunden.</p>
+
+  <!-- Infinite Scroll Sentinel -->
+  <ps-infinite-scroll
+      th:if="${nextUrl != null}"
+      th:attr="data-next-url=${nextUrl}, data-target='#search-results'">
+  </ps-infinite-scroll>
+
+</div>
+
+</body>
+</html>

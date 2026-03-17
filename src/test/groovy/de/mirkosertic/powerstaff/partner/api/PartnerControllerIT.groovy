@@ -10,9 +10,11 @@ import de.mirkosertic.powerstaff.partner.query.PartnerFreelancerView
 import de.mirkosertic.powerstaff.partner.query.PartnerHistoryView
 import de.mirkosertic.powerstaff.partner.query.PartnerProjectView
 import de.mirkosertic.powerstaff.partner.query.PartnerQueryService
+import de.mirkosertic.powerstaff.partner.query.PartnerSearchResult
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.OptimisticLockingFailureException
+import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -21,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext
 import java.time.LocalDateTime
 
 import static org.mockito.ArgumentMatchers.any
+import static org.mockito.ArgumentMatchers.anyInt
 import static org.mockito.ArgumentMatchers.anyLong
 import static org.mockito.Mockito.doThrow
 import static org.mockito.Mockito.when
@@ -81,6 +84,10 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         when(queryService.findHistoryByPartner(anyLong())).thenReturn([] as List<PartnerHistoryView>)
         when(queryService.findFreelancersByPartner(anyLong())).thenReturn([] as List<PartnerFreelancerView>)
         when(queryService.findProjectsByPartner(anyLong())).thenReturn([] as List<PartnerProjectView>)
+        when(queryService.search(any(), anyInt(), anyInt())).thenReturn([
+                new PartnerSearchResult(1L, "Test GmbH", null, null, "Berlin")
+        ])
+        when(queryService.countSearch(any())).thenReturn(1L)
     }
 
     def "GET /partner leitet auf letzten oder ersten Partner weiter (302)"() {
@@ -199,5 +206,31 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().isConflict())
               .andExpect(content().contentTypeCompatibleWith("application/json"))
               .andExpect(jsonPath('$.blocked').value(true))
+    }
+
+    // -------------------------------------------------------------------------
+    // Suche
+    // -------------------------------------------------------------------------
+
+    def "POST /partner/search gibt HTML-Fragment mit Treffern zurueck"() {
+        when:
+        def result = mockMvc.perform(
+                post("/partner/search")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("company", "Test"))
+
+        then:
+        result.andExpect(status().isOk())
+    }
+
+    def "GET /partner/search-more gibt HTML-Fragment zurueck"() {
+        when:
+        def result = mockMvc.perform(
+                get("/partner/search-more?offset=20")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
     }
 }

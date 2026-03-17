@@ -186,13 +186,13 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 2.8 Partner – Controller (Suche + Freelancer-Zuordnung)
-- [ ] POST `/partner/search`: bindet `PartnerSearchCriteria`; speichert Criteria in Session; ruft `search(criteria, 0, 20)`; rendert `partner/search-results.html` als Fragment
-- [ ] GET `/partner/search-more`: liest Criteria aus Session, `offset` aus Query-Param; ruft `search(criteria, offset, 20)`; setzt Response-Header `X-Next-Url` wenn weitere Treffer vorhanden; rendert Fragment
-- [ ] POST `/partner/{id}/assign-freelancer`: Body `{code: "..."}` (JSON); sucht Freelancer per Code via `JdbcClient`; wenn nicht gefunden → 404 JSON; wenn bereits anderem Partner zugeordnet → 409 JSON `{"otherPartner": "Firmenname"}`; sonst: UPDATE `freelancer.partner_id`; → 200 JSON mit aktualisierter Freelancer-Liste
-- [ ] POST `/partner/{id}/confirm-reassign-freelancer`: Body `{freelancerId: ...}` (JSON); überschreibt `freelancer.partner_id` ohne Konfliktprüfung; → 200 JSON
-- [ ] POST `/partner/{id}/remove-freelancer/{freelancerId}`: setzt `freelancer.partner_id = NULL` per `JdbcClient`; → 200 JSON
-- [ ] Test: `PartnerControllerIT` ergänzt: POST search → Fragment-HTML; search-more mit Offset; assign-freelancer Szenarien
-- [ ] Git-Commit
+- [x] POST `/partner/search`: bindet `PartnerSearchCriteria`; speichert Criteria in Session; ruft `search(criteria, 0, 20)`; rendert `partner/search-results.html` als Fragment
+- [x] GET `/partner/search-more`: liest Criteria aus Session, `offset` aus Query-Param; ruft `search(criteria, offset, 20)`; setzt Response-Header `X-Next-Url` wenn weitere Treffer vorhanden; rendert Fragment
+- [x] POST `/partner/{id}/assign-freelancer`: Body `{code: "..."}` (JSON); sucht Freelancer per Code via `JdbcClient`; wenn nicht gefunden → 404 JSON; wenn bereits anderem Partner zugeordnet → 409 JSON `{"otherPartner": "Firmenname"}`; sonst: UPDATE `freelancer.partner_id`; → 200 JSON mit aktualisierter Freelancer-Liste
+- [x] POST `/partner/{id}/confirm-reassign-freelancer`: Body `{freelancerId: ...}` (JSON); überschreibt `freelancer.partner_id` ohne Konfliktprüfung; → 200 JSON
+- [x] POST `/partner/{id}/remove-freelancer/{freelancerId}`: setzt `freelancer.partner_id = NULL` per `JdbcClient`; → 200 JSON
+- [x] Test: `PartnerControllerIT` ergänzt: POST search → Fragment-HTML; search-more mit Offset; assign-freelancer Szenarien
+- [x] Git-Commit
 
 ### 2.9 Partner – Kontakt- und Historien-Controller (AJAX)
 - [ ] `PartnerContactController`: POST `/partner/{id}/contacts` (JSON Body: `type`, `value`) → speichert, gibt aktualisierte Kontaktliste als JSON zurück; DELETE `/partner/{id}/contacts/{contactId}` → löscht, gibt aktualisierte Liste zurück
