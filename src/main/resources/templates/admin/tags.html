@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('Tags', 'admin', ~{::body})}">
+<body>
+
+  <!-- Toolbar -->
+  <div th:replace="~{fragments/toolbar :: toolbar(
+      'ADMINISTRATION',
+      null, null, null, null, null,
+      null, null, null, null)}">
+  </div>
+
+  <!-- Page Content -->
+  <div id="page">
+
+    <!-- Neuanlage -->
+    <div class="fcard">
+      <h2>Neuen Tag anlegen</h2>
+      <form method="post" th:action="@{/admin/tags}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div class="form-grid">
+          <div>
+            <label for="new-tag-type">Tag-Typ</label>
+            <select id="new-tag-type" name="tagType" required>
+              <option value="">– Typ wählen –</option>
+              <option th:each="tt : ${tagTypes}"
+                      th:value="${tt.name()}"
+                      th:text="${tt.label}"></option>
+            </select>
+          </div>
+          <div>
+            <label for="new-tag-name">Name</label>
+            <input type="text" id="new-tag-name" name="tagname"
+                   required maxlength="255" autocomplete="off">
+          </div>
+        </div>
+        <div style="margin-top:0.75rem">
+          <button class="btn btn-pri" type="submit">&#xFF0B; Tag anlegen</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Eine Karte pro TagType -->
+    <div th:each="entry : ${tagsByType}" class="fcard">
+      <h2 th:text="${entry.key.label}">Tag-Typ</h2>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="tag : ${entry.value}" th:id="'tag-row-' + ${tag.id}">
+            <td th:text="${tag.tagname}"></td>
+            <td>
+              <button class="ibtn" type="button"
+                      th:attr="data-id=${tag.id}, data-tagname=${tag.tagname}"
+                      data-action="edit-tag">&#9998;</button>
+              <button class="ibtn del" type="button"
+                      th:attr="data-id=${tag.id}"
+                      data-action="delete-tag">&#x1F5D1;</button>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(entry.value)}">
+            <td colspan="2" style="text-align:center">Keine Tags vorhanden.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Modal: Tag bearbeiten -->
+  <div class="mbk hidden" id="modal-edit-tag">
+    <div class="mbox">
+      <div class="mhd">
+        <h3>Tag bearbeiten</h3>
+        <button class="mx" type="button" onclick="closeModal('modal-edit-tag')">&#x2715;</button>
+      </div>
+      <div class="mbody">
+        <form id="edit-tag-form" method="post" action="#">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <div class="mb">
+            <label for="edit-tag-name">Name</label>
+            <input type="text" id="edit-tag-name" name="tagname"
+                   required maxlength="255" autocomplete="off">
+          </div>
+        </form>
+      </div>
+      <div class="mft">
+        <button class="btn btn-ghost" type="button" onclick="closeModal('modal-edit-tag')">Abbrechen</button>
+        <button class="btn btn-pri" type="submit" form="edit-tag-form">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('click', function(e) {
+      const editBtn = e.target.closest('[data-action="edit-tag"]');
+      if (editBtn) {
+        document.getElementById('edit-tag-form').action = '/admin/tags/' + editBtn.dataset.id;
+        document.getElementById('edit-tag-name').value = editBtn.dataset.tagname;
+        document.getElementById('modal-edit-tag').classList.remove('hidden');
+        return;
+      }
+
+      const delBtn = e.target.closest('[data-action="delete-tag"]');
+      if (delBtn) {
+        deleteTag(delBtn.dataset.id, delBtn);
+      }
+    });
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    async function deleteTag(id, el) {
+      if (!confirm('Tag wirklich löschen?')) return;
+      const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+      const token = match ? decodeURIComponent(match[1]) : '';
+      const resp = await fetch('/admin/tags/' + id, {
+        method: 'DELETE',
+        headers: { 'X-XSRF-TOKEN': token }
+      });
+      if (resp.ok) {
+        const row = el.closest('tr');
+        if (row) row.remove();
+      }
+    }
+  </script>
+
+</body>
+</html>

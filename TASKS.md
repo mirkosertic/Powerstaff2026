@@ -81,45 +81,45 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 ## Phase 1 – Modul `stammdaten`
 
 ### 1.1 Historientypen – Domain + Repository
-- [ ] Aggregate `HistoryType` (`id` BIGINT PK, `description` VARCHAR) im Paket `de.mirkosertic.powerstaff.stammdaten`
-- [ ] `HistoryTypeRepository` extends `CrudRepository<HistoryType, Long>`
-- [ ] `HistoryTypeQueryService`: `findAll()` via `JdbcClient` – `ORDER BY description ASC`
-- [ ] Test: `HistoryTypeRepositoryIT` extends `AbstractContainerBaseIT`: insert, findById, findAll; `HistoryTypeQueryServiceIT`: prüft Sortierung
-- [ ] Git-Commit
+- [x] Aggregate `HistoryType` (`id` BIGINT PK, `description` VARCHAR) im Paket `de.mirkosertic.powerstaff.shared.command`
+- [x] `HistoryTypeRepository` extends `CrudRepository<HistoryType, Long>`
+- [x] `HistoryTypeQueryService`: `findAll()` via `JdbcClient` – `ORDER BY description ASC`
+- [x] Test: `HistoryTypeRepositoryIT` extends `AbstractContainerBaseIT`: insert, findById, findAll; `HistoryTypeQueryServiceIT`: prüft Sortierung
+- [x] Git-Commit
 
 ### 1.2 Projektpositions-Status – Domain + Repository
-- [ ] Aggregate `ProjectPositionStatus` (`id`, `description`, `color`, `colorText` ← Spalte `color_text`)
-- [ ] `ProjectPositionStatusRepository`
-- [ ] `ProjectPositionStatusQueryService`: `findAll()` sortiert nach `description ASC`
-- [ ] Test: `ProjectPositionStatusRepositoryIT`, `ProjectPositionStatusQueryServiceIT`
-- [ ] Git-Commit
+- [x] Aggregate `ProjectPositionStatus` (`id`, `description`, `color`, `colorText` ← Spalte `color_text`)
+- [x] `ProjectPositionStatusRepository`
+- [x] `ProjectPositionStatusQueryService`: `findAll()` sortiert nach `description ASC`
+- [x] Test: `ProjectPositionStatusRepositoryIT`, `ProjectPositionStatusQueryServiceIT`
+- [x] Git-Commit
 
 ### 1.3 Tags – Domain + Repository
-- [ ] Aggregate `Tag` (`id`; `name` ← Spalte `tagname`; `type` ← Spalte `type` als `String`; Konvertierung zu `TagType` über `TagType.valueOf()`)
-- [ ] `TagRepository`
-- [ ] `TagQueryService`: `findAll()` sortiert nach `tagname ASC`; `findByType(TagType)` filtert per `WHERE type = :type`
-- [ ] Test: `TagRepositoryIT`, `TagQueryServiceIT`: prüft Filterung und Sortierung nach Typ
-- [ ] Git-Commit
+- [x] Aggregate `Tag` (`id`; `tagname` ← Spalte `tagname`; `type` ← Spalte `type` als `String`)
+- [x] `TagRepository`
+- [x] `TagQueryService`: `findAll()` sortiert nach `tagname ASC`; `findByType(TagType)` filtert per `WHERE type = :type`
+- [x] Test: `TagRepositoryIT`, `TagQueryServiceIT`: prüft Filterung und Sortierung nach Typ
+- [x] Git-Commit
 
 ### 1.4 Stammdaten-Administration – Historientypen UI
-- [ ] `StammdatenController`: GET `/admin/historientypen` → `model.addAttribute("types", historyTypeQueryService.findAll())`; rendert `admin/historientypen.html`
-- [ ] POST `/admin/historientypen` → speichert neuen `HistoryType`; Redirect
-- [ ] POST `/admin/historientypen/{id}` → aktualisiert `description`; Redirect
-- [ ] Template `admin/historientypen.html`: Tabelle mit allen Typen, Bearbeiten-Button öffnet `<ps-modal>`, Neuanlage-Button öffnet `<ps-modal>`
-- [ ] Test: `@WebMvcTest StammdatenControllerIT`: GET → 200, POST → Redirect 302, Template rendert ohne Fehler
-- [ ] Git-Commit
+- [x] `StammdatenController`: GET `/admin/historientypen` → `model.addAttribute("types", historyTypeQueryService.findAll())`; rendert `admin/historientypen.html`
+- [x] POST `/admin/historientypen` → speichert neuen `HistoryType`; Redirect
+- [x] POST `/admin/historientypen/{id}` → aktualisiert `description`; Redirect
+- [x] Template `admin/historientypen.html`: Tabelle mit allen Typen, Bearbeiten-Button öffnet Modal, Neuanlage-Button öffnet Modal
+- [x] Test: `StammdatenControllerIT`: GET → 200, POST → Redirect 302, Template rendert ohne Fehler
+- [x] Git-Commit
 
 ### 1.5 Stammdaten-Administration – Projektpositions-Status UI
-- [ ] GET `/admin/positionsstatus`, POST `/admin/positionsstatus`, POST `/admin/positionsstatus/{id}` in `StammdatenController` ergänzen
-- [ ] Template `admin/positionsstatus.html`: Tabelle mit Badge-Vorschau (Inline-Style `background:<color>; color:<color_text>`), Modale für Neuanlage/Bearbeitung mit Farbfelder-Inputs
-- [ ] Test: `StammdatenControllerIT` ergänzt
-- [ ] Git-Commit
+- [x] GET `/admin/positionsstatus`, POST `/admin/positionsstatus`, POST `/admin/positionsstatus/{id}` in `StammdatenController`
+- [x] Template `admin/positionsstatus.html`: Tabelle mit Badge-Vorschau (Inline-Style), Modale für Neuanlage/Bearbeitung mit Farbfelder-Inputs
+- [x] Test: `StammdatenControllerIT` ergänzt
+- [x] Git-Commit
 
 ### 1.6 Stammdaten-Administration – Tags UI
-- [ ] GET `/admin/tags`, POST `/admin/tags`, POST `/admin/tags/{id}`, DELETE `/admin/tags/{id}` (AJAX → JSON `{ok:true}`) in `StammdatenController`
-- [ ] Template `admin/tags.html`: Tags gruppiert nach `TagType`-Abschnitt, je Gruppe Tabelle + Neuanlage-Modal + Löschen-Button (AJAX)
-- [ ] Test: `StammdatenControllerIT` ergänzt (inkl. DELETE → 200 JSON)
-- [ ] Git-Commit
+- [x] GET `/admin/tags`, POST `/admin/tags`, POST `/admin/tags/{id}`, DELETE `/admin/tags/{id}` (AJAX → JSON `{ok:true}`) in `StammdatenController`
+- [x] Template `admin/tags.html`: Tags gruppiert nach `TagType`-Abschnitt, je Gruppe Tabelle + Neuanlage-Formular + Löschen-Button (AJAX)
+- [x] Test: `StammdatenControllerIT` ergänzt (inkl. DELETE → 200 JSON)
+- [x] Git-Commit
 
 ---
 

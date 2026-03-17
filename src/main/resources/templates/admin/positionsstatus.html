@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('Positionsstatus', 'admin', ~{::body})}">
+<body>
+
+  <!-- Toolbar -->
+  <div th:replace="~{fragments/toolbar :: toolbar(
+      'ADMINISTRATION',
+      null, null, null, null, null,
+      null, null, null, null)}">
+  </div>
+
+  <!-- Page Content -->
+  <div id="page">
+
+    <div class="fcard">
+      <h2>Projektpositions-Status</h2>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Vorschau</th>
+            <th>Bezeichnung</th>
+            <th>Hintergr.-Farbe</th>
+            <th>Textfarbe</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="status : ${statusList}">
+            <td th:text="${status.id}"></td>
+            <td>
+              <span class="badge-dyn"
+                    th:style="'background:' + ${status.color} + ';color:' + ${status.colorText}"
+                    th:text="${status.description}"></span>
+            </td>
+            <td th:text="${status.description}"></td>
+            <td><code th:text="${status.color}"></code></td>
+            <td><code th:text="${status.colorText}"></code></td>
+            <td>
+              <button class="ibtn" type="button"
+                      th:attr="data-id=${status.id},
+                               data-description=${status.description},
+                               data-color=${status.color},
+                               data-colortext=${status.colorText}"
+                      data-action="edit-status">&#9998;</button>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(statusList)}">
+            <td colspan="6" style="text-align:center">Keine Einträge vorhanden.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top:1rem">
+        <button class="btn btn-add" type="button"
+                onclick="document.getElementById('modal-new-status').classList.remove('hidden')">
+          &#xFF0B; Neuer Status
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal: Neuanlage -->
+  <div class="mbk hidden" id="modal-new-status">
+    <div class="mbox">
+      <div class="mhd">
+        <h3>Neuen Positionsstatus anlegen</h3>
+        <button class="mx" type="button" onclick="closeModal('modal-new-status')">&#x2715;</button>
+      </div>
+      <div class="mbody">
+        <form id="new-status-form" method="post" th:action="@{/admin/positionsstatus}">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <div class="mb">
+            <label for="new-status-description">Bezeichnung</label>
+            <input type="text" id="new-status-description" name="description"
+                   required maxlength="255" autocomplete="off">
+          </div>
+          <div class="form-grid">
+            <div>
+              <label for="new-status-color">Hintergrundfarbe (CSS)</label>
+              <input type="text" id="new-status-color" name="color"
+                     placeholder="#d1fae5" required maxlength="50">
+            </div>
+            <div>
+              <label for="new-status-colortext">Textfarbe (CSS)</label>
+              <input type="text" id="new-status-colortext" name="colorText"
+                     placeholder="#065f46" required maxlength="50">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="mft">
+        <button class="btn btn-ghost" type="button" onclick="closeModal('modal-new-status')">Abbrechen</button>
+        <button class="btn btn-pri" type="submit" form="new-status-form">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Bearbeiten -->
+  <div class="mbk hidden" id="modal-edit-status">
+    <div class="mbox">
+      <div class="mhd">
+        <h3>Positionsstatus bearbeiten</h3>
+        <button class="mx" type="button" onclick="closeModal('modal-edit-status')">&#x2715;</button>
+      </div>
+      <div class="mbody">
+        <form id="edit-status-form" method="post" action="#">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <div class="mb">
+            <label for="edit-status-description">Bezeichnung</label>
+            <input type="text" id="edit-status-description" name="description"
+                   required maxlength="255" autocomplete="off">
+          </div>
+          <div class="form-grid">
+            <div>
+              <label for="edit-status-color">Hintergrundfarbe (CSS)</label>
+              <input type="text" id="edit-status-color" name="color"
+                     required maxlength="50">
+            </div>
+            <div>
+              <label for="edit-status-colortext">Textfarbe (CSS)</label>
+              <input type="text" id="edit-status-colortext" name="colorText"
+                     required maxlength="50">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="mft">
+        <button class="btn btn-ghost" type="button" onclick="closeModal('modal-edit-status')">Abbrechen</button>
+        <button class="btn btn-pri" type="submit" form="edit-status-form">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-action="edit-status"]');
+      if (!btn) return;
+      document.getElementById('edit-status-form').action = '/admin/positionsstatus/' + btn.dataset.id;
+      document.getElementById('edit-status-description').value = btn.dataset.description;
+      document.getElementById('edit-status-color').value = btn.dataset.color;
+      document.getElementById('edit-status-colortext').value = btn.dataset.colortext;
+      document.getElementById('modal-edit-status').classList.remove('hidden');
+    });
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+  </script>
+
+</body>
+</html>
