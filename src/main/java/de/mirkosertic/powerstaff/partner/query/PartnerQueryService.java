@@ -195,6 +195,18 @@ public class PartnerQueryService {
                 .list();
     }
 
+    public List<PartnerContactView> findContactsByPartner(Long partnerId) {
+        return jdbcClient.sql("""
+                SELECT id, type, value, partner_id
+                FROM partner_contact
+                WHERE partner_id = :partnerId
+                ORDER BY type ASC, value ASC
+                """)
+                .param("partnerId", partnerId)
+                .query(PartnerContactView.class)
+                .list();
+    }
+
     private static boolean hasValue(String s) {
         return s != null && !s.isBlank();
     }
