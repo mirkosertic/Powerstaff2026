@@ -13,13 +13,13 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 ## Phase 0 – Querschnittsinfrastruktur
 
 ### 0.1 Spring Security – Formularlogin
-- [ ] `SecurityConfig` mit BCrypt-`PasswordEncoder` Bean, Form-Login (`/login`), Logout (`/logout`), CSRF via `CookieCsrfTokenRepository.withHttpOnlyFalse()`, alle Endpunkte authenticated
-- [ ] Aggregate `PsUser` (`id`, `username` UNIQUE, `passwordHash`, `enabled`) im Paket `de.mirkosertic.powerstaff.auth`
-- [ ] `PsUserRepository` (Spring Data JDBC)
-- [ ] `PsUserDetailsService` implementiert `UserDetailsService`, lädt Nutzer per `PsUserRepository`
-- [ ] Test: `PsUserRepositoryIT` extends `AbstractContainerBaseIT` – speichert und liest `PsUser`
-- [ ] Test: `SecurityIT` (`@SpringBootTest` + MockMvc): unauthentifiziert → 302 `/login`; POST mit falschen Credentials → Fehlerseite; POST mit richtigen Credentials → Redirect
-- [ ] Git-Commit
+- [x] `SecurityConfig` mit BCrypt-`PasswordEncoder` Bean, Form-Login (`/login`), Logout (`/logout`), CSRF via `CookieCsrfTokenRepository.withHttpOnlyFalse()`, alle Endpunkte authenticated
+- [x] Aggregate `PsUser` (`id`, `username` UNIQUE, `passwordHash`, `enabled`) im Paket `de.mirkosertic.powerstaff.auth`
+- [x] `PsUserRepository` (Spring Data JDBC)
+- [x] `PsUserDetailsService` implementiert `UserDetailsService`, lädt Nutzer per `PsUserRepository`
+- [x] Test: `PsUserRepositoryIT` extends `AbstractContainerBaseIT` – speichert und liest `PsUser`
+- [x] Test: `SecurityIT` (`@SpringBootTest` + MockMvc): unauthentifiziert → 302 `/login`; POST mit falschen Credentials → Fehlerseite; POST mit richtigen Credentials → Redirect
+- [x] Git-Commit
 
 ### 0.2 Auditing
 - [ ] `AuditingConfig` implementiert `AuditorAware<String>`: liefert `Authentication::getName` aus `SecurityContextHolder`; gibt `"system"` zurück wenn kein Login aktiv

@@ -959,6 +959,7 @@ Der Actuator ist ausschließlich auf `localhost` (`127.0.0.1`) erreichbar. Monit
 ```yaml
 management:
   server:
+    port: 8090
     address: 127.0.0.1
   endpoints:
     web:

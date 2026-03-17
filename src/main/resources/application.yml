@@ -18,16 +18,21 @@ spring:
     cache: true
     encoding: UTF-8
 
-  # Security – Session Cookie Flags
-  session:
-    cookie:
-      http-only: true
-      secure: true
-      same-site: strict
 
-# Actuator – nur auf localhost erreichbar (SWARCHITEKTUR.md §7)
+# Server – Bind-Adresse und Session-Cookie-Flags
+server:
+  address: 127.0.0.1
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: true
+        same-site: strict
+
+# Actuator – separater Port, nur auf localhost erreichbar (SWARCHITEKTUR.md §7)
 management:
   server:
+    port: 8090
     address: 127.0.0.1
   endpoints:
     web:
