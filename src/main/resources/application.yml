@@ -1,6 +1,8 @@
 spring:
   application:
     name: powerstaff
+  main:
+    allow-bean-definition-overriding: true
 
   # Flyway – Schema-Migration
   flyway:
