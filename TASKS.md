@@ -126,45 +126,45 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 ## Phase 2 – Modul `partner`
 
 ### 2.1 Partner – Domain & Repository
-- [ ] Aggregate `Partner` im Paket `de.mirkosertic.powerstaff.partner` mit allen Feldern gemäß PARTNER.md (Gruppen Adresse, Kontaktinformationen, Kommentar, Konditionen); `@Version` auf `dbVersion` ← Spalte `db_version`; `@CreatedDate creationDate`, `@LastModifiedDate lastModificationDate`, `@CreatedBy creationUserId`, `@LastModifiedBy lastModificationUserId`
-- [ ] `PartnerRepository` extends `CrudRepository<Partner, Long>`
-- [ ] Test: `PartnerRepositoryIT` extends `AbstractContainerBaseIT`: insert, findById, update (prüft `db_version` Inkrement), Optimistic-Locking-Konflikt (zwei parallele saves auf gleicher Version) → `OptimisticLockingFailureException`
-- [ ] Git-Commit
+- [x] Aggregate `Partner` im Paket `de.mirkosertic.powerstaff.partner` mit allen Feldern gemäß PARTNER.md (Gruppen Adresse, Kontaktinformationen, Kommentar, Konditionen); `@Version` auf `dbVersion` ← Spalte `db_version`; `@CreatedDate creationDate`, `@LastModifiedDate lastModificationDate`, `@CreatedBy creationUserId`, `@LastModifiedBy lastModificationUserId`
+- [x] `PartnerRepository` extends `CrudRepository<Partner, Long>`
+- [x] Test: `PartnerRepositoryIT` extends `AbstractContainerBaseIT`: insert, findById, update (prüft `db_version` Inkrement), Optimistic-Locking-Konflikt (zwei parallele saves auf gleicher Version) → `OptimisticLockingFailureException`
+- [x] Git-Commit
 
 ### 2.2 Partner – CommandService (save + delete)
-- [ ] `PartnerCommandService.save(Partner)`: speichert via `PartnerRepository`; fängt `OptimisticLockingFailureException` und wirft eigene `OptimisticLockingException` (enthält `changedBy`, `changedDate` des aktuellen DB-Stands)
-- [ ] `PartnerCommandService.delete(Long id)`: liest alle `project.partner_id = id` Einträge via `JdbcClient`; wenn vorhanden → wirft `EntityHasProjectsException(List<String> projectNumbers)`; sonst `partnerRepository.deleteById(id)`
-- [ ] `EntityHasProjectsException` als gemeinsame Exception-Klasse im Paket `de.mirkosertic.powerstaff.shared`
-- [ ] Test: `PartnerCommandServiceIT` extends `AbstractContainerBaseIT`: save neu, save update, delete ohne Projekte, delete mit Projekten → Exception mit Projektnummern
-- [ ] Git-Commit
+- [x] `PartnerCommandService.save(Partner)`: speichert via `PartnerRepository`; fängt `OptimisticLockingFailureException` und wirft eigene `OptimisticLockingException` (enthält `changedBy`, `changedDate` des aktuellen DB-Stands)
+- [x] `PartnerCommandService.delete(Long id)`: liest alle `project.partner_id = id` Einträge via `JdbcClient`; wenn vorhanden → wirft `EntityHasProjectsException(List<String> projectNumbers)`; sonst `partnerRepository.deleteById(id)`
+- [x] `EntityHasProjectsException` als gemeinsame Exception-Klasse im Paket `de.mirkosertic.powerstaff.shared`
+- [x] Test: `PartnerCommandServiceIT` extends `AbstractContainerBaseIT`: save neu, save update, delete ohne Projekte, delete mit Projekten → Exception mit Projektnummern
+- [x] Git-Commit
 
 ### 2.3 Partner – QueryService (Navigation + findById)
-- [ ] `PartnerQueryService` via `JdbcClient`:
+- [x] `PartnerQueryService` via `JdbcClient`:
   - `findById(Long)` → `Optional<Partner>`
   - `findFirst()` → `Optional<Partner>` (`ORDER BY id ASC LIMIT 1`)
   - `findLast()` → `Optional<Partner>` (`ORDER BY id DESC LIMIT 1`)
   - `findPrevious(Long currentId)` → `Optional<Partner>` (`WHERE id < :id ORDER BY id DESC LIMIT 1`)
   - `findNext(Long currentId)` → `Optional<Partner>` (`WHERE id > :id ORDER BY id ASC LIMIT 1`)
-- [ ] Test: `PartnerQueryServiceIT`: legt 3 Partner an, prüft alle 5 Navigationsmethoden
-- [ ] Git-Commit
+- [x] Test: `PartnerQueryServiceIT`: legt 3 Partner an, prüft alle 5 Navigationsmethoden
+- [x] Git-Commit
 
 ### 2.4 Partner – QueryService (QBE-Suche + Sublisten)
-- [ ] Record `PartnerSearchCriteria(String company, String name1, String name2, String street, String country, String plz, String city, String comments, String kreditorNr, String debitorNr)`
-- [ ] Record `PartnerSearchResult(Long id, String company, String name1, String name2, String city)` für Suchergebnis-Liste
-- [ ] `PartnerQueryService.search(PartnerSearchCriteria criteria, int offset, int limit)`: baut SQL mit `WHERE`-Klausel dynamisch über nicht-null/nicht-leere Felder (`LIKE '%:wert%'` per `JdbcClient` mit `SqlParameterSource`); niemals String-Konkatenation; `ORDER BY company ASC`
-- [ ] `PartnerQueryService.countSearch(PartnerSearchCriteria criteria)` → `long`
-- [ ] `PartnerQueryService.findFreelancersByPartnerId(Long partnerId, String sortField, String sortDir)` → `List<FreelancerListItem>` (Record mit: `id, code, name1, name2, company, availabilityAsDate, salaryLong`)
-- [ ] `PartnerQueryService.findProjectsByPartnerId(Long partnerId, String sortField, String sortDir)` → `List<ProjectListItem>` (Record mit: `id, projectNumber, descriptionShort, workplace, startDate, status`)
-- [ ] Test: `PartnerQueryServiceIT` ergänzt: QBE mit einem Feld (Treffer), QBE mit zwei Feldern (AND), QBE ohne Treffer, Sortierung Freelancer-Liste
-- [ ] Git-Commit
+- [x] Record `PartnerSearchCriteria(String company, String name1, String name2, String street, String country, String plz, String city, String comments, String kreditorNr, String debitorNr)`
+- [x] Record `PartnerSearchResult(Long id, String company, String name1, String name2, String city)` für Suchergebnis-Liste
+- [x] `PartnerQueryService.search(PartnerSearchCriteria criteria, int offset, int limit)`: baut SQL mit `WHERE`-Klausel dynamisch über nicht-null/nicht-leere Felder (`LIKE '%:wert%'` per `JdbcClient` mit `SqlParameterSource`); niemals String-Konkatenation; `ORDER BY company ASC`
+- [x] `PartnerQueryService.countSearch(PartnerSearchCriteria criteria)` → `long`
+- [x] `PartnerQueryService.findFreelancersByPartnerId(Long partnerId, String sortField, String sortDir)` → `List<FreelancerListItem>` (Record mit: `id, code, name1, name2, company, availabilityAsDate, salaryLong`)
+- [x] `PartnerQueryService.findProjectsByPartnerId(Long partnerId, String sortField, String sortDir)` → `List<ProjectListItem>` (Record mit: `id, projectNumber, descriptionShort, workplace, startDate, status`)
+- [x] Test: `PartnerQueryServiceIT` ergänzt: QBE mit einem Feld (Treffer), QBE mit zwei Feldern (AND), QBE ohne Treffer, Sortierung Freelancer-Liste
+- [x] Git-Commit
 
 ### 2.5 Partner – Kontaktmöglichkeiten (Domain + Service)
-- [ ] Aggregate `PartnerContact` (`id`, `type` als `String` ← Spalte `type`, `value`, `partnerId`, Audit-Felder `@CreatedDate`, `@LastModifiedDate`, `@CreatedBy`, `@LastModifiedBy`)
-- [ ] `PartnerContactRepository`
-- [ ] `PartnerContactCommandService`: `save(PartnerContact)`, `delete(Long contactId)`
-- [ ] `PartnerContactQueryService`: `findByPartnerId(Long partnerId)` → sortiert nach `ContactType`-Reihenfolge (CASE WHEN in SQL), dann `id ASC`
-- [ ] Test: `PartnerContactRepositoryIT`: insert, findByPartnerId (Sortierung), delete
-- [ ] Git-Commit
+- [x] Aggregate `PartnerContact` (`id`, `type` als `String` ← Spalte `type`, `value`, `partnerId`, Audit-Felder `@CreatedDate`, `@LastModifiedDate`, `@CreatedBy`, `@LastModifiedBy`)
+- [x] `PartnerContactRepository`
+- [x] `PartnerContactCommandService`: `save(PartnerContact)`, `delete(Long contactId)`
+- [x] `PartnerContactQueryService`: `findByPartnerId(Long partnerId)` → sortiert nach `ContactType`-Reihenfolge (CASE WHEN in SQL), dann `id ASC`
+- [x] Test: `PartnerContactRepositoryIT`: insert, findByPartnerId (Sortierung), delete
+- [x] Git-Commit
 
 ### 2.6 Partner – Kontakthistorie (Domain + Service)
 - [ ] Aggregate `PartnerHistory` (`id`, `description`, `typeId` ← `type_id` FK → `historytype`, `partnerId`, Audit-Felder)
