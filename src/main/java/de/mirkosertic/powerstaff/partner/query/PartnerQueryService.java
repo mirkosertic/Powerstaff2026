@@ -207,6 +207,20 @@ public class PartnerQueryService {
                 .list();
     }
 
+    public List<PartnerHistoryView> findHistoryByPartner(Long partnerId) {
+        return jdbcClient.sql("""
+                SELECT ph.id, ph.creation_date, ph.creation_user, ph.changed_date, ph.changed_user,
+                       ph.description, ph.type_id, ht.description AS type_description, ph.partner_id
+                FROM partner_history ph
+                JOIN historytype ht ON ht.id = ph.type_id
+                WHERE ph.partner_id = :partnerId
+                ORDER BY ph.creation_date DESC
+                """)
+                .param("partnerId", partnerId)
+                .query(PartnerHistoryView.class)
+                .list();
+    }
+
     private static boolean hasValue(String s) {
         return s != null && !s.isBlank();
     }

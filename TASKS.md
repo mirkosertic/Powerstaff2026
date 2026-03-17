@@ -167,12 +167,12 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 2.6 Partner – Kontakthistorie (Domain + Service)
-- [ ] Aggregate `PartnerHistory` (`id`, `description`, `typeId` ← `type_id` FK → `historytype`, `partnerId`, Audit-Felder)
-- [ ] `PartnerHistoryRepository`
-- [ ] `PartnerHistoryCommandService`: `save(PartnerHistory)`, `delete(Long historyId)`
-- [ ] `PartnerHistoryQueryService`: `findByPartnerId(Long partnerId)` → JOIN `historytype` für `typeDescription`, sortiert `creation_date DESC`
-- [ ] Test: `PartnerHistoryRepositoryIT`: insert mit `typeId`, findByPartnerId (Sortierung), delete
-- [ ] Git-Commit
+- [x] Aggregate `PartnerHistory` (`id`, `description`, `typeId` ← `type_id` FK → `historytype`, `partnerId`, Audit-Felder)
+- [x] `PartnerHistoryRepository`
+- [x] `PartnerHistoryCommandService`: `save(PartnerHistory)`, `delete(Long historyId)`
+- [x] `PartnerHistoryQueryService`: `findByPartnerId(Long partnerId)` → JOIN `historytype` für `typeDescription`, sortiert `creation_date DESC`
+- [x] Test: `PartnerHistoryRepositoryIT`: insert mit `typeId`, findByPartnerId (Sortierung), delete
+- [x] Git-Commit
 
 ### 2.7 Partner – Controller (CRUD + Navigation)
 - [ ] `PartnerController`:
