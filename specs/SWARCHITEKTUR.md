@@ -1689,3 +1689,39 @@ Alle Datenbankobjekte (Tabellen, Spalten, Indizes, Constraints) werden ausschlie
 - `lower_case_table_names=1` muss bei der Produktionsdatenbank zum Initialisierungszeitpunkt gesetzt sein
 - Bestehende Audit-Spalten folgen der Spring-Data-JDBC-Konvention: `created_at`, `created_by`, `last_modified_at`, `last_modified_by`
 
+### ADR-017: Stateless HTTP-Endpunkte – kein HttpSession
+
+**Status:** Akzeptiert
+
+**Kontext:**
+Der initiale `PartnerController` speicherte zwei Arten von Zustand in der HTTP-Session: (1) die zuletzt
+angezeigte Partner-ID zur Navigation und (2) die QBE-Suchkriterien für Infinite-Scroll-Pagination.
+Sessions erfordern serverseitigen Speicher, erschweren horizontales Skalieren und stehen im Widerspruch
+zum Grundsatz (Abschnitt 5), dass "kein fachlicher Zustand ausschließlich in Browser-Session oder
+JS-State gespeichert" sein soll.
+
+**Entscheidung:**
+Alle HTTP-Endpunkte der Anwendung sind zustandslos (kein `HttpSession`). Stattdessen:
+
+1. **Zuletzt angezeigter Datensatz** (z. B. "last partner"): Wird als kurzlebiges Browser-Cookie
+   (30 Tage, gleiches Path-Präfix) gespeichert. Der Server schreibt das Cookie beim Laden eines
+   Datensatzes (`GET /{modul}/{id}`) und löscht es beim Öffnen des Neuanlage-Formulars.
+   Der `GET /{modul}`-Einstiegspunkt liest den Wert via `@CookieValue(required = false)`.
+
+2. **QBE-Suchkriterien für Pagination** (Infinite Scroll): Alle Suchfelder werden als URL-Query-
+   Parameter in den `X-Next-Url`-Header kodiert. Der Client übergibt dieselben Parameter beim
+   nächsten `GET /{modul}/search-more`-Request. Spring MVC bindet sie via `@ModelAttribute`.
+
+**Begründung:**
+- Cookies sind explizit erlaubt (Authentifizierungstoken ist ein Cookie); sie stellen keinen
+  serverseitigen Zustand dar
+- URL-Parameter sind bookmarkbar, transparent und reproduzierbar (Grundsatz Abschnitt 5)
+- Kein Session-Affinity beim Skalieren notwendig; vereinfacht die Testbarkeit
+
+**Konsequenzen:**
+- `HttpSession` ist in Controllers **verboten** — kein `session.getAttribute`/`session.setAttribute`
+- Zuletzt-angezeigt-Cookies werden pro Modul und pro Browser gespeichert (Path-Cookie)
+- Jeder Controller implementiert eine `buildSearchMoreUrl`-Hilfsmethode, die alle Criteria-Felder
+  als Query-Parameter kodiert (null-Felder werden weggelassen)
+- `@CookieValue(required = false)` für optionale Cookie-Lesezugriffe verwenden
+

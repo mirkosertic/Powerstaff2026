@@ -33,6 +33,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
@@ -90,7 +92,7 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         when(queryService.countSearch(any())).thenReturn(1L)
     }
 
-    def "GET /partner leitet auf letzten oder ersten Partner weiter (302)"() {
+    def "GET /partner ohne Cookie leitet auf ersten Partner weiter (302)"() {
         when:
         def result = mockMvc.perform(get("/partner").with(user("testuser")))
 
@@ -98,22 +100,36 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().is3xxRedirection())
     }
 
-    def "GET /partner/{id} liefert HTTP 200 und rendert das Template"() {
+    def "GET /partner mit lastPartnerId-Cookie leitet auf diesen Partner weiter (302)"() {
+        when:
+        def result = mockMvc.perform(
+                get("/partner")
+                        .with(user("testuser"))
+                        .cookie(new jakarta.servlet.http.Cookie("lastPartnerId", "42")))
+
+        then:
+        result.andExpect(status().is3xxRedirection())
+              .andExpect(header().string("Location", "/partner/42"))
+    }
+
+    def "GET /partner/{id} liefert HTTP 200, rendert Template und setzt lastPartnerId-Cookie"() {
         when:
         def result = mockMvc.perform(get("/partner/42").with(user("testuser")))
 
         then:
         result.andExpect(status().isOk())
               .andExpect(view().name("partner/form"))
+              .andExpect(cookie().value("lastPartnerId", "42"))
     }
 
-    def "GET /partner/new liefert HTTP 200 und rendert das Template"() {
+    def "GET /partner/new liefert HTTP 200, rendert Template und loescht lastPartnerId-Cookie"() {
         when:
         def result = mockMvc.perform(get("/partner/new").with(user("testuser")))
 
         then:
         result.andExpect(status().isOk())
               .andExpect(view().name("partner/form"))
+              .andExpect(cookie().maxAge("lastPartnerId", 0))
     }
 
     def "GET /partner/first leitet auf ersten Partner weiter (302)"() {

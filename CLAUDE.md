@@ -115,6 +115,10 @@ spring.sql.init.mode=always
 
 // ❌ H2 in Tests
 @AutoConfigureTestDatabase  // ohne replace=NONE – verboten
+
+// ❌ HttpSession in Controllers (ADR-017)
+// session.getAttribute(...), session.setAttribute(...)
+// Stattdessen: Cookie für "last viewed", URL-Parameter für Suchkriterien-Pagination
 ```
 
 ---

@@ -6,14 +6,15 @@ import de.mirkosertic.powerstaff.partner.command.PartnerHasProjectsException;
 import de.mirkosertic.powerstaff.partner.query.PartnerFreelancerView;
 import de.mirkosertic.powerstaff.partner.query.PartnerQueryService;
 import de.mirkosertic.powerstaff.partner.query.PartnerSearchCriteria;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,8 +33,8 @@ import java.util.Map;
 @RequestMapping("/partner")
 public class PartnerController {
 
-    private static final String SESSION_LAST_PARTNER_ID = "lastPartnerId";
-    private static final String SESSION_SEARCH_CRITERIA = "partnerSearchCriteria";
+    private static final String COOKIE_LAST_PARTNER_ID = "lastPartnerId";
+    private static final int COOKIE_MAX_AGE = 30 * 24 * 60 * 60; // 30 days
     private static final int PAGE_SIZE = 20;
 
     private final PartnerCommandService commandService;
@@ -52,8 +54,7 @@ public class PartnerController {
     // -------------------------------------------------------------------------
 
     @GetMapping
-    public String index(HttpSession session) {
-        Long lastId = (Long) session.getAttribute(SESSION_LAST_PARTNER_ID);
+    public String index(@CookieValue(name = COOKIE_LAST_PARTNER_ID, required = false) Long lastId) {
         if (lastId != null && queryService.findById(lastId).isPresent()) {
             return "redirect:/partner/" + lastId;
         }
@@ -95,9 +96,12 @@ public class PartnerController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/{id}")
-    public String show(@PathVariable Long id, HttpSession session, Model model) {
+    public String show(@PathVariable Long id, HttpServletResponse response, Model model) {
         var partner = commandService.findById(id).orElseThrow();
-        session.setAttribute(SESSION_LAST_PARTNER_ID, id);
+        var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, String.valueOf(id));
+        cookie.setPath("/partner");
+        cookie.setMaxAge(COOKIE_MAX_AGE);
+        response.addCookie(cookie);
         model.addAttribute("partner", partner);
         model.addAttribute("contacts", queryService.findContactsByPartner(id));
         model.addAttribute("history", queryService.findHistoryByPartner(id));
@@ -108,8 +112,11 @@ public class PartnerController {
     }
 
     @GetMapping("/new")
-    public String newForm(HttpSession session, Model model) {
-        session.removeAttribute(SESSION_LAST_PARTNER_ID);
+    public String newForm(HttpServletResponse response, Model model) {
+        var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, "");
+        cookie.setPath("/partner");
+        cookie.setMaxAge(0); // delete
+        response.addCookie(cookie);
         model.addAttribute("partner", new Partner());
         model.addAttribute("contacts", java.util.List.of());
         model.addAttribute("history", java.util.List.of());
@@ -161,35 +168,44 @@ public class PartnerController {
 
     @PostMapping("/search")
     public String search(@ModelAttribute PartnerSearchCriteria criteria,
-                         HttpSession session,
                          Model model) {
-        session.setAttribute(SESSION_SEARCH_CRITERIA, criteria);
         var results = queryService.search(criteria, 0, PAGE_SIZE);
         long total = queryService.countSearch(criteria);
         model.addAttribute("results", results);
         model.addAttribute("totalCount", total);
-        String nextUrl = results.size() == PAGE_SIZE ? "/partner/search-more?offset=" + PAGE_SIZE : null;
+        String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
         model.addAttribute("nextUrl", nextUrl);
         return "partner/search-results :: results";
     }
 
     @GetMapping("/search-more")
-    public String searchMore(@RequestParam int offset,
-                             HttpSession session,
+    public String searchMore(@ModelAttribute PartnerSearchCriteria criteria,
+                             @RequestParam int offset,
                              Model model,
                              HttpServletResponse response) {
-        var criteria = (PartnerSearchCriteria) session.getAttribute(SESSION_SEARCH_CRITERIA);
-        if (criteria == null) {
-            criteria = PartnerSearchCriteria.empty();
-        }
         var results = queryService.search(criteria, offset, PAGE_SIZE);
         int nextOffset = offset + PAGE_SIZE;
         long total = queryService.countSearch(criteria);
         if (nextOffset < total) {
-            response.setHeader("X-Next-Url", "/partner/search-more?offset=" + nextOffset);
+            response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
         }
         model.addAttribute("results", results);
         return "partner/search-results :: results";
+    }
+
+    private String buildSearchMoreUrl(PartnerSearchCriteria criteria, int offset) {
+        var b = UriComponentsBuilder.fromPath("/partner/search-more").queryParam("offset", offset);
+        if (criteria.company()    != null) b.queryParam("company",    criteria.company());
+        if (criteria.name1()      != null) b.queryParam("name1",      criteria.name1());
+        if (criteria.name2()      != null) b.queryParam("name2",      criteria.name2());
+        if (criteria.street()     != null) b.queryParam("street",     criteria.street());
+        if (criteria.country()    != null) b.queryParam("country",    criteria.country());
+        if (criteria.plz()        != null) b.queryParam("plz",        criteria.plz());
+        if (criteria.city()       != null) b.queryParam("city",       criteria.city());
+        if (criteria.comments()   != null) b.queryParam("comments",   criteria.comments());
+        if (criteria.debitorNr()  != null) b.queryParam("debitorNr",  criteria.debitorNr());
+        if (criteria.kreditorNr() != null) b.queryParam("kreditorNr", criteria.kreditorNr());
+        return b.build().toUriString();
     }
 
     // -------------------------------------------------------------------------
