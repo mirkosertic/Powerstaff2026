@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('Partner', 'partner', ~{::body})}">
+<body>
+
+  <!-- Toolbar -->
+  <div th:replace="~{fragments/toolbar :: toolbar(
+      'Partner',
+      @{/partner/first},
+      @{/partner/previous/{id}(id=${partner.id})},
+      ${partner.id},
+      @{/partner/next/{id}(id=${partner.id})},
+      @{/partner/last},
+      @{/partner/new},
+      'partner-form',
+      ${partner.id != null} ? '#delete-modal' : null,
+      null)}">
+  </div>
+
+  <!-- Page Content -->
+  <div id="page">
+
+    <form id="partner-form" th:action="@{/partner/save}" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <input type="hidden" name="id" th:value="${partner.id}"/>
+      <input type="hidden" name="dbVersion" th:value="${partner.dbVersion}"/>
+
+      <!-- Kontaktsperre-Banner -->
+      <div class="banner banner-error" th:if="${partner.contactForbidden}">
+        Kontaktsperre aktiv – keine Kontaktaufnahme erlaubt.
+      </div>
+
+      <!-- Adresse -->
+      <div class="fcard">
+        <h2>Adresse</h2>
+        <div class="field-grid col-2">
+          <label>Firma
+            <input type="text" name="company" th:value="${partner.company}"/>
+          </label>
+          <label>Name 1
+            <input type="text" name="name1" th:value="${partner.name1}"/>
+          </label>
+          <label>Name 2
+            <input type="text" name="name2" th:value="${partner.name2}"/>
+          </label>
+          <label>Straße
+            <input type="text" name="street" th:value="${partner.street}"/>
+          </label>
+          <label>PLZ
+            <input type="text" name="plz" th:value="${partner.plz}"/>
+          </label>
+          <label>Ort
+            <input type="text" name="city" th:value="${partner.city}"/>
+          </label>
+          <label>Land
+            <input type="text" name="country" th:value="${partner.country}"/>
+          </label>
+        </div>
+      </div>
+
+      <!-- Konditionen -->
+      <div class="fcard">
+        <h2>Konditionen</h2>
+        <div class="field-grid col-2">
+          <label>Debitor-Nr
+            <input type="text" name="debitorNr" th:value="${partner.debitorNr}"/>
+          </label>
+          <label>Kreditor-Nr
+            <input type="text" name="kreditorNr" th:value="${partner.kreditorNr}"/>
+          </label>
+          <label class="checkbox-pill">
+            <input type="checkbox" name="contactForbidden" th:checked="${partner.contactForbidden}"/>
+            Kontaktsperre
+          </label>
+          <label class="checkbox-pill">
+            <input type="checkbox" name="showAgain" th:checked="${partner.showAgain}"/>
+            Wieder vorlegen
+          </label>
+        </div>
+      </div>
+
+      <!-- Kommentar -->
+      <div class="fcard">
+        <h2>Kommentar</h2>
+        <textarea name="comments" rows="4" th:text="${partner.comments}"></textarea>
+      </div>
+
+    </form>
+
+    <!-- Kontaktmöglichkeiten -->
+    <div class="fcard" th:if="${partner.id != null}">
+      <h2>Kontaktmöglichkeiten</h2>
+      <div th:replace="~{fragments/contact-list :: contactList(${contacts}, null, null)}"></div>
+    </div>
+
+    <!-- Kontakthistorie -->
+    <div class="fcard" th:if="${partner.id != null}">
+      <h2>Kontakthistorie</h2>
+      <table class="data-table" th:if="${!history.isEmpty()}">
+        <thead>
+          <tr>
+            <th>Typ</th>
+            <th>Erfasst am</th>
+            <th>Erfasst von</th>
+            <th>Beschreibung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="entry : ${history}">
+            <td th:text="${entry.typeDescription}"></td>
+            <td th:text="${entry.creationDate}"></td>
+            <td th:text="${entry.creationUser}"></td>
+            <td th:text="${entry.description}"></td>
+          </tr>
+        </tbody>
+      </table>
+      <p th:if="${history.isEmpty()}">Keine Historieneinträge vorhanden.</p>
+    </div>
+
+    <!-- Freiberufler -->
+    <div class="fcard col-wide" th:if="${partner.id != null}">
+      <h2>Zugeordnete Freiberufler</h2>
+      <table class="data-table" th:if="${!freelancers.isEmpty()}">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name 1</th>
+            <th>Name 2</th>
+            <th>Firma</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="fl : ${freelancers}">
+            <td th:text="${fl.code}"></td>
+            <td th:text="${fl.name1}"></td>
+            <td th:text="${fl.name2}"></td>
+            <td th:text="${fl.company}"></td>
+          </tr>
+        </tbody>
+      </table>
+      <p th:if="${freelancers.isEmpty()}">Keine Freiberufler zugeordnet.</p>
+    </div>
+
+    <!-- Projekte -->
+    <div class="fcard col-wide" th:if="${partner.id != null}">
+      <h2>Projekte</h2>
+      <table class="data-table" th:if="${!projects.isEmpty()}">
+        <thead>
+          <tr>
+            <th>Projektnummer</th>
+            <th>Kurzbeschreibung</th>
+            <th>Einsatzort</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="proj : ${projects}">
+            <td th:text="${proj.projectNumber}"></td>
+            <td th:text="${proj.descriptionShort}"></td>
+            <td th:text="${proj.workplace}"></td>
+          </tr>
+        </tbody>
+      </table>
+      <p th:if="${projects.isEmpty()}">Keine Projekte vorhanden.</p>
+    </div>
+
+    <!-- Audit-Info -->
+    <div class="fcard" th:if="${partner.id != null}">
+      <p>Erfasst: <span th:text="${partner.creationDate}"></span> von <span th:text="${partner.creationUser}"></span></p>
+      <p>Geändert: <span th:text="${partner.changedDate}"></span> von <span th:text="${partner.changedUser}"></span></p>
+    </div>
+
+  </div><!-- /#page -->
+
+</body>
+</html>

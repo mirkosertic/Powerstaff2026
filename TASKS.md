@@ -175,15 +175,15 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 2.7 Partner – Controller (CRUD + Navigation)
-- [ ] `PartnerController`:
+- [x] `PartnerController`:
   - GET `/partner`: lädt letzten Partner aus Session-Attribut `lastPartnerId`; wenn nicht vorhanden → `partnerQueryService.findFirst()`; Model: `partner`, `rememberedProject`; rendert `partner/form.html`
   - GET `/partner/{id}`: lädt Partner, setzt Session `lastPartnerId`; rendert `partner/form.html`
   - GET `/partner/new`: löscht Session `lastPartnerId`; rendert `partner/form.html` mit leerem `Partner`
   - GET `/partner/first` / `/partner/last` / `/partner/previous/{id}` / `/partner/next/{id}`: Navigation → Redirect zu `/partner/{id}` oder `/partner/new` wenn kein Ergebnis
   - POST `/partner/save`: bindet `@ModelAttribute Partner`; ruft `partnerCommandService.save()`; bei `OptimisticLockingException` → JSON `{"conflict": true, "changedBy": "...", "changedDate": "..."}` mit Status 409; bei Erfolg → Redirect zu `/partner/{id}`
   - POST `/partner/delete/{id}`: ruft `partnerCommandService.delete()`; bei `EntityHasProjectsException` → JSON `{"blocked": true, "projectNumbers": [...]}` mit Status 409; bei Erfolg → Redirect zu `/partner/new`
-- [ ] Test: `@WebMvcTest PartnerControllerIT` mit `@MockBean` für Services: GET `/partner` → 200; GET `/partner/{id}` → 200; Navigation → 302; POST `/partner/save` Erfolg → 302; POST `/partner/save` Konflikt → 409 JSON; POST `/partner/delete` geblockt → 409 JSON
-- [ ] Git-Commit
+- [x] Test: `@WebMvcTest PartnerControllerIT` mit `@MockBean` für Services: GET `/partner` → 200; GET `/partner/{id}` → 200; Navigation → 302; POST `/partner/save` Erfolg → 302; POST `/partner/save` Konflikt → 409 JSON; POST `/partner/delete` geblockt → 409 JSON
+- [x] Git-Commit
 
 ### 2.8 Partner – Controller (Suche + Freelancer-Zuordnung)
 - [ ] POST `/partner/search`: bindet `PartnerSearchCriteria`; speichert Criteria in Session; ruft `search(criteria, 0, 20)`; rendert `partner/search-results.html` als Fragment
