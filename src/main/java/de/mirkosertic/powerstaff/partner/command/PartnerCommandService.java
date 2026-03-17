@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,13 +45,13 @@ public class PartnerCommandService {
                         List<PartnerContactEntry> contacts,
                         List<PartnerHistoryEntry> history) {
         Partner saved = partnerRepository.save(partner);
-        Long partnerId = saved.getId();
+        long partnerId = saved.getId();
         replaceContacts(partnerId, contacts);
         replaceHistory(partnerId, history);
         return saved;
     }
 
-    private void replaceContacts(Long partnerId, List<PartnerContactEntry> entries) {
+    private void replaceContacts(long partnerId, List<PartnerContactEntry> entries) {
         Set<Long> submittedIds = entries.stream()
                 .filter(e -> e.id() != null)
                 .map(PartnerContactEntry::id)
@@ -61,20 +62,27 @@ public class PartnerCommandService {
                 .forEach(c -> contactRepository.deleteById(c.getId()));
 
         for (PartnerContactEntry entry : entries) {
-            PartnerContact contact;
             if (entry.id() != null) {
-                contact = contactRepository.findById(entry.id()).orElseGet(PartnerContact::new);
+                contactRepository.findById(entry.id()).ifPresent(contact -> {
+                    boolean changed = !Objects.equals(entry.type(), contact.getType())
+                            || !Objects.equals(entry.value(), contact.getValue());
+                    if (changed) {
+                        contact.setType(entry.type());
+                        contact.setValue(entry.value());
+                        contactRepository.save(contact);
+                    }
+                });
             } else {
-                contact = new PartnerContact();
+                PartnerContact contact = new PartnerContact();
+                contact.setType(entry.type());
+                contact.setValue(entry.value());
+                contact.setPartnerId(partnerId);
+                contactRepository.save(contact);
             }
-            contact.setType(entry.type());
-            contact.setValue(entry.value());
-            contact.setPartnerId(partnerId);
-            contactRepository.save(contact);
         }
     }
 
-    private void replaceHistory(Long partnerId, List<PartnerHistoryEntry> entries) {
+    private void replaceHistory(long partnerId, List<PartnerHistoryEntry> entries) {
         Set<Long> submittedIds = entries.stream()
                 .filter(e -> e.id() != null)
                 .map(PartnerHistoryEntry::id)
@@ -85,16 +93,23 @@ public class PartnerCommandService {
                 .forEach(h -> historyRepository.deleteById(h.getId()));
 
         for (PartnerHistoryEntry entry : entries) {
-            PartnerHistory history;
             if (entry.id() != null) {
-                history = historyRepository.findById(entry.id()).orElseGet(PartnerHistory::new);
+                historyRepository.findById(entry.id()).ifPresent(history -> {
+                    boolean changed = !Objects.equals(entry.description(), history.getDescription())
+                            || !Objects.equals(entry.typeId(), history.getTypeId());
+                    if (changed) {
+                        history.setDescription(entry.description());
+                        history.setTypeId(entry.typeId());
+                        historyRepository.save(history);
+                    }
+                });
             } else {
-                history = new PartnerHistory();
+                PartnerHistory history = new PartnerHistory();
+                history.setDescription(entry.description());
+                history.setTypeId(entry.typeId());
+                history.setPartnerId(partnerId);
+                historyRepository.save(history);
             }
-            history.setDescription(entry.description());
-            history.setTypeId(entry.typeId());
-            history.setPartnerId(partnerId);
-            historyRepository.save(history);
         }
     }
 

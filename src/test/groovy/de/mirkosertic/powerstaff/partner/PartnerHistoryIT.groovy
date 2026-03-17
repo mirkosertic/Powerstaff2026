@@ -83,6 +83,26 @@ class PartnerHistoryIT extends AbstractContainerBaseIT {
         list[0].description() == "IT-History neuer Text"
     }
 
+    def "Historieneintrag unveraendert speichern beruehrt changed_date nicht (Audit Trail)"() {
+        given:
+        def partner = partnerService.save(newPartner("IT-History NoAudit GmbH"),
+                [],
+                [new PartnerHistoryEntry(null, historyTypeId, "IT-History unveraenderter Text")])
+        def historyId = queryService.findHistoryByPartner(partner.id)[0].id()
+        def changedDateBefore = jdbcClient.sql("SELECT changed_date FROM partner_history WHERE id = :id")
+                .param("id", historyId).query(String.class).single()
+
+        when:
+        partnerService.save(partner,
+                [],
+                [new PartnerHistoryEntry(historyId, historyTypeId, "IT-History unveraenderter Text")])
+
+        then:
+        def changedDateAfter = jdbcClient.sql("SELECT changed_date FROM partner_history WHERE id = :id")
+                .param("id", historyId).query(String.class).single()
+        changedDateAfter == changedDateBefore
+    }
+
     def "mehrere Eintraege werden absteigend nach creation_date sortiert"() {
         given:
         def partner = partnerService.save(newPartner("IT-History Sort GmbH"), [], [])

@@ -73,6 +73,26 @@ class PartnerContactIT extends AbstractContainerBaseIT {
         list[0].value() == "IT-Contact http://new.example.com"
     }
 
+    def "Kontakt unveraendert speichern beruehrt changed_date nicht (Audit Trail)"() {
+        given:
+        def partner = partnerService.save(newPartner("IT-Contact NoAudit GmbH"),
+                [new PartnerContactEntry(null, "EMAIL", "IT-Contact audit@example.com")],
+                [])
+        def contactId = queryService.findContactsByPartner(partner.id)[0].id()
+        def changedDateBefore = jdbcClient.sql("SELECT changed_date FROM partner_contact WHERE id = :id")
+                .param("id", contactId).query(String.class).single()
+
+        when:
+        partnerService.save(partner,
+                [new PartnerContactEntry(contactId, "EMAIL", "IT-Contact audit@example.com")],
+                [])
+
+        then:
+        def changedDateAfter = jdbcClient.sql("SELECT changed_date FROM partner_contact WHERE id = :id")
+                .param("id", contactId).query(String.class).single()
+        changedDateAfter == changedDateBefore
+    }
+
     def "findContactsByPartner fuer Partner ohne Kontakte liefert leere Liste"() {
         given:
         def partner = partnerService.save(newPartner("IT-Contact Empty GmbH"), [], [])
