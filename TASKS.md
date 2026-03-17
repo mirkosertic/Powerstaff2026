@@ -195,10 +195,10 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 2.9 Partner – Kontakt- und Historien-Controller (AJAX)
-- [ ] `PartnerContactController`: POST `/partner/{id}/contacts` (JSON Body: `type`, `value`) → speichert, gibt aktualisierte Kontaktliste als JSON zurück; DELETE `/partner/{id}/contacts/{contactId}` → löscht, gibt aktualisierte Liste zurück
-- [ ] `PartnerHistoryController`: POST `/partner/{id}/history` (JSON Body: `typeId`, `description`) → speichert; PUT `/partner/{id}/history/{hId}` → aktualisiert; DELETE `/partner/{id}/history/{hId}` → löscht; jeweils → JSON `{ok: true}` oder Fehler
-- [ ] Test: `PartnerContactControllerIT`, `PartnerHistoryControllerIT` mit MockMvc + `@MockBean`
-- [ ] Git-Commit
+- [x] `PartnerContactController`: POST `/partner/{id}/contacts` (JSON Body: `type`, `value`) → speichert, gibt aktualisierte Kontaktliste als JSON zurück; DELETE `/partner/{id}/contacts/{contactId}` → löscht, gibt aktualisierte Liste zurück
+- [x] `PartnerHistoryController`: POST `/partner/{id}/history` (JSON Body: `typeId`, `description`) → speichert; PUT `/partner/{id}/history/{hId}` → aktualisiert; DELETE `/partner/{id}/history/{hId}` → löscht; jeweils → JSON `{ok: true}` oder Fehler
+- [x] Test: `PartnerContactControllerIT`, `PartnerHistoryControllerIT` mit MockMvc + `@MockBean`
+- [x] Git-Commit
 
 ### 2.10 Partner – Thymeleaf Template: Hauptformular
 - [ ] `partner/form.html`: bindet `fragments/layout.html`; `fragments/toolbar.html` mit Navigations-Buttons (Erste, Zurück, Weiter, Letzte, ID-Eingabe), Neu-Button, Speichern-Button, Löschen-Button; Formular-Karten für Adresse, Kontaktinformationen, Kommentar, Konditionen; Audit-Info-Zeile (Erfasst am/von, Geändert am/von); bindet `fragments/contact-list.html` für Kontaktmöglichkeiten

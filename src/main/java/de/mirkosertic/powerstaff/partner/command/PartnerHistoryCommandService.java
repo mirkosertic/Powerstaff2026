@@ -3,6 +3,8 @@ package de.mirkosertic.powerstaff.partner.command;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class PartnerHistoryCommandService {
@@ -15,6 +17,11 @@ public class PartnerHistoryCommandService {
 
     public PartnerHistory save(PartnerHistory history) {
         return historyRepository.save(history);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<PartnerHistory> findById(Long historyId) {
+        return historyRepository.findById(historyId);
     }
 
     public void deleteById(Long historyId) {
