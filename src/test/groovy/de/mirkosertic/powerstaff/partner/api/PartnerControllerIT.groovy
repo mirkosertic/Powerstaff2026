@@ -76,6 +76,7 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         when(commandService.findById(42L)).thenReturn(Optional.of(testPartner))
         when(commandService.findById(-999L)).thenReturn(Optional.empty())
         when(commandService.save(any())).thenReturn(testPartner)
+        when(commandService.save(any(), any(), any())).thenReturn(testPartner)
 
         when(queryService.findFirst()).thenReturn(Optional.of(detailView))
         when(queryService.findLast()).thenReturn(Optional.of(detailView))
@@ -164,7 +165,7 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().is3xxRedirection())
     }
 
-    def "POST /partner/save Erfolg leitet auf Partner-Formular weiter (302)"() {
+    def "POST /partner/save ohne Kontakte und Historie leitet auf Partner-Formular weiter (302)"() {
         when:
         def result = mockMvc.perform(
                 post("/partner/save")
@@ -172,16 +173,31 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
                         .with(user("testuser"))
                         .param("id", "42")
                         .param("dbVersion", "0")
-                        .param("company", "Test GmbH"))
+                        .param("company", "Test GmbH")
+                        .param("contactsJson", "[]")
+                        .param("historyJson", "[]"))
 
         then:
         result.andExpect(status().is3xxRedirection())
     }
 
-    def "POST /partner/save bei OptimisticLockingFailureException gibt 409 JSON zurueck"() {
-        given:
-        when(commandService.save(any())).thenThrow(new OptimisticLockingFailureException("conflict"))
+    def "POST /partner/save mit Kontakten und Historieneintraegen leitet weiter (302)"() {
+        when:
+        def result = mockMvc.perform(
+                post("/partner/save")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("id", "42")
+                        .param("dbVersion", "0")
+                        .param("company", "Test GmbH")
+                        .param("contactsJson", '[{"id":null,"type":"EMAIL","value":"info@example.com"}]')
+                        .param("historyJson", '[{"id":null,"typeId":1,"description":"Erstkontakt"}]'))
 
+        then:
+        result.andExpect(status().is3xxRedirection())
+    }
+
+    def "POST /partner/save ohne contactsJson und historyJson verwendet leere Listen (302)"() {
         when:
         def result = mockMvc.perform(
                 post("/partner/save")
@@ -189,6 +205,24 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
                         .with(user("testuser"))
                         .param("id", "42")
                         .param("dbVersion", "0"))
+
+        then:
+        result.andExpect(status().is3xxRedirection())
+    }
+
+    def "POST /partner/save bei OptimisticLockingFailureException gibt 409 JSON zurueck"() {
+        given:
+        when(commandService.save(any(), any(), any())).thenThrow(new OptimisticLockingFailureException("conflict"))
+
+        when:
+        def result = mockMvc.perform(
+                post("/partner/save")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("id", "42")
+                        .param("dbVersion", "0")
+                        .param("contactsJson", "[]")
+                        .param("historyJson", "[]"))
 
         then:
         result.andExpect(status().isConflict())

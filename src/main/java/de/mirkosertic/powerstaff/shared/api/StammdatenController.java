@@ -73,7 +73,7 @@ public class StammdatenController {
     }
 
     @PostMapping("/historientypen/{id}")
-    public String updateHistoryType(@PathVariable Long id,
+    public String updateHistoryType(@PathVariable long id,
                                     @RequestParam String description) {
         stammdatenCommandService.findHistoryTypeById(id).ifPresent(ht -> {
             ht.setDescription(description);
@@ -83,7 +83,7 @@ public class StammdatenController {
     }
 
     @PostMapping("/historientypen/{id}/delete")
-    public String deleteHistoryType(@PathVariable Long id) {
+    public String deleteHistoryType(@PathVariable long id) {
         stammdatenCommandService.deleteHistoryType(id);
         return "redirect:/admin/historientypen";
     }
@@ -107,7 +107,7 @@ public class StammdatenController {
     }
 
     @PostMapping("/positionsstatus/{id}")
-    public String updatePositionsStatus(@PathVariable Long id,
+    public String updatePositionsStatus(@PathVariable long id,
                                         @RequestParam String description,
                                         @RequestParam String color,
                                         @RequestParam String colorText) {
@@ -146,7 +146,7 @@ public class StammdatenController {
     }
 
     @PostMapping("/tags/{id}")
-    public String updateTag(@PathVariable Long id,
+    public String updateTag(@PathVariable long id,
                             @RequestParam String tagname) {
         stammdatenCommandService.findTagById(id).ifPresent(tag -> {
             tag.setTagname(tagname);
@@ -157,7 +157,7 @@ public class StammdatenController {
 
     @DeleteMapping("/tags/{id}")
     @ResponseBody
-    public ResponseEntity<Map<String, Boolean>> deleteTag(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Boolean>> deleteTag(@PathVariable long id) {
         stammdatenCommandService.deleteTag(id);
         return ResponseEntity.ok(Map.of("ok", true));
     }

@@ -1,8 +1,13 @@
 package de.mirkosertic.powerstaff.partner.api;
 
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 import de.mirkosertic.powerstaff.partner.command.Partner;
 import de.mirkosertic.powerstaff.partner.command.PartnerCommandService;
+import de.mirkosertic.powerstaff.partner.command.PartnerContactEntry;
 import de.mirkosertic.powerstaff.partner.command.PartnerHasProjectsException;
+import de.mirkosertic.powerstaff.partner.command.PartnerHistoryEntry;
 import de.mirkosertic.powerstaff.partner.query.PartnerFreelancerView;
 import de.mirkosertic.powerstaff.partner.query.PartnerQueryService;
 import de.mirkosertic.powerstaff.partner.query.PartnerSearchCriteria;
@@ -40,13 +45,16 @@ public class PartnerController {
     private final PartnerCommandService commandService;
     private final PartnerQueryService queryService;
     private final JdbcClient jdbcClient;
+    private final ObjectMapper objectMapper;
 
     public PartnerController(PartnerCommandService commandService,
                              PartnerQueryService queryService,
-                             JdbcClient jdbcClient) {
+                             JdbcClient jdbcClient,
+                             ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.jdbcClient = jdbcClient;
+        this.objectMapper = objectMapper;
     }
 
     // -------------------------------------------------------------------------
@@ -78,14 +86,14 @@ public class PartnerController {
     }
 
     @GetMapping("/previous/{id}")
-    public String previous(@PathVariable Long id) {
+    public String previous(@PathVariable long id) {
         return queryService.findPrevious(id)
                 .map(p -> "redirect:/partner/" + p.id())
                 .orElse("redirect:/partner/new");
     }
 
     @GetMapping("/next/{id}")
-    public String next(@PathVariable Long id) {
+    public String next(@PathVariable long id) {
         return queryService.findNext(id)
                 .map(p -> "redirect:/partner/" + p.id())
                 .orElse("redirect:/partner/new");
@@ -96,7 +104,7 @@ public class PartnerController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/{id}")
-    public String show(@PathVariable Long id, HttpServletResponse response, Model model) {
+    public String show(@PathVariable long id, HttpServletResponse response, Model model) {
         var partner = commandService.findById(id).orElseThrow();
         var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, String.valueOf(id));
         cookie.setPath("/partner");
@@ -118,29 +126,37 @@ public class PartnerController {
         cookie.setMaxAge(0); // delete
         response.addCookie(cookie);
         model.addAttribute("partner", new Partner());
-        model.addAttribute("contacts", java.util.List.of());
-        model.addAttribute("history", java.util.List.of());
-        model.addAttribute("freelancers", java.util.List.of());
-        model.addAttribute("projects", java.util.List.of());
+        model.addAttribute("contacts", List.of());
+        model.addAttribute("history", List.of());
+        model.addAttribute("freelancers", List.of());
+        model.addAttribute("projects", List.of());
         model.addAttribute("activePage", "partner");
         return "partner/form";
     }
 
     // -------------------------------------------------------------------------
-    // Save
+    // Save (Unified Save: Stammdaten + Kontakte + Historie in einer Transaktion)
     // -------------------------------------------------------------------------
 
     @PostMapping("/save")
     @ResponseBody
     public ResponseEntity<?> save(@ModelAttribute Partner partner,
+                                  @RequestParam(required = false, defaultValue = "[]") String contactsJson,
+                                  @RequestParam(required = false, defaultValue = "[]") String historyJson,
                                   HttpServletResponse response) throws IOException {
         try {
-            var saved = commandService.save(partner);
+            List<PartnerContactEntry> contacts = objectMapper.readValue(
+                    contactsJson, new TypeReference<>() {});
+            List<PartnerHistoryEntry> history = objectMapper.readValue(
+                    historyJson, new TypeReference<>() {});
+            var saved = commandService.save(partner, contacts, history);
             response.sendRedirect("/partner/" + saved.getId());
             return null;
         } catch (OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("conflict", true));
+        } catch (JacksonException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "invalid json"));
         }
     }
 
@@ -150,7 +166,7 @@ public class PartnerController {
 
     @PostMapping("/delete/{id}")
     @ResponseBody
-    public ResponseEntity<?> delete(@PathVariable Long id,
+    public ResponseEntity<?> delete(@PathVariable long id,
                                     HttpServletResponse response) throws IOException {
         try {
             commandService.deleteById(id);
@@ -214,7 +230,7 @@ public class PartnerController {
 
     @PostMapping("/{id}/assign-freelancer")
     @ResponseBody
-    public ResponseEntity<?> assignFreelancer(@PathVariable Long id,
+    public ResponseEntity<?> assignFreelancer(@PathVariable long id,
                                               @RequestBody Map<String, String> body) {
         String code = body.get("code");
         var freelancerOpt = jdbcClient
@@ -259,8 +275,8 @@ public class PartnerController {
 
     @PostMapping("/{id}/confirm-reassign-freelancer")
     @ResponseBody
-    public ResponseEntity<?> confirmReassignFreelancer(@PathVariable Long id,
-                                                        @RequestBody Map<String, Long> body) {
+    public ResponseEntity<?> confirmReassignFreelancer(@PathVariable long id,
+                                                       @RequestBody Map<String, Long> body) {
         Long freelancerId = body.get("freelancerId");
         jdbcClient.sql("UPDATE freelancer SET partner_id = :partnerId WHERE id = :freelancerId")
                 .param("partnerId", id)
@@ -272,8 +288,8 @@ public class PartnerController {
 
     @PostMapping("/{id}/remove-freelancer/{freelancerId}")
     @ResponseBody
-    public ResponseEntity<?> removeFreelancer(@PathVariable Long id,
-                                              @PathVariable Long freelancerId) {
+    public ResponseEntity<?> removeFreelancer(@PathVariable long id,
+                                              @PathVariable long freelancerId) {
         jdbcClient.sql("UPDATE freelancer SET partner_id = NULL WHERE id = :freelancerId AND partner_id = :partnerId")
                 .param("freelancerId", freelancerId)
                 .param("partnerId", id)
