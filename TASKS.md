@@ -32,18 +32,18 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 0.4 CSS – Komponenten
-- [ ] `src/main/resources/static/css/components.css`: fcard §8, field-grids §9 (col-1 bis col-wide), Input/Select/Textarea §9, Buttons §10 (btn-primary, btn-secondary, btn-danger, btn-sm), Checkboxen §11 (Pill-Style), Subsection-Label & Divider §12
-- [ ] `src/main/resources/static/css/components2.css`: Kontaktliste §13, Chips §14, Kontakthistorie §15, Tabellen §16 (sortierbare Header, Hover-Zeilen), Modals §17, dynamische Status-Badges §22, Read-only Link-Felder §20, Inline-Zuordnung §23
-- [ ] Git-Commit
+- [x] `src/main/resources/static/css/components.css`: fcard §8, field-grids §9 (col-1 bis col-wide), Input/Select/Textarea §9, Buttons §10 (btn-primary, btn-secondary, btn-danger, btn-sm), Checkboxen §11 (Pill-Style), Subsection-Label & Divider §12
+- [x] `src/main/resources/static/css/components2.css`: Kontaktliste §13, Chips §14, Kontakthistorie §15, Tabellen §16 (sortierbare Header, Hover-Zeilen), Modals §17, dynamische Status-Badges §22, Read-only Link-Felder §20, Inline-Zuordnung §23
+- [x] Git-Commit
 
 ### 0.5 Thymeleaf Basis-Fragmente
-- [ ] `src/main/resources/templates/fragments/layout.html`: App-Shell (nav + content-slot), App-Nav mit 5 Menüpunkten (Freiberufler `/freelancer`, Partner `/partner`, Kunden `/kunde`, Projekte `/project`, Profilsuche `/profilesearch`) + Logout-Link + aktivem Menüpunkt via `th:classappend`
-- [ ] `src/main/resources/templates/fragments/toolbar.html`: Form-Toolbar mit `th:fragment="toolbar(buttons, rememberedProject)"` – linker Slot für Buttons, rechts Gemerktes-Projekt-Anzeige §21 (Projektname + Projektnummer oder leer)
-- [ ] `src/main/resources/templates/fragments/modal.html`: generisches Modal-Grundgerüst §17 mit `th:fragment="modal(id, title, body, footer)"` – Overlay, Dialog-Box, Header, scrollbarer Body, Footer-Buttons
-- [ ] `src/main/resources/templates/fragments/contact-list.html`: wiederverwendbare Kontaktlisten-Darstellung §13 – iteriert über `contacts` (Liste mit `type`, `value`), rendert je Typ das korrekte Label + Link-URL gemäß STAMMDATEN.md (mailto/tel/http/xing/gulp), sortierbar nach `ContactType`-Reihenfolge; `th:fragment="contactList(contacts, editUrl, deleteUrl)"`
-- [ ] `src/main/resources/templates/login.html`: Login-Formular ohne App-Nav, zentriert, Fehleranzeige bei `?error`
-- [ ] Test: `@WebMvcTest` mit einem Stub-Controller der jedes Fragment einbindet – prüft 200 und keine Template-Fehler (Thymeleaf-Parsing)
-- [ ] Git-Commit
+- [x] `src/main/resources/templates/fragments/layout.html`: App-Shell (nav + content-slot), App-Nav mit 5 Menüpunkten (Freiberufler `/freelancer`, Partner `/partner`, Kunden `/kunde`, Projekte `/project`, Profilsuche `/profilesearch`) + Logout-Link + aktivem Menüpunkt via `th:classappend`
+- [x] `src/main/resources/templates/fragments/toolbar.html`: Form-Toolbar mit `th:fragment="toolbar(buttons, rememberedProject)"` – linker Slot für Buttons, rechts Gemerktes-Projekt-Anzeige §21 (Projektname + Projektnummer oder leer)
+- [x] `src/main/resources/templates/fragments/modal.html`: generisches Modal-Grundgerüst §17 mit `th:fragment="modal(id, title, body, footer)"` – Overlay, Dialog-Box, Header, scrollbarer Body, Footer-Buttons
+- [x] `src/main/resources/templates/fragments/contact-list.html`: wiederverwendbare Kontaktlisten-Darstellung §13 – iteriert über `contacts` (Liste mit `type`, `value`), rendert je Typ das korrekte Label + Link-URL gemäß STAMMDATEN.md (mailto/tel/http/xing/gulp), sortierbar nach `ContactType`-Reihenfolge; `th:fragment="contactList(contacts, editUrl, deleteUrl)"`
+- [x] `src/main/resources/templates/login.html`: Login-Formular ohne App-Nav, zentriert, Fehleranzeige bei `?error`
+- [x] Test: `@WebMvcTest` mit einem Stub-Controller der jedes Fragment einbindet – prüft 200 und keine Template-Fehler (Thymeleaf-Parsing)
+- [x] Git-Commit
 
 ### 0.6 Frontend-Build (Vite + apiFetch)
 - [ ] `frontend/package.json` mit Vite als devDependency, `build`-Script
@@ -70,11 +70,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [ ] Git-Commit
 
 ### 0.11 Stammdaten-Enums (Shared Domain)
-- [ ] Enum `ContactType` (`EMAIL, WEB, XING, GULP, TELEFON, FAX`) mit `getLabel()`, `buildLink(String value)` im Paket `de.mirkosertic.powerstaff.shared`
-- [ ] Enum `TagType` (`SCHWERPUNKT(0), FUNKTION(1), EINSATZORT(2), BEMERKUNG(3), TYP(4)`) mit `getLabel()`
-- [ ] Enum `ProjectStatus` (`OFFEN(1), VERLOREN(2), CANCELED(3), BESETZT(4), SEARCH_ZU(5)`) mit `fromInt(int)`, `getLabel()`
-- [ ] Test: `ContactTypeSpec`, `TagTypeSpec`, `ProjectStatusSpec` (Spock Unit-Tests, kein DB): prüfen Label, Link-URL-Generierung, `fromInt`-Mapping
-- [ ] Git-Commit
+- [x] Enum `ContactType` (`EMAIL, WEB, XING, GULP, TELEFON, FAX`) mit `getLabel()`, `buildLink(String value)` im Paket `de.mirkosertic.powerstaff.shared`
+- [x] Enum `TagType` (`SCHWERPUNKT(0), FUNKTION(1), EINSATZORT(2), BEMERKUNG(3), TYP(4)`) mit `getLabel()`
+- [x] Enum `ProjectStatus` (`OFFEN(1), VERLOREN(2), CANCELED(3), BESETZT(4), SEARCH_ZU(5)`) mit `fromInt(int)`, `getLabel()`
+- [x] Test: `ContactTypeSpec`, `TagTypeSpec`, `ProjectStatusSpec` (Spock Unit-Tests, kein DB): prüfen Label, Link-URL-Generierung, `fromInt`-Mapping
+- [x] Git-Commit
 
 ---
 

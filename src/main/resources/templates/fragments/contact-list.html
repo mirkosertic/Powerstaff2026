@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Wiederverwendbare Kontaktlisten-Darstellung (§13)
+
+  Parameter:
+    contacts      – Liste von Kontaktobjekten mit Feldern: id, type (ContactType), value
+    editBaseUrl   – Basis-URL für Bearbeiten (wird mit /{id} ergänzt)
+    deleteBaseUrl – Basis-URL für Löschen (wird mit /{id} ergänzt)
+-->
+<div class="clist" th:fragment="contactList(contacts, editBaseUrl, deleteBaseUrl)">
+
+  <div class="citem" th:each="contact : ${contacts}">
+
+    <!-- Typ-Badge -->
+    <th:block th:switch="${contact.type.name()}">
+      <span class="cbadge cb-email"   th:case="'EMAIL'">E-Mail</span>
+      <span class="cbadge cb-telefon" th:case="'TELEFON'">Telefon</span>
+      <span class="cbadge cb-web"     th:case="'WEB'">Website</span>
+      <span class="cbadge cb-xing"    th:case="'XING'">XING</span>
+      <span class="cbadge cb-gulp"    th:case="'GULP'">GULP</span>
+      <span class="cbadge cb-fax"     th:case="'FAX'">Fax</span>
+      <!-- Fallback -->
+      <span class="cbadge"            th:case="*" th:text="${contact.type.name()}">Typ</span>
+    </th:block>
+
+    <!-- Kontaktwert mit Link -->
+    <span class="cval">
+      <th:block th:switch="${contact.type.name()}">
+        <a th:case="'EMAIL'"
+           th:href="'mailto:' + ${contact.value}"
+           th:text="${contact.value}">E-Mail</a>
+        <a th:case="'TELEFON'"
+           th:href="'tel:' + ${contact.value}"
+           th:text="${contact.value}">Telefon</a>
+        <a th:case="'FAX'"
+           th:href="'tel:' + ${contact.value}"
+           th:text="${contact.value}">Fax</a>
+        <a th:case="'WEB'"
+           th:href="${contact.value}"
+           th:text="${contact.value}"
+           target="_blank" rel="noopener noreferrer">Website</a>
+        <a th:case="'XING'"
+           th:href="${contact.value}"
+           th:text="${contact.value}"
+           target="_blank" rel="noopener noreferrer">XING</a>
+        <a th:case="'GULP'"
+           th:href="${contact.value}"
+           th:text="${contact.value}"
+           target="_blank" rel="noopener noreferrer">GULP</a>
+        <span th:case="*" th:text="${contact.value}">Wert</span>
+      </th:block>
+    </span>
+
+    <!-- Aktions-Buttons -->
+    <div class="cacts">
+      <a class="ibtn"
+         th:href="${editBaseUrl} + '/' + ${contact.id}"
+         title="Bearbeiten">✎</a>
+      <a class="ibtn del"
+         th:href="${deleteBaseUrl} + '/' + ${contact.id}"
+         title="Löschen">🗑</a>
+    </div>
+
+  </div>
+
+  <!-- Leerer Zustand -->
+  <p th:if="${#lists.isEmpty(contacts)}"
+     style="font-size:.82rem; color:var(--text-3); font-style:italic; margin:4px 6px;">
+    Noch keine Kontaktmöglichkeiten vorhanden.
+  </p>
+
+</div>
+
+</body>
+</html>

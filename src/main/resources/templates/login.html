@@ -1,36 +1,90 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Powerstaff 2026 – Login</title>
+  <link rel="stylesheet" th:href="@{/css/base.css}">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
   <style>
-    /* Minimale Inline-Styles: zentriertes Formular, weißer Hintergrund */
-    body { font-family: sans-serif; background: #eaecf0; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-    .login-box { background: #f9fafb; border: 1px solid #c8cdd6; border-radius: 8px; padding: 2rem; width: 320px; }
-    h1 { font-size: 1.25rem; color: #1c2333; margin-bottom: 1.5rem; }
-    .fg { display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 1rem; }
-    label { font-size: 0.875rem; color: #4a5568; }
-    input { padding: 0.5rem; border: 1px solid #c8cdd6; border-radius: 4px; font-size: 0.9rem; }
-    .btn { width: 100%; padding: 0.6rem; background: #2d5be3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.95rem; }
-    .error { color: #c53030; font-size: 0.875rem; margin-bottom: 1rem; }
+    /* Login-spezifisches Layout: zentriertes Formular */
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-l);
+      box-shadow: var(--shadow-md);
+      padding: 2rem;
+      width: 340px;
+    }
+    .login-logo {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      display: block;
+      text-align: center;
+    }
+    .login-logo span {
+      color: var(--pri);
+    }
+    .login-box .fg {
+      margin-bottom: 0.85rem;
+    }
+    .login-submit {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    .error {
+      font-size: .82rem;
+      color: var(--danger);
+      background: var(--danger-l);
+      border: 1px solid #fca5a5;
+      border-radius: var(--r);
+      padding: 6px 10px;
+      margin-bottom: 1rem;
+    }
+    .success-msg {
+      font-size: .82rem;
+      color: var(--ok-text);
+      background: var(--ok-bg);
+      border: 1px solid var(--ok-border);
+      border-radius: var(--r);
+      padding: 6px 10px;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
   <div class="login-box">
-    <h1>Powerstaff 2026</h1>
-    <p th:if="${param.error}" class="error">Ungültiger Benutzername oder Passwort.</p>
-    <p th:if="${param.logout}" class="error" style="color:#2d5be3">Erfolgreich abgemeldet.</p>
+    <span class="login-logo">Power<span>staff</span> 2026</span>
+
+    <p th:if="${param.error}" class="error">
+      Ungültiger Benutzername oder Passwort.
+    </p>
+    <p th:if="${param.logout}" class="success-msg">
+      Erfolgreich abgemeldet.
+    </p>
+
     <form method="post" th:action="@{/login}">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
       <div class="fg">
         <label for="username">Benutzername</label>
-        <input type="text" id="username" name="username" required autofocus>
+        <input type="text" id="username" name="username" required autofocus autocomplete="username">
       </div>
+
       <div class="fg">
         <label for="password">Passwort</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" required autocomplete="current-password">
       </div>
-      <button type="submit" class="btn">Anmelden</button>
+
+      <button type="submit" class="btn btn-pri login-submit">Anmelden</button>
     </form>
   </div>
 </body>

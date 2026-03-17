@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Generisches Modal-Grundgerüst (§17)
+
+  Parameter:
+    id      – HTML-ID des Modals (für openModal/closeModal JS)
+    title   – Titel im Modal-Header
+    body    – Template-Fragment für den scrollbaren Body-Bereich
+    footer  – Template-Fragment für den Footer-Bereich (Buttons)
+-->
+<div class="mbk hidden"
+     th:fragment="modal(id, title, body, footer)"
+     th:id="${id}">
+  <div class="mbox">
+
+    <!-- Header -->
+    <div class="mhd">
+      <h3 th:text="${title}">Modal-Titel</h3>
+      <button class="mx"
+              th:onclick="'closeModal(\'' + ${id} + '\')'">✕</button>
+    </div>
+
+    <!-- Scrollbarer Body -->
+    <div class="mbody">
+      <th:block th:replace="${body}"/>
+    </div>
+
+    <!-- Footer -->
+    <div class="mft">
+      <th:block th:replace="${footer}"/>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
