@@ -22,9 +22,9 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 0.2 Auditing
-- [ ] `AuditingConfig` implementiert `AuditorAware<String>`: liefert `Authentication::getName` aus `SecurityContextHolder`; gibt `"system"` zurück wenn kein Login aktiv
-- [ ] Test: `AuditingConfigSpec` (Spock Unit-Test, kein DB): mockt `SecurityContextHolder`, prüft dass `currentAuditor()` den Usernamen liefert
-- [ ] Git-Commit
+- [x] `AuditingConfig` implementiert `AuditorAware<String>`: liefert `Authentication::getName` aus `SecurityContextHolder`; gibt `"system"` zurück wenn kein Login aktiv
+- [x] Test: `AuditingConfigSpec` (Spock Unit-Test, kein DB): mockt `SecurityContextHolder`, prüft dass `currentAuditor()` den Usernamen liefert
+- [x] Git-Commit
 
 ### 0.3 CSS – Design Tokens und Layout
 - [ ] `src/main/resources/static/css/base.css`: alle CSS Custom Properties (Design Tokens §2), Typografie-Reset §3, Box-Sizing-Reset
