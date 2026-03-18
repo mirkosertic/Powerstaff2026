@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- HTMX fragment: sidebar chat entries -->
+  <th:block th:fragment="entry" th:each="chat : ${sidebar}">
+    <div class="sidebar-entry" th:data-id="${chat.id()}">
+      <span class="sidebar-title" th:text="${chat.title() != null ? chat.title() : 'Neuer Chat'}"></span>
+      <span class="sidebar-date" th:text="${#temporals.format(chat.changedDate(), 'dd.MM.yyyy HH:mm')}"></span>
+    </div>
+  </th:block>
+</body>
+</html>

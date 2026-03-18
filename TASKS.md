@@ -517,15 +517,15 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 6.6 Profilsuche – Controller
-- [ ] `ProfileSearchController`:
+- [x] `ProfileSearchController`:
   - GET `/profilesearch`: lädt neueste Chat-ID via `findLatestChatByUser()`; wenn vorhanden → Redirect zu `/profilesearch/chat/{id}`; sonst → `createChat()` → Redirect
   - GET `/profilesearch/chat/{chatId}`: lädt Chat + Messages + Sidebar-Liste (erste 20); rendert `profilesearch/form.html`
   - POST `/profilesearch/chat/new`: `createChat(userId, rememberedProjectId)`; Redirect zu `/profilesearch/chat/{id}`
   - DELETE `/profilesearch/chat/{chatId}`: löscht Chat; wenn aktiver Chat → nächsten laden oder neuen anlegen; Redirect
   - POST `/profilesearch/chat/{chatId}/send` (JSON `{message: "..."}`) → speichert User-Nachricht, ruft `llmService.sendMessage()`, speichert Assistant-Antwort; gibt JSON `{id: ..., role: "assistant", content: "..."}` zurück
   - GET `/profilesearch/sidebar-more` (Query `?offset=N`) → HTMX Fragment mit nächsten 20 Chat-Einträgen; Response-Header `X-Next-Url` wenn weitere vorhanden
-- [ ] Test: `@WebMvcTest ProfileSearchControllerIT`: alle Endpunkte mit `@MockBean`; POST send → JSON-Antwort
-- [ ] Git-Commit
+- [x] Test: `@SpringBootTest(webEnvironment=MOCK)` `ProfileSearchControllerIT`: alle Endpunkte mit `@MockitoBean`; POST send → JSON-Antwort (8 Tests, alle grün)
+- [x] Git-Commit
 
 ### 6.7 Profilsuche – CSS (Chat-Layout)
 - [ ] `src/main/resources/static/css/chat.css`: Split-Panel-Layout §24 (Sidebar + Chat-Bereich), Sidebar-Einträge §25 (Titel, Projektbezug, Zeitstempel, aktiver Eintrag hervorgehoben, Löschen-Icon), Nachrichten §26 (user rechtsbündig, assistant linksbündig, Markdown-Container), Eingabebereich §27 (Textarea + Senden-Button fixiert am unteren Rand), responsive Sidebar (≥1024 px aufgeklappt, <1024 px Overlay)
