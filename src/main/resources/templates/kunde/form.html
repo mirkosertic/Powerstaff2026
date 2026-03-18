@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('Kunde', 'kunde', ~{::body})}">
+<body>
+  <form th:action="@{/kunde/save}" method="post">
+    <input type="hidden" name="id" th:value="${kunde.id}"/>
+    <input type="hidden" name="dbVersion" th:value="${kunde.dbVersion}"/>
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    <input type="hidden" id="contactsJson" name="contactsJson" value="[]"/>
+    <input type="hidden" id="historyJson"  name="historyJson"  value="[]"/>
+
+    <div class="field-grid col-2">
+      <div class="field"><label>Firma</label>
+        <input type="text" name="company" th:value="${kunde.company}"/></div>
+      <div class="field"><label>Name 1</label>
+        <input type="text" name="name1" th:value="${kunde.name1}"/></div>
+      <div class="field"><label>Name 2</label>
+        <input type="text" name="name2" th:value="${kunde.name2}"/></div>
+    </div>
+
+    <button type="submit" class="btn-primary">Speichern</button>
+  </form>
+</body>
+</html>

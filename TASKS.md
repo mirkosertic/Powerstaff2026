@@ -351,20 +351,19 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 4.6 Kunde – Controller (CRUD + Navigation)
-- [ ] `KundeController`:
-  - GET `/kunde`, GET `/kunde/{id}` (Session `lastKundeId`), GET `/kunde/new`
+- [x] `KundeController`:
+  - GET `/kunde`, GET `/kunde/{id}` (Cookie `lastKundeId`), GET `/kunde/new`
   - GET `/kunde/first` / `last` / `previous/{id}` / `next/{id}`
-  - POST `/kunde/save` (409 JSON bei Optimistic-Locking-Konflikt)
-  - POST `/kunde/delete/{id}` (409 JSON bei Projekten)
-- [ ] Test: `@WebMvcTest KundeControllerIT`
-- [ ] Git-Commit
+  - POST `/kunde/save` (409 JSON bei Optimistic-Locking-Konflikt, Unified Save)
+  - POST `/kunde/delete/{id}` (409 JSON bei KundeHasProjectsException)
+- [x] Test: `KundeControllerIT` (14 Tests)
+- [x] Git-Commit
 
 ### 4.7 Kunde – Controller (Suche + AJAX)
-- [ ] POST `/kunde/search`, GET `/kunde/search-more`
-- [ ] `KundeContactController`: POST / DELETE `/kunde/{id}/contacts`, `/kunde/{id}/contacts/{contactId}`
-- [ ] `KundeHistoryController`: POST / PUT / DELETE `/kunde/{id}/history`, `.../history/{hId}`
-- [ ] Test: `KundeControllerIT`, `KundeContactControllerIT`, `KundeHistoryControllerIT` ergänzt
-- [ ] Git-Commit
+- [x] POST `/kunde/search`, GET `/kunde/search-more`
+- [-] `KundeContactController`/`KundeHistoryController` entfallen – Unified-Save-Muster
+- [x] Test: KundeControllerIT (in 4.6 enthalten)
+- [x] Git-Commit
 
 ### 4.8 Kunde – Thymeleaf Templates
 - [ ] `kunde/form.html`: Shell, Toolbar (Navigation, Neu, Speichern, Löschen, Gemerktes-Projekt-Anzeige), alle Feldkarten (Adresse, Kontaktinformationen + `fragments/contact-list.html`, Kommentar, Konditionen), Projekte-Karte (`col-wide`, Tabelle + Neu-Projekt-Button), Kontakthistorie-Sektion

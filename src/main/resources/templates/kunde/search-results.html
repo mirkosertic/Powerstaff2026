@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="results">
+  <p th:if="${#lists.isEmpty(results)}" class="hint">Keine Treffer.</p>
+  <table th:unless="${#lists.isEmpty(results)}" class="data-table">
+    <thead>
+      <tr>
+        <th>Firma</th>
+        <th>Name 1</th>
+        <th>Name 2</th>
+        <th>Ort</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="r : ${results}" th:onclick="|window.location='/kunde/${r.id}'|" style="cursor:pointer">
+        <td th:text="${r.company}"></td>
+        <td th:text="${r.name1}"></td>
+        <td th:text="${r.name2}"></td>
+        <td th:text="${r.city}"></td>
+      </tr>
+    </tbody>
+  </table>
+  <ps-infinite-scroll th:if="${nextUrl != null}" th:attr="data-url=${nextUrl}"></ps-infinite-scroll>
+</div>
+</body>
+</html>
