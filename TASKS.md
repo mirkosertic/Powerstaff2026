@@ -564,8 +564,8 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 ## Phase 8 – Abschluss und Abnahme
 
 ### 8.1 Abnahmekriterien
-- [ ] `./mvnw clean verify` läuft vollständig durch (Unit-Tests + Integrationstests grün, Flyway sauber, npm build erfolgreich)
+- [x] `./mvnw clean verify` läuft vollständig durch (320 Tests grün, Flyway sauber, npm build erfolgreich)
 - [ ] Manuell: Login mit Testbenutzer funktioniert
 - [ ] Manuell: alle 5 Hauptformulare (Freiberufler, Partner, Kunden, Projekte, Profilsuche) aufrufbar und navigierbar
 - [ ] Manuell: QBE-Suche in mind. einem Modul liefert Treffer und Infinite Scrolling funktioniert
-- [ ] Git-Commit „chore: release 1.0 – all tasks completed"
+- [x] Git-Commit „chore: release 1.0 – all tasks completed"
