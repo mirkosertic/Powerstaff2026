@@ -528,8 +528,8 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 6.7 Profilsuche – CSS (Chat-Layout)
-- [ ] `src/main/resources/static/css/chat.css`: Split-Panel-Layout §24 (Sidebar + Chat-Bereich), Sidebar-Einträge §25 (Titel, Projektbezug, Zeitstempel, aktiver Eintrag hervorgehoben, Löschen-Icon), Nachrichten §26 (user rechtsbündig, assistant linksbündig, Markdown-Container), Eingabebereich §27 (Textarea + Senden-Button fixiert am unteren Rand), responsive Sidebar (≥1024 px aufgeklappt, <1024 px Overlay)
-- [ ] Git-Commit
+- [x] `src/main/resources/static/css/chat.css`: Split-Panel-Layout §24 (Sidebar + Chat-Bereich), Sidebar-Einträge §25 (Titel, Projektbezug, Zeitstempel, aktiver Eintrag hervorgehoben, Löschen-Icon), Nachrichten §26 (user rechtsbündig, assistant linksbündig, Markdown-Container), Eingabebereich §27 (Textarea + Senden-Button fixiert am unteren Rand), responsive Sidebar (≥1024 px aufgeklappt, <1024 px Overlay)
+- [x] Git-Commit
 
 ### 6.8 Profilsuche – Thymeleaf Templates
 - [ ] `profilesearch/form.html`: Shell + Toolbar (Gemerktes-Projekt-Anzeige, „＋ Neuer Chat"-Button, „Löschen"-Button); Split-Panel (Sidebar + Chat-Bereich)
