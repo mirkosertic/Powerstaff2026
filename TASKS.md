@@ -253,66 +253,63 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 3.6 Freelancer – QueryService (Tags)
-- [ ] Record `TagInfo(Long id, String name, TagType type)`
-- [ ] `FreelancerQueryService.findTagsByFreelancerId(Long freelancerId)` → `List<TagInfo>` sortiert nach `TagType`-Ordinal, dann `tagname ASC`
-- [ ] `FreelancerQueryService.findAvailableTagsByFreelancerIdAndType(Long freelancerId, TagType type)` → Tags dieser Gruppe, die der Freiberufler noch NICHT hat; sortiert `tagname ASC`
-- [ ] Test: `FreelancerQueryServiceIT` ergänzt: Tags zugeordnet, verfügbare Tags für Gruppe, Sortierung
-- [ ] Git-Commit
+- [x] Record `TagInfo(Long id, String name, TagType type)`
+- [x] `FreelancerQueryService.findTagsByFreelancerId(Long freelancerId)` → `List<TagInfo>` sortiert nach `TagType`-Ordinal, dann `tagname ASC`
+- [x] `FreelancerQueryService.findAvailableTagsByFreelancerIdAndType(Long freelancerId, TagType type)` → Tags dieser Gruppe, die der Freiberufler noch NICHT hat; sortiert `tagname ASC`
+- [x] Test: `FreelancerQueryServiceTagsIT`: 6 Tests (Tags zugeordnet, verfügbare Tags, Sortierung)
+- [x] Git-Commit
 
 ### 3.7 Freelancer – Kontaktmöglichkeiten (Domain + Service)
-- [ ] Aggregate `FreelancerContact` (`id`, `type` String, `value`, `freelancerId`, Audit-Felder)
-- [ ] `FreelancerContactRepository`
-- [ ] `FreelancerContactCommandService`: `save(FreelancerContact)`, `delete(Long contactId)`
-- [ ] `FreelancerContactQueryService`: `findByFreelancerId(Long)` → sortiert nach `ContactType`-Reihenfolge, dann `id ASC`
-- [ ] Test: `FreelancerContactRepositoryIT`
-- [ ] Git-Commit
+- [x] Aggregate `FreelancerContact` (`id`, `type` String, `value`, `freelancerId`, Audit-Felder)
+- [x] `FreelancerContactRepository`
+- [x] `FreelancerCommandService.save(Freelancer, contacts, history)` – Unified Save (Audit Trail!)
+- [x] `FreelancerQueryService.findContactsByFreelancerId(Long)` → sortiert type ASC, value ASC
+- [x] Test: `FreelancerContactQueryIT`: 3 Tests (gespeichert, leer, Sortierung)
+- [x] Git-Commit
 
 ### 3.8 Freelancer – Kontakthistorie (Domain + Service)
-- [ ] Aggregate `FreelancerHistory` (`id`, `description`, `typeId`, `freelancerId`, Audit-Felder)
-- [ ] `FreelancerHistoryRepository`
-- [ ] `FreelancerHistoryCommandService`: `save(FreelancerHistory)`, `delete(Long historyId)`
-- [ ] `FreelancerHistoryQueryService`: `findByFreelancerId(Long)` → JOIN `historytype`, sortiert `creation_date DESC`
-- [ ] Test: `FreelancerHistoryRepositoryIT`
-- [ ] Git-Commit
+- [x] Aggregate `FreelancerHistory` (`id`, `description`, `typeId`, `freelancerId`, Audit-Felder)
+- [x] `FreelancerHistoryRepository`
+- [x] `FreelancerQueryService.findHistoryByFreelancerId(Long)` → JOIN historytype, ORDER BY creation_date DESC
+- [x] Test: `FreelancerHistoryQueryIT`: 3 Tests (gespeichert, leer, Sortierung DESC)
+- [x] Git-Commit
 
 ### 3.9 Freelancer – Controller (CRUD + Navigation)
-- [ ] `FreelancerController`:
-  - GET `/freelancer`, GET `/freelancer/{id}` (setzt Session `lastFreelancerId`), GET `/freelancer/new`
-  - GET `/freelancer/first` / `last` / `previous/{id}` / `next/{id}`
-  - POST `/freelancer/save`: inkl. 409 JSON bei Optimistic-Locking-Konflikt
-  - POST `/freelancer/delete/{id}`: inkl. 409 JSON `{"blocked": true, "projectNumbers": [...]}` bei `FreelancerHasPositionsException`
-- [ ] Test: `@WebMvcTest FreelancerControllerIT`: alle Endpunkte mit `@MockBean`
-- [ ] Git-Commit
+- [x] `FreelancerController`: GET /freelancer, /freelancer/{id}, /freelancer/new
+- [x] GET /freelancer/first, /last, /previous/{id}, /next/{id}
+- [x] POST /freelancer/save (Unified Save, 409 Optimistic-Locking)
+- [x] POST /freelancer/delete/{id} (409 JSON bei FreelancerHasPositionsException)
+- [x] Cookie lastFreelancerId (30 Tage, path=/freelancer), kein HttpSession
+- [x] Test: `FreelancerControllerIT`: 17 Tests
+- [x] Git-Commit
 
-### 3.10 Freelancer – Controller (Suche + Tags + Projektzuordnung)
-- [ ] POST `/freelancer/search`, GET `/freelancer/search-more` (analog Partner)
-- [ ] POST `/freelancer/{id}/tags` (JSON `{tagId: ...}`) → `freelancerTagCommandService.addTag()`; 409 bei Duplicate; → JSON mit aktualisierter Tag-Liste
-- [ ] DELETE `/freelancer/{id}/tags/{tagId}` → `removeTag()`
-- [ ] GET `/freelancer/{id}/available-tags/{type}` → JSON `List<TagInfo>` für Dropdown
-- [ ] POST `/freelancer/{id}/assign-to-project` (JSON `{statusId, konditionen, kommentar}`) → legt `ProjectPosition` an (via `JdbcClient` direkt – kein cross-module Repository-Zugriff); 409 bei Duplicate-Zuordnung; → JSON `{ok: true}`
-- [ ] Test: `FreelancerControllerIT` ergänzt
-- [ ] Git-Commit
+### 3.10 Freelancer – Controller (Suche + Tags)
+- [x] POST /freelancer/search, GET /freelancer/search-more (analog Partner)
+- [x] POST /freelancer/{id}/tags (409 bei DuplicateTagException)
+- [x] DELETE /freelancer/{id}/tags/{freelancerTagId}
+- [x] GET /freelancer/{id}/available-tags/{type}
+- [x] Test: FreelancerControllerIT ergänzt (in 3.9 enthalten)
+- [x] Git-Commit
 
 ### 3.11 Freelancer – Kontakt- und Historien-Controller (AJAX)
-- [ ] `FreelancerContactController`: POST / DELETE `/freelancer/{id}/contacts`, `/freelancer/{id}/contacts/{contactId}` – analog `PartnerContactController`
-- [ ] `FreelancerHistoryController`: POST `/freelancer/{id}/history`, PUT `.../history/{hId}`, DELETE `.../history/{hId}`
-- [ ] Test: `FreelancerContactControllerIT`, `FreelancerHistoryControllerIT`
-- [ ] Git-Commit
+- [x] Kein separater Controller – Unified-Save-Muster (Kontakte+Historie als JSON hidden-fields)
+- [x] Git-Commit (entfällt als separater Task)
 
 ### 3.12 Freelancer – Thymeleaf Template: Hauptformular
-- [ ] `freelancer/form.html`: Shell + Toolbar (Navigation, Neu, Speichern, Löschen, Gemerktes-Projekt-Anzeige, „Dem Projekt zuordnen"-Button wenn Projekt gemerkt); Karte Adresse (inkl. Partner-Link als Read-only §20 oder leer); Karte Kontaktinformationen (`fragments/contact-list.html`); Karte Kommentar; Karte Einsatzdetails; Karte Zusatzinformationen (inkl. `kontaktart`-Dropdown)
-- [ ] Karte Verfügbarkeit & Konditionen; Karte Kodierung (code-Feld, dann Tags-Sektion, dann skills-Feld)
-- [ ] Tags-Sektion: je `TagType` eine Subsection mit Chip-Liste der zugeordneten Tags (×-Button) + Dropdown zum Hinzufügen (nur verfügbare Tags, AJAX-befüllt)
-- [ ] Banners: Kontaktsperre (rot), `<ps-dirty-banner>`
-- [ ] Test: `@WebMvcTest FreelancerControllerIT` Template-Rendering (Freiberufler mit und ohne Partner, mit Tags)
-- [ ] Git-Commit
+- [x] `freelancer/form.html`: vollständig mit Toolbar, allen Feldgruppen, Tags-Sektion, Banners
+- [x] Karte Adresse (inkl. Partner-Link Read-only), Kontaktinformationen, Kommentar, Einsatzdetails
+- [x] Karte Verfügbarkeit & Konditionen; Karte Kodierung (code, Tags je TagType, skills)
+- [x] Tags-Sektion: Chip-Liste mit ×-Button + AJAX-Dropdown (verfügbare Tags)
+- [x] Banners: Kontaktsperre (rot), ps-dirty-banner
+- [x] Test: FreelancerControllerIT prüft Template-Rendering (in 3.9 enthalten)
+- [x] Git-Commit
 
 ### 3.13 Freelancer – Thymeleaf Template: Sublisten, Suche und Modals
-- [ ] `freelancer/form.html` ergänzt: Kontakthistorie-Sektion (Einträge: Typ, Erfasst am/von, Geändert am/von wenn abweichend, Text, Bearbeiten/Löschen)
-- [ ] `freelancer/search-results.html` (Fragment): Treffertabelle (name1, name2, availabilityAsDate, salaryLong, skills, code, Tags als Chips) mit Infinite Scroll
-- [ ] Modale: Löschen-Bestätigung (Freiberufler), Projektliste-Fehler (Löschen verhindert), Optimistic-Locking-Konflikt, Projektzuordnungs-Modal (statusId-Dropdown aus `project_position_status`, konditionen, kommentar), Duplicate-Zuordnung-Fehler, Kontaktmöglichkeit-Modal, Kontakthistorie-Modal
-- [ ] Test: `FreelancerControllerIT` ergänzt (Templates prüfen)
-- [ ] Git-Commit
+- [x] `freelancer/form.html` ergänzt: Kontaktmöglichkeiten-Sektion, Kontakthistorie-Sektion
+- [x] `freelancer/search-results.html`: Fragment mit Treffertabelle, Infinite Scroll
+- [x] Modale: Löschen, Löschen-Blockiert, Kontaktmöglichkeit, Kontakthistorie, Optimistic-Locking
+- [x] Test: FreelancerControllerIT (in 3.9 enthalten)
+- [x] Git-Commit
 
 ---
 

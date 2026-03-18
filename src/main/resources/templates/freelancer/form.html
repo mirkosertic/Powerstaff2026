@@ -3,11 +3,555 @@
       th:replace="~{fragments/layout :: layout('Freiberufler', 'freelancer', ~{::body})}">
 <body>
 
-  <div class="page-content">
-    <p th:text="${freelancer.id != null} ? 'Freiberufler #' + ${freelancer.id} : 'Neuer Freiberufler'">
-      Freiberufler
-    </p>
+  <!-- Toolbar (§6) -->
+  <div th:replace="~{fragments/toolbar :: toolbar(
+      'Freiberufler',
+      @{/freelancer/first},
+      ${freelancer.id != null} ? @{/freelancer/previous/{id}(id=${freelancer.id})} : null,
+      ${freelancer.id},
+      ${freelancer.id != null} ? @{/freelancer/next/{id}(id=${freelancer.id})} : null,
+      @{/freelancer/last},
+      @{/freelancer/new},
+      'freelancer-form',
+      ${freelancer.id != null} ? '#modal-delete' : null,
+      null)}">
   </div>
+
+  <!-- Page Content -->
+  <div id="page">
+
+    <!-- Kontaktsperre-Banner -->
+    <div class="banner banner-error" th:if="${freelancer.contactForbidden}">
+      Kontaktsperre aktiv – keine Kontaktaufnahme erlaubt.
+    </div>
+
+    <ps-dirty-banner></ps-dirty-banner>
+
+    <!-- Hauptformular -->
+    <form id="freelancer-form" th:action="@{/freelancer/save}" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <input type="hidden" name="id" th:value="${freelancer.id}"/>
+      <input type="hidden" name="dbVersion" th:value="${freelancer.dbVersion}"/>
+
+      <!-- Hidden-Fields für Unified Save (JS befüllt diese) -->
+      <input type="hidden" name="contactsJson" id="contacts-json" value="[]"/>
+      <input type="hidden" name="historyJson" id="history-json" value="[]"/>
+
+      <!-- Adresse -->
+      <div class="fcard">
+        <h2>Adresse</h2>
+        <div class="field-grid col-2">
+          <label>Titel
+            <input type="text" name="titel" th:value="${freelancer.titel}" placeholder="z.B. Dr."/>
+          </label>
+          <label>Name 1
+            <input type="text" name="name1" th:value="${freelancer.name1}"/>
+          </label>
+          <label>Name 2
+            <input type="text" name="name2" th:value="${freelancer.name2}"/>
+          </label>
+          <label>Firma
+            <input type="text" name="company" th:value="${freelancer.company}"/>
+          </label>
+          <label>Straße
+            <input type="text" name="street" th:value="${freelancer.street}"/>
+          </label>
+          <label>PLZ
+            <input type="text" name="plz" th:value="${freelancer.plz}" style="max-width:7rem"/>
+          </label>
+          <label>Ort
+            <input type="text" name="city" th:value="${freelancer.city}"/>
+          </label>
+          <label>Land
+            <input type="text" name="country" th:value="${freelancer.country}"/>
+          </label>
+          <label>Nationalität
+            <input type="text" name="nationalitaet" th:value="${freelancer.nationalitaet}"/>
+          </label>
+          <label>Geburtsdatum
+            <input type="text" name="geburtsdatum" th:value="${freelancer.geburtsdatum}" placeholder="TT.MM.JJJJ"/>
+          </label>
+          <label>Partner
+            <span th:if="${freelancer.partnerId != null}" class="subsection-label">
+              <a th:href="@{/partner/{id}(id=${freelancer.partnerId})}"
+                 th:text="${freelancer.partnerId}">–</a>
+            </span>
+            <span th:if="${freelancer.partnerId == null}" class="subsection-label"
+                  style="color:var(--text-3);font-style:italic">Kein Partner</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Kontaktinformationen -->
+      <div class="fcard">
+        <h2>Kontaktinformationen</h2>
+        <div class="field-grid col-2">
+          <label>Ansprechpartner
+            <input type="text" name="contactPerson" th:value="${freelancer.contactPerson}"/>
+          </label>
+          <label>Kontaktart
+            <select name="kontaktart">
+              <option value="" th:selected="${freelancer.kontaktart == null or freelancer.kontaktart.isEmpty()}">–</option>
+              <option value="NL"  th:selected="${freelancer.kontaktart == 'NL'}">NL</option>
+              <option value="NL1" th:selected="${freelancer.kontaktart == 'NL1'}">NL1</option>
+              <option value="NL2" th:selected="${freelancer.kontaktart == 'NL2'}">NL2</option>
+              <option value="X"   th:selected="${freelancer.kontaktart == 'X'}">X</option>
+              <option value="NO"  th:selected="${freelancer.kontaktart == 'NO'}">NO</option>
+              <option value="LL"  th:selected="${freelancer.kontaktart == 'LL'}">LL</option>
+            </select>
+          </label>
+          <label>Kontaktgrund
+            <input type="text" name="contactReason" th:value="${freelancer.contactReason}"/>
+          </label>
+          <label>Kontakttyp
+            <input type="text" name="contactType" th:value="${freelancer.contactType}"/>
+          </label>
+          <label>Letzter Kontakt
+            <input type="datetime-local" name="lastContactDate"
+                   th:value="${freelancer.lastContactDate != null} ? ${#temporals.format(freelancer.lastContactDate, 'yyyy-MM-dd''T''HH:mm')} : ''"/>
+          </label>
+          <div class="field-grid col-2" style="gap:.5rem">
+            <label class="checkbox-pill">
+              <input type="checkbox" name="contactForbidden" value="true"
+                     th:checked="${freelancer.contactForbidden}"/>
+              Kontaktsperre
+            </label>
+            <label class="checkbox-pill">
+              <input type="checkbox" name="showAgain" value="true"
+                     th:checked="${freelancer.showAgain}"/>
+              Wieder vorlegen
+            </label>
+            <label class="checkbox-pill">
+              <input type="checkbox" name="datenschutz" value="true"
+                     th:checked="${freelancer.datenschutz}"/>
+              Datenschutz
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kommentar -->
+      <div class="fcard">
+        <h2>Kommentar</h2>
+        <textarea name="comments" rows="4" th:text="${freelancer.comments}"
+                  placeholder="Freie Notizen..."></textarea>
+      </div>
+
+      <!-- Einsatzdetails -->
+      <div class="fcard">
+        <h2>Einsatzdetails</h2>
+        <textarea name="einsatzdetails" rows="4" th:text="${freelancer.einsatzdetails}"
+                  placeholder="Einsatzmöglichkeiten, Präferenzen..."></textarea>
+      </div>
+
+      <!-- Verfügbarkeit & Konditionen -->
+      <div class="fcard">
+        <h2>Verfügbarkeit &amp; Konditionen</h2>
+        <div class="field-grid col-2">
+          <label>Verfügbar ab
+            <input type="datetime-local" name="availabilityAsDate"
+                   th:value="${freelancer.availabilityAsDate != null} ? ${#temporals.format(freelancer.availabilityAsDate, 'yyyy-MM-dd''T''HH:mm')} : ''"/>
+          </label>
+          <label>Gehalt (€/Monat)
+            <input type="number" name="salaryLong" th:value="${freelancer.salaryLong}" min="0"/>
+          </label>
+          <label>Tagessatz (€)
+            <input type="number" name="salaryPerDayLong" th:value="${freelancer.salaryPerDayLong}" min="0"/>
+          </label>
+          <label>Remote-Satz (€)
+            <input type="number" name="salaryRemote" th:value="${freelancer.salaryRemote}" min="0"/>
+          </label>
+          <label>Partner-Gehalt (€/Monat)
+            <input type="number" name="salaryPartnerLong" th:value="${freelancer.salaryPartnerLong}" min="0"/>
+          </label>
+          <label>Partner-Tagessatz (€)
+            <input type="number" name="salaryPartnerPerDayLong" th:value="${freelancer.salaryPartnerPerDayLong}" min="0"/>
+          </label>
+          <label>Debitor-Nr
+            <input type="text" name="debitorNr" th:value="${freelancer.debitorNr}"/>
+          </label>
+          <label>GULP-ID
+            <input type="text" name="gulpId" th:value="${freelancer.gulpId}"/>
+          </label>
+        </div>
+      </div>
+
+      <!-- Kodierung & Skills -->
+      <div class="fcard">
+        <h2>Kodierung</h2>
+        <div class="field-grid col-2">
+          <label>Code
+            <input type="text" name="code" th:value="${freelancer.code}" placeholder="FL-XXXX"/>
+          </label>
+        </div>
+
+        <!-- Tags-Sektion: je TagType eine Subsection -->
+        <div th:if="${freelancer.id != null}" id="tags-section">
+          <div th:each="tagType : ${tagTypes}" class="tag-group" th:attr="data-tag-type=${tagType.name()}">
+            <h3 class="subsection-label" th:text="${tagType.label}">Kategorie</h3>
+            <div class="chip-list" th:id="'chips-' + ${tagType.name()}">
+              <span class="chip" th:each="tag : ${tags}" th:if="${tag.type() == tagType}">
+                <span th:text="${tag.name()}">Tag</span>
+                <button type="button" class="chip-remove"
+                        th:attr="data-freelancer-id=${freelancer.id},data-tag-id=${tag.id()}"
+                        onclick="removeTag(this)">×</button>
+              </span>
+            </div>
+            <select class="tag-add-select" th:id="'tag-select-' + ${tagType.name()}"
+                    th:attr="data-freelancer-id=${freelancer.id},data-tag-type=${tagType.name()}"
+                    onchange="addTag(this)">
+              <option value="">+ Tag hinzufügen</option>
+            </select>
+          </div>
+        </div>
+
+        <label style="margin-top:1rem">Skills
+          <textarea name="skills" rows="5" th:text="${freelancer.skills}"
+                    placeholder="Java, Spring Boot, Docker..."></textarea>
+        </label>
+      </div>
+
+      <!-- Audit-Info -->
+      <div class="fcard" th:if="${freelancer.id != null}">
+        <p class="subsection-label">Erfasst: <span th:text="${#temporals.format(freelancer.creationDate,'dd.MM.yyyy HH:mm')}"></span>
+          von <span th:text="${freelancer.creationUser}"></span></p>
+        <p class="subsection-label">Geändert: <span th:text="${#temporals.format(freelancer.changedDate,'dd.MM.yyyy HH:mm')}"></span>
+          von <span th:text="${freelancer.changedUser}"></span></p>
+      </div>
+
+    </form>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Kontaktmöglichkeiten -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="fcard" th:if="${freelancer.id != null}" id="contacts-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <h2 style="margin:0">Kontaktmöglichkeiten</h2>
+        <button class="btn btn-sm btn-secondary"
+                type="button"
+                th:onclick="'openModal(\'modal-contact\')'">+ Hinzufügen</button>
+      </div>
+      <div class="clist" id="contacts-list">
+        <div class="citem" th:each="c : ${contacts}">
+          <span class="cbadge" th:text="${c.type()}">Typ</span>
+          <span class="cval">
+            <a th:if="${c.type() == 'EMAIL'}" th:href="'mailto:' + ${c.value()}" th:text="${c.value()}"></a>
+            <a th:if="${c.type() == 'TELEFON'}" th:href="'tel:' + ${c.value()}" th:text="${c.value()}"></a>
+            <a th:if="${c.type() == 'FAX'}" th:href="'tel:' + ${c.value()}" th:text="${c.value()}"></a>
+            <a th:if="${c.type() == 'WEB' or c.type() == 'XING' or c.type() == 'GULP'}"
+               th:href="${c.value()}" th:text="${c.value()}" target="_blank" rel="noopener noreferrer"></a>
+            <span th:if="${c.type() != 'EMAIL' and c.type() != 'TELEFON' and c.type() != 'FAX'
+                           and c.type() != 'WEB' and c.type() != 'XING' and c.type() != 'GULP'}"
+                  th:text="${c.value()}"></span>
+          </span>
+          <div class="cacts">
+            <button class="ibtn del" type="button"
+                    th:attr="data-contact-id=${c.id()},data-freelancer-id=${freelancer.id}"
+                    onclick="deleteContact(this)">🗑</button>
+          </div>
+        </div>
+        <p th:if="${contacts.isEmpty()}"
+           style="font-size:.82rem;color:var(--text-3);font-style:italic;margin:4px 6px">
+          Noch keine Kontaktmöglichkeiten vorhanden.
+        </p>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- Kontakthistorie -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="fcard" th:if="${freelancer.id != null}" id="history-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <h2 style="margin:0">Kontakthistorie</h2>
+        <button type="button" class="btn btn-sm btn-secondary"
+                th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
+      </div>
+      <div class="chist" id="history-list">
+        <div class="chist-entry" th:each="entry : ${history}">
+          <div class="chist-meta">
+            <span class="cbadge" th:text="${entry.typeDescription()}">Typ</span>
+            <span th:text="${#temporals.format(entry.creationDate(),'dd.MM.yyyy HH:mm')}"></span>
+            von <strong th:text="${entry.creationUser()}"></strong>
+            <span th:if="${entry.changedDate() != null and entry.changedUser() != null
+                           and !entry.creationDate().equals(entry.changedDate())}">
+              · geändert <span th:text="${#temporals.format(entry.changedDate(),'dd.MM.yyyy HH:mm')}"></span>
+              von <strong th:text="${entry.changedUser()}"></strong>
+            </span>
+          </div>
+          <div class="chist-text" th:text="${entry.description()}"></div>
+          <div class="chist-actions">
+            <button type="button" class="ibtn del"
+                    th:attr="data-history-id=${entry.id()},data-freelancer-id=${freelancer.id}"
+                    onclick="deleteHistoryEntry(this)">🗑</button>
+          </div>
+        </div>
+        <p th:if="${history.isEmpty()}"
+           style="font-size:.82rem;color:var(--text-3);font-style:italic">
+          Keine Historieneinträge vorhanden.
+        </p>
+      </div>
+    </div>
+
+  </div><!-- /#page -->
+
+  <!-- ================================================================== -->
+  <!-- MODALS -->
+  <!-- ================================================================== -->
+
+  <!-- Löschen-Bestätigung -->
+  <div th:replace="~{fragments/modal :: modal(
+      'modal-delete',
+      'Freiberufler löschen',
+      ~{::div#modal-delete-body},
+      ~{::div#modal-delete-footer})}">
+  </div>
+  <div id="modal-delete-body" style="display:none">
+    <p>Soll dieser Freiberufler wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
+  </div>
+  <div id="modal-delete-footer" style="display:none">
+    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete')">Abbrechen</button>
+    <button type="button" class="btn btn-danger" id="btn-delete-confirm">Löschen</button>
+  </div>
+
+  <!-- Löschen verhindert (Projektpositionen) -->
+  <div th:replace="~{fragments/modal :: modal(
+      'modal-delete-blocked',
+      'Freiberufler kann nicht gelöscht werden',
+      ~{::div#modal-delete-blocked-body},
+      ~{::div#modal-delete-blocked-footer})}">
+  </div>
+  <div id="modal-delete-blocked-body" style="display:none">
+    <p>Der Freiberufler kann nicht gelöscht werden, da noch Projektpositionen zugeordnet sind:</p>
+    <ul id="blocked-project-ids"></ul>
+  </div>
+  <div id="modal-delete-blocked-footer" style="display:none">
+    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete-blocked')">Schließen</button>
+  </div>
+
+  <!-- Kontaktmöglichkeit – Neu -->
+  <div th:replace="~{fragments/modal :: modal(
+      'modal-contact',
+      'Kontaktmöglichkeit',
+      ~{::div#modal-contact-body},
+      ~{::div#modal-contact-footer})}">
+  </div>
+  <div id="modal-contact-body" style="display:none">
+    <div class="field-grid col-1">
+      <label>Typ
+        <select id="contact-type">
+          <option value="EMAIL">E-Mail</option>
+          <option value="TELEFON">Telefon</option>
+          <option value="FAX">Fax</option>
+          <option value="WEB">Website</option>
+          <option value="XING">XING</option>
+          <option value="GULP">GULP</option>
+        </select>
+      </label>
+      <label>Wert
+        <input type="text" id="contact-value" placeholder="z. B. info@example.com"/>
+      </label>
+    </div>
+  </div>
+  <div id="modal-contact-footer" style="display:none">
+    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-contact')">Abbrechen</button>
+    <button type="button" class="btn btn-primary" id="btn-contact-save">Speichern</button>
+  </div>
+
+  <!-- Kontakthistorie – Neuer Eintrag -->
+  <div th:replace="~{fragments/modal :: modal(
+      'modal-history',
+      'Kontakthistorie',
+      ~{::div#modal-history-body},
+      ~{::div#modal-history-footer})}">
+  </div>
+  <div id="modal-history-body" style="display:none">
+    <input type="hidden" id="history-edit-id"/>
+    <div class="field-grid col-1">
+      <label>Typ
+        <select id="history-type-id">
+          <option th:each="ht : ${historyTypes}" th:value="${ht.id()}"
+                  th:text="${ht.description()}">Typ</option>
+        </select>
+      </label>
+      <label>Beschreibung
+        <textarea id="history-description" rows="4" placeholder="Gesprächsnotiz..."></textarea>
+      </label>
+    </div>
+  </div>
+  <div id="modal-history-footer" style="display:none">
+    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-history')">Abbrechen</button>
+    <button type="button" class="btn btn-primary" id="btn-history-save">Speichern</button>
+  </div>
+
+  <!-- Optimistic-Locking-Konflikt -->
+  <div th:replace="~{fragments/modal :: modal(
+      'modal-conflict',
+      'Speichern nicht möglich',
+      ~{::div#modal-conflict-body},
+      ~{::div#modal-conflict-footer})}">
+  </div>
+  <div id="modal-conflict-body" style="display:none">
+    <p>Der Datensatz wurde zwischenzeitlich von einem anderen Benutzer geändert.
+       Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>
+  </div>
+  <div id="modal-conflict-footer" style="display:none">
+    <button type="button" class="btn btn-secondary" onclick="location.reload()">Seite neu laden</button>
+  </div>
+
+  <!-- ================================================================== -->
+  <!-- JavaScript -->
+  <!-- ================================================================== -->
+  <script th:inline="javascript">
+    var freelancerId = /*[[${freelancer.id}]]*/ null;
+
+    // Modal helpers
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // ---- Save with Unified Save + optimistic locking ----
+    document.getElementById('freelancer-form')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var form = this;
+      var data = new URLSearchParams(new FormData(form));
+      apiFetch('/freelancer/save', { method: 'POST', body: data,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
+        .then(function(r) {
+          if (r.ok && r.redirected) { location.href = r.url; return; }
+          if (r.status === 409) { openModal('modal-conflict'); return; }
+          if (r.ok) { location.reload(); }
+        });
+    });
+
+    // ---- Delete ----
+    document.getElementById('btn-delete-confirm')?.addEventListener('click', function() {
+      if (!freelancerId) return;
+      apiFetch('/freelancer/delete/' + freelancerId, { method: 'POST' })
+        .then(function(r) {
+          if (r.ok) { location.href = '/freelancer/new'; return; }
+          return r.json();
+        })
+        .then(function(data) {
+          if (data && data.blocked) {
+            closeModal('modal-delete');
+            var ul = document.getElementById('blocked-project-ids');
+            ul.innerHTML = '';
+            (data.projectIds || []).forEach(function(id) {
+              var li = document.createElement('li');
+              li.textContent = 'Projekt-ID: ' + id;
+              ul.appendChild(li);
+            });
+            openModal('modal-delete-blocked');
+          }
+        });
+    });
+
+    // ---- Contacts (inline: saved in contactsJson hidden field) ----
+    var contacts = /*[[${#lists.isEmpty(contacts)}]]*/ true
+        ? []
+        : JSON.parse(document.getElementById('contacts-json').value);
+
+    function renderContacts() {
+      document.getElementById('contacts-json').value = JSON.stringify(contacts);
+    }
+
+    document.getElementById('btn-contact-save')?.addEventListener('click', function() {
+      var type = document.getElementById('contact-type').value;
+      var value = document.getElementById('contact-value').value;
+      if (!value.trim()) return;
+      contacts.push({id: null, type: type, value: value});
+      renderContacts();
+      closeModal('modal-contact');
+      document.getElementById('contact-value').value = '';
+      location.reload(); // reload to re-render contact list from server
+    });
+
+    function deleteContact(btn) {
+      var contactId = parseInt(btn.dataset.contactId);
+      if (freelancerId && contactId) {
+        // Mark for deletion by removing from form's contacts list
+        contacts = contacts.filter(function(c) { return c.id !== contactId; });
+        renderContacts();
+        location.reload();
+      }
+    }
+
+    // ---- History (inline: saved in historyJson hidden field) ----
+    var history = [];
+    function renderHistory() {
+      document.getElementById('history-json').value = JSON.stringify(history);
+    }
+
+    document.getElementById('btn-history-save')?.addEventListener('click', function() {
+      var typeId = parseInt(document.getElementById('history-type-id').value);
+      var desc = document.getElementById('history-description').value;
+      if (!desc.trim()) return;
+      history.push({id: null, typeId: typeId, description: desc});
+      renderHistory();
+      closeModal('modal-history');
+      document.getElementById('history-description').value = '';
+      location.reload();
+    });
+
+    function deleteHistoryEntry(btn) {
+      var hId = parseInt(btn.dataset.historyId);
+      history = history.filter(function(h) { return h.id !== hId; });
+      renderHistory();
+      location.reload();
+    }
+
+    // ---- Tags (AJAX) ----
+    function loadAvailableTags(typeEl) {
+      var type = typeEl.dataset.tagType;
+      apiFetch('/freelancer/' + freelancerId + '/available-tags/' + type, { method: 'GET' })
+        .then(function(r) { return r.json(); })
+        .then(function(tags) {
+          typeEl.innerHTML = '<option value="">+ Tag hinzufügen</option>';
+          tags.forEach(function(tag) {
+            var opt = document.createElement('option');
+            opt.value = tag.id;
+            opt.textContent = tag.name;
+            typeEl.appendChild(opt);
+          });
+        });
+    }
+
+    function addTag(selectEl) {
+      var tagId = parseInt(selectEl.value);
+      if (!tagId || !freelancerId) return;
+      apiFetch('/freelancer/' + freelancerId + '/tags', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({tagId: tagId})
+      }).then(function(r) {
+        if (r.ok) { location.reload(); }
+      });
+    }
+
+    function removeTag(btn) {
+      var freelancerTagId = btn.dataset.tagId;
+      if (!freelancerTagId || !freelancerId) return;
+      apiFetch('/freelancer/' + freelancerId + '/tags/' + freelancerTagId, { method: 'DELETE' })
+        .then(function(r) {
+          if (r.ok) { location.reload(); }
+        });
+    }
+
+    // Load available tags for all selects on page load
+    if (freelancerId) {
+      document.querySelectorAll('.tag-add-select').forEach(function(sel) {
+        loadAvailableTags(sel);
+      });
+    }
+
+    // bfcache handler
+    window.addEventListener('pageshow', function(e) {
+      if (e.persisted) { location.reload(); }
+    });
+  </script>
 
 </body>
 </html>

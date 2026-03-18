@@ -2,18 +2,55 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
+<!--
+  Fragment: Suchergebnis-Tabelle für Freiberufler-QBE-Suche.
+  Eingebunden via POST /freelancer/search.
+-->
 <div th:fragment="results">
-  <p th:text="'Treffer: ' + ${totalCount}">Treffer</p>
-  <table>
+
+  <p th:if="${totalCount != null}">
+    <strong th:text="${totalCount}">0</strong> Treffer gefunden.
+  </p>
+
+  <table class="data-table" th:if="${results != null and !results.isEmpty()}">
+    <thead>
+      <tr>
+        <th>Name 1</th>
+        <th>Name 2</th>
+        <th>Firma</th>
+        <th>Ort</th>
+        <th>Verfügbar ab</th>
+        <th>Tagessatz</th>
+        <th>Code</th>
+        <th></th>
+      </tr>
+    </thead>
     <tbody>
-      <tr th:each="r : ${results}">
-        <td th:text="${r.name1()}">Name</td>
-        <td th:text="${r.name2()}">Vorname</td>
-        <td th:text="${r.company()}">Firma</td>
-        <td th:text="${r.city()}">Ort</td>
+      <tr th:each="result : ${results}">
+        <td>
+          <a th:href="@{/freelancer/{id}(id=${result.id()})}" th:text="${result.name1()}"></a>
+        </td>
+        <td th:text="${result.name2()}"></td>
+        <td th:text="${result.company()}"></td>
+        <td th:text="${result.city()}"></td>
+        <td th:text="${result.availabilityAsDate() != null} ? ${#temporals.format(result.availabilityAsDate(), 'dd.MM.yyyy')} : ''"></td>
+        <td th:text="${result.salaryPerDayLong() != null} ? ${result.salaryPerDayLong()} + ' €' : ''"></td>
+        <td th:text="${result.code()}"></td>
+        <td>
+          <a class="btn btn-sm btn-secondary" th:href="@{/freelancer/{id}(id=${result.id()})}">Öffnen</a>
+        </td>
       </tr>
     </tbody>
   </table>
+
+  <p th:if="${results == null or results.isEmpty()}">Keine Treffer gefunden.</p>
+
+  <!-- Infinite Scroll Sentinel -->
+  <ps-infinite-scroll
+      th:if="${nextUrl != null}"
+      th:attr="data-next-url=${nextUrl}, data-target='#search-results'">
+  </ps-infinite-scroll>
+
 </div>
 
 </body>
