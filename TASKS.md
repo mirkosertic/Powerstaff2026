@@ -391,9 +391,9 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 5.3 Project – Validierung
-- [ ] `ProjectValidator` implements Spring `Validator`: `customerId` und `partnerId` gleichzeitig gesetzt → `ValidationException`; registriert als `@Component`
-- [ ] Test: `ProjectValidatorSpec` (Spock Unit-Test): beide null → ok; einer gesetzt → ok; beide gesetzt → Exception
-- [ ] Git-Commit
+- [x] `ProjectValidator` implements Spring `Validator` (@Component): customerId + partnerId gleichzeitig → global error "project.bothFks"
+- [x] Test: `ProjectValidatorSpec` (Spock Unit-Test): beide null, nur customer, nur partner, beide gesetzt → Fehler, supports()
+- [x] Git-Commit
 
 ### 5.4 Project – CommandService
 - [ ] `ProjectCommandService.save(Project)`: ruft `projectValidator.validate()`, speichert, fängt Optimistic-Locking-Fehler
