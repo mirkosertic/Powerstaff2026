@@ -114,6 +114,32 @@ public class FreelancerQueryService {
         return stmt.query(Long.class).single();
     }
 
+    public List<FreelancerContactView> findContactsByFreelancerId(long freelancerId) {
+        return jdbcClient.sql("""
+                SELECT id, type, value, freelancer_id
+                FROM freelancer_contact
+                WHERE freelancer_id = :freelancerId
+                ORDER BY type ASC, value ASC
+                """)
+                .param("freelancerId", freelancerId)
+                .query(FreelancerContactView.class)
+                .list();
+    }
+
+    public List<FreelancerHistoryView> findHistoryByFreelancerId(long freelancerId) {
+        return jdbcClient.sql("""
+                SELECT fh.id, fh.creation_date, fh.creation_user, fh.changed_date, fh.changed_user,
+                       fh.description, fh.type_id, ht.description AS type_description, fh.freelancer_id
+                FROM freelancer_history fh
+                JOIN historytype ht ON ht.id = fh.type_id
+                WHERE fh.freelancer_id = :freelancerId
+                ORDER BY fh.creation_date DESC
+                """)
+                .param("freelancerId", freelancerId)
+                .query(FreelancerHistoryView.class)
+                .list();
+    }
+
     public List<TagInfo> findTagsByFreelancerId(long freelancerId) {
         return jdbcClient.sql("""
                 SELECT t.id, t.tagname AS name, t.type
