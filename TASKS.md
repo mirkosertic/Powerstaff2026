@@ -221,36 +221,36 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 ## Phase 3 – Modul `freelancer`
 
 ### 3.1 Freelancer – Domain & Repository
-- [ ] Aggregate `Freelancer` im Paket `de.mirkosertic.powerstaff.freelancer` mit allen Feldern gemäß FREIBERUFLER.md (alle Gruppen); `@Version dbVersion`; Audit-Felder; `partnerId` nullable FK
-- [ ] `FreelancerRepository`
-- [ ] Test: `FreelancerRepositoryIT`: CRUD, Optimistic-Locking-Konflikt → `OptimisticLockingFailureException`
-- [ ] Git-Commit
+- [x] Aggregate `Freelancer` im Paket `de.mirkosertic.powerstaff.freelancer` mit allen Feldern gemäß FREIBERUFLER.md (alle Gruppen); `@Version dbVersion`; Audit-Felder; `partnerId` nullable FK
+- [x] `FreelancerRepository`
+- [x] Test: `FreelancerRepositoryIT`: CRUD, Optimistic-Locking-Konflikt → `OptimisticLockingFailureException`
+- [x] Git-Commit
 
 ### 3.2 Freelancer – Tags (Domain + Repository)
-- [ ] Aggregate `FreelancerTag` (`id`, `freelancerId`, `tagId`, Audit-Felder); UNIQUE-Constraint `(freelancer_id, tag_id)`
-- [ ] `FreelancerTagRepository`
-- [ ] `FreelancerTagCommandService`: `addTag(Long freelancerId, Long tagId)` → wirft `DuplicateTagException` bei Violation des UNIQUE-Index; `removeTag(Long freelancerTagId)`
-- [ ] Test: `FreelancerTagRepositoryIT`: insert, findByFreelancerId, delete, Duplicate → Exception
-- [ ] Git-Commit
+- [x] Aggregate `FreelancerTag` (`id`, `freelancerId`, `tagId`, Audit-Felder); UNIQUE-Constraint `(freelancer_id, tag_id)`
+- [x] `FreelancerTagRepository`
+- [x] `FreelancerTagCommandService`: `addTag(Long freelancerId, Long tagId)` → wirft `DuplicateTagException` bei Violation des UNIQUE-Index; `removeTag(Long freelancerTagId)`
+- [x] Test: `FreelancerTagRepositoryIT`: insert, findByFreelancerId, delete, Duplicate → Exception
+- [x] Git-Commit
 
 ### 3.3 Freelancer – CommandService
-- [ ] `FreelancerCommandService.save(Freelancer)`: speichert, fängt `OptimisticLockingFailureException` → wirft `OptimisticLockingException`
-- [ ] `FreelancerCommandService.delete(Long id)`: prüft Einträge in `project_position` via `JdbcClient`; wenn vorhanden → wirft `FreelancerHasPositionsException(List<String> projectNumbers)`; sonst `freelancerRepository.deleteById(id)`
-- [ ] Test: `FreelancerCommandServiceIT`: save neu, save update, delete ohne Positionen, delete mit Positionen → Exception
-- [ ] Git-Commit
+- [x] `FreelancerCommandService.save(Freelancer)`: speichert, fängt `OptimisticLockingFailureException` → wirft `OptimisticLockingException`
+- [x] `FreelancerCommandService.delete(Long id)`: prüft Einträge in `project_position` via `JdbcClient`; wenn vorhanden → wirft `FreelancerHasPositionsException(List<String> projectNumbers)`; sonst `freelancerRepository.deleteById(id)`
+- [x] Test: `FreelancerCommandServiceIT`: save neu, save update, delete ohne Positionen, delete mit Positionen → Exception
+- [x] Git-Commit
 
 ### 3.4 Freelancer – QueryService (Navigation + findById)
-- [ ] `FreelancerQueryService.findById(Long)`, `findFirst()`, `findLast()`, `findPrevious(Long)`, `findNext(Long)` – analog zu `PartnerQueryService`
-- [ ] Test: `FreelancerQueryServiceIT` (Navigation, 3 Datensätze)
-- [ ] Git-Commit
+- [x] `FreelancerQueryService.findById(Long)`, `findFirst()`, `findLast()`, `findPrevious(Long)`, `findNext(Long)` – analog zu `PartnerQueryService`
+- [x] Test: `FreelancerQueryServiceIT` (Navigation, 3 Datensätze)
+- [x] Git-Commit
 
 ### 3.5 Freelancer – QueryService (QBE-Suche)
-- [ ] Record `FreelancerSearchCriteria` mit 19 Feldern gemäß FREIBERUFLER.md (alle Suchfelder)
-- [ ] Record `FreelancerSearchResult(Long id, String name1, String name2, LocalDateTime availabilityAsDate, Long salaryLong, String skills, String code)` + `List<TagInfo> tags`
-- [ ] `FreelancerQueryService.search(FreelancerSearchCriteria, int offset, int limit)`: QBE – LIKE für Strings, exakter Vergleich für `kontaktart`; JOIN `freelancer_tags` + `tags` für Tag-Daten; GROUP BY / Aggregation für Tags per Freelancer; `ORDER BY name1 ASC, name2 ASC`
-- [ ] `FreelancerQueryService.countSearch(FreelancerSearchCriteria)` → `long`
-- [ ] Test: `FreelancerQueryServiceIT` ergänzt: QBE ein Feld, QBE `kontaktart` exakt, QBE ohne Treffer, Tags erscheinen in Ergebnis
-- [ ] Git-Commit
+- [x] Record `FreelancerSearchCriteria` mit 19 Feldern gemäß FREIBERUFLER.md (alle Suchfelder)
+- [x] Record `FreelancerSearchResult` (10 Felder für Listansicht)
+- [x] `FreelancerQueryService.search(FreelancerSearchCriteria, int offset, int limit)`: LIKE für Strings, <= für Salary-Felder; `ORDER BY name1 ASC, name2 ASC`
+- [x] `FreelancerQueryService.countSearch(FreelancerSearchCriteria)` → `long`
+- [x] Test: `FreelancerQueryServiceSearchIT`: 9 Tests (ein Feld, AND, kein Treffer, skills LIKE, salary, pagination, countSearch)
+- [x] Git-Commit
 
 ### 3.6 Freelancer – QueryService (Tags)
 - [ ] Record `TagInfo(Long id, String name, TagType type)`

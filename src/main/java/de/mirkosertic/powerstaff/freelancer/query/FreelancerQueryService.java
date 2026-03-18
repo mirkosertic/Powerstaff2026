@@ -1,10 +1,12 @@
 package de.mirkosertic.powerstaff.freelancer.query;
 
+import de.mirkosertic.powerstaff.shared.TagType;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,6 +112,44 @@ public class FreelancerQueryService {
             stmt = stmt.param(i + 1, params.get(i));
         }
         return stmt.query(Long.class).single();
+    }
+
+    public List<TagInfo> findTagsByFreelancerId(long freelancerId) {
+        return jdbcClient.sql("""
+                SELECT t.id, t.tagname AS name, t.type
+                FROM freelancer_tags ft
+                JOIN tags t ON t.id = ft.tag_id
+                WHERE ft.freelancer_id = :freelancerId
+                """)
+                .param("freelancerId", freelancerId)
+                .query((rs, rowNum) -> new TagInfo(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        TagType.valueOf(rs.getString("type"))))
+                .list()
+                .stream()
+                .sorted(Comparator.comparingInt((TagInfo ti) -> ti.type().getOrder())
+                        .thenComparing(TagInfo::name))
+                .toList();
+    }
+
+    public List<TagInfo> findAvailableTagsByFreelancerIdAndType(long freelancerId, TagType type) {
+        return jdbcClient.sql("""
+                SELECT t.id, t.tagname AS name, t.type
+                FROM tags t
+                WHERE t.type = :type
+                  AND t.id NOT IN (
+                      SELECT ft.tag_id FROM freelancer_tags ft WHERE ft.freelancer_id = :freelancerId
+                  )
+                ORDER BY t.tagname ASC
+                """)
+                .param("type", type.name())
+                .param("freelancerId", freelancerId)
+                .query((rs, rowNum) -> new TagInfo(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        TagType.valueOf(rs.getString("type"))))
+                .list();
     }
 
     private static void appendStringCriteria(StringBuilder sql, List<Object> params, FreelancerSearchCriteria c) {
