@@ -366,11 +366,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 4.8 Kunde – Thymeleaf Templates
-- [ ] `kunde/form.html`: Shell, Toolbar (Navigation, Neu, Speichern, Löschen, Gemerktes-Projekt-Anzeige), alle Feldkarten (Adresse, Kontaktinformationen + `fragments/contact-list.html`, Kommentar, Konditionen), Projekte-Karte (`col-wide`, Tabelle + Neu-Projekt-Button), Kontakthistorie-Sektion
-- [ ] Banners: Kontaktsperre, `<ps-dirty-banner>`; Modale: Löschen-Bestätigung, Projektlisten-Fehler, Optimistic-Locking-Konflikt, Kontaktmöglichkeit-Modal, Kontakthistorie-Modal
-- [ ] `kunde/search-results.html` (Fragment): Treffertabelle (company, name1, name2, city) mit Infinite Scroll
-- [ ] Test: `KundeControllerIT` Template-Rendering
-- [ ] Git-Commit
+- [x] `kunde/form.html`: Shell, Toolbar, alle Feldkarten (Adresse, Kontaktinformationen, Kommentar, Konditionen), Projekte-Karte (col-wide), Kontaktmöglichkeiten, Kontakthistorie
+- [x] Banners: Kontaktsperre, ps-dirty-banner; Modale: Löschen, Projektlisten-Fehler, Optimistic-Locking, Kontaktmöglichkeit, Kontakthistorie
+- [x] `kunde/search-results.html`: Fragment mit Treffertabelle (company, name1, name2, city), Infinite Scroll
+- [x] Test: KundeControllerIT Template-Rendering (in 4.6 enthalten)
+- [x] Git-Commit
 
 ---
 
