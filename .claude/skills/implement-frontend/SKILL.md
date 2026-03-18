@@ -11,16 +11,48 @@ Du bist ein erfahrener Thymeleaf-/Vanilla-JS-Entwickler, der das Powerstaff-2026
 
 ---
 
-## Pflichtlektüre — immer zuerst laden
+## Schritt 0 (PFLICHT): CSS-Klassen-Inventar erstellen
+
+**Bevor du eine einzige Zeile Template-Code schreibst**, lies alle CSS-Quelldateien vollständig:
+
+1. `src/main/frontend/src/css/base.css`
+2. `src/main/frontend/src/css/layout.css`
+3. `src/main/frontend/src/css/components.css`
+4. `src/main/frontend/src/css/components2.css`
+5. `src/main/frontend/src/css/chat.css`
+
+Erstelle dir intern eine Liste aller verfügbaren CSS-Klassen. Du darfst **ausschließlich diese Klassen** in Templates verwenden. Das Erfinden neuer Klassen ist verboten — neue Styles gehören in die CSS-Datei, nicht als Inline-Style.
+
+**Zusätzliche Pflichtlektüre:**
 
 | Dokument                                  | Relevante Abschnitte                                  |
 |-------------------------------------------|-------------------------------------------------------|
 | `specs/SWARCHITEKTUR.md`                  | 5 (Frontend-Strategie), 6 (Validierungsstrategie)     |
 | `specs/UI-DESIGNSYSTEM.md`                | Vollständig — Komponentenkatalog, Layout, CSS-Klassen |
-| `prototype/base.css`                      | Vollständig — CSS-Klassen und ihre Verwendung         |
+| `prototype/freiberufler.html`             | Vollständig — **einzige visuelle Wahrheit** für Layout und HTML-Struktur |
 | Modul-Spec (`specs/FREIBERUFLER.md` etc.) | Vollständig — Felder, Workflows, UX-Anforderungen     |
 
-Lies diese Dokumente vollständig, bevor du eine einzige Zeile Template- oder JS-Code schreibst.
+**Wichtige CSS-Klassen-Kurzreferenz** (häufige Fehlerquellen):
+
+| Bereich | Richtig | Falsch (nicht verwenden) |
+|---------|---------|--------------------------|
+| Akkordeon-Karte Header | `.fcard-hd` + `.fcard-title` + `.fcard-chv` | `<h2>` direkt in `.fcard` |
+| Akkordeon-Karte Inhalt | `.fcard-body` | Content direkt in `.fcard` |
+| Seiten-Grid | `.form-grid` + `.col-wide` | kein Grid / eigene Grid-Klassen |
+| Feld-Container | `.fg` | – |
+| 2-spaltig | `.fg2` | `.field-grid`, `.field-grid.col-2` |
+| 3-spaltig | `.fg3` | `.field-grid.col-3` |
+| Checkbox | `.cbfield` in `.cbrow` | `.checkbox-pill` |
+| Button sekundär | `.btn-ghost` | `.btn-secondary` |
+| Button primär | `.btn-pri` | `.btn-primary` |
+| Kontaktsperre-Banner | `.banner-forbidden` | `.banner-error` |
+| History-Liste | `.hlist` > `.hitem` > `.hitem-hd` + `.hbody` | `.chist`, `.chist-entry` |
+| History-Badge | `.hbadge` + `.hmeta` + `.hacts` | `.chist-meta`, `.chist-text` |
+| Tag-Grid | `.tag-grid` | `.tag-group` |
+| Tag-Kategorie | `.tg-label` | `.subsection-label` (in Tag-Kontext) |
+| Chip-Reihe | `.chip-row` | `.chip-list` |
+| Chip-Entfernen | `.chip-x` | `.chip-remove` |
+| Chip-Hinzufügen | `.chip-add` | `.tag-add-select` |
 
 ---
 
@@ -110,15 +142,28 @@ Alle Templates müssen mit `@WebMvcTest` + echtem Thymeleaf-Rendering getestet s
 
 ## Qualitätsprüfung vor Ausgabe
 
-- [ ] Kein externes CSS-Framework, kein externes JS-Framework
-- [ ] Alle CSS-Klassen aus `base.css` (keine ad-hoc Inline-Styles außer dynamischen Status-Farben)
+**CSS-Konformität (KRITISCH):**
+- [ ] Jede verwendete CSS-Klasse in `src/main/frontend/src/css/` per Grep verifiziert?
+- [ ] Kein externes CSS-Framework, keine erfundenen Klassen, keine ad-hoc Inline-Styles
+- [ ] `.fcard` hat `.fcard-hd` (mit `.fcard-title` + `.fcard-chv`) + `.fcard-body`?
+- [ ] Seiten-Content in `.form-grid` mit `.col-wide` für breite Cards?
+- [ ] Field-Grids: `.fg2` / `.fg3` / `.fg4` (NICHT `.field-grid`)?
+- [ ] Felder: `<div class="fg"><label>…</label><input/></div>` Struktur?
+- [ ] Checkboxen: `.cbfield` in `.cbrow` (NICHT `.checkbox-pill`)?
+- [ ] Buttons: `.btn-ghost` / `.btn-pri` / `.btn-danger` (NICHT `.btn-secondary`)?
+- [ ] History: `.hlist` / `.hitem` / `.hitem-hd` / `.hbody` (NICHT `.chist-*`)?
+- [ ] Tags: `.tag-grid` / `.tg-label` / `.chip-row` / `.chip-x` / `.chip-add`?
+- [ ] Banner: `.banner-forbidden` (NICHT `.banner-error`)?
+
+**Struktur & Verhalten:**
+- [ ] `<ps-dirty-banner>` ist INNERHALB des `<form>`-Elements?
+- [ ] Toolbar-Löschen-Button ruft `openModal('modal-id')` auf (NICHT `href="#modal-id"`)?
 - [ ] Alle Custom Elements mit `ps-`-Präfix, Light DOM
 - [ ] `apiFetch` statt `fetch` für alle state-mutierenden Requests
 - [ ] bfcache-Handler vorhanden (oder explizit bestätigt, dass er in `main.js` bereits global aktiv ist)
 - [ ] POST-Formulare für Datensatz-Navigation (kein vorberechnetes `href`)
 - [ ] `th:errors` für alle validierten Felder vorhanden
 - [ ] HTML5-Validierungsattribute konsistent mit Modul-Spec-Constraints
-- [ ] Asset-Referenzen über `#vite.asset(...)` (kein hardcodierter Pfad)
 
 ---
 

@@ -5,8 +5,9 @@
 1. `specs/SWARCHITEKTUR.md` – verbindliche Architektur, alle ADRs
 2. `specs/UEBERSICHT.md` – fachliche Struktur und Modulübersicht
 3. `TASKS.md` – aktueller Implementierungsstand, Recovery-Punkte
+4. `UITASKS.md` – offene UI-Angleichungs-Tasks (parallel zu TASKS.md führen)
 
-Vor jedem neuen Task: `TASKS.md` lesen und prüfen, welche Tasks bereits abgehakt sind.
+Vor jedem neuen Task: `TASKS.md` und `UITASKS.md` lesen und prüfen, welche Tasks bereits abgehakt sind.
 
 ---
 
@@ -94,6 +95,34 @@ Repositories sind immer `package-private`. Kein direkter Repository-Zugriff zwis
 - **Keine gemockte Datenbank** – H2 ist verboten
 - Unit-Tests (`*Spec`) für isolierte Logik ohne DB-Zugriff
 - Integrationstests (`*IT`) laufen in der `integration-test`-Phase via maven-failsafe
+
+---
+
+## Template-Implementierung – Pflichtregeln
+
+**Vor dem Schreiben jedes Thymeleaf-Templates:**
+
+1. Alle 5 CSS-Dateien lesen: `src/main/frontend/src/css/base.css`, `layout.css`,
+   `components.css`, `components2.css`, `chat.css`
+2. **Nur CSS-Klassen verwenden, die dort definiert sind** – keine neuen erfinden
+3. `prototype/freiberufler.html` als visuelle Referenz für Layout und HTML-Struktur nutzen
+
+**Checkliste vor jedem Template-Commit:**
+
+```
+[ ] Alle verwendeten CSS-Klassen per Grep in src/main/frontend/src/css/ verifiziert?
+[ ] .fcard hat .fcard-hd (mit .fcard-title + .fcard-chv) + .fcard-body?
+[ ] fcard-Content ist in .form-grid eingebettet?
+[ ] Field-Grids nutzen .fg2 / .fg3 / .fg4 (nicht .field-grid)?
+[ ] Felder sind <div class="fg"><label>…</label><input/></div> Struktur?
+[ ] Checkboxen nutzen .cbfield (nicht .checkbox-pill)?
+[ ] Buttons nutzen .btn-ghost / .btn-pri / .btn-danger (nicht .btn-secondary / .btn-primary)?
+[ ] Kontakthistorie nutzt .hlist / .hitem / .hitem-hd / .hbody (nicht .chist-*)?
+[ ] Tags nutzen .tag-grid / .tg-label / .chip-row / .chip-x / .chip-add (nicht .tag-group / .chip-list)?
+[ ] ps-dirty-banner ist INNERHALB des <form> Elements?
+[ ] Toolbar-Löschen-Button ruft openModal() auf (nicht href="#...")?
+[ ] Kontaktsperre-Banner nutzt .banner-forbidden (nicht .banner-error)?
+```
 
 ---
 
