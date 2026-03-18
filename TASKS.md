@@ -545,8 +545,9 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 ## Phase 7 – Modultest & Integration
 
 ### 7.1 Spring Modulith – Modulstruktur
-- [ ] `ApplicationModulesSpec` (Spock): `ApplicationModules.of(PowerstaffApplication.class).verify()` → prüft dass keine zyklischen Abhängigkeiten und keine unerlaubten Paket-Querverweise existieren
-- [ ] Git-Commit
+- [x] `ApplicationModulesSpec` (Spock): `ApplicationModules.of(PowerstaffApplication.class).verify()` → prüft dass keine zyklischen Abhängigkeiten und keine unerlaubten Paket-Querverweise existieren
+- [x] `@NamedInterface` auf shared.query, freelancer.command, project.command (cross-modul genutzte Sub-Pakete)
+- [x] Git-Commit
 
 ### 7.2 Application-Start- und Flyway-Test
 - [ ] `ApplicationStartIT` (`@SpringBootTest`) extends `AbstractContainerBaseIT`: Spring-Kontext startet vollständig (kein `fail()` durch Flyway-Fehler oder Bean-Konflikte)
