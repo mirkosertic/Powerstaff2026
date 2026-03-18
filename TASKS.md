@@ -495,12 +495,12 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 6.3 Profilsuche – QueryService
-- [ ] `ProfileSearchQueryService.findChatsByUser(String userId, int offset, int limit)` → sortiert `changed_date DESC`; JOIN `project` für `project_number` (nullable)
-- [ ] `ProfileSearchQueryService.countChatsByUser(String userId)` → `long`
-- [ ] `ProfileSearchQueryService.findMessagesByChat(Long chatId)` → sortiert `sequence ASC`
-- [ ] `ProfileSearchQueryService.findLatestChatByUser(String userId)` → `Optional<Long>` (nur die chatId)
-- [ ] Test: `ProfileSearchQueryServiceIT`: mehrere Chats, Sortierung, countByUser
-- [ ] Git-Commit
+- [x] `ProfileSearchQueryService.findChatsByUser(String userId, int offset, int limit)` → sortiert `changed_date DESC`; JOIN `project` für `project_number` (nullable)
+- [x] `ProfileSearchQueryService.countChatsByUser(String userId)` → `long`
+- [x] `ProfileSearchQueryService.findMessagesByChat(Long chatId)` → sortiert `sequence ASC`
+- [x] `ProfileSearchQueryService.findLatestChatByUser(String userId)` → `Optional<Long>` (nur die chatId)
+- [x] Test: `ProfileSearchQueryServiceIT`: mehrere Chats, Sortierung, countByUser
+- [x] Git-Commit
 
 ### 6.4 Profilsuche – LLM-Kontext
 - [ ] Record `LlmProjectContext(String projectNumber, String descriptionShort, String descriptionLong, String workplace, String skills, String duration, LocalDateTime startDate, String statusLabel, Long stundensatzVk, List<LlmFreelancerContext> positions)`

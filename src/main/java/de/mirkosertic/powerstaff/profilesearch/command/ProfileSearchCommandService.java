@@ -26,6 +26,13 @@ public class ProfileSearchCommandService {
         var chat = new ProfileSearchChat();
         chat.setProjectId(projectId);
         var saved = chatRepository.save(chat);
+        // @CreatedBy sets creation_user from SecurityContextHolder (may be "system" in tests).
+        // Override explicitly with the passed userId.
+        jdbcClient.sql("UPDATE profile_search_chat SET creation_user = :userId, changed_date = :now WHERE id = :id")
+                .param("userId", userId)
+                .param("now", LocalDateTime.now())
+                .param("id", saved.getId())
+                .update();
         return saved.getId();
     }
 
