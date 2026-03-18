@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="results">
+  <p th:text="'Treffer: ' + ${totalCount}">Treffer</p>
+  <table>
+    <tbody>
+      <tr th:each="r : ${results}">
+        <td th:text="${r.name1()}">Name</td>
+        <td th:text="${r.name2()}">Vorname</td>
+        <td th:text="${r.company()}">Firma</td>
+        <td th:text="${r.city()}">Ort</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

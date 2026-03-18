@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('Freiberufler', 'freelancer', ~{::body})}">
+<body>
+
+  <div class="page-content">
+    <p th:text="${freelancer.id != null} ? 'Freiberufler #' + ${freelancer.id} : 'Neuer Freiberufler'">
+      Freiberufler
+    </p>
+  </div>
+
+</body>
+</html>
