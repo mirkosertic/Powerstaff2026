@@ -21,7 +21,7 @@
   <div id="page">
 
     <!-- Kontaktsperre-Banner -->
-    <div class="banner banner-error" th:if="${freelancer.contactForbidden}">
+    <div class="banner banner-forbidden" th:if="${freelancer.contactForbidden}">
       Kontaktsperre aktiv – keine Kontaktaufnahme erlaubt.
     </div>
 
@@ -40,56 +40,69 @@
       <!-- Adresse -->
       <div class="fcard">
         <h2>Adresse</h2>
-        <div class="field-grid col-2">
-          <label>Titel
+        <div class="fg2">
+          <div class="fg">
+            <label>Titel</label>
             <input type="text" name="titel" th:value="${freelancer.titel}" placeholder="z.B. Dr."/>
-          </label>
-          <label>Name 1
+          </div>
+          <div class="fg">
+            <label>Name 1</label>
             <input type="text" name="name1" th:value="${freelancer.name1}"/>
-          </label>
-          <label>Name 2
+          </div>
+          <div class="fg">
+            <label>Name 2</label>
             <input type="text" name="name2" th:value="${freelancer.name2}"/>
-          </label>
-          <label>Firma
+          </div>
+          <div class="fg">
+            <label>Firma</label>
             <input type="text" name="company" th:value="${freelancer.company}"/>
-          </label>
-          <label>Straße
+          </div>
+          <div class="fg">
+            <label>Straße</label>
             <input type="text" name="street" th:value="${freelancer.street}"/>
-          </label>
-          <label>PLZ
+          </div>
+          <div class="fg">
+            <label>PLZ</label>
             <input type="text" name="plz" th:value="${freelancer.plz}" style="max-width:7rem"/>
-          </label>
-          <label>Ort
+          </div>
+          <div class="fg">
+            <label>Ort</label>
             <input type="text" name="city" th:value="${freelancer.city}"/>
-          </label>
-          <label>Land
+          </div>
+          <div class="fg">
+            <label>Land</label>
             <input type="text" name="country" th:value="${freelancer.country}"/>
-          </label>
-          <label>Nationalität
+          </div>
+          <div class="fg">
+            <label>Nationalität</label>
             <input type="text" name="nationalitaet" th:value="${freelancer.nationalitaet}"/>
-          </label>
-          <label>Geburtsdatum
+          </div>
+          <div class="fg">
+            <label>Geburtsdatum</label>
             <input type="text" name="geburtsdatum" th:value="${freelancer.geburtsdatum}" placeholder="TT.MM.JJJJ"/>
-          </label>
-          <label>Partner
+          </div>
+          <div class="fg">
+            <label>Partner</label>
             <span th:if="${freelancer.partnerId != null}" class="subsection-label">
               <a th:href="@{/partner/{id}(id=${freelancer.partnerId})}"
                  th:text="${freelancer.partnerId}">–</a>
             </span>
             <span th:if="${freelancer.partnerId == null}" class="subsection-label"
                   style="color:var(--text-3);font-style:italic">Kein Partner</span>
-          </label>
+          </div>
         </div>
       </div>
 
       <!-- Kontaktinformationen -->
       <div class="fcard">
         <h2>Kontaktinformationen</h2>
-        <div class="field-grid col-2">
-          <label>Ansprechpartner
+        <div class="fg2">
+          <div class="fg">
+            <label>Ansprechpartner</label>
             <input type="text" name="contactPerson" th:value="${freelancer.contactPerson}"/>
-          </label>
-          <label>Kontaktart
+          </div>
+          <div class="fg">
+            <label>Kontaktart</label>
             <select name="kontaktart">
               <option value="" th:selected="${freelancer.kontaktart == null or freelancer.kontaktart.isEmpty()}">–</option>
               <option value="NL"  th:selected="${freelancer.kontaktart == 'NL'}">NL</option>
@@ -99,34 +112,37 @@
               <option value="NO"  th:selected="${freelancer.kontaktart == 'NO'}">NO</option>
               <option value="LL"  th:selected="${freelancer.kontaktart == 'LL'}">LL</option>
             </select>
-          </label>
-          <label>Kontaktgrund
+          </div>
+          <div class="fg">
+            <label>Kontaktgrund</label>
             <input type="text" name="contactReason" th:value="${freelancer.contactReason}"/>
-          </label>
-          <label>Kontakttyp
+          </div>
+          <div class="fg">
+            <label>Kontakttyp</label>
             <input type="text" name="contactType" th:value="${freelancer.contactType}"/>
-          </label>
-          <label>Letzter Kontakt
+          </div>
+          <div class="fg">
+            <label>Letzter Kontakt</label>
             <input type="datetime-local" name="lastContactDate"
                    th:value="${freelancer.lastContactDate != null} ? ${#temporals.format(freelancer.lastContactDate, 'yyyy-MM-dd''T''HH:mm')} : ''"/>
-          </label>
-          <div class="field-grid col-2" style="gap:.5rem">
-            <label class="checkbox-pill">
-              <input type="checkbox" name="contactForbidden" value="true"
-                     th:checked="${freelancer.contactForbidden}"/>
-              Kontaktsperre
-            </label>
-            <label class="checkbox-pill">
-              <input type="checkbox" name="showAgain" value="true"
-                     th:checked="${freelancer.showAgain}"/>
-              Wieder vorlegen
-            </label>
-            <label class="checkbox-pill">
-              <input type="checkbox" name="datenschutz" value="true"
-                     th:checked="${freelancer.datenschutz}"/>
-              Datenschutz
-            </label>
           </div>
+        </div>
+        <div class="cbrow">
+          <label class="cbfield">
+            <input type="checkbox" name="contactForbidden" value="true"
+                   th:checked="${freelancer.contactForbidden}"/>
+            Kontaktsperre
+          </label>
+          <label class="cbfield">
+            <input type="checkbox" name="showAgain" value="true"
+                   th:checked="${freelancer.showAgain}"/>
+            Wieder vorlegen
+          </label>
+          <label class="cbfield">
+            <input type="checkbox" name="datenschutz" value="true"
+                   th:checked="${freelancer.datenschutz}"/>
+            Datenschutz
+          </label>
         </div>
       </div>
 
@@ -147,42 +163,51 @@
       <!-- Verfügbarkeit & Konditionen -->
       <div class="fcard">
         <h2>Verfügbarkeit &amp; Konditionen</h2>
-        <div class="field-grid col-2">
-          <label>Verfügbar ab
+        <div class="fg2">
+          <div class="fg">
+            <label>Verfügbar ab</label>
             <input type="datetime-local" name="availabilityAsDate"
                    th:value="${freelancer.availabilityAsDate != null} ? ${#temporals.format(freelancer.availabilityAsDate, 'yyyy-MM-dd''T''HH:mm')} : ''"/>
-          </label>
-          <label>Gehalt (€/Monat)
+          </div>
+          <div class="fg">
+            <label>Gehalt (€/Monat)</label>
             <input type="number" name="salaryLong" th:value="${freelancer.salaryLong}" min="0"/>
-          </label>
-          <label>Tagessatz (€)
+          </div>
+          <div class="fg">
+            <label>Tagessatz (€)</label>
             <input type="number" name="salaryPerDayLong" th:value="${freelancer.salaryPerDayLong}" min="0"/>
-          </label>
-          <label>Remote-Satz (€)
+          </div>
+          <div class="fg">
+            <label>Remote-Satz (€)</label>
             <input type="number" name="salaryRemote" th:value="${freelancer.salaryRemote}" min="0"/>
-          </label>
-          <label>Partner-Gehalt (€/Monat)
+          </div>
+          <div class="fg">
+            <label>Partner-Gehalt (€/Monat)</label>
             <input type="number" name="salaryPartnerLong" th:value="${freelancer.salaryPartnerLong}" min="0"/>
-          </label>
-          <label>Partner-Tagessatz (€)
+          </div>
+          <div class="fg">
+            <label>Partner-Tagessatz (€)</label>
             <input type="number" name="salaryPartnerPerDayLong" th:value="${freelancer.salaryPartnerPerDayLong}" min="0"/>
-          </label>
-          <label>Debitor-Nr
+          </div>
+          <div class="fg">
+            <label>Debitor-Nr</label>
             <input type="text" name="debitorNr" th:value="${freelancer.debitorNr}"/>
-          </label>
-          <label>GULP-ID
+          </div>
+          <div class="fg">
+            <label>GULP-ID</label>
             <input type="text" name="gulpId" th:value="${freelancer.gulpId}"/>
-          </label>
+          </div>
         </div>
       </div>
 
       <!-- Kodierung & Skills -->
       <div class="fcard">
         <h2>Kodierung</h2>
-        <div class="field-grid col-2">
-          <label>Code
+        <div class="fg2">
+          <div class="fg">
+            <label>Code</label>
             <input type="text" name="code" th:value="${freelancer.code}" placeholder="FL-XXXX"/>
-          </label>
+          </div>
         </div>
 
         <!-- Tags-Sektion: je TagType eine Subsection -->
@@ -227,7 +252,7 @@
     <div class="fcard" th:if="${freelancer.id != null}" id="contacts-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h2 style="margin:0">Kontaktmöglichkeiten</h2>
-        <button class="btn btn-sm btn-secondary"
+        <button class="btn btn-sm btn-ghost"
                 type="button"
                 th:onclick="'openModal(\'modal-contact\')'">+ Hinzufügen</button>
       </div>
@@ -263,7 +288,7 @@
     <div class="fcard" th:if="${freelancer.id != null}" id="history-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h2 style="margin:0">Kontakthistorie</h2>
-        <button type="button" class="btn btn-sm btn-secondary"
+        <button type="button" class="btn btn-sm btn-ghost"
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
       <div class="chist" id="history-list">
@@ -309,7 +334,7 @@
     <p>Soll dieser Freiberufler wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
   </div>
   <div id="modal-delete-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete')">Abbrechen</button>
     <button type="button" class="btn btn-danger" id="btn-delete-confirm">Löschen</button>
   </div>
 
@@ -325,7 +350,7 @@
     <ul id="blocked-project-ids"></ul>
   </div>
   <div id="modal-delete-blocked-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete-blocked')">Schließen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete-blocked')">Schließen</button>
   </div>
 
   <!-- Kontaktmöglichkeit – Neu -->
@@ -353,7 +378,7 @@
     </div>
   </div>
   <div id="modal-contact-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-contact')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-contact')">Abbrechen</button>
     <button type="button" class="btn btn-primary" id="btn-contact-save">Speichern</button>
   </div>
 
@@ -379,7 +404,7 @@
     </div>
   </div>
   <div id="modal-history-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-history')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-history')">Abbrechen</button>
     <button type="button" class="btn btn-primary" id="btn-history-save">Speichern</button>
   </div>
 
@@ -395,7 +420,7 @@
        Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>
   </div>
   <div id="modal-conflict-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="location.reload()">Seite neu laden</button>
+    <button type="button" class="btn btn-ghost" onclick="location.reload()">Seite neu laden</button>
   </div>
 
   <!-- ================================================================== -->

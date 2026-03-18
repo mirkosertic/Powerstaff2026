@@ -20,8 +20,8 @@
   <!-- Page Content -->
   <div id="page">
 
-    <!-- Kontaktsperre-Banner (§7 banner-error) -->
-    <div class="banner banner-error" th:if="${partner.contactForbidden}">
+    <!-- Kontaktsperre-Banner (§7 banner-forbidden) -->
+    <div class="banner banner-forbidden" th:if="${partner.contactForbidden}">
       Kontaktsperre aktiv – keine Kontaktaufnahme erlaubt.
     </div>
 
@@ -40,53 +40,62 @@
       <!-- Adresse (§9 col-2) -->
       <div class="fcard">
         <h2>Adresse</h2>
-        <div class="field-grid col-2">
-          <label>Firma
+        <div class="fg2">
+          <div class="fg">
+            <label>Firma</label>
             <input type="text" name="company" th:value="${partner.company}" placeholder="Firmenbezeichnung"/>
-          </label>
-          <label>Name 1
+          </div>
+          <div class="fg">
+            <label>Name 1</label>
             <input type="text" name="name1" th:value="${partner.name1}"/>
-          </label>
-          <label>Name 2
+          </div>
+          <div class="fg">
+            <label>Name 2</label>
             <input type="text" name="name2" th:value="${partner.name2}"/>
-          </label>
-          <label>Straße
+          </div>
+          <div class="fg">
+            <label>Straße</label>
             <input type="text" name="street" th:value="${partner.street}"/>
-          </label>
-          <label>PLZ
+          </div>
+          <div class="fg">
+            <label>PLZ</label>
             <input type="text" name="plz" th:value="${partner.plz}" style="max-width:7rem"/>
-          </label>
-          <label>Ort
+          </div>
+          <div class="fg">
+            <label>Ort</label>
             <input type="text" name="city" th:value="${partner.city}"/>
-          </label>
-          <label>Land
+          </div>
+          <div class="fg">
+            <label>Land</label>
             <input type="text" name="country" th:value="${partner.country}"/>
-          </label>
+          </div>
         </div>
       </div>
 
       <!-- Konditionen -->
       <div class="fcard">
         <h2>Konditionen</h2>
-        <div class="field-grid col-2">
-          <label>Debitor-Nr
+        <div class="fg2">
+          <div class="fg">
+            <label>Debitor-Nr</label>
             <input type="text" name="debitorNr" th:value="${partner.debitorNr}"/>
-          </label>
-          <label>Kreditor-Nr
-            <input type="text" name="kreditorNr" th:value="${partner.kreditorNr}"/>
-          </label>
-          <div class="field-grid col-2" style="gap:.5rem">
-            <label class="checkbox-pill">
-              <input type="checkbox" name="contactForbidden" value="true"
-                     th:checked="${partner.contactForbidden}"/>
-              Kontaktsperre
-            </label>
-            <label class="checkbox-pill">
-              <input type="checkbox" name="showAgain" value="true"
-                     th:checked="${partner.showAgain}"/>
-              Wieder vorlegen
-            </label>
           </div>
+          <div class="fg">
+            <label>Kreditor-Nr</label>
+            <input type="text" name="kreditorNr" th:value="${partner.kreditorNr}"/>
+          </div>
+        </div>
+        <div class="cbrow">
+          <label class="cbfield">
+            <input type="checkbox" name="contactForbidden" value="true"
+                   th:checked="${partner.contactForbidden}"/>
+            Kontaktsperre
+          </label>
+          <label class="cbfield">
+            <input type="checkbox" name="showAgain" value="true"
+                   th:checked="${partner.showAgain}"/>
+            Wieder vorlegen
+          </label>
         </div>
       </div>
 
@@ -113,7 +122,7 @@
     <div class="fcard" th:if="${partner.id != null}" id="contacts-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h2 style="margin:0">Kontaktmöglichkeiten</h2>
-        <button class="btn btn-sm btn-secondary"
+        <button class="btn btn-sm btn-ghost"
                 type="button"
                 th:onclick="'openModal(\'modal-contact\')'">+ Hinzufügen</button>
       </div>
@@ -153,8 +162,8 @@
         <h2 style="margin:0">Zugeordnete Freiberufler</h2>
         <div style="display:flex;gap:.5rem">
           <input type="text" id="fl-code-input" placeholder="Code eingeben" style="width:10rem"/>
-          <button type="button" class="btn btn-sm btn-secondary" onclick="assignFreelancer()">Zuordnen</button>
-          <a class="btn btn-sm btn-secondary" th:href="@{/freelancer/new}">Neu anlegen</a>
+          <button type="button" class="btn btn-sm btn-ghost" onclick="assignFreelancer()">Zuordnen</button>
+          <a class="btn btn-sm btn-ghost" th:href="@{/freelancer/new}">Neu anlegen</a>
         </div>
       </div>
       <table class="data-table" id="freelancers-table" th:if="${!freelancers.isEmpty()}">
@@ -193,7 +202,7 @@
     <div class="fcard col-wide" th:if="${partner.id != null}">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h2 style="margin:0">Projekte</h2>
-        <a class="btn btn-sm btn-secondary"
+        <a class="btn btn-sm btn-ghost"
            th:if="${partner.id != null}"
            th:href="@{/project/new-from-partner/{id}(id=${partner.id})}">Neues Projekt</a>
       </div>
@@ -227,7 +236,7 @@
     <div class="fcard" th:if="${partner.id != null}" id="history-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h2 style="margin:0">Kontakthistorie</h2>
-        <button type="button" class="btn btn-sm btn-secondary"
+        <button type="button" class="btn btn-sm btn-ghost"
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
 
@@ -277,7 +286,7 @@
     <p>Soll dieser Partner wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
   </div>
   <div id="modal-delete-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete')">Abbrechen</button>
     <button type="button" class="btn btn-danger" id="btn-delete-confirm">Löschen</button>
   </div>
 
@@ -306,7 +315,7 @@
     </div>
   </div>
   <div id="modal-contact-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-contact')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-contact')">Abbrechen</button>
     <button type="button" class="btn btn-primary" id="btn-contact-save">Speichern</button>
   </div>
 
@@ -326,7 +335,7 @@
     </div>
   </div>
   <div id="modal-history-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-history')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-history')">Abbrechen</button>
     <button type="button" class="btn btn-primary" id="btn-history-save">Speichern</button>
   </div>
 
@@ -342,7 +351,7 @@
     <ul id="blocked-project-ids"></ul>
   </div>
   <div id="modal-delete-blocked-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete-blocked')">Schließen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete-blocked')">Schließen</button>
   </div>
 
   <!-- Freelancer-Konflikt-Dialog (bereits anderem Partner zugeordnet) -->
@@ -358,7 +367,7 @@
     <input type="hidden" id="conflict-freelancer-id"/>
   </div>
   <div id="modal-fl-conflict-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-freelancer-conflict')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-freelancer-conflict')">Abbrechen</button>
     <button type="button" class="btn btn-danger" id="btn-conflict-reassign">Trotzdem zuordnen</button>
   </div>
 
@@ -374,7 +383,7 @@
        Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>
   </div>
   <div id="modal-conflict-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="location.reload()">Seite neu laden</button>
+    <button type="button" class="btn btn-ghost" onclick="location.reload()">Seite neu laden</button>
   </div>
 
   <!-- ================================================================== -->

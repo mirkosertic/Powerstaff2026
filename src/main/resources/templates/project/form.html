@@ -36,22 +36,27 @@
       <!-- ---------------------------------------------------------------- -->
       <div class="fcard">
         <h2>Allgemein</h2>
-        <div class="field-grid col-2">
-          <label>Projektnummer
+        <div class="fg2">
+          <div class="fg">
+            <label>Projektnummer</label>
             <input type="text" name="projectNumber" th:value="${project.projectNumber}"/>
-          </label>
-          <label>Eingangsdatum
+          </div>
+          <div class="fg">
+            <label>Eingangsdatum</label>
             <input type="datetime-local" name="entryDate"
                    th:value="${project.entryDate != null} ? ${#temporals.format(project.entryDate,'yyyy-MM-dd\'T\'HH:mm')} : ''"/>
-          </label>
-          <label>Startdatum
+          </div>
+          <div class="fg">
+            <label>Startdatum</label>
             <input type="datetime-local" name="startDate"
                    th:value="${project.startDate != null} ? ${#temporals.format(project.startDate,'yyyy-MM-dd\'T\'HH:mm')} : ''"/>
-          </label>
-          <label>Laufzeit
+          </div>
+          <div class="fg">
+            <label>Laufzeit</label>
             <input type="text" name="duration" th:value="${project.duration}"/>
-          </label>
-          <label>Status
+          </div>
+          <div class="fg">
+            <label>Status</label>
             <select name="status">
               <option value="1" th:selected="${project.status == 1}">Offen</option>
               <option value="2" th:selected="${project.status == 2}">Verloren</option>
@@ -59,8 +64,10 @@
               <option value="4" th:selected="${project.status == 4}">Besetzt</option>
               <option value="5" th:selected="${project.status == 5}">Search zu</option>
             </select>
-          </label>
-          <label class="checkbox-pill" style="margin-top:1.5rem">
+          </div>
+        </div>
+        <div class="cbrow">
+          <label class="cbfield" style="margin-top:1.5rem">
             <input type="checkbox" name="visibleOnWebSite" value="true"
                    th:checked="${project.visibleOnWebSite}"/>
             Auf Website
@@ -93,10 +100,11 @@
       <!-- ---------------------------------------------------------------- -->
       <div class="fcard">
         <h2>Einsatz</h2>
-        <div class="field-grid col-2">
-          <label>Einsatzort
+        <div class="fg2">
+          <div class="fg">
+            <label>Einsatzort</label>
             <input type="text" name="workplace" th:value="${project.workplace}"/>
-          </label>
+          </div>
         </div>
       </div>
 
@@ -124,16 +132,19 @@
       <!-- ---------------------------------------------------------------- -->
       <div class="fcard">
         <h2>Konditionen</h2>
-        <div class="field-grid col-2">
-          <label>Stundensatz VK (EUR)
+        <div class="fg2">
+          <div class="fg">
+            <label>Stundensatz VK (EUR)</label>
             <input type="number" name="stundensatzVk" th:value="${project.stundensatzVk}"/>
-          </label>
-          <label>Debitor-Nr
+          </div>
+          <div class="fg">
+            <label>Debitor-Nr</label>
             <input type="text" name="debitorNr" th:value="${project.debitorNr}"/>
-          </label>
-          <label>Kreditor-Nr
+          </div>
+          <div class="fg">
+            <label>Kreditor-Nr</label>
             <input type="text" name="kreditorNr" th:value="${project.kreditorNr}"/>
-          </label>
+          </div>
         </div>
       </div>
 
@@ -181,7 +192,7 @@
             <td th:text="${pos.konditionen()}"></td>
             <td th:text="${pos.kommentar()}"></td>
             <td>
-              <button type="button" class="btn btn-sm btn-secondary"
+              <button type="button" class="btn btn-sm btn-ghost"
                       th:attr="data-pos-id=${pos.id()},data-db-version=${pos.dbVersion()},
                                data-status-id=${pos.statusId()},data-konditionen=${pos.konditionen()},
                                data-kommentar=${pos.kommentar()}"
@@ -205,7 +216,7 @@
     <div class="fcard" th:if="${project.id != null}" id="history-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h2 style="margin:0">Projekthistorie</h2>
-        <button type="button" class="btn btn-sm btn-secondary"
+        <button type="button" class="btn btn-sm btn-ghost"
                 onclick="openModal('modal-history')">+ Neuer Eintrag</button>
       </div>
       <div class="chist" id="history-list">
@@ -253,7 +264,7 @@
     <p>Soll dieses Projekt wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
   </div>
   <div id="modal-delete-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete')">Abbrechen</button>
     <button type="button" class="btn btn-danger" id="btn-delete-confirm">Löschen</button>
   </div>
 
@@ -269,7 +280,7 @@
        Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>
   </div>
   <div id="modal-conflict-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-conflict')">Schließen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-conflict')">Schließen</button>
     <button type="button" class="btn btn-primary" onclick="location.reload()">Neu laden</button>
   </div>
 
@@ -300,7 +311,7 @@
     </div>
   </div>
   <div id="modal-edit-position-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-edit-position')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-edit-position')">Abbrechen</button>
     <button type="button" class="btn btn-primary" id="btn-save-position">Speichern</button>
   </div>
 
@@ -315,7 +326,7 @@
     <p>Die Zuordnung wurde zwischenzeitlich von einem anderen Sachbearbeiter geändert.</p>
   </div>
   <div id="modal-pos-conflict-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-pos-conflict')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-pos-conflict')">Abbrechen</button>
     <button type="button" class="btn btn-primary" onclick="reloadPosition()">Neu laden</button>
   </div>
 
@@ -330,7 +341,7 @@
     <p id="modal-delete-pos-text">Die Zuordnung wird aufgehoben. Sind Sie sicher?</p>
   </div>
   <div id="modal-delete-pos-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete-position')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete-position')">Abbrechen</button>
     <button type="button" class="btn btn-danger" id="btn-confirm-delete-position">Löschen</button>
   </div>
 
@@ -350,7 +361,7 @@
     </div>
   </div>
   <div id="modal-history-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-history')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-history')">Abbrechen</button>
     <button type="button" class="btn btn-primary" id="btn-save-history">Speichern</button>
   </div>
 

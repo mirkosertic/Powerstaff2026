@@ -21,7 +21,7 @@
   <div id="page">
 
     <!-- Kontaktsperre-Banner -->
-    <div class="banner banner-error" th:if="${kunde.contactForbidden}">
+    <div class="banner banner-forbidden" th:if="${kunde.contactForbidden}">
       Kontaktsperre aktiv – keine Kontaktaufnahme erlaubt.
     </div>
 
@@ -40,47 +40,52 @@
       <!-- Adresse -->
       <div class="fcard">
         <h2>Adresse</h2>
-        <div class="field-grid col-2">
-          <label>Firma
+        <div class="fg2">
+          <div class="fg">
+            <label>Firma</label>
             <input type="text" name="company" th:value="${kunde.company}"/>
-          </label>
-          <label>Name 1
+          </div>
+          <div class="fg">
+            <label>Name 1</label>
             <input type="text" name="name1" th:value="${kunde.name1}"/>
-          </label>
-          <label>Name 2
+          </div>
+          <div class="fg">
+            <label>Name 2</label>
             <input type="text" name="name2" th:value="${kunde.name2}"/>
-          </label>
-          <label>Straße
+          </div>
+          <div class="fg">
+            <label>Straße</label>
             <input type="text" name="street" th:value="${kunde.street}"/>
-          </label>
-          <label>PLZ
+          </div>
+          <div class="fg">
+            <label>PLZ</label>
             <input type="text" name="plz" th:value="${kunde.plz}" style="max-width:7rem"/>
-          </label>
-          <label>Ort
+          </div>
+          <div class="fg">
+            <label>Ort</label>
             <input type="text" name="city" th:value="${kunde.city}"/>
-          </label>
-          <label>Land
+          </div>
+          <div class="fg">
+            <label>Land</label>
             <input type="text" name="country" th:value="${kunde.country}"/>
-          </label>
+          </div>
         </div>
       </div>
 
       <!-- Kontaktinformationen -->
       <div class="fcard">
         <h2>Kontaktinformationen</h2>
-        <div class="field-grid col-2">
-          <div class="field-grid col-2" style="gap:.5rem">
-            <label class="checkbox-pill">
-              <input type="checkbox" name="contactForbidden" value="true"
-                     th:checked="${kunde.contactForbidden}"/>
-              Kontaktsperre
-            </label>
-            <label class="checkbox-pill">
-              <input type="checkbox" name="showAgain" value="true"
-                     th:checked="${kunde.showAgain}"/>
-              Wieder vorlegen
-            </label>
-          </div>
+        <div class="cbrow">
+          <label class="cbfield">
+            <input type="checkbox" name="contactForbidden" value="true"
+                   th:checked="${kunde.contactForbidden}"/>
+            Kontaktsperre
+          </label>
+          <label class="cbfield">
+            <input type="checkbox" name="showAgain" value="true"
+                   th:checked="${kunde.showAgain}"/>
+            Wieder vorlegen
+          </label>
         </div>
       </div>
 
@@ -94,13 +99,15 @@
       <!-- Konditionen -->
       <div class="fcard">
         <h2>Konditionen</h2>
-        <div class="field-grid col-2">
-          <label>Debitor-Nr
+        <div class="fg2">
+          <div class="fg">
+            <label>Debitor-Nr</label>
             <input type="text" name="debitorNr" th:value="${kunde.debitorNr}"/>
-          </label>
-          <label>Kreditor-Nr
+          </div>
+          <div class="fg">
+            <label>Kreditor-Nr</label>
             <input type="text" name="kreditorNr" th:value="${kunde.kreditorNr}"/>
-          </label>
+          </div>
         </div>
       </div>
 
@@ -122,7 +129,7 @@
     <div class="fcard col-wide" th:if="${kunde.id != null}">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h2 style="margin:0">Projekte</h2>
-        <a class="btn btn-sm btn-secondary"
+        <a class="btn btn-sm btn-ghost"
            th:href="@{/project/new(kundeId=${kunde.id})}">+ Neues Projekt</a>
       </div>
       <table class="data-table" th:unless="${projects.isEmpty()}">
@@ -159,7 +166,7 @@
     <div class="fcard" th:if="${kunde.id != null}" id="contacts-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h2 style="margin:0">Kontaktmöglichkeiten</h2>
-        <button class="btn btn-sm btn-secondary"
+        <button class="btn btn-sm btn-ghost"
                 type="button"
                 th:onclick="'openModal(\'modal-contact\')'">+ Hinzufügen</button>
       </div>
@@ -195,7 +202,7 @@
     <div class="fcard" th:if="${kunde.id != null}" id="history-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h2 style="margin:0">Kontakthistorie</h2>
-        <button type="button" class="btn btn-sm btn-secondary"
+        <button type="button" class="btn btn-sm btn-ghost"
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
       <div class="chist" id="history-list">
@@ -241,7 +248,7 @@
     <p>Soll dieser Kunde wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
   </div>
   <div id="modal-delete-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete')">Abbrechen</button>
     <button type="button" class="btn btn-danger" id="btn-delete-confirm">Löschen</button>
   </div>
 
@@ -257,7 +264,7 @@
     <ul id="blocked-project-ids"></ul>
   </div>
   <div id="modal-delete-blocked-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete-blocked')">Schließen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete-blocked')">Schließen</button>
   </div>
 
   <!-- Kontaktmöglichkeit -->
@@ -284,7 +291,7 @@
     </div>
   </div>
   <div id="modal-contact-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-contact')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-contact')">Abbrechen</button>
     <button type="button" class="btn btn-primary" id="btn-contact-save">Speichern</button>
   </div>
 
@@ -310,7 +317,7 @@
     </div>
   </div>
   <div id="modal-history-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-history')">Abbrechen</button>
+    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-history')">Abbrechen</button>
     <button type="button" class="btn btn-primary" id="btn-history-save">Speichern</button>
   </div>
 
@@ -326,7 +333,7 @@
        Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>
   </div>
   <div id="modal-conflict-footer" style="display:none">
-    <button type="button" class="btn btn-secondary" onclick="location.reload()">Seite neu laden</button>
+    <button type="button" class="btn btn-ghost" onclick="location.reload()">Seite neu laden</button>
   </div>
 
   <!-- ================================================================== -->
