@@ -119,6 +119,32 @@ public class KundeQueryService {
                 .list();
     }
 
+    public List<KundeContactView> findContactsByKundeId(Long kundeId) {
+        return jdbcClient.sql("""
+                SELECT id, type, value, kunde_id
+                FROM kunde_contact
+                WHERE kunde_id = :kundeId
+                ORDER BY type ASC, value ASC
+                """)
+                .param("kundeId", kundeId)
+                .query(KundeContactView.class)
+                .list();
+    }
+
+    public List<KundeHistoryView> findHistoryByKundeId(Long kundeId) {
+        return jdbcClient.sql("""
+                SELECT kh.id, kh.creation_date, kh.creation_user, kh.changed_date, kh.changed_user,
+                       kh.description, kh.type_id, ht.description AS type_description, kh.kunde_id
+                FROM kunde_history kh
+                JOIN historytype ht ON ht.id = kh.type_id
+                WHERE kh.kunde_id = :kundeId
+                ORDER BY kh.creation_date DESC
+                """)
+                .param("kundeId", kundeId)
+                .query(KundeHistoryView.class)
+                .list();
+    }
+
     private static String allowedSortField(String field) {
         return switch (field == null ? "" : field) {
             case "projectNumber" -> "project_number";

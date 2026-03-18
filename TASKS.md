@@ -335,20 +335,20 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 4.4 Kunde – Kontaktmöglichkeiten (Domain + Service)
-- [ ] Aggregate `KundeContact` (`id`, `type` String, `value`, `kundeId`, Audit-Felder)
-- [ ] `KundeContactRepository`
-- [ ] `KundeContactCommandService`: `save`, `delete`
-- [ ] `KundeContactQueryService`: `findByKundeId(Long)` sortiert nach `ContactType`-Reihenfolge
-- [ ] Test: `KundeContactRepositoryIT`
-- [ ] Git-Commit
+- [x] Aggregate `KundeContact` (`id`, `type` String, `value`, `kundeId`, Audit-Felder)
+- [x] `KundeContactRepository`
+- [-] `KundeContactCommandService`: entfällt – Unified-Save-Muster in KundeCommandService
+- [x] `KundeContactQueryService`: `findContactsByKundeId` in KundeQueryService, sortiert type ASC, value ASC
+- [x] Test: `KundeContactQueryIT`
+- [x] Git-Commit
 
 ### 4.5 Kunde – Kontakthistorie (Domain + Service)
-- [ ] Aggregate `KundeHistory` (`id`, `description`, `typeId`, `kundeId`, Audit-Felder)
-- [ ] `KundeHistoryRepository`
-- [ ] `KundeHistoryCommandService`: `save`, `delete`
-- [ ] `KundeHistoryQueryService`: `findByKundeId(Long)` → JOIN `historytype`, sortiert `creation_date DESC`
-- [ ] Test: `KundeHistoryRepositoryIT`
-- [ ] Git-Commit
+- [x] Aggregate `KundeHistory` (`id`, `description`, `typeId`, `kundeId`, Audit-Felder)
+- [x] `KundeHistoryRepository`
+- [-] `KundeHistoryCommandService`: entfällt – Unified-Save-Muster in KundeCommandService
+- [x] `KundeHistoryQueryService`: `findHistoryByKundeId` in KundeQueryService, JOIN historytype, sortiert creation_date DESC
+- [x] Test: `KundeHistoryQueryIT`
+- [x] Git-Commit
 
 ### 4.6 Kunde – Controller (CRUD + Navigation)
 - [ ] `KundeController`:
