@@ -316,10 +316,10 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 ## Phase 4 – Modul `kunde`
 
 ### 4.1 Kunde – Domain & Repository
-- [ ] Aggregate `Kunde` mit allen Feldern gemäß KUNDEN.md; `@Version`, Audit-Felder
-- [ ] `KundeRepository`
-- [ ] Test: `KundeRepositoryIT`: CRUD, Optimistic-Locking-Konflikt
-- [ ] Git-Commit
+- [x] Aggregate `Kunde` mit allen Feldern gemäß KUNDEN.md; `@Version`, Audit-Felder
+- [x] `KundeRepository`
+- [x] Test: `KundeRepositoryIT`: CRUD, Optimistic-Locking-Konflikt
+- [x] Git-Commit
 
 ### 4.2 Kunde – CommandService
 - [ ] `KundeCommandService.save(Kunde)`: mit Optimistic-Locking-Handling
