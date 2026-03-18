@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="results">
+  <p th:if="${#lists.isEmpty(results)}" class="hint">Keine Treffer.</p>
+  <table th:unless="${#lists.isEmpty(results)}" class="data-table">
+    <thead>
+      <tr>
+        <th>Projektnummer</th>
+        <th>Kurzbeschreibung</th>
+        <th>Einsatzort</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="r : ${results}">
+        <td><a th:href="@{/project/{id}(id=${r.id})}" th:text="${r.projectNumber}"></a></td>
+        <td th:text="${r.descriptionShort}"></td>
+        <td th:text="${r.workplace}"></td>
+        <td th:text="${r.status}"></td>
+      </tr>
+    </tbody>
+  </table>
+  <ps-infinite-scroll th:if="${nextUrl != null}"
+                      th:attr="data-next-url=${nextUrl}"
+                      data-target="#search-results"></ps-infinite-scroll>
+</div>
+</body>
+</html>

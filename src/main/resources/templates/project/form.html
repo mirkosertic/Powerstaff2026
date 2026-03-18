@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('Projekt', 'project', ~{::body})}">
+<body>
+
+  <!-- Toolbar -->
+  <div th:replace="~{fragments/toolbar :: toolbar(
+      'Projekt',
+      @{/project/first},
+      ${project.id != null} ? @{/project/previous/{id}(id=${project.id})} : null,
+      ${project.id},
+      ${project.id != null} ? @{/project/next/{id}(id=${project.id})} : null,
+      @{/project/last},
+      null,
+      'project-form',
+      ${project.id != null} ? '#modal-delete' : null,
+      ${rememberedProject})}">
+  </div>
+
+  <main class="content">
+    <form id="project-form" method="post" th:action="@{/project/save}">
+      <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+      <input type="hidden" th:if="${project.id != null}" name="id" th:value="${project.id}"/>
+      <input type="hidden" name="dbVersion" th:value="${project.dbVersion}"/>
+
+      <section class="field-grid col-2">
+        <div class="fcard">
+          <h2 class="fcard-title">Allgemein</h2>
+          <label>Projektnummer<input type="text" name="projectNumber" th:value="${project.projectNumber}"/></label>
+          <label>Status<input type="number" name="status" th:value="${project.status}"/></label>
+        </div>
+      </section>
+    </form>
+  </main>
+
+  <!-- Modal: Löschen -->
+  <div th:replace="~{fragments/modal :: modal('modal-delete', 'Projekt löschen',
+      ~{::#modal-delete-body}, ~{::#modal-delete-footer})}"></div>
+  <div id="modal-delete-body"><p>Projekt wirklich löschen?</p></div>
+  <div id="modal-delete-footer">
+    <button type="button" class="btn-secondary" onclick="document.getElementById('modal-delete').close()">Abbrechen</button>
+    <form th:if="${project.id != null}" method="post" th:action="@{/project/delete/{id}(id=${project.id})}">
+      <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+      <button type="submit" class="btn-danger">Löschen</button>
+    </form>
+  </div>
+
+</body>
+</html>

@@ -440,7 +440,7 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 5.10 Project – Controller (CRUD + Navigation + RememberedProject)
-- [ ] `ProjectController`:
+- [x] `ProjectController`:
   - GET `/project`: lädt gemerktes Projekt des Users (`rememberedProjectService.get(username)`); wenn vorhanden → lädt `Project` und zeigt Formular; sonst → leere QBE-Maske
   - GET `/project/{id}`: lädt Projekt, ruft `rememberedProjectService.set(username, id)`; rendert Formular
   - GET `/project/first` / `last` / `previous/{id}` / `next/{id}`: Navigation → Redirect → setzt gemerktes Projekt
@@ -448,16 +448,16 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   - POST `/project/delete/{id}`: löscht; Redirect zu `/project`
   - GET `/project/new-from-kunde/{kundeId}`: rendert leeres Formular mit `customerId` vorausgefüllt (read-only)
   - GET `/project/new-from-partner/{partnerId}`: rendert leeres Formular mit `partnerId` vorausgefüllt (read-only)
-- [ ] Test: `@WebMvcTest ProjectControllerIT`: alle Endpunkte; insb. GET `/project` ohne gemerktes Projekt → leere Maske; GET `/project/{id}` → setzt gemerktes Projekt
-- [ ] Git-Commit
+- [x] Test: `@WebMvcTest ProjectControllerIT`: alle Endpunkte; insb. GET `/project` ohne gemerktes Projekt → leere Maske; GET `/project/{id}` → setzt gemerktes Projekt
+- [x] Git-Commit
 
 ### 5.11 Project – Controller (Suche + Positionen)
-- [ ] POST `/project/search`, GET `/project/search-more`
-- [ ] GET `/project/{id}/positions` → JSON `List<ProjectPositionView>`
-- [ ] POST `/project/{id}/positions/{posId}` (JSON Body: statusId, konditionen, kommentar, dbVersion) → speichert, 409 bei Optimistic-Locking-Konflikt
-- [ ] DELETE `/project/{id}/positions/{posId}` → löscht
-- [ ] Test: `ProjectControllerIT` ergänzt
-- [ ] Git-Commit
+- [x] POST `/project/search`, GET `/project/search-more`
+- [x] GET `/project/{id}/positions` → JSON `List<ProjectPositionView>`
+- [-] POST `/project/{id}/positions/{posId}` (in Template-JS via ProjectHistoryController pattern)
+- [-] DELETE `/project/{id}/positions/{posId}` (in Template-JS via ProjectHistoryController pattern)
+- [x] Test: `ProjectControllerIT` ergänzt
+- [x] Git-Commit
 
 ### 5.12 Project – Thymeleaf Template: Hauptformular
 - [ ] `project/form.html`: Shell + Toolbar (Navigation, Speichern, Löschen, Gemerktes-Projekt-Anzeige – hier informativ, nicht änderbar; kein Neu-Button); Karte Allgemein (projectNumber, entryDate, startDate, duration, status-Dropdown, visibleOnWebSite-Checkbox); Karte Beschreibung (descriptionShort, descriptionLong, skills); Karte Einsatz (workplace)
