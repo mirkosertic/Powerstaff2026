@@ -4,6 +4,7 @@ import de.mirkosertic.powerstaff.AbstractContainerBaseIT
 import de.mirkosertic.powerstaff.project.command.BothFKsException
 import de.mirkosertic.powerstaff.project.command.Project
 import de.mirkosertic.powerstaff.project.command.ProjectCommandService
+import de.mirkosertic.powerstaff.project.command.ProjectPositionCommandService
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService
 import de.mirkosertic.powerstaff.project.query.ProjectDetailView
 import de.mirkosertic.powerstaff.project.query.ProjectHistoryQueryService
@@ -57,6 +58,9 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
 
     @MockitoBean
     ProjectPositionQueryService positionQueryService
+
+    @MockitoBean
+    ProjectPositionCommandService positionCommandService
 
     @MockitoBean
     ProjectPositionStatusQueryService statusQueryService

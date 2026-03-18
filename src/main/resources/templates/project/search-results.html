@@ -2,22 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="results">
-  <p th:if="${#lists.isEmpty(results)}" class="hint">Keine Treffer.</p>
+  <p th:if="${#lists.isEmpty(results)}"
+     style="font-size:.82rem;color:var(--text-3);font-style:italic">Keine Treffer.</p>
   <table th:unless="${#lists.isEmpty(results)}" class="data-table">
     <thead>
       <tr>
         <th>Projektnummer</th>
         <th>Kurzbeschreibung</th>
         <th>Einsatzort</th>
+        <th>Start</th>
         <th>Status</th>
+        <th>Stundensatz</th>
       </tr>
     </thead>
     <tbody>
-      <tr th:each="r : ${results}">
-        <td><a th:href="@{/project/{id}(id=${r.id})}" th:text="${r.projectNumber}"></a></td>
-        <td th:text="${r.descriptionShort}"></td>
-        <td th:text="${r.workplace}"></td>
-        <td th:text="${r.status}"></td>
+      <tr th:each="r : ${results}"
+          th:onclick="|window.location='/project/${r.id()}'|"
+          style="cursor:pointer">
+        <td th:text="${r.projectNumber()}"></td>
+        <td th:text="${r.descriptionShort()}"></td>
+        <td th:text="${r.workplace()}"></td>
+        <td th:text="${r.startDate() != null} ? ${#temporals.format(r.startDate(),'dd.MM.yyyy')} : ''"></td>
+        <td>
+          <span th:switch="${r.status()}">
+            <span th:case="1">Offen</span>
+            <span th:case="2">Verloren</span>
+            <span th:case="3">Canceled</span>
+            <span th:case="4">Besetzt</span>
+            <span th:case="5">Search zu</span>
+            <span th:case="*" th:text="${r.status()}"></span>
+          </span>
+        </td>
+        <td th:text="${r.stundensatzVk() != null} ? ${r.stundensatzVk() + ' EUR/h'} : ''"></td>
       </tr>
     </tbody>
   </table>

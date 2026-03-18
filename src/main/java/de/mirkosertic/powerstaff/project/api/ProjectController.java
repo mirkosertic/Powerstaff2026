@@ -3,6 +3,8 @@ package de.mirkosertic.powerstaff.project.api;
 import de.mirkosertic.powerstaff.project.command.BothFKsException;
 import de.mirkosertic.powerstaff.project.command.Project;
 import de.mirkosertic.powerstaff.project.command.ProjectCommandService;
+import de.mirkosertic.powerstaff.project.command.ProjectPosition;
+import de.mirkosertic.powerstaff.project.command.ProjectPositionCommandService;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
 import de.mirkosertic.powerstaff.project.query.ProjectHistoryQueryService;
 import de.mirkosertic.powerstaff.project.query.ProjectPositionQueryService;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,6 +43,7 @@ public class ProjectController {
     private final ProjectQueryService queryService;
     private final ProjectHistoryQueryService historyQueryService;
     private final ProjectPositionQueryService positionQueryService;
+    private final ProjectPositionCommandService positionCommandService;
     private final ProjectPositionStatusQueryService statusQueryService;
     private final RememberedProjectService rememberedProjectService;
 
@@ -47,12 +51,14 @@ public class ProjectController {
                              ProjectQueryService queryService,
                              ProjectHistoryQueryService historyQueryService,
                              ProjectPositionQueryService positionQueryService,
+                             ProjectPositionCommandService positionCommandService,
                              ProjectPositionStatusQueryService statusQueryService,
                              RememberedProjectService rememberedProjectService) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.historyQueryService = historyQueryService;
         this.positionQueryService = positionQueryService;
+        this.positionCommandService = positionCommandService;
         this.statusQueryService = statusQueryService;
         this.rememberedProjectService = rememberedProjectService;
     }
@@ -236,6 +242,36 @@ public class ProjectController {
                                           @RequestParam(required = false) String sortField,
                                           @RequestParam(required = false) String sortDir) {
         return ResponseEntity.ok(positionQueryService.findByProjectId(id, sortField, sortDir));
+    }
+
+    record PositionRequest(Long statusId, String konditionen, String kommentar, Long dbVersion) {}
+
+    @PostMapping("/{projectId}/positions/{posId}")
+    @ResponseBody
+    public ResponseEntity<?> savePosition(@PathVariable long projectId,
+                                          @PathVariable long posId,
+                                          @RequestBody PositionRequest request) {
+        try {
+            var position = new ProjectPosition();
+            position.setId(posId);
+            position.setProjectId(projectId);
+            position.setStatusId(request.statusId());
+            position.setKonditionen(request.konditionen());
+            position.setKommentar(request.kommentar());
+            position.setDbVersion(request.dbVersion());
+            positionCommandService.save(position);
+            return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));
+        } catch (OptimisticLockingFailureException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("conflict", true));
+        }
+    }
+
+    @PostMapping("/{projectId}/positions/{posId}/delete")
+    @ResponseBody
+    public ResponseEntity<?> deletePosition(@PathVariable long projectId,
+                                            @PathVariable long posId) {
+        positionCommandService.delete(posId);
+        return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));
     }
 
     private String buildSearchMoreUrl(ProjectSearchCriteria c, int offset) {

@@ -460,21 +460,21 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 5.12 Project – Thymeleaf Template: Hauptformular
-- [ ] `project/form.html`: Shell + Toolbar (Navigation, Speichern, Löschen, Gemerktes-Projekt-Anzeige – hier informativ, nicht änderbar; kein Neu-Button); Karte Allgemein (projectNumber, entryDate, startDate, duration, status-Dropdown, visibleOnWebSite-Checkbox); Karte Beschreibung (descriptionShort, descriptionLong, skills); Karte Einsatz (workplace)
-- [ ] Karte Zuordnung: `customerId` / `partnerId` als Read-only-Link §20 (nach Anlage nicht mehr änderbar), bei leerem Formular ausgeblendet wenn Kontext über `/new-from-xxx` gesetzt
-- [ ] Karte Konditionen (stundensatzVK, debitorNr, kreditorNr); Audit-Info-Zeile; `<ps-dirty-banner>`
-- [ ] Git-Commit
+- [x] `project/form.html`: Shell + Toolbar (Navigation, Speichern, Löschen, Gemerktes-Projekt-Anzeige – hier informativ, nicht änderbar; kein Neu-Button); Karte Allgemein (projectNumber, entryDate, startDate, duration, status-Dropdown, visibleOnWebSite-Checkbox); Karte Beschreibung (descriptionShort, descriptionLong, skills); Karte Einsatz (workplace)
+- [x] Karte Zuordnung: `customerId` / `partnerId` als Read-only-Link §20 (nach Anlage nicht mehr änderbar), bei leerem Formular ausgeblendet wenn Kontext über `/new-from-xxx` gesetzt
+- [x] Karte Konditionen (stundensatzVK, debitorNr, kreditorNr); Audit-Info-Zeile; `<ps-dirty-banner>`
+- [x] Git-Commit
 
 ### 5.13 Project – Thymeleaf Template: Positionen und Kontakthistorie
-- [ ] `project/form.html` ergänzt: Positionen-Karte (`col-wide`): Tabelle (code, name1, name2, Status-Badge §22, konditionen, kommentar, Bearbeiten-Button, Löschen-Button), Leer-Hinweis
-- [ ] Kontakthistorie-Sektion: Einträge (Erfasst am/von, Geändert am/von wenn abweichend, Text, Bearbeiten/Löschen), Neu-Eintrag-Button
-- [ ] `project/search-results.html` (Fragment): Treffertabelle (projectNumber, descriptionShort, workplace, startDate, status-Label, stundensatzVK) mit Infinite Scroll
-- [ ] Git-Commit
+- [x] `project/form.html` ergänzt: Positionen-Karte (`col-wide`): Tabelle (code, name1, name2, Status-Badge §22, konditionen, kommentar, Bearbeiten-Button, Löschen-Button), Leer-Hinweis
+- [x] Kontakthistorie-Sektion: Einträge (Erfasst am/von, Geändert am/von wenn abweichend, Text, Bearbeiten/Löschen), Neu-Eintrag-Button
+- [x] `project/search-results.html` (Fragment): Treffertabelle (projectNumber, descriptionShort, workplace, startDate, status-Label, stundensatzVK) mit Infinite Scroll
+- [x] Git-Commit
 
 ### 5.14 Project – Thymeleaf Template: Modals
-- [ ] Modale in `project/form.html`: Löschen-Bestätigung (Projekt), Optimistic-Locking-Konflikt (Projekt-Stammdaten), Positions-Bearbeiten-Modal (statusId-Dropdown, konditionen, kommentar, dbVersion hidden, Optimistic-Locking-Konflikt auf Positions-Ebene), Positions-Löschen-Bestätigung, Kontakthistorie-Modal
-- [ ] Test: `ProjectControllerIT` Template-Rendering (Projekt mit Positionen, leere Maske, mit gemerktem Projekt)
-- [ ] Git-Commit
+- [x] Modale in `project/form.html`: Löschen-Bestätigung (Projekt), Optimistic-Locking-Konflikt (Projekt-Stammdaten), Positions-Bearbeiten-Modal (statusId-Dropdown, konditionen, kommentar, dbVersion hidden, Optimistic-Locking-Konflikt auf Positions-Ebene), Positions-Löschen-Bestätigung, Kontakthistorie-Modal
+- [x] Test: `ProjectControllerIT` Template-Rendering (Projekt mit Positionen, leere Maske, mit gemerktem Projekt)
+- [x] Git-Commit
 
 ---
 
