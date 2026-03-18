@@ -322,10 +322,10 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 4.2 Kunde – CommandService
-- [ ] `KundeCommandService.save(Kunde)`: mit Optimistic-Locking-Handling
-- [ ] `KundeCommandService.delete(Long id)`: prüft `project.customer_id`; bei Projekten → wirft `EntityHasProjectsException`; sonst löscht
-- [ ] Test: `KundeCommandServiceIT`: save, delete frei, delete geblockt
-- [ ] Git-Commit
+- [x] `KundeCommandService.save(Kunde)`: mit Optimistic-Locking-Handling
+- [x] `KundeCommandService.delete(Long id)`: prüft `project.customer_id`; bei Projekten → wirft `EntityHasProjectsException`; sonst löscht
+- [x] Test: `KundeCommandServiceIT`: save, delete frei, delete geblockt
+- [x] Git-Commit
 
 ### 4.3 Kunde – QueryService
 - [ ] `KundeQueryService`: `findById`, `findFirst`, `findLast`, `findPrevious`, `findNext` (analog Partner)
