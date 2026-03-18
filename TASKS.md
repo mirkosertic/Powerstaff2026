@@ -377,10 +377,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 ## Phase 5 – Modul `project`
 
 ### 5.1 Project – Domain & Repository
-- [ ] Aggregate `Project` im Paket `de.mirkosertic.powerstaff.project` mit allen Feldern gemäß PROJEKTE.md; `@Version dbVersion`; Audit-Felder; `customerId` nullable; `partnerId` nullable
-- [ ] `ProjectRepository`
-- [ ] Test: `ProjectRepositoryIT`: CRUD, beide FK-Felder nullable, Optimistic-Locking-Konflikt
-- [ ] Git-Commit
+- [x] Aggregate `Project` im Paket `de.mirkosertic.powerstaff.project` mit allen Feldern; `@Version dbVersion`; Audit-Felder; `customerId` nullable; `partnerId` nullable
+- [x] `ProjectRepository` (package-private)
+- [x] `ProjectCommandService` (save, findById, deleteById – wird in 5.4 erweitert)
+- [x] Test: `ProjectRepositoryIT`: CRUD, nullable FKs, Optimistic-Locking-Konflikt
+- [x] Git-Commit
 
 ### 5.2 Project – RememberedProject (Domain + Repository)
 - [ ] Aggregate `RememberedProject` (`userId` als `@Id` String PK ← Spalte `user_id`; `projectId` BIGINT FK)
