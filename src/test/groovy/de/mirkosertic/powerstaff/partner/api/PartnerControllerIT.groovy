@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
+import jakarta.servlet.http.Cookie
 import java.time.LocalDateTime
 
 import static org.mockito.ArgumentMatchers.any
@@ -115,7 +116,7 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 get("/partner")
                         .with(user("testuser"))
-                        .cookie(new jakarta.servlet.http.Cookie("lastPartnerId", "42")))
+                        .cookie(new Cookie("lastPartnerId", "42")))
 
         then:
         result.andExpect(status().is3xxRedirection())
@@ -303,7 +304,7 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
                 post("/partner/42/assign-freelancer")
                         .with(csrf())
                         .with(user("testuser"))
-                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content('{"code":"FL-001"}'))
 
         then:
@@ -317,7 +318,7 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
                 post("/partner/42/assign-freelancer")
                         .with(csrf())
                         .with(user("testuser"))
-                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content('{"code":"UNKNOWN"}'))
 
         then:
@@ -337,7 +338,7 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
                 post("/partner/42/assign-freelancer")
                         .with(csrf())
                         .with(user("testuser"))
-                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content('{"code":"FL-OTHER"}'))
 
         then:
@@ -351,7 +352,7 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
                 post("/partner/42/confirm-reassign-freelancer")
                         .with(csrf())
                         .with(user("testuser"))
-                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content('{"freelancerId":10}'))
 
         then:

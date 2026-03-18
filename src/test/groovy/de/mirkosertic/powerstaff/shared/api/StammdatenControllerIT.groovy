@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.when
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
@@ -113,7 +114,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Historientypen-Seite mit forwardedHeader aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/historientypen")
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser")))
+                        .with(user("testuser")))
 
         then: "HTTP 200 und das Template wird fehlerfrei gerendert"
         result.andExpect(status().isOk())
@@ -124,7 +125,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Historientypen-Seite aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/historientypen")
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser")))
+                        .with(user("testuser")))
 
         then: "das Model enthaelt types und newType"
         result.andExpect(status().isOk())
@@ -136,7 +137,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/historientypen")
                         .with(csrf())
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser"))
+                        .with(user("testuser"))
                         .param("description", "Neuer Typ"))
 
         then: "ein Redirect auf /admin/historientypen erfolgt"
@@ -149,7 +150,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/historientypen/1")
                         .with(csrf())
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser"))
+                        .with(user("testuser"))
                         .param("description", "Aktualisierter Typ"))
 
         then: "ein Redirect auf /admin/historientypen erfolgt"
@@ -162,7 +163,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/historientypen/1/delete")
                         .with(csrf())
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser")))
+                        .with(user("testuser")))
 
         then: "ein Redirect auf /admin/historientypen erfolgt"
         result.andExpect(status().is3xxRedirection())
@@ -177,7 +178,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Positionsstatus-Seite aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/positionsstatus")
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser")))
+                        .with(user("testuser")))
 
         then: "HTTP 200 und das Template wird fehlerfrei gerendert"
         result.andExpect(status().isOk())
@@ -188,7 +189,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Positionsstatus-Seite aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/positionsstatus")
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser")))
+                        .with(user("testuser")))
 
         then: "das Model enthaelt statusList und newStatus"
         result.andExpect(status().isOk())
@@ -200,7 +201,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/positionsstatus")
                         .with(csrf())
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser"))
+                        .with(user("testuser"))
                         .param("description", "Im Gespraech")
                         .param("color", "#fef3c7")
                         .param("colorText", "#92400e"))
@@ -215,7 +216,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/positionsstatus/1")
                         .with(csrf())
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser"))
+                        .with(user("testuser"))
                         .param("description", "Besetzt")
                         .param("color", "#dbeafe")
                         .param("colorText", "#1e40af"))
@@ -233,7 +234,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Tags-Seite aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/tags")
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser")))
+                        .with(user("testuser")))
 
         then: "HTTP 200 und das Template wird fehlerfrei gerendert"
         result.andExpect(status().isOk())
@@ -244,7 +245,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Tags-Seite aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/tags")
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser")))
+                        .with(user("testuser")))
 
         then: "das Model enthaelt tagsByType, tagTypes und newTag"
         result.andExpect(status().isOk())
@@ -256,7 +257,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/tags")
                         .with(csrf())
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser"))
+                        .with(user("testuser"))
                         .param("tagname", "Python")
                         .param("tagType", "SCHWERPUNKT"))
 
@@ -270,7 +271,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/tags/1")
                         .with(csrf())
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser"))
+                        .with(user("testuser"))
                         .param("tagname", "Python aktualisiert"))
 
         then: "ein Redirect auf /admin/tags erfolgt"
@@ -283,7 +284,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 delete("/admin/tags/1")
                         .with(csrf())
-                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("testuser")))
+                        .with(user("testuser")))
 
         then: "HTTP 200 und JSON-Antwort ok:true"
         result.andExpect(status().isOk())

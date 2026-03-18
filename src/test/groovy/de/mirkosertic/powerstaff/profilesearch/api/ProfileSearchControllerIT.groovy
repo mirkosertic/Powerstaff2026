@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl
+import static org.hamcrest.Matchers.containsString
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -177,11 +178,11 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
         mockMvc.perform(get("/profilesearch/chat/42").with(user("testuser")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profilesearch/form"))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString('id="chat-page"')))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString('id="chat-sidebar"')))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString('id="chat-messages"')))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString('id="chat-input-area"')))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString('KI-Suche Test')))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString('Hallo KI')))
+                .andExpect(content().string(containsString('id="chat-page"')))
+                .andExpect(content().string(containsString('id="chat-sidebar"')))
+                .andExpect(content().string(containsString('id="chat-messages"')))
+                .andExpect(content().string(containsString('id="chat-input-area"')))
+                .andExpect(content().string(containsString('KI-Suche Test')))
+                .andExpect(content().string(containsString('Hallo KI')))
     }
 }

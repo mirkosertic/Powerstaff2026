@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
+import jakarta.servlet.http.Cookie
 import java.time.LocalDateTime
 
 import static org.mockito.ArgumentMatchers.any
@@ -108,7 +109,7 @@ class KundeControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 get("/kunde")
                         .with(user("testuser"))
-                        .cookie(new jakarta.servlet.http.Cookie("lastKundeId", "42")))
+                        .cookie(new Cookie("lastKundeId", "42")))
 
         then:
         result.andExpect(status().is3xxRedirection())

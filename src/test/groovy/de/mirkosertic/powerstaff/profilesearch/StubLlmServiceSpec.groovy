@@ -1,5 +1,6 @@
 package de.mirkosertic.powerstaff.profilesearch
 
+import de.mirkosertic.powerstaff.profilesearch.query.LlmProjectContext
 import spock.lang.Specification
 
 class StubLlmServiceSpec extends Specification {
@@ -20,7 +21,7 @@ class StubLlmServiceSpec extends Specification {
         def service = new StubLlmService()
 
         when:
-        def result = service.sendMessage(Optional.of(Mock(de.mirkosertic.powerstaff.profilesearch.query.LlmProjectContext)), [], "Frage mit Kontext")
+        def result = service.sendMessage(Optional.of(Mock(LlmProjectContext)), [], "Frage mit Kontext")
 
         then:
         result == "Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert."
