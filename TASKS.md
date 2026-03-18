@@ -532,13 +532,13 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 6.8 Profilsuche – Thymeleaf Templates
-- [ ] `profilesearch/form.html`: Shell + Toolbar (Gemerktes-Projekt-Anzeige, „＋ Neuer Chat"-Button, „Löschen"-Button); Split-Panel (Sidebar + Chat-Bereich)
-- [ ] Sidebar: Liste der Chats (`creationUser` Einträge, `<ps-infinite-scroll>`), aktiver Chat hervorgehoben, Löschen-Icon je Eintrag
-- [ ] Chat-Bereich: Nachrichtenbereich (scrollbar; Nachrichten nach Role; Markdown-Rendering für `assistant`-Nachrichten via `marked.js` oder `<pre>`-Fallback; `[freelancer:<id>:<text>]` → `<a href="/freelancer/{id}" target="_blank">`; Lade-Indikator); `<ps-chat-input>`-Element
-- [ ] `profilesearch/sidebar-entry.html` (HTMX Fragment): ein Sidebar-Eintrag mit Titel, optionaler Projektnummer, Zeitstempel
-- [ ] Modal: Chat-Löschen-Bestätigung
-- [ ] Test: `ProfileSearchControllerIT` Template-Rendering
-- [ ] Git-Commit
+- [x] `profilesearch/form.html`: Shell + Toolbar (Gemerktes-Projekt-Anzeige, „＋ Neuer Chat"-Button, „Löschen"-Button); Split-Panel (Sidebar + Chat-Bereich)
+- [x] Sidebar: Liste der Chats (`creationUser` Einträge, `<ps-infinite-scroll>`), aktiver Chat hervorgehoben, Löschen-Icon je Eintrag
+- [x] Chat-Bereich: Nachrichtenbereich (scrollbar; Nachrichten nach Role; Markdown-Rendering für `assistant`-Nachrichten via `marked.js` oder `<pre>`-Fallback; `[freelancer:<id>:<text>]` → `<a href="/freelancer/{id}" target="_blank">`; Lade-Indikator); `<ps-chat-input>`-Element
+- [x] `profilesearch/sidebar-entry.html` (HTMX Fragment): ein Sidebar-Eintrag mit Titel, optionaler Projektnummer, Zeitstempel
+- [x] Modal: Chat-Löschen-Bestätigung
+- [x] Test: `ProfileSearchControllerIT` Template-Rendering (9 Tests gesamt, alle grün)
+- [x] Git-Commit
 
 ---
 

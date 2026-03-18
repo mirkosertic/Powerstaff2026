@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
@@ -160,5 +161,27 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
         mockMvc.perform(get("/profilesearch/sidebar-more?offset=0").with(user("testuser")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profilesearch/sidebar-entry"))
+    }
+
+    def "GET /profilesearch/chat/{chatId} rendert chat-page HTML-Struktur korrekt"() {
+        given:
+        def chatView = new ChatListView(42L, LocalDateTime.now(), "testuser", LocalDateTime.now(), "KI-Suche Test", null, null)
+        when(queryService.findChatsByUser(anyString(), anyInt(), anyInt())).thenReturn([chatView])
+        when(queryService.countChatsByUser(anyString())).thenReturn(1L)
+        when(queryService.findMessagesByChat(42L)).thenReturn([
+                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo KI"),
+                new MessageView(2L, LocalDateTime.now(), 42L, "assistant", 2, "Antwort der KI")
+        ])
+
+        expect:
+        mockMvc.perform(get("/profilesearch/chat/42").with(user("testuser")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profilesearch/form"))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString('id="chat-page"')))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString('id="chat-sidebar"')))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString('id="chat-messages"')))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString('id="chat-input-area"')))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString('KI-Suche Test')))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString('Hallo KI')))
     }
 }
