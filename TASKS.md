@@ -481,11 +481,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 ## Phase 6 – Modul `profilesearch`
 
 ### 6.1 Profilsuche – Domain & Repositories
-- [ ] Aggregate `ProfileSearchChat` (`id`, `creationDate`, `creationUser`, `changedDate`, `title`, `projectId` nullable FK) im Paket `de.mirkosertic.powerstaff.profilesearch`
-- [ ] Aggregate `ProfileSearchMessage` (`id`, `creationDate`, `chatId` FK, `role` String, `sequence`, `content`)
-- [ ] `ProfileSearchChatRepository`, `ProfileSearchMessageRepository`
-- [ ] Test: `ProfileSearchChatRepositoryIT`, `ProfileSearchMessageRepositoryIT`: insert, findByChatId, Cascade-Delete (Chat löschen → Messages weg)
-- [ ] Git-Commit
+- [x] Aggregate `ProfileSearchChat` (`id`, `creationDate`, `creationUser`, `changedDate`, `title`, `projectId` nullable FK) im Paket `de.mirkosertic.powerstaff.profilesearch`
+- [x] Aggregate `ProfileSearchMessage` (`id`, `creationDate`, `chatId` FK, `role` String, `sequence`, `content`)
+- [x] `ProfileSearchChatRepository`, `ProfileSearchMessageRepository`
+- [x] Test: `ProfileSearchChatRepositoryIT`, `ProfileSearchMessageRepositoryIT`: insert, findByChatId, Cascade-Delete (Chat löschen → Messages weg)
+- [x] Git-Commit
 
 ### 6.2 Profilsuche – CommandService
 - [ ] `ProfileSearchCommandService.createChat(String userId, Long projectId)` → legt `ProfileSearchChat` an, gibt `id` zurück

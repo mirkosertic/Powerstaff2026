@@ -1,0 +1,52 @@
+package de.mirkosertic.powerstaff.profilesearch.command;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.time.LocalDateTime;
+
+@Table("profile_search_chat")
+public class ProfileSearchChat {
+
+    @Id
+    private Long id;
+
+    @CreatedDate
+    @Column("creation_date")
+    private LocalDateTime creationDate;
+
+    @CreatedBy
+    @Column("creation_user")
+    private String creationUser;
+
+    @LastModifiedDate
+    @Column("changed_date")
+    private LocalDateTime changedDate;
+
+    private String title;
+
+    @Column("project_id")
+    private Long projectId;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public LocalDateTime getCreationDate() { return creationDate; }
+    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
+
+    public String getCreationUser() { return creationUser; }
+    public void setCreationUser(String creationUser) { this.creationUser = creationUser; }
+
+    public LocalDateTime getChangedDate() { return changedDate; }
+    public void setChangedDate(LocalDateTime changedDate) { this.changedDate = changedDate; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public Long getProjectId() { return projectId; }
+    public void setProjectId(Long projectId) { this.projectId = projectId; }
+}
