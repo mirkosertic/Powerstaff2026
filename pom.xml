@@ -285,7 +285,7 @@
                             <arguments>
                                 <argument>install</argument>
                             </arguments>
-                            <workingDirectory>${project.basedir}/frontend</workingDirectory>
+                            <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -300,7 +300,7 @@
                                 <argument>run</argument>
                                 <argument>build</argument>
                             </arguments>
-                            <workingDirectory>${project.basedir}/frontend</workingDirectory>
+                            <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
                         </configuration>
                     </execution>
                 </executions>
