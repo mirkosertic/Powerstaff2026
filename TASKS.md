@@ -403,17 +403,17 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 5.5 Project – QueryService (Navigation + findById)
-- [ ] `ProjectQueryService.findById(Long)`, `findFirst()`, `findLast()`, `findPrevious(Long)`, `findNext(Long)`
-- [ ] Test: `ProjectQueryServiceIT` (Navigation)
-- [ ] Git-Commit
+- [x] `ProjectQueryService.findById(Long)`, `findFirst()`, `findLast()`, `findPrevious(Long)`, `findNext(Long)`
+- [x] Test: `ProjectQueryServiceIT` (Navigation)
+- [x] Git-Commit
 
 ### 5.6 Project – QueryService (QBE-Suche)
-- [ ] Record `ProjectSearchCriteria` (projectNumber, descriptionShort, descriptionLong, skills, workplace, duration, Integer status, debitorNr, kreditorNr)
-- [ ] Record `ProjectSearchResult` (id, projectNumber, descriptionShort, workplace, startDate, status, stundensatzVK)
-- [ ] `ProjectQueryService.search(ProjectSearchCriteria, offset, limit)`: `status` → exakter Vergleich; alle anderen → LIKE; `ORDER BY entry_date DESC`
-- [ ] `ProjectQueryService.countSearch(ProjectSearchCriteria)`
-- [ ] Test: `ProjectQueryServiceIT` ergänzt: QBE mit status exakt, LIKE-Felder, kein Treffer
-- [ ] Git-Commit
+- [x] Record `ProjectSearchCriteria` (projectNumber, descriptionShort, descriptionLong, skills, workplace, duration, Integer status, debitorNr, kreditorNr)
+- [x] Record `ProjectSearchResult` (id, projectNumber, descriptionShort, workplace, startDate, status, stundensatzVK)
+- [x] `ProjectQueryService.search(ProjectSearchCriteria, offset, limit)`: `status` → exakter Vergleich; alle anderen → LIKE; `ORDER BY entry_date DESC`
+- [x] `ProjectQueryService.countSearch(ProjectSearchCriteria)`
+- [x] Test: `ProjectQueryServiceIT` ergänzt: QBE mit status exakt, LIKE-Felder, kein Treffer
+- [x] Git-Commit
 
 ### 5.7 Projektposition – Domain + Repository
 - [ ] Aggregate `ProjectPosition` (`id`, `@Version dbVersion`, Audit-Felder, `projectId`, `freelancerId`, `statusId`, `konditionen`, `kommentar`)
