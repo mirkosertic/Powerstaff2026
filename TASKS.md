@@ -416,10 +416,10 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 5.7 Projektposition – Domain + Repository
-- [ ] Aggregate `ProjectPosition` (`id`, `@Version dbVersion`, Audit-Felder, `projectId`, `freelancerId`, `statusId`, `konditionen`, `kommentar`)
-- [ ] `ProjectPositionRepository`
-- [ ] Test: `ProjectPositionRepositoryIT`: insert, UNIQUE-Verletzung `(project_id, freelancer_id)` → Exception
-- [ ] Git-Commit
+- [x] Aggregate `ProjectPosition` (`id`, `@Version dbVersion`, Audit-Felder, `projectId`, `freelancerId`, `statusId`, `konditionen`, `kommentar`)
+- [x] `ProjectPositionRepository`
+- [x] Test: `ProjectPositionRepositoryIT`: insert, UNIQUE-Verletzung `(project_id, freelancer_id)` → Exception
+- [x] Git-Commit
 
 ### 5.8 Projektposition – Services
 - [ ] `ProjectPositionCommandService.save(ProjectPosition)`: speichert, Optimistic-Locking-Handling
