@@ -431,13 +431,13 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 5.9 Project – Kontakthistorie
-- [ ] Aggregate `ProjectHistory` (`id`, `description`, `projectId`, Audit-Felder; **kein** `typeId`)
-- [ ] `ProjectHistoryRepository`
-- [ ] `ProjectHistoryCommandService`: `save(ProjectHistory)`, `delete(Long id)`
-- [ ] `ProjectHistoryQueryService`: `findByProjectId(Long)` sortiert `creation_date DESC`
-- [ ] `ProjectHistoryController` (AJAX): POST `/project/{id}/history`, PUT `.../history/{hId}`, DELETE `.../history/{hId}`
-- [ ] Test: `ProjectHistoryRepositoryIT`, `ProjectHistoryControllerIT`
-- [ ] Git-Commit
+- [x] Aggregate `ProjectHistory` (`id`, `description`, `projectId`, Audit-Felder; **kein** `typeId`)
+- [x] `ProjectHistoryRepository`
+- [x] `ProjectHistoryCommandService`: `save(ProjectHistory)`, `delete(Long id)`
+- [x] `ProjectHistoryQueryService`: `findByProjectId(Long)` sortiert `creation_date DESC`
+- [x] `ProjectHistoryController` (AJAX): POST `/project/{id}/history`, PUT `.../history/{hId}`, DELETE `.../history/{hId}`
+- [x] Test: `ProjectHistoryRepositoryIT`, `ProjectHistoryControllerIT`
+- [x] Git-Commit
 
 ### 5.10 Project – Controller (CRUD + Navigation + RememberedProject)
 - [ ] `ProjectController`:
