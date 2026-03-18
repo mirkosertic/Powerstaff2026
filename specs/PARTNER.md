@@ -210,16 +210,16 @@ Der Server führt beim Speichern eine vollständige **Replace-Logik** durch:
 
 Die Kontaktmöglichkeiten der Partner werden in der Tabelle `partner_contact` gespeichert:
 
-| Feld                     | Datenbankspalte | Datentyp   | Länge | Prüfungen                                     | Hinweise                                                    |
-|--------------------------|-----------------|------------|-------|-----------------------------------------------|-------------------------------------------------------------|
-| `id`                     | `id`            | `BIGINT`   | —     | PK, NOT NULL, AUTO_INCREMENT                  |                                                             |
-| `creationDate`           | `creation_date` | `DATETIME` | —     | nullable                                      | Zeitpunkt der Erfassung                                     |
-| `creationUserID`         | `creation_user` | `VARCHAR`  | 255   | nullable                                      | Erfassender Sachbearbeiter                                  |
-| `lastModificationDate`   | `changed_date`  | `DATETIME` | —     | nullable                                      | Zeitpunkt der letzten Änderung                              |
-| `lastModificationUserID` | `changed_user`  | `VARCHAR`  | 255   | nullable                                      | Zuletzt ändernder Sachbearbeiter                            |
+| Feld                     | Datenbankspalte | Datentyp   | Länge | Prüfungen                                     | Hinweise                                                   |
+|--------------------------|-----------------|------------|-------|-----------------------------------------------|------------------------------------------------------------|
+| `id`                     | `id`            | `BIGINT`   | —     | PK, NOT NULL, AUTO_INCREMENT                  |                                                            |
+| `creationDate`           | `creation_date` | `DATETIME` | —     | nullable                                      | Zeitpunkt der Erfassung                                    |
+| `creationUserID`         | `creation_user` | `VARCHAR`  | 255   | nullable                                      | Erfassender Sachbearbeiter                                 |
+| `lastModificationDate`   | `changed_date`  | `DATETIME` | —     | nullable                                      | Zeitpunkt der letzten Änderung                             |
+| `lastModificationUserID` | `changed_user`  | `VARCHAR`  | 255   | nullable                                      | Zuletzt ändernder Sachbearbeiter                           |
 | `type`                   | `type`          | `VARCHAR`  | 255   | NOT NULL                                      | Typ-Enum: `EMAIL`, `WEB`, `XING`, `GULP`, `TELEFON`, `FAX` |
-| `value`                  | `value`         | `VARCHAR`  | 255   | NOT NULL                                      | Der eigentliche Kontaktwert                                 |
-| `partner_id`             | `partner_id`    | `BIGINT`   | —     | FK → partner(id), NOT NULL, ON DELETE CASCADE | Zugehöriger Partner                                         |
+| `value`                  | `value`         | `VARCHAR`  | 255   | NOT NULL                                      | Der eigentliche Kontaktwert                                |
+| `partner_id`             | `partner_id`    | `BIGINT`   | —     | FK → partner(id), NOT NULL, ON DELETE CASCADE | Zugehöriger Partner                                        |
 
 ## Kontakthistorie
 

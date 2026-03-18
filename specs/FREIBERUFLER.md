@@ -73,27 +73,27 @@ In dieser Gruppe werden ebenfalls die Kontaktmöglichkeiten angezeigt.
 
 **Gruppe: Zusatzinformationen**
 
-| Feld              | Datenbankspalte    | Datentyp   | Länge | Prüfungen                                                          | Label für die UI | Hinweise                                                                         |
-|-------------------|--------------------|------------|-------|--------------------------------------------------------------------|------------------|----------------------------------------------------------------------------------|
-| `contactPerson`   | `contact_person`   | `VARCHAR`  | 255   | nullable                                                           | Kontaktperson    | Name des betreuenden Sachbearbeiters                                             |
-| `contactType`     | `contact_type`     | `VARCHAR`  | 255   | nullable                                                           | Kontaktkanal     | Freitext: wie wurde Kontakt aufgenommen (z. B. E-Mail, Telefon, Messe)           |
-| `contactReason`   | `contact_reason`   | `VARCHAR`  | 255   | nullable                                                           | Kontaktgrund     | Freitext: Grund des letzten Kontakts                                             |
-| `lastContactDate` | `last_contact_date`| `DATETIME` | —     | nullable                                                           | Letzter Kontakt  | Datumseingabe (dd.MM.yyyy)                                                       |
-| `kontaktart`      | `kontaktart`       | `VARCHAR`  | 10    | nullable, CHECK (`kontaktart` IN ('NL','NL1','NL2','X','NO','LL')) | Kontaktart       | Auswahlliste; erlaubte Werte: NL, NL1, NL2, X, NO, LL; leer = kein Wert gesetzt |
+| Feld              | Datenbankspalte     | Datentyp   | Länge | Prüfungen                                                          | Label für die UI | Hinweise                                                                        |
+|-------------------|---------------------|------------|-------|--------------------------------------------------------------------|------------------|---------------------------------------------------------------------------------|
+| `contactPerson`   | `contact_person`    | `VARCHAR`  | 255   | nullable                                                           | Kontaktperson    | Name des betreuenden Sachbearbeiters                                            |
+| `contactType`     | `contact_type`      | `VARCHAR`  | 255   | nullable                                                           | Kontaktkanal     | Freitext: wie wurde Kontakt aufgenommen (z. B. E-Mail, Telefon, Messe)          |
+| `contactReason`   | `contact_reason`    | `VARCHAR`  | 255   | nullable                                                           | Kontaktgrund     | Freitext: Grund des letzten Kontakts                                            |
+| `lastContactDate` | `last_contact_date` | `DATETIME` | —     | nullable                                                           | Letzter Kontakt  | Datumseingabe (dd.MM.yyyy)                                                      |
+| `kontaktart`      | `kontaktart`        | `VARCHAR`  | 10    | nullable, CHECK (`kontaktart` IN ('NL','NL1','NL2','X','NO','LL')) | Kontaktart       | Auswahlliste; erlaubte Werte: NL, NL1, NL2, X, NO, LL; leer = kein Wert gesetzt |
 
 **Gruppe: Verfügbarkeit & Konditionen**
 
-| Feld                      | Datenbankspalte             | Datentyp   | Länge | Prüfungen                 | Label für die UI | Hinweise                                                                                   |
-|---------------------------|-----------------------------|------------|-------|---------------------------|------------------|--------------------------------------------------------------------------------------------|
-| `availabilityAsDate`      | `availability_as_date`      | `DATETIME` | —     | nullable                  | Verfügbarkeit    | Datumseingabe (dd.MM.yyyy): ab wann verfügbar                                              |
-| `salaryLong`              | `salary_long`               | `BIGINT`   | —     | nullable                  | Stundensatz      | Gewünschter Stundensatz in ganzen Euro                                                     |
-| `salaryPerDayLong`        | `salary_per_day_long`       | `BIGINT`   | —     | nullable                  | Tagessatz        | Gewünschter Tagessatz in ganzen Euro                                                       |
-| `salaryRemote`            | `salary_remote`             | `BIGINT`   | —     | nullable                  | Stds. Remote     | Tooltip: "Stundensatz Remote"; gewünschter Remote-Stundensatz in ganzen Euro               |
-| `salaryPartnerLong`       | `salary_partner_long`       | `BIGINT`   | —     | nullable                  | Stds. verhandelt | Tooltip: "Stundensatz verhandelt"; verhandelter Stundensatz (Einkaufspreis) in ganzen Euro |
-| `salaryPartnerPerDayLong` | `salary_partner_per_day_long` | `BIGINT` | —     | nullable                  | Tgs. Partner     | Tooltip: "Tagessatz Partner"; verhandelter Tagessatz (Einkaufspreis) in ganzen Euro        |
-| `datenschutz`             | `datenschutz`               | `BIT`      | 1     | NOT NULL, default `false` | Datenschutz      | DSGVO-Einwilligung                                                                         |
-| `debitorNr`               | `debitor_nr`                | `VARCHAR`  | 255   | nullable                  | Debitor          | Debitorennummer (Buchhaltung)                                                              |
-| `gulpID`                  | `gulp_id`                   | `VARCHAR`  | 255   | nullable                  | Gulp ID          | Profil-ID auf GULP.de                                                                      |
+| Feld                      | Datenbankspalte               | Datentyp   | Länge | Prüfungen                 | Label für die UI | Hinweise                                                                                   |
+|---------------------------|-------------------------------|------------|-------|---------------------------|------------------|--------------------------------------------------------------------------------------------|
+| `availabilityAsDate`      | `availability_as_date`        | `DATETIME` | —     | nullable                  | Verfügbarkeit    | Datumseingabe (dd.MM.yyyy): ab wann verfügbar                                              |
+| `salaryLong`              | `salary_long`                 | `BIGINT`   | —     | nullable                  | Stundensatz      | Gewünschter Stundensatz in ganzen Euro                                                     |
+| `salaryPerDayLong`        | `salary_per_day_long`         | `BIGINT`   | —     | nullable                  | Tagessatz        | Gewünschter Tagessatz in ganzen Euro                                                       |
+| `salaryRemote`            | `salary_remote`               | `BIGINT`   | —     | nullable                  | Stds. Remote     | Tooltip: "Stundensatz Remote"; gewünschter Remote-Stundensatz in ganzen Euro               |
+| `salaryPartnerLong`       | `salary_partner_long`         | `BIGINT`   | —     | nullable                  | Stds. verhandelt | Tooltip: "Stundensatz verhandelt"; verhandelter Stundensatz (Einkaufspreis) in ganzen Euro |
+| `salaryPartnerPerDayLong` | `salary_partner_per_day_long` | `BIGINT`   | —     | nullable                  | Tgs. Partner     | Tooltip: "Tagessatz Partner"; verhandelter Tagessatz (Einkaufspreis) in ganzen Euro        |
+| `datenschutz`             | `datenschutz`                 | `BIT`      | 1     | NOT NULL, default `false` | Datenschutz      | DSGVO-Einwilligung                                                                         |
+| `debitorNr`               | `debitor_nr`                  | `VARCHAR`  | 255   | nullable                  | Debitor          | Debitorennummer (Buchhaltung)                                                              |
+| `gulpID`                  | `gulp_id`                     | `VARCHAR`  | 255   | nullable                  | Gulp ID          | Profil-ID auf GULP.de                                                                      |
 
 **Gruppe: Kodierung**
 
@@ -197,16 +197,16 @@ Der Server führt beim Speichern eine vollständige **Replace-Logik** durch:
 
 Die Kontaktmöglichkeiten werden in der Tabelle `freelancer_contact` in folgender Struktur gespeichert:
 
-| Feld                     | Datenbankspalte | Datentyp   | Länge | Prüfungen                                        | Hinweise                                                    |
-|--------------------------|-----------------|------------|-------|--------------------------------------------------|-------------------------------------------------------------|
-| `id`                     | `id`            | `BIGINT`   | —     | PK, NOT NULL, AUTO_INCREMENT                     |                                                             |
-| `creationDate`           | `creation_date` | `DATETIME` | —     | nullable                                         | Zeitpunkt der Erfassung                                     |
-| `creationUserID`         | `creation_user` | `VARCHAR`  | 255   | nullable                                         | Erfassender Sachbearbeiter                                  |
-| `lastModificationDate`   | `changed_date`  | `DATETIME` | —     | nullable                                         | Zeitpunkt der letzten Änderung                              |
-| `lastModificationUserID` | `changed_user`  | `VARCHAR`  | 255   | nullable                                         | Zuletzt ändernder Sachbearbeiter                            |
+| Feld                     | Datenbankspalte | Datentyp   | Länge | Prüfungen                                        | Hinweise                                                   |
+|--------------------------|-----------------|------------|-------|--------------------------------------------------|------------------------------------------------------------|
+| `id`                     | `id`            | `BIGINT`   | —     | PK, NOT NULL, AUTO_INCREMENT                     |                                                            |
+| `creationDate`           | `creation_date` | `DATETIME` | —     | nullable                                         | Zeitpunkt der Erfassung                                    |
+| `creationUserID`         | `creation_user` | `VARCHAR`  | 255   | nullable                                         | Erfassender Sachbearbeiter                                 |
+| `lastModificationDate`   | `changed_date`  | `DATETIME` | —     | nullable                                         | Zeitpunkt der letzten Änderung                             |
+| `lastModificationUserID` | `changed_user`  | `VARCHAR`  | 255   | nullable                                         | Zuletzt ändernder Sachbearbeiter                           |
 | `type`                   | `type`          | `VARCHAR`  | 255   | NOT NULL                                         | Typ-Enum: `EMAIL`, `WEB`, `XING`, `GULP`, `TELEFON`, `FAX` |
-| `value`                  | `value`         | `VARCHAR`  | 255   | NOT NULL                                         | Der eigentliche Kontaktwert                                 |
-| `freelancer_id`          | `freelancer_id` | `BIGINT`   | —     | FK → freelancer(id), NOT NULL, ON DELETE CASCADE | Zugehöriger Freiberufler                                    |
+| `value`                  | `value`         | `VARCHAR`  | 255   | NOT NULL                                         | Der eigentliche Kontaktwert                                |
+| `freelancer_id`          | `freelancer_id` | `BIGINT`   | —     | FK → freelancer(id), NOT NULL, ON DELETE CASCADE | Zugehöriger Freiberufler                                   |
 
 ## Kontakthistorie
 

@@ -1131,12 +1131,12 @@ class FreelancerQueryServiceIT extends Specification {
 
 ### Teststufen
 
-| Teststufe                | Annotation                        | Phase              | Zweck                                            |
-|--------------------------|-----------------------------------|--------------------|--------------------------------------------------|
+| Teststufe                | Annotation                        | Phase              | Zweck                                                             |
+|--------------------------|-----------------------------------|--------------------|-------------------------------------------------------------------|
 | Unit-Test                | –                                 | `test`             | Isolierte Logik, Berechnungen, Validierungsregeln ohne DB-Zugriff |
 | Controller + Template    | `@WebMvcTest` mit Thymeleaf aktiv | `test`             | HTML-Rendering, Routing, Model-Attribute                          |
 | Modul-Integration        | `@ApplicationModuleTest`          | `integration-test` | Modulgrenzen, Event-Kommunikation                                 |
-| Service + Repository     | `@DataJdbcTest`                   | `integration-test` | Repositories, QueryServices (JdbcClient), QBE-Suchen             |
+| Service + Repository     | `@DataJdbcTest`                   | `integration-test` | Repositories, QueryServices (JdbcClient), QBE-Suchen              |
 | Vollständige Integration | `@SpringBootTest`                 | `integration-test` | End-to-End kritischer Workflows                                   |
 
 **Pflicht:** Jede Klasse, die auf die Datenbank zugreift – Repositories (Spring Data JDBC) ebenso wie QueryServices (`JdbcClient`) –, muss durch einen `@DataJdbcTest`-Integrationstest gegen Testcontainers abgedeckt sein. Unit-Tests mit gemockter Datenbankschicht sind für datenbanknahe Klassen **nicht zulässig**.

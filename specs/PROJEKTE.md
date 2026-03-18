@@ -30,14 +30,14 @@ gruppiert – diese Gruppen spiegeln auch die Struktur des Formulars wider.
 
 **Gruppe: Allgemein**
 
-| Feld               | Datenbankspalte    | Datentyp   | Länge | Prüfungen                                               | Label für die UI | Hinweise                                                                            |
-|--------------------|--------------------|-----------:|-------|---------------------------------------------------------|------------------|-------------------------------------------------------------------------------------|
-| `projectNumber`    | `project_number`   | `VARCHAR`  | 255   | nullable                                                | Projektnummer    | Fachliche Projektnummer; frei vergebbar                                             |
-| `entryDate`        | `entry_date`       | `DATETIME` | —     | nullable                                                | Eingangsdatum    | Fachliches Datum des Projekteingangs; unabhängig vom technischen `creation_date`    |
-| `startDate`        | `start_date`       | `DATETIME` | —     | nullable                                                | Startdatum       | Geplanter oder vereinbarter Projektbeginn (dd.MM.yyyy)                              |
-| `duration`         | `duration`         | `VARCHAR`  | 255   | nullable                                                | Laufzeit         | Freitext; erlaubt flexible Angaben wie „3 Monate", „bis 31.12.2026", „unbefristet"  |
-| `status`           | `status`           | `INT`      | —     | NOT NULL, default `1`, CHECK (`status` BETWEEN 1 AND 5) | Status           | Projektstatus; Werteliste siehe [Projektstatus](#projektstatus)                     |
-| `visibleOnWebSite` | `visible_on_web_site` | `BIT`   | 1     | NOT NULL, default `false`                               | Auf Website      | Steuert, ob das Projekt auf der öffentlichen Website veröffentlicht wird            |
+| Feld               | Datenbankspalte       |   Datentyp | Länge | Prüfungen                                               | Label für die UI | Hinweise                                                                           |
+|--------------------|-----------------------|-----------:|-------|---------------------------------------------------------|------------------|------------------------------------------------------------------------------------|
+| `projectNumber`    | `project_number`      |  `VARCHAR` | 255   | nullable                                                | Projektnummer    | Fachliche Projektnummer; frei vergebbar                                            |
+| `entryDate`        | `entry_date`          | `DATETIME` | —     | nullable                                                | Eingangsdatum    | Fachliches Datum des Projekteingangs; unabhängig vom technischen `creation_date`   |
+| `startDate`        | `start_date`          | `DATETIME` | —     | nullable                                                | Startdatum       | Geplanter oder vereinbarter Projektbeginn (dd.MM.yyyy)                             |
+| `duration`         | `duration`            |  `VARCHAR` | 255   | nullable                                                | Laufzeit         | Freitext; erlaubt flexible Angaben wie „3 Monate", „bis 31.12.2026", „unbefristet" |
+| `status`           | `status`              |      `INT` | —     | NOT NULL, default `1`, CHECK (`status` BETWEEN 1 AND 5) | Status           | Projektstatus; Werteliste siehe [Projektstatus](#projektstatus)                    |
+| `visibleOnWebSite` | `visible_on_web_site` |      `BIT` | 1     | NOT NULL, default `false`                               | Auf Website      | Steuert, ob das Projekt auf der öffentlichen Website veröffentlicht wird           |
 
 **Gruppe: Beschreibung**
 
