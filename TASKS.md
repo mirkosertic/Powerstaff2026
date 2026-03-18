@@ -510,11 +510,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 6.5 Profilsuche – LLM-Interface + Stub
-- [ ] Interface `LlmService` im Paket `de.mirkosertic.powerstaff.profilesearch`: `String sendMessage(Optional<LlmProjectContext> context, List<ProfileSearchMessage> history, String userMessage)`
-- [ ] `StubLlmService` implements `LlmService`: gibt `"Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert."` zurück
-- [ ] `ProfileSearchConfig` (`@Configuration`): `@Bean LlmService llmService() { return new StubLlmService(); }`
-- [ ] Test: `StubLlmServiceSpec` (Unit-Test): prüft Rückgabewert
-- [ ] Git-Commit
+- [x] Interface `LlmService` im Paket `de.mirkosertic.powerstaff.profilesearch`: `String sendMessage(Optional<LlmProjectContext> context, List<ProfileSearchMessage> history, String userMessage)`
+- [x] `StubLlmService` implements `LlmService`: gibt `"Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert."` zurück
+- [x] `ProfileSearchConfig` (`@Configuration`): `@Bean LlmService llmService() { return new StubLlmService(); }`
+- [x] Test: `StubLlmServiceSpec` (Unit-Test): prüft Rückgabewert
+- [x] Git-Commit
 
 ### 6.6 Profilsuche – Controller
 - [ ] `ProfileSearchController`:
