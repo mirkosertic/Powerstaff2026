@@ -555,9 +555,9 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 7.3 Security-Integrationstests
-- [ ] `SecurityIT` (`@SpringBootTest` + MockMvc, `@WithMockUser`): für jeden Controller-Basispfad prüfen: ohne Auth → 302 `/login`; mit Auth → 200 oder weitere 3xx
-- [ ] CSRF: POST auf `/partner/save` ohne `X-XSRF-TOKEN` → 403
-- [ ] Git-Commit
+- [x] `SecurityIT` (`@SpringBootTest` + MockMvc, `@WithMockUser`): für jeden Controller-Basispfad prüfen: ohne Auth → 302 `/login`; mit Auth → 200 oder weitere 3xx
+- [x] CSRF: POST auf `/partner/save` ohne `X-XSRF-TOKEN` → 403
+- [x] Git-Commit
 
 ---
 

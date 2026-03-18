@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -77,6 +78,30 @@ class SecurityIT extends AbstractContainerBaseIT {
         then: "Spring Security leitet auf die Login-Seite mit dem error-Parameter weiter"
         result.andExpect(status().is3xxRedirection())
               .andExpect(redirectedUrl("/login?error"))
+    }
+
+    def "unauthentifizierter Zugriff auf Controller-Basispfade wird auf /login weitergeleitet"() {
+        when:
+        def result = mockMvc.perform(get(path))
+
+        then:
+        result.andExpect(status().is3xxRedirection())
+              .andExpect(redirectedUrl("/login"))
+
+        where:
+        path << ['/freelancer', '/partner', '/kunde', '/project', '/profilesearch']
+    }
+
+    def "CSRF: POST ohne X-XSRF-TOKEN liefert 403"() {
+        when:
+        def result = mockMvc.perform(
+                post("/partner/save")
+                        .with(user("testuser"))
+                        // intentionally NO csrf()
+        )
+
+        then:
+        result.andExpect(status().isForbidden())
     }
 
     def "ein Login mit korrekten Credentials leitet nicht zu /login?error weiter"() {
