@@ -488,11 +488,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 6.2 Profilsuche – CommandService
-- [ ] `ProfileSearchCommandService.createChat(String userId, Long projectId)` → legt `ProfileSearchChat` an, gibt `id` zurück
-- [ ] `ProfileSearchCommandService.deleteChat(Long chatId)` → `chatRepository.deleteById()` (Cascade erledigt Messages)
-- [ ] `ProfileSearchCommandService.addMessage(Long chatId, String role, String content)` → ermittelt nächstes `sequence` (`MAX(sequence)+1`), speichert `ProfileSearchMessage`; aktualisiert `changedDate` in Chat; wenn erste User-Nachricht → generiert `title` (erste 60 Zeichen)
-- [ ] Test: `ProfileSearchCommandServiceIT`: createChat, deleteChat, addMessage (sequence korrekt, title generiert)
-- [ ] Git-Commit
+- [x] `ProfileSearchCommandService.createChat(String userId, Long projectId)` → legt `ProfileSearchChat` an, gibt `id` zurück
+- [x] `ProfileSearchCommandService.deleteChat(Long chatId)` → `chatRepository.deleteById()` (Cascade erledigt Messages)
+- [x] `ProfileSearchCommandService.addMessage(Long chatId, String role, String content)` → ermittelt nächstes `sequence` (`MAX(sequence)+1`), speichert `ProfileSearchMessage`; aktualisiert `changedDate` in Chat; wenn erste User-Nachricht → generiert `title` (erste 60 Zeichen)
+- [x] Test: `ProfileSearchCommandServiceIT`: createChat, deleteChat, addMessage (sequence korrekt, title generiert)
+- [x] Git-Commit
 
 ### 6.3 Profilsuche – QueryService
 - [ ] `ProfileSearchQueryService.findChatsByUser(String userId, int offset, int limit)` → sortiert `changed_date DESC`; JOIN `project` für `project_number` (nullable)
