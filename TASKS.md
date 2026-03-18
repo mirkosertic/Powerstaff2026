@@ -384,11 +384,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 5.2 Project – RememberedProject (Domain + Repository)
-- [ ] Aggregate `RememberedProject` (`userId` als `@Id` String PK ← Spalte `user_id`; `projectId` BIGINT FK)
-- [ ] `RememberedProjectRepository`
-- [ ] `RememberedProjectService`: `set(String userId, Long projectId)` → upsert (`save` via Repository: da `userId` PK, überschreibt Spring Data JDBC bei `isNew=false`); `get(String userId)` → `Optional<Long>`; `clear(String userId)` → `deleteById`
-- [ ] Test: `RememberedProjectRepositoryIT`: set, get, set überschreibt, clear
-- [ ] Git-Commit
+- [x] Aggregate `RememberedProject` (userId als @Id String PK via Persistable<String>; projectId BIGINT FK)
+- [x] `RememberedProjectRepository` (package-private)
+- [x] `RememberedProjectService`: set (Upsert via existsById + isNew-Flag), get, clear
+- [x] Test: `RememberedProjectRepositoryIT`: set, get, Upsert, clear
+- [x] Git-Commit
 
 ### 5.3 Project – Validierung
 - [ ] `ProjectValidator` implements Spring `Validator`: `customerId` und `partnerId` gleichzeitig gesetzt → `ValidationException`; registriert als `@Component`
