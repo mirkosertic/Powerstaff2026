@@ -503,11 +503,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 6.4 Profilsuche – LLM-Kontext
-- [ ] Record `LlmProjectContext(String projectNumber, String descriptionShort, String descriptionLong, String workplace, String skills, String duration, LocalDateTime startDate, String statusLabel, Long stundensatzVk, List<LlmFreelancerContext> positions)`
-- [ ] Record `LlmFreelancerContext(String code, String name1, String name2, String skills, List<String> tags, String positionStatus, String konditionen, String kommentar)`
-- [ ] `ProfileSearchQueryService.buildLlmContext(String userId)` → `Optional<LlmProjectContext>`: liest gemerktes Projekt des Users aus `remembered_project`; wenn vorhanden: lädt Projekt + Positionen + Freelancer + Tags via JdbcClient-JOINs
-- [ ] Test: `ProfileSearchQueryServiceIT` ergänzt: buildLlmContext ohne gemerktes Projekt → empty; mit Projekt und Positionen → vollständiger Kontext
-- [ ] Git-Commit
+- [x] Record `LlmProjectContext(String projectNumber, String descriptionShort, String descriptionLong, String workplace, String skills, String duration, LocalDateTime startDate, String statusLabel, Long stundensatzVk, List<LlmFreelancerContext> positions)`
+- [x] Record `LlmFreelancerContext(String code, String name1, String name2, String skills, List<String> tags, String positionStatus, String konditionen, String kommentar)`
+- [x] `ProfileSearchQueryService.buildLlmContext(String userId)` → `Optional<LlmProjectContext>`: liest gemerktes Projekt des Users aus `remembered_project`; wenn vorhanden: lädt Projekt + Positionen + Freelancer + Tags via JdbcClient-JOINs
+- [x] Test: `ProfileSearchQueryServiceIT` ergänzt: buildLlmContext ohne gemerktes Projekt → empty; mit Projekt und Positionen → vollständiger Kontext
+- [x] Git-Commit
 
 ### 6.5 Profilsuche – LLM-Interface + Stub
 - [ ] Interface `LlmService` im Paket `de.mirkosertic.powerstaff.profilesearch`: `String sendMessage(Optional<LlmProjectContext> context, List<ProfileSearchMessage> history, String userMessage)`

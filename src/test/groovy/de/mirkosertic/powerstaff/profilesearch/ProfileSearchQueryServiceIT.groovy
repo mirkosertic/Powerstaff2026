@@ -102,4 +102,71 @@ class ProfileSearchQueryServiceIT extends AbstractContainerBaseIT {
         expect:
         queryService.findLatestChatByUser('not-existing-user').isEmpty()
     }
+
+    def "buildLlmContext ohne gemerktes Projekt liefert empty"() {
+        expect:
+        queryService.buildLlmContext('no-remembered-project-user').isEmpty()
+    }
+
+    def "buildLlmContext mit gemerktem Projekt und Position liefert vollstaendigen Kontext"() {
+        given:
+        // Insert a project_position_status
+        jdbcClient.sql("INSERT INTO project_position_status (description, color, color_text) VALUES ('Vorgeschlagen', '#d1fae5', '#065f46')").update()
+        def statusId = jdbcClient.sql("SELECT LAST_INSERT_ID()").query(Long.class).single()
+
+        // Insert a project
+        jdbcClient.sql("""
+            INSERT INTO project (db_version, project_number, status, description_short, description_long, skills, workplace, duration, stundensatz_vk)
+            VALUES (0, 'IT-LLM-P001', 1, 'KI-Projekt', 'Volles Projekt', 'Java, Spring', 'Remote', '6 Monate', 150)
+        """).update()
+        def projectId = jdbcClient.sql("SELECT LAST_INSERT_ID()").query(Long.class).single()
+
+        // Insert a freelancer
+        jdbcClient.sql("""
+            INSERT INTO freelancer (db_version, code, name1, name2, skills)
+            VALUES (0, 'IT-LLM-FL01', 'Max', 'Muster', 'Java, Kotlin')
+        """).update()
+        def freelancerId = jdbcClient.sql("SELECT LAST_INSERT_ID()").query(Long.class).single()
+
+        // Insert a tag and assign to freelancer
+        jdbcClient.sql("INSERT INTO tags (tagname, type) VALUES ('Java', 'SCHWERPUNKT')").update()
+        def tagId = jdbcClient.sql("SELECT LAST_INSERT_ID()").query(Long.class).single()
+        jdbcClient.sql("INSERT INTO freelancer_tags (freelancer_id, tag_id) VALUES (:fid, :tid)")
+                .param("fid", freelancerId).param("tid", tagId).update()
+
+        // Insert project_position
+        jdbcClient.sql("""
+            INSERT INTO project_position (db_version, project_id, freelancer_id, status_id, konditionen, kommentar)
+            VALUES (0, :pid, :fid, :sid, '100€/h', 'Top Kandidat')
+        """).param("pid", projectId).param("fid", freelancerId).param("sid", statusId).update()
+
+        // Set remembered project for test user
+        jdbcClient.sql("INSERT INTO remembered_project (user_id, project_id) VALUES ('IT-LLM-User', :pid)")
+                .param("pid", projectId).update()
+
+        when:
+        def ctx = queryService.buildLlmContext('IT-LLM-User')
+
+        then:
+        ctx.isPresent()
+        ctx.get().projectNumber() == 'IT-LLM-P001'
+        ctx.get().descriptionShort() == 'KI-Projekt'
+        ctx.get().statusLabel() == 'Offen'
+        ctx.get().stundensatzVk() == 150
+        ctx.get().positions().size() == 1
+        ctx.get().positions()[0].code() == 'IT-LLM-FL01'
+        ctx.get().positions()[0].name1() == 'Max'
+        ctx.get().positions()[0].tags() == ['Java']
+        ctx.get().positions()[0].positionStatus() == 'Vorgeschlagen'
+        ctx.get().positions()[0].konditionen() == '100€/h'
+
+        cleanup:
+        jdbcClient.sql("DELETE FROM remembered_project WHERE user_id = 'IT-LLM-User'").update()
+        jdbcClient.sql("DELETE FROM project_position WHERE project_id = :pid").param("pid", projectId).update()
+        jdbcClient.sql("DELETE FROM freelancer_tags WHERE freelancer_id = :fid").param("fid", freelancerId).update()
+        jdbcClient.sql("DELETE FROM tags WHERE id = :tid").param("tid", tagId).update()
+        jdbcClient.sql("DELETE FROM freelancer WHERE id = :fid").param("fid", freelancerId).update()
+        jdbcClient.sql("DELETE FROM project WHERE id = :pid").param("pid", projectId).update()
+        jdbcClient.sql("DELETE FROM project_position_status WHERE id = :sid").param("sid", statusId).update()
+    }
 }
