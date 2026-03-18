@@ -550,9 +550,9 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 7.2 Application-Start- und Flyway-Test
-- [ ] `ApplicationStartIT` (`@SpringBootTest`) extends `AbstractContainerBaseIT`: Spring-Kontext startet vollständig (kein `fail()` durch Flyway-Fehler oder Bean-Konflikte)
-- [ ] `FlywayMigrationIT`: prüft via `JdbcClient`, dass alle 21 erwarteten Tabellen in der DB existieren
-- [ ] Git-Commit
+- [x] `ApplicationStartIT` (`@SpringBootTest`) extends `AbstractContainerBaseIT`: Spring-Kontext startet vollständig (kein `fail()` durch Flyway-Fehler oder Bean-Konflikte)
+- [x] `FlywayMigrationIT`: prüft via `JdbcClient`, dass alle 21 erwarteten Tabellen in der DB existieren
+- [x] Git-Commit
 
 ### 7.3 Security-Integrationstests
 - [ ] `SecurityIT` (`@SpringBootTest` + MockMvc, `@WithMockUser`): für jeden Controller-Basispfad prüfen: ohne Auth → 302 `/login`; mit Auth → 200 oder weitere 3xx
