@@ -396,10 +396,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 5.4 Project – CommandService
-- [ ] `ProjectCommandService.save(Project)`: ruft `projectValidator.validate()`, speichert, fängt Optimistic-Locking-Fehler
-- [ ] `ProjectCommandService.delete(Long id)`: löscht (kein RESTRICT von außen); `ON DELETE CASCADE` auf `project_history`, `project_position`, `remembered_project` erledigt Rest DB-seitig
-- [ ] Test: `ProjectCommandServiceIT`: save valid, save invalid (beide FKs gesetzt), save Konflikt, delete
-- [ ] Git-Commit
+- [x] `ProjectCommandService.save(Project)`: Validierung via ProjectValidator → BothFKsException; dann speichern
+- [x] `ProjectCommandService.deleteById(Long id)`: ON DELETE CASCADE erledigt Positionen/Historie/RememberedProject
+- [x] `BothFKsException` (RuntimeException)
+- [x] Test: `ProjectCommandServiceIT`: save valid, save BothFKs, update, Optimistic Locking, delete
+- [x] Git-Commit
 
 ### 5.5 Project – QueryService (Navigation + findById)
 - [ ] `ProjectQueryService.findById(Long)`, `findFirst()`, `findLast()`, `findPrevious(Long)`, `findNext(Long)`
