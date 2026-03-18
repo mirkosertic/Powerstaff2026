@@ -328,11 +328,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 4.3 Kunde – QueryService
-- [ ] `KundeQueryService`: `findById`, `findFirst`, `findLast`, `findPrevious`, `findNext` (analog Partner)
-- [ ] `search(KundeSearchCriteria, offset, limit)`, `countSearch` (QBE über: company, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr)
-- [ ] `findProjectsByKundeId(Long kundeId, String sortField, String sortDir)` → `List<ProjectListItem>`
-- [ ] Test: `KundeQueryServiceIT`: Navigation, QBE, Projektliste
-- [ ] Git-Commit
+- [x] `KundeQueryService`: `findById`, `findFirst`, `findLast`, `findPrevious`, `findNext` (analog Partner)
+- [x] `search(KundeSearchCriteria, offset, limit)`, `countSearch` (QBE über: company, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr)
+- [x] `findProjectsByKundeId(Long kundeId, String sortField, String sortDir)` → `List<ProjectListItem>`
+- [x] Test: `KundeQueryServiceIT`: Navigation, QBE, Projektliste
+- [x] Git-Commit
 
 ### 4.4 Kunde – Kontaktmöglichkeiten (Domain + Service)
 - [ ] Aggregate `KundeContact` (`id`, `type` String, `value`, `kundeId`, Audit-Felder)
