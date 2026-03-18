@@ -422,13 +422,13 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Git-Commit
 
 ### 5.8 Projektposition – Services
-- [ ] `ProjectPositionCommandService.save(ProjectPosition)`: speichert, Optimistic-Locking-Handling
-- [ ] `ProjectPositionCommandService.delete(Long positionId)`
-- [ ] Record `ProjectPositionView` (id, dbVersion, freelancerId, code, name1, name2, statusId, statusDescription, statusColor, statusColorText, konditionen, kommentar)
-- [ ] `ProjectPositionQueryService.findByProjectId(Long projectId, String sortField, String sortDir)` → `List<ProjectPositionView>` via JOIN `freelancer` + `project_position_status`
-- [ ] `ProjectPositionQueryService.existsPosition(Long projectId, Long freelancerId)` → `boolean`
-- [ ] Test: `ProjectPositionCommandServiceIT`: save, save Konflikt, delete; `ProjectPositionQueryServiceIT`: findByProjectId mit JOIN-Daten
-- [ ] Git-Commit
+- [x] `ProjectPositionCommandService.save(ProjectPosition)`: speichert, Optimistic-Locking-Handling
+- [x] `ProjectPositionCommandService.delete(Long positionId)`
+- [x] Record `ProjectPositionView` (id, dbVersion, freelancerId, code, name1, name2, statusId, statusDescription, statusColor, statusColorText, konditionen, kommentar)
+- [x] `ProjectPositionQueryService.findByProjectId(Long projectId, String sortField, String sortDir)` → `List<ProjectPositionView>` via JOIN `freelancer` + `project_position_status`
+- [x] `ProjectPositionQueryService.existsPosition(Long projectId, Long freelancerId)` → `boolean`
+- [x] Test: `ProjectPositionCommandServiceIT`: save, save Konflikt, delete; `ProjectPositionQueryServiceIT`: findByProjectId mit JOIN-Daten
+- [x] Git-Commit
 
 ### 5.9 Project – Kontakthistorie
 - [ ] Aggregate `ProjectHistory` (`id`, `description`, `projectId`, Audit-Felder; **kein** `typeId`)
