@@ -9,7 +9,7 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
   loadAvailableTags http://localhost:8080/freelancer/1:790
 - [x] Zu geringer vertikaler Abstand auf der Freiberufler Seite zwischen  "Letzter Kontwxt" und den Checkboxen für "Wiedervorlage", "Kontaktsperre" und "Datenschutz"
 - [x] Bei gesetzter Kontaktsperre soll das Warnings-Banner, analog dem Prototyl im "specs" angezeigt werden
-- [ ] Audit-Info eines Freiberuflers (und allen anderen Formularen) soll in der Top-Navigation angezeigt werden, analog dem Prototypen. Bei neuen Datensätzen soll als Audit-Info "Neu, noch nicht gespeichert" angezeigt werden
+- [x] Audit-Info eines Freiberuflers (und allen anderen Formularen) soll in der Top-Navigation angezeigt werden, analog dem Prototypen. Bei neuen Datensätzen soll als Audit-Info "Neu, noch nicht gespeichert" angezeigt werden
 - [ ] Beim Hinzufügen einer Kontaktmöglichkeit zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
 - [ ] Beim Hinzufügen einer Kontakthistorie zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
 - [ ] Kontaktmöglichkeiten können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert

@@ -14,7 +14,10 @@
       @{/freelancer/new},
       'freelancer-form',
       ${freelancer.id != null} ? 'modal-delete' : null,
-      null)}">
+      null,
+      ${freelancer.id != null}
+        ? 'Erfasst: ' + ${#temporals.format(freelancer.creationDate,'dd.MM.yyyy')} + ' ' + ${freelancer.creationUser} + ' · Geändert: ' + ${#temporals.format(freelancer.changedDate,'dd.MM.yyyy')} + ' ' + ${freelancer.changedUser}
+        : 'Neu, noch nicht gespeichert')}">
   </div>
 
   <!-- Page Content -->

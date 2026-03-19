@@ -14,7 +14,10 @@
       null,
       'project-form',
       ${project.id != null} ? 'modal-delete' : null,
-      ${rememberedProject})}">
+      ${rememberedProject},
+      ${project.id != null}
+        ? 'Erfasst: ' + ${#temporals.format(project.creationDate,'dd.MM.yyyy')} + ' ' + ${project.creationUser} + ' · Geändert: ' + ${#temporals.format(project.changedDate,'dd.MM.yyyy')} + ' ' + ${project.changedUser}
+        : 'Neu, noch nicht gespeichert')}">
   </div>
 
   <!-- Page Content -->

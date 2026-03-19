@@ -14,7 +14,10 @@
       @{/kunde/new},
       'kunde-form',
       ${kunde.id != null} ? 'modal-delete' : null,
-      null)}">
+      null,
+      ${kunde.id != null}
+        ? 'Erfasst: ' + ${#temporals.format(kunde.creationDate,'dd.MM.yyyy')} + ' ' + ${kunde.creationUser} + ' · Geändert: ' + ${#temporals.format(kunde.changedDate,'dd.MM.yyyy')} + ' ' + ${kunde.changedUser}
+        : 'Neu, noch nicht gespeichert')}">
   </div>
 
   <!-- Page Content -->

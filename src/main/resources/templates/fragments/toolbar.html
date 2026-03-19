@@ -16,8 +16,10 @@
     saveFormId        – ID des Formulars, das beim Speichern abgeschickt wird
     deleteModalId     – ID des Löschen-Bestätigungs-Modals (ohne #), öffnet openModal(id)
     rememberedProject – Objekt mit Feldern projectNumber + shortDescription (oder null)
+    auditInfo         – Audit-Infotext (z. B. "Erfasst: 01.01.2026 admin · Geändert: ...")
+                        oder "Neu, noch nicht gespeichert" bei Neuanlage
 -->
-<div id="toolbar" th:fragment="toolbar(moduleLabel, firstUrl, prevUrl, entityId, nextUrl, lastUrl, newUrl, saveFormId, deleteModalId, rememberedProject)">
+<div id="toolbar" th:fragment="toolbar(moduleLabel, firstUrl, prevUrl, entityId, nextUrl, lastUrl, newUrl, saveFormId, deleteModalId, rememberedProject, auditInfo)">
 
   <!-- Modul-Label -->
   <div id="tb-module" th:text="${moduleLabel}">Modul</div>
@@ -43,10 +45,8 @@
        title="Letzter">⏭</a>
   </div>
 
-  <!-- Audit-Informationen (werden vom jeweiligen Controller ins Model gegeben) -->
-  <div id="tb-audit">
-    <!-- Inhalt wird durch das einbindende Template via th:replace oder direkt befüllt -->
-  </div>
+  <!-- Audit-Informationen -->
+  <div id="tb-audit" th:text="${auditInfo}"></div>
 
   <!-- Gemerktes Projekt (§21) – nur anzeigen wenn vorhanden -->
   <div id="tb-project" th:if="${rememberedProject != null}">
