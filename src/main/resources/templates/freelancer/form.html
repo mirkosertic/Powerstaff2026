@@ -53,7 +53,7 @@
           </div>
           <div class="fg">
             <label>Name 1</label>
-            <input type="text" name="name1" th:value="${freelancer.name1}"/>
+            <input type="text" name="name1" th:value="${freelancer.name1}" required/>
           </div>
           <div class="fg">
             <label>Name 2</label>
@@ -492,6 +492,8 @@
     document.getElementById('freelancer-form')?.addEventListener('submit', function(e) {
       e.preventDefault();
       var form = this;
+      form.classList.add('was-validated');
+      if (!form.checkValidity()) return;
       var data = new URLSearchParams(new FormData(form));
       apiFetch('/freelancer/save', { method: 'POST', body: data,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'} })

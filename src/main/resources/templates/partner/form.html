@@ -45,7 +45,7 @@
         <div class="fg2">
           <div class="fg">
             <label>Firma</label>
-            <input type="text" name="company" th:value="${partner.company}" placeholder="Firmenbezeichnung"/>
+            <input type="text" name="company" th:value="${partner.company}" placeholder="Firmenbezeichnung" required/>
           </div>
           <div class="fg">
             <label>Name 1</label>
@@ -464,6 +464,8 @@
     document.getElementById('partner-form')?.addEventListener('submit', function(e) {
       e.preventDefault();
       var form = this;
+      form.classList.add('was-validated');
+      if (!form.checkValidity()) return;
       var data = new URLSearchParams(new FormData(form));
       apiFetch('/partner/save', { method: 'POST', body: data,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'} })

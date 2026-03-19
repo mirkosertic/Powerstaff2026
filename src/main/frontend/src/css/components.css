@@ -223,3 +223,11 @@ hr.div {
   border-top: 1px solid var(--border-l);
   margin: 10px 0;
 }
+
+/* HTML5-Pflichtfeld-Validierung */
+.was-validated input:invalid,
+.was-validated select:invalid,
+.was-validated textarea:invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger-ring);
+}

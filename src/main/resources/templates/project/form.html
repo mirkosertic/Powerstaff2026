@@ -45,7 +45,7 @@
         <div class="fg2">
           <div class="fg">
             <label>Projektnummer</label>
-            <input type="text" name="projectNumber" th:value="${project.projectNumber}"/>
+            <input type="text" name="projectNumber" th:value="${project.projectNumber}" required/>
           </div>
           <div class="fg">
             <label>Eingangsdatum</label>
@@ -93,7 +93,7 @@
         <div class="fcard-body" id="fcard-beschreibung">
         <div class="fg">
           <label>Kurzbeschreibung</label>
-          <input type="text" name="descriptionShort" th:value="${project.descriptionShort}"/>
+          <input type="text" name="descriptionShort" th:value="${project.descriptionShort}" required/>
         </div>
         <div class="fg">
           <label>Beschreibung</label>
@@ -433,6 +433,8 @@
   document.getElementById('project-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
+    form.classList.add('was-validated');
+    if (!form.checkValidity()) return;
     const data = new FormData(form);
     const resp = await fetch(form.action, { method: 'POST', body: data });
     if (resp.status === 409) {

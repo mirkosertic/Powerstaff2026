@@ -142,12 +142,12 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 
 **Betroffen:** `profilesearch/form.html`, `src/main/frontend/src/css/chat.css`
 
-- [ ] Prüfen ob `#chat-page`, `#chat-sidebar`, `#chat-messages`, `#chat-input-area` korrekt strukturiert
-- [ ] `--toolbar-h` Variable: wird in `chat.css:14` als Fallback `52px` genutzt –
+- [x] Prüfen ob `#chat-page`, `#chat-sidebar`, `#chat-messages`, `#chat-input-area` korrekt strukturiert
+- [x] `--toolbar-h` Variable: wird in `chat.css:14` als Fallback `52px` genutzt –
   sicherstellen dass der Custom-Toolbar der Profilsuche diese Höhe tatsächlich hat
-- [ ] Sicherstellen dass `chat.css` nun korrekt über `generated/app.css` geladen wird
+- [x] Sicherstellen dass `chat.css` nun korrekt über `generated/app.css` geladen wird
   (Vite-Integration wurde in separatem Commit gefixt)
-- [ ] Mobile-Overlay-Sidebar funktioniert (`#sidebar-backdrop.visible`)
+- [x] Mobile-Overlay-Sidebar funktioniert (`#sidebar-backdrop.visible`)
 
 **Commit:** `fix(ui): Profilsuche Chat-Layout nach Vite-Integration validiert`
 
@@ -157,12 +157,12 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 
 **Betroffen:** alle 4 `form.html`, `src/main/frontend/src/css/components.css`
 
-- [ ] `required` auf Pflichtfeldern:
+- [x] `required` auf Pflichtfeldern:
   - Freiberufler: `name1`
   - Partner: `company`
   - Kunde: `company`
   - Projekt: `projectNumber`, `descriptionShort`
-- [ ] CSS in `components.css` ergänzen:
+- [x] CSS in `components.css` ergänzen:
   ```css
   .was-validated input:invalid,
   .was-validated select:invalid,
@@ -171,7 +171,7 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
     box-shadow: 0 0 0 3px var(--danger-ring);
   }
   ```
-- [ ] JS in jedem Template: submit-Handler setzt `form.classList.add('was-validated')`
+- [x] JS in jedem Template: submit-Handler setzt `form.classList.add('was-validated')`
   und bricht ab wenn `!form.checkValidity()`
 
 **Commit:** `feat(ui): HTML5-Pflichtfeld-Validierung mit visueller Rückmeldung`
@@ -200,7 +200,7 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 | U.4    | ✅ erledigt | eec5fb0  |
 | U.5    | ✅ erledigt | 87c3a1f  |
 | U.6    | ✅ erledigt | aa09f85  |
-| U.7    | ⬜ offen    | –        |
-| U.8    | ⬜ offen    | –        |
+| U.7    | ✅ erledigt | 2df2a47  |
+| U.8    | ✅ erledigt | (validiert, kein commit nötig) |
 | U.9    | ⬜ offen    | –        |
 | U.10   | ⬜ offen    | –        |
