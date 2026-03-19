@@ -14,10 +14,10 @@
     lastUrl           – URL für den "Letzter"-Button
     newUrl            – URL für den Neu-Button
     saveFormId        – ID des Formulars, das beim Speichern abgeschickt wird
-    deleteUrl         – URL für den Löschen-Button (Modal-Trigger oder direkter Link)
+    deleteModalId     – ID des Löschen-Bestätigungs-Modals (ohne #), öffnet openModal(id)
     rememberedProject – Objekt mit Feldern projectNumber + shortDescription (oder null)
 -->
-<div id="toolbar" th:fragment="toolbar(moduleLabel, firstUrl, prevUrl, entityId, nextUrl, lastUrl, newUrl, saveFormId, deleteUrl, rememberedProject)">
+<div id="toolbar" th:fragment="toolbar(moduleLabel, firstUrl, prevUrl, entityId, nextUrl, lastUrl, newUrl, saveFormId, deleteModalId, rememberedProject)">
 
   <!-- Modul-Label -->
   <div id="tb-module" th:text="${moduleLabel}">Modul</div>
@@ -65,9 +65,9 @@
             th:attr="form=${saveFormId}"
             th:if="${saveFormId != null}">💾 Speichern</button>
 
-    <a class="btn btn-danger"
-       th:href="${deleteUrl}"
-       th:if="${deleteUrl != null}">🗑 Löschen</a>
+    <button type="button" class="btn btn-danger"
+            th:if="${deleteModalId != null}"
+            th:attr="onclick='openModal(\'' + ${deleteModalId} + '\')'">🗑 Löschen</button>
   </div>
 
 </div>

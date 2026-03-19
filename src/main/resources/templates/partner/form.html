@@ -13,7 +13,7 @@
       @{/partner/last},
       @{/partner/new},
       'partner-form',
-      ${partner.id != null} ? '#modal-delete' : null,
+      ${partner.id != null} ? 'modal-delete' : null,
       null)}">
   </div>
 
@@ -436,14 +436,6 @@
   <!-- ================================================================== -->
   <script th:inline="javascript">
     var partnerId = /*[[${partner.id}]]*/ null;
-
-    // Modal helpers
-    function openModal(id) {
-      document.getElementById(id).classList.remove('hidden');
-    }
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
 
     // ---- Delete Partner ----
     document.getElementById('btn-delete-confirm')?.addEventListener('click', function() {

@@ -126,12 +126,12 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 
 **Betroffen:** `fragments/toolbar.html`, alle 4 `form.html`
 
-- [ ] `toolbar.html`: Parameter `deleteUrl` → `deleteModalId` umbenennen
-- [ ] `<a class="btn btn-danger" th:href="${deleteUrl}">` ersetzen durch:
+- [x] `toolbar.html`: Parameter `deleteUrl` → `deleteModalId` umbenennen
+- [x] `<a class="btn btn-danger" th:href="${deleteUrl}">` ersetzen durch:
   `<button type="button" class="btn btn-danger" th:if="${deleteModalId != null}"
    th:attr="onclick='openModal(\'' + ${deleteModalId} + '\'')">`
-- [ ] Alle 4 `form.html`: Übergabewert von `'#modal-delete'` → `'modal-delete'` (ohne `#`)
-- [ ] `openModal(id)` und `closeModal(id)` in `main.js` als `window`-Funktionen auslagern
+- [x] Alle 4 `form.html`: Übergabewert von `'#modal-delete'` → `'modal-delete'` (ohne `#`)
+- [x] `openModal(id)` und `closeModal(id)` in `main.js` als `window`-Funktionen auslagern
   (derzeit dupliziert in jedem Template)
 
 **Commit:** `fix(ui): Toolbar-Löschen-Button öffnet Modal statt href-Navigation`
@@ -199,7 +199,7 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 | U.3    | ✅ erledigt | e606861  |
 | U.4    | ✅ erledigt | eec5fb0  |
 | U.5    | ✅ erledigt | 87c3a1f  |
-| U.6    | ⬜ offen    | –        |
+| U.6    | ✅ erledigt | aa09f85  |
 | U.7    | ⬜ offen    | –        |
 | U.8    | ⬜ offen    | –        |
 | U.9    | ⬜ offen    | –        |

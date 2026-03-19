@@ -13,7 +13,7 @@
       @{/project/last},
       null,
       'project-form',
-      ${project.id != null} ? '#modal-delete' : null,
+      ${project.id != null} ? 'modal-delete' : null,
       ${rememberedProject})}">
   </div>
 
@@ -422,16 +422,6 @@
   const PROJECT_ID = /*[[${project.id}]]*/ 0;
   const CSRF_TOKEN = /*[[${_csrf.token}]]*/ '';
   const CSRF_HEADER = /*[[${_csrf.headerName}]]*/ 'X-XSRF-TOKEN';
-
-  // ---- Hilfsfunktionen ----
-  function openModal(id) {
-    const m = document.getElementById(id);
-    if (m) m.setAttribute('open', '');
-  }
-  function closeModal(id) {
-    const m = document.getElementById(id);
-    if (m) m.removeAttribute('open');
-  }
 
   // ---- Projekt löschen ----
   document.getElementById('btn-delete-confirm').addEventListener('click', () => {

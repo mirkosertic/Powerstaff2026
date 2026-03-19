@@ -13,7 +13,7 @@
       @{/freelancer/last},
       @{/freelancer/new},
       'freelancer-form',
-      ${freelancer.id != null} ? '#modal-delete' : null,
+      ${freelancer.id != null} ? 'modal-delete' : null,
       null)}">
   </div>
 
@@ -487,14 +487,6 @@
   <!-- ================================================================== -->
   <script th:inline="javascript">
     var freelancerId = /*[[${freelancer.id}]]*/ null;
-
-    // Modal helpers
-    function openModal(id) {
-      document.getElementById(id).classList.remove('hidden');
-    }
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
 
     // ---- Save with Unified Save + optimistic locking ----
     document.getElementById('freelancer-form')?.addEventListener('submit', function(e) {

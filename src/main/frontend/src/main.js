@@ -37,6 +37,20 @@ export function apiFetch(url, options = {}) {
 window.apiFetch = apiFetch;
 
 /**
+ * openModal / closeModal – zeigt oder verbirgt ein Modal-Element (.mbk)
+ * durch Toggeln der CSS-Klasse `hidden`.
+ * @param {string} id – ID des Modals (ohne `#`)
+ */
+function openModal(id) {
+  document.getElementById(id)?.classList.remove('hidden');
+}
+function closeModal(id) {
+  document.getElementById(id)?.classList.add('hidden');
+}
+window.openModal = openModal;
+window.closeModal = closeModal;
+
+/**
  * toggleCard – öffnet/schließt eine fcard-Sektion.
  * @param {string} id – ID des .fcard-body Elements
  */
