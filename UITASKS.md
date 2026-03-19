@@ -78,12 +78,12 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 
 **Betroffen:** `freelancer/form.html`
 
-- [ ] Tags-Container: `<div id="tags-section">` erhält `.tag-grid` als direkten Kind-Wrapper
+- [x] Tags-Container: `<div id="tags-section">` erhält `.tag-grid` als direkten Kind-Wrapper
   um alle Tag-Kategorien
-- [ ] Kategorie-Label: `<h3 class="subsection-label">` → `<div class="tg-label">`
-- [ ] `.chip-list` → `.chip-row`
-- [ ] `.chip-remove` → `.chip-x`
-- [ ] `.tag-add-select` → `.chip-add`
+- [x] Kategorie-Label: `<h3 class="subsection-label">` → `<div class="tg-label">`
+- [x] `.chip-list` → `.chip-row`
+- [x] `.chip-remove` → `.chip-x`
+- [x] `.tag-add-select` → `.chip-add`
 
 **Commit:** `fix(ui): Tag-HTML-Struktur an Design-System §14 (tag-grid/chip-row/chip-x) angleichen`
 
@@ -196,7 +196,7 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 |--------|-------------|----------|
 | U.1    | ✅ erledigt | ac62cb3  |
 | U.2    | ✅ erledigt | a6c4244  |
-| U.3    | ⬜ offen    | –        |
+| U.3    | ✅ erledigt | e606861  |
 | U.4    | ⬜ offen    | –        |
 | U.5    | ⬜ offen    | –        |
 | U.6    | ⬜ offen    | –        |

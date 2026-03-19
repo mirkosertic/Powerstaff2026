@@ -212,21 +212,23 @@
 
         <!-- Tags-Sektion: je TagType eine Subsection -->
         <div th:if="${freelancer.id != null}" id="tags-section">
-          <div th:each="tagType : ${tagTypes}" class="tag-group" th:attr="data-tag-type=${tagType.name()}">
-            <h3 class="subsection-label" th:text="${tagType.label}">Kategorie</h3>
-            <div class="chip-list" th:id="'chips-' + ${tagType.name()}">
-              <span class="chip" th:each="tag : ${tags}" th:if="${tag.type() == tagType}">
-                <span th:text="${tag.name()}">Tag</span>
-                <button type="button" class="chip-remove"
-                        th:attr="data-freelancer-id=${freelancer.id},data-tag-id=${tag.id()}"
-                        onclick="removeTag(this)">×</button>
-              </span>
+          <div class="tag-grid">
+            <div th:each="tagType : ${tagTypes}" th:attr="data-tag-type=${tagType.name()}">
+              <div class="tg-label" th:text="${tagType.label}">Kategorie</div>
+              <div class="chip-row" th:id="'chips-' + ${tagType.name()}">
+                <span class="chip" th:each="tag : ${tags}" th:if="${tag.type() == tagType}">
+                  <span th:text="${tag.name()}">Tag</span>
+                  <button type="button" class="chip-x"
+                          th:attr="data-freelancer-id=${freelancer.id},data-tag-id=${tag.id()}"
+                          onclick="removeTag(this)">×</button>
+                </span>
+              </div>
+              <select class="chip-add" th:id="'tag-select-' + ${tagType.name()}"
+                      th:attr="data-freelancer-id=${freelancer.id},data-tag-type=${tagType.name()}"
+                      onchange="addTag(this)">
+                <option value="">+ Tag hinzufügen</option>
+              </select>
             </div>
-            <select class="tag-add-select" th:id="'tag-select-' + ${tagType.name()}"
-                    th:attr="data-freelancer-id=${freelancer.id},data-tag-type=${tagType.name()}"
-                    onchange="addTag(this)">
-              <option value="">+ Tag hinzufügen</option>
-            </select>
           </div>
         </div>
 
@@ -569,7 +571,7 @@
 
     // Load available tags for all selects on page load
     if (freelancerId) {
-      document.querySelectorAll('.tag-add-select').forEach(function(sel) {
+      document.querySelectorAll('.chip-add').forEach(function(sel) {
         loadAvailableTags(sel);
       });
     }
