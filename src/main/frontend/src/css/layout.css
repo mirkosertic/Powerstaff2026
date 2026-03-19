@@ -361,3 +361,21 @@
   border-bottom: 2px solid var(--pri);
   color: var(--pri-d);
 }
+
+/* ps-dirty-banner Custom Element – versteckt bis .visible gesetzt wird */
+ps-dirty-banner {
+  display: none;
+}
+
+ps-dirty-banner.visible {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: .82rem;
+  font-weight: 500;
+  background: var(--warn-bg);
+  border-bottom: 2px solid var(--warn-border);
+  color: var(--warn-text);
+  margin-bottom: 4px;
+}

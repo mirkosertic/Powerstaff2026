@@ -20,8 +20,6 @@
   <!-- Page Content -->
   <div id="page">
 
-    <ps-dirty-banner></ps-dirty-banner>
-
     <!-- Hauptformular -->
     <form id="project-form" th:action="@{/project/save}" method="post">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -30,6 +28,8 @@
       <!-- customerId / partnerId als Hidden-Felder (nach Anlage read-only) -->
       <input type="hidden" name="customerId" th:value="${project.customerId}"/>
       <input type="hidden" name="partnerId" th:value="${project.partnerId}"/>
+
+      <ps-dirty-banner>⚠ Ungespeicherte Änderungen vorhanden.</ps-dirty-banner>
 
       <!-- ---------------------------------------------------------------- -->
       <!-- Allgemein -->

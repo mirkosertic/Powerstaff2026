@@ -25,17 +25,13 @@
       Kontaktsperre aktiv – keine Kontaktaufnahme erlaubt.
     </div>
 
-    <!-- Dirty-Banner -->
-    <div class="banner banner-info hidden" data-dirty-banner>
-      Ungespeicherte Änderungen vorhanden.
-    </div>
-    <ps-dirty-banner></ps-dirty-banner>
-
     <!-- Hauptformular -->
     <form id="partner-form" th:action="@{/partner/save}" method="post">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
       <input type="hidden" name="id" th:value="${partner.id}"/>
       <input type="hidden" name="dbVersion" th:value="${partner.dbVersion}"/>
+
+      <ps-dirty-banner>⚠ Ungespeicherte Änderungen vorhanden.</ps-dirty-banner>
 
       <!-- Adresse (§9 col-2) -->
       <div class="fcard">
