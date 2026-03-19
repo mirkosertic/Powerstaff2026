@@ -35,7 +35,11 @@
       <!-- Allgemein -->
       <!-- ---------------------------------------------------------------- -->
       <div class="fcard">
-        <h2>Allgemein</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-allgemein')">
+          <span class="fcard-title">Allgemein</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-allgemein">
         <div class="fg2">
           <div class="fg">
             <label>Projektnummer</label>
@@ -73,25 +77,32 @@
             Auf Website
           </label>
         </div>
+        </div>
       </div>
 
       <!-- ---------------------------------------------------------------- -->
       <!-- Beschreibung -->
       <!-- ---------------------------------------------------------------- -->
       <div class="fcard">
-        <h2>Beschreibung</h2>
-        <div class="field-grid col-1">
-          <label>Kurzbeschreibung
-            <input type="text" name="descriptionShort" th:value="${project.descriptionShort}"/>
-          </label>
-          <label>Beschreibung
-            <textarea name="descriptionLong" rows="5"
-                      th:text="${project.descriptionLong}"></textarea>
-          </label>
-          <label>Anforderungen
-            <textarea name="skills" rows="4"
-                      th:text="${project.skills}"></textarea>
-          </label>
+        <div class="fcard-hd" onclick="toggleCard('fcard-beschreibung')">
+          <span class="fcard-title">Beschreibung</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-beschreibung">
+        <div class="fg">
+          <label>Kurzbeschreibung</label>
+          <input type="text" name="descriptionShort" th:value="${project.descriptionShort}"/>
+        </div>
+        <div class="fg">
+          <label>Beschreibung</label>
+          <textarea name="descriptionLong" rows="5"
+                    th:text="${project.descriptionLong}"></textarea>
+        </div>
+        <div class="fg">
+          <label>Anforderungen</label>
+          <textarea name="skills" rows="4"
+                    th:text="${project.skills}"></textarea>
+        </div>
         </div>
       </div>
 
@@ -99,12 +110,17 @@
       <!-- Einsatz -->
       <!-- ---------------------------------------------------------------- -->
       <div class="fcard">
-        <h2>Einsatz</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-einsatz')">
+          <span class="fcard-title">Einsatz</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-einsatz">
         <div class="fg2">
           <div class="fg">
             <label>Einsatzort</label>
             <input type="text" name="workplace" th:value="${project.workplace}"/>
           </div>
+        </div>
         </div>
       </div>
 
@@ -112,8 +128,12 @@
       <!-- Zuordnung (read-only nach Anlage) -->
       <!-- ---------------------------------------------------------------- -->
       <div class="fcard" th:if="${project.customerId != null or project.partnerId != null}">
-        <h2>Zuordnung</h2>
-        <div class="field-grid col-2">
+        <div class="fcard-hd" onclick="toggleCard('fcard-zuordnung')">
+          <span class="fcard-title">Zuordnung</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-zuordnung">
+        <div class="fg2">
           <div th:if="${project.customerId != null}">
             <span class="subsection-label">Kunde</span>
             <a class="readonly-link" th:href="@{/kunde/{id}(id=${project.customerId})}"
@@ -125,13 +145,18 @@
                th:text="'Partner #' + ${project.partnerId}"></a>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- ---------------------------------------------------------------- -->
       <!-- Konditionen -->
       <!-- ---------------------------------------------------------------- -->
       <div class="fcard">
-        <h2>Konditionen</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-konditionen')">
+          <span class="fcard-title">Konditionen</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-konditionen">
         <div class="fg2">
           <div class="fg">
             <label>Stundensatz VK (EUR)</label>
@@ -146,16 +171,23 @@
             <input type="text" name="kreditorNr" th:value="${project.kreditorNr}"/>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- Audit-Info -->
       <div class="fcard" th:if="${project.id != null}">
+        <div class="fcard-hd" onclick="toggleCard('fcard-audit')">
+          <span class="fcard-title">Audit-Info</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-audit">
         <p class="subsection-label">Erfasst:
           <span th:text="${#temporals.format(project.creationDate,'dd.MM.yyyy HH:mm')}"></span>
           von <span th:text="${project.creationUser}"></span></p>
         <p class="subsection-label">Geändert:
           <span th:text="${#temporals.format(project.changedDate,'dd.MM.yyyy HH:mm')}"></span>
           von <span th:text="${project.changedUser}"></span></p>
+        </div>
       </div>
 
     </form>
@@ -164,9 +196,11 @@
     <!-- Positionen (Freiberufler-Zuordnungen) -->
     <!-- ------------------------------------------------------------------ -->
     <div class="fcard col-wide" th:if="${project.id != null}" id="positions-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h2 style="margin:0">Freiberufler</h2>
+      <div class="fcard-hd" onclick="toggleCard('fcard-positions')">
+        <span class="fcard-title">Freiberufler</span>
+        <span class="fcard-chv open">▾</span>
       </div>
+      <div class="fcard-body" id="fcard-positions">
       <table class="data-table" th:unless="${positions.isEmpty()}">
         <thead>
           <tr>
@@ -208,14 +242,19 @@
          style="font-size:.82rem;color:var(--text-3);font-style:italic">
         Keine Freiberufler zugeordnet.
       </p>
+      </div>
     </div>
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontakthistorie -->
     <!-- ------------------------------------------------------------------ -->
     <div class="fcard" th:if="${project.id != null}" id="history-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h2 style="margin:0">Projekthistorie</h2>
+      <div class="fcard-hd" onclick="toggleCard('fcard-history')">
+        <span class="fcard-title">Projekthistorie</span>
+        <span class="fcard-chv open">▾</span>
+      </div>
+      <div class="fcard-body" id="fcard-history">
+      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
         <button type="button" class="btn btn-sm btn-ghost"
                 onclick="openModal('modal-history')">+ Neuer Eintrag</button>
       </div>
@@ -246,6 +285,7 @@
            style="font-size:.82rem;color:var(--text-3);font-style:italic">
           Keine Historieneinträge vorhanden.
         </p>
+      </div>
       </div>
     </div>
 

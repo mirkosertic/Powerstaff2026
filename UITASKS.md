@@ -93,11 +93,11 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 
 **Betroffen:** `freelancer/form.html`, `partner/form.html`, `kunde/form.html`, `project/form.html`
 
-- [ ] Jedes `<div class="fcard">` erhält `.fcard-hd` Header mit `.fcard-title` + `.fcard-chv`
-- [ ] Gesamter bisheriger Content in `.fcard-body` wrappen
-- [ ] JS `toggleCard(id)` Funktion (in `main.js` als `window.toggleCard`)
-- [ ] Standard: alle Cards geöffnet (`.fcard-chv.open`, `.fcard-body` sichtbar)
-- [ ] Accordion-State: `toggleCard` toggelt `.open` auf Chevron und `display:none` auf Body
+- [x] Jedes `<div class="fcard">` erhält `.fcard-hd` Header mit `.fcard-title` + `.fcard-chv`
+- [x] Gesamter bisheriger Content in `.fcard-body` wrappen
+- [x] JS `toggleCard(id)` Funktion (in `main.js` als `window.toggleCard`)
+- [x] Standard: alle Cards geöffnet (`.fcard-chv.open`, `.fcard-body` sichtbar)
+- [x] Accordion-State: `toggleCard` toggelt `.open` auf Chevron und `display:none` auf Body
 
 **Commit:** `feat(ui): Akkordeon-Toggle für fcard-Sektionen in allen Formular-Templates`
 
@@ -197,7 +197,7 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 | U.1    | ✅ erledigt | ac62cb3  |
 | U.2    | ✅ erledigt | a6c4244  |
 | U.3    | ✅ erledigt | e606861  |
-| U.4    | ⬜ offen    | –        |
+| U.4    | ✅ erledigt | eec5fb0  |
 | U.5    | ⬜ offen    | –        |
 | U.6    | ⬜ offen    | –        |
 | U.7    | ⬜ offen    | –        |

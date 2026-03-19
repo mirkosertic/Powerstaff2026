@@ -35,3 +35,17 @@ export function apiFetch(url, options = {}) {
 }
 
 window.apiFetch = apiFetch;
+
+/**
+ * toggleCard – öffnet/schließt eine fcard-Sektion.
+ * @param {string} id – ID des .fcard-body Elements
+ */
+function toggleCard(id) {
+  const body = document.getElementById(id);
+  const chv = body?.previousElementSibling?.querySelector('.fcard-chv');
+  if (!body) return;
+  const isOpen = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', isOpen);
+  chv?.classList.toggle('open', !isOpen);
+}
+window.toggleCard = toggleCard;

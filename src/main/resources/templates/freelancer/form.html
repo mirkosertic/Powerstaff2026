@@ -39,7 +39,11 @@
 
       <!-- Adresse -->
       <div class="fcard">
-        <h2>Adresse</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-adresse')">
+          <span class="fcard-title">Adresse</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-adresse">
         <div class="fg2">
           <div class="fg">
             <label>Titel</label>
@@ -91,11 +95,16 @@
                   style="color:var(--text-3);font-style:italic">Kein Partner</span>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- Kontaktinformationen -->
       <div class="fcard">
-        <h2>Kontaktinformationen</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-kontakt')">
+          <span class="fcard-title">Kontaktinformationen</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-kontakt">
         <div class="fg2">
           <div class="fg">
             <label>Ansprechpartner</label>
@@ -144,25 +153,40 @@
             Datenschutz
           </label>
         </div>
+        </div>
       </div>
 
       <!-- Kommentar -->
       <div class="fcard">
-        <h2>Kommentar</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-kommentar')">
+          <span class="fcard-title">Kommentar</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-kommentar">
         <textarea name="comments" rows="4" th:text="${freelancer.comments}"
                   placeholder="Freie Notizen..."></textarea>
+        </div>
       </div>
 
       <!-- Einsatzdetails -->
       <div class="fcard">
-        <h2>Einsatzdetails</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-einsatz')">
+          <span class="fcard-title">Einsatzdetails</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-einsatz">
         <textarea name="einsatzdetails" rows="4" th:text="${freelancer.einsatzdetails}"
                   placeholder="Einsatzmöglichkeiten, Präferenzen..."></textarea>
+        </div>
       </div>
 
       <!-- Verfügbarkeit & Konditionen -->
       <div class="fcard">
-        <h2>Verfügbarkeit &amp; Konditionen</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-verfuegbarkeit')">
+          <span class="fcard-title">Verfügbarkeit &amp; Konditionen</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-verfuegbarkeit">
         <div class="fg2">
           <div class="fg">
             <label>Verfügbar ab</label>
@@ -198,11 +222,16 @@
             <input type="text" name="gulpId" th:value="${freelancer.gulpId}"/>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- Kodierung & Skills -->
       <div class="fcard">
-        <h2>Kodierung</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-kodierung')">
+          <span class="fcard-title">Kodierung &amp; Skills</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-kodierung">
         <div class="fg2">
           <div class="fg">
             <label>Code</label>
@@ -232,18 +261,26 @@
           </div>
         </div>
 
-        <label style="margin-top:1rem">Skills
+        <div class="fg" style="margin-top:1rem">
+          <label>Skills</label>
           <textarea name="skills" rows="5" th:text="${freelancer.skills}"
                     placeholder="Java, Spring Boot, Docker..."></textarea>
-        </label>
+        </div>
+        </div>
       </div>
 
       <!-- Audit-Info -->
       <div class="fcard" th:if="${freelancer.id != null}">
+        <div class="fcard-hd" onclick="toggleCard('fcard-audit')">
+          <span class="fcard-title">Audit-Info</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-audit">
         <p class="subsection-label">Erfasst: <span th:text="${#temporals.format(freelancer.creationDate,'dd.MM.yyyy HH:mm')}"></span>
           von <span th:text="${freelancer.creationUser}"></span></p>
         <p class="subsection-label">Geändert: <span th:text="${#temporals.format(freelancer.changedDate,'dd.MM.yyyy HH:mm')}"></span>
           von <span th:text="${freelancer.changedUser}"></span></p>
+        </div>
       </div>
 
     </form>
@@ -252,8 +289,12 @@
     <!-- Kontaktmöglichkeiten -->
     <!-- ------------------------------------------------------------------ -->
     <div class="fcard" th:if="${freelancer.id != null}" id="contacts-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h2 style="margin:0">Kontaktmöglichkeiten</h2>
+      <div class="fcard-hd" onclick="toggleCard('fcard-contacts')">
+        <span class="fcard-title">Kontaktmöglichkeiten</span>
+        <span class="fcard-chv open">▾</span>
+      </div>
+      <div class="fcard-body" id="fcard-contacts">
+      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
         <button class="btn btn-sm btn-ghost"
                 type="button"
                 th:onclick="'openModal(\'modal-contact\')'">+ Hinzufügen</button>
@@ -282,14 +323,19 @@
           Noch keine Kontaktmöglichkeiten vorhanden.
         </p>
       </div>
+      </div>
     </div>
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontakthistorie -->
     <!-- ------------------------------------------------------------------ -->
     <div class="fcard" th:if="${freelancer.id != null}" id="history-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h2 style="margin:0">Kontakthistorie</h2>
+      <div class="fcard-hd" onclick="toggleCard('fcard-history')">
+        <span class="fcard-title">Kontakthistorie</span>
+        <span class="fcard-chv open">▾</span>
+      </div>
+      <div class="fcard-body" id="fcard-history">
+      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
         <button type="button" class="btn btn-sm btn-ghost"
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
@@ -318,6 +364,7 @@
            style="font-size:.82rem;color:var(--text-3);font-style:italic;margin:4px 6px">
           Noch keine Historieneinträge vorhanden.
         </p>
+      </div>
       </div>
     </div>
 

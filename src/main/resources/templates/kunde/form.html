@@ -39,7 +39,11 @@
 
       <!-- Adresse -->
       <div class="fcard">
-        <h2>Adresse</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-adresse')">
+          <span class="fcard-title">Adresse</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-adresse">
         <div class="fg2">
           <div class="fg">
             <label>Firma</label>
@@ -70,11 +74,16 @@
             <input type="text" name="country" th:value="${kunde.country}"/>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- Kontaktinformationen -->
       <div class="fcard">
-        <h2>Kontaktinformationen</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-kontakt')">
+          <span class="fcard-title">Kontaktinformationen</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-kontakt">
         <div class="cbrow">
           <label class="cbfield">
             <input type="checkbox" name="contactForbidden" value="true"
@@ -87,18 +96,28 @@
             Wieder vorlegen
           </label>
         </div>
+        </div>
       </div>
 
       <!-- Kommentar -->
       <div class="fcard">
-        <h2>Kommentar</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-kommentar')">
+          <span class="fcard-title">Kommentar</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-kommentar">
         <textarea name="comments" rows="4" th:text="${kunde.comments}"
                   placeholder="Freie Notizen..."></textarea>
+        </div>
       </div>
 
       <!-- Konditionen -->
       <div class="fcard">
-        <h2>Konditionen</h2>
+        <div class="fcard-hd" onclick="toggleCard('fcard-konditionen')">
+          <span class="fcard-title">Konditionen</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-konditionen">
         <div class="fg2">
           <div class="fg">
             <label>Debitor-Nr</label>
@@ -109,16 +128,23 @@
             <input type="text" name="kreditorNr" th:value="${kunde.kreditorNr}"/>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- Audit-Info -->
       <div class="fcard" th:if="${kunde.id != null}">
+        <div class="fcard-hd" onclick="toggleCard('fcard-audit')">
+          <span class="fcard-title">Audit-Info</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="fcard-audit">
         <p class="subsection-label">Erfasst:
           <span th:text="${#temporals.format(kunde.creationDate,'dd.MM.yyyy HH:mm')}"></span>
           von <span th:text="${kunde.creationUser}"></span></p>
         <p class="subsection-label">Geändert:
           <span th:text="${#temporals.format(kunde.changedDate,'dd.MM.yyyy HH:mm')}"></span>
           von <span th:text="${kunde.changedUser}"></span></p>
+        </div>
       </div>
 
     </form>
@@ -127,8 +153,12 @@
     <!-- Projekte -->
     <!-- ------------------------------------------------------------------ -->
     <div class="fcard col-wide" th:if="${kunde.id != null}">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h2 style="margin:0">Projekte</h2>
+      <div class="fcard-hd" onclick="toggleCard('fcard-projekte')">
+        <span class="fcard-title">Projekte</span>
+        <span class="fcard-chv open">▾</span>
+      </div>
+      <div class="fcard-body" id="fcard-projekte">
+      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
         <a class="btn btn-sm btn-ghost"
            th:href="@{/project/new(kundeId=${kunde.id})}">+ Neues Projekt</a>
       </div>
@@ -158,14 +188,19 @@
          style="font-size:.82rem;color:var(--text-3);font-style:italic">
         Noch keine Projekte vorhanden.
       </p>
+      </div>
     </div>
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontaktmöglichkeiten -->
     <!-- ------------------------------------------------------------------ -->
     <div class="fcard" th:if="${kunde.id != null}" id="contacts-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h2 style="margin:0">Kontaktmöglichkeiten</h2>
+      <div class="fcard-hd" onclick="toggleCard('fcard-contacts')">
+        <span class="fcard-title">Kontaktmöglichkeiten</span>
+        <span class="fcard-chv open">▾</span>
+      </div>
+      <div class="fcard-body" id="fcard-contacts">
+      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
         <button class="btn btn-sm btn-ghost"
                 type="button"
                 th:onclick="'openModal(\'modal-contact\')'">+ Hinzufügen</button>
@@ -194,14 +229,19 @@
           Noch keine Kontaktmöglichkeiten vorhanden.
         </p>
       </div>
+      </div>
     </div>
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontakthistorie -->
     <!-- ------------------------------------------------------------------ -->
     <div class="fcard" th:if="${kunde.id != null}" id="history-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h2 style="margin:0">Kontakthistorie</h2>
+      <div class="fcard-hd" onclick="toggleCard('fcard-history')">
+        <span class="fcard-title">Kontakthistorie</span>
+        <span class="fcard-chv open">▾</span>
+      </div>
+      <div class="fcard-body" id="fcard-history">
+      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
         <button type="button" class="btn btn-sm btn-ghost"
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
@@ -230,6 +270,7 @@
            style="font-size:.82rem;color:var(--text-3);font-style:italic">
           Keine Historieneinträge vorhanden.
         </p>
+      </div>
       </div>
     </div>
 
