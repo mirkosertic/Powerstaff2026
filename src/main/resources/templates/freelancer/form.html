@@ -134,25 +134,35 @@
           </div>
           <div class="fg">
             <label>Letzter Kontakt</label>
-            <input type="datetime-local" name="lastContactDate"
-                   th:value="${freelancer.lastContactDate != null} ? ${#temporals.format(freelancer.lastContactDate, 'yyyy-MM-dd''T''HH:mm')} : ''"/>
+            <input type="date" name="lastContactDate"
+                   th:value="${freelancer.lastContactDate != null} ? ${#temporals.format(freelancer.lastContactDate, 'yyyy-MM-dd')} : ''"/>
           </div>
         </div>
         <div class="cbrow">
-          <label class="cbfield">
+          <label class="cbfield"
+                 id="cb-contactForbidden"
+                 th:classappend="${freelancer.contactForbidden} ? ' on-danger' : ''"
+                 onclick="toggleCbField(this)">
             <input type="checkbox" name="contactForbidden" value="true"
-                   th:checked="${freelancer.contactForbidden}"/>
-            Kontaktsperre
+                   th:checked="${freelancer.contactForbidden}"
+                   onchange="syncBannerForbidden(this)"/>
+            🚫 Kontaktsperre
           </label>
-          <label class="cbfield">
+          <label class="cbfield"
+                 id="cb-showAgain"
+                 th:classappend="${freelancer.showAgain} ? ' on' : ''"
+                 onclick="toggleCbField(this)">
             <input type="checkbox" name="showAgain" value="true"
                    th:checked="${freelancer.showAgain}"/>
-            Wieder vorlegen
+            🔔 Wiedervorlage
           </label>
-          <label class="cbfield">
+          <label class="cbfield"
+                 id="cb-datenschutz"
+                 th:classappend="${freelancer.datenschutz} ? ' on' : ''"
+                 onclick="toggleCbField(this)">
             <input type="checkbox" name="datenschutz" value="true"
                    th:checked="${freelancer.datenschutz}"/>
-            Datenschutz
+            🛡 Datenschutz
           </label>
         </div>
         </div>
@@ -623,6 +633,23 @@
       document.querySelectorAll('.chip-add').forEach(function(sel) {
         loadAvailableTags(sel);
       });
+    }
+
+    // ---- Checkbox-Pill-Toggle (cbfield) ----
+    function toggleCbField(label) {
+      var cb = label.querySelector('input[type="checkbox"]');
+      if (!cb) return;
+      // click on label already toggles checkbox; sync visual state after tick
+      setTimeout(function() { syncCbPill(label, cb); }, 0);
+    }
+    function syncCbPill(label, cb) {
+      var danger = label.id === 'cb-contactForbidden';
+      label.classList.toggle('on', !danger && cb.checked);
+      label.classList.toggle('on-danger', danger && cb.checked);
+    }
+    function syncBannerForbidden(cb) {
+      var banner = document.querySelector('.banner-forbidden');
+      if (banner) banner.style.display = cb.checked ? '' : 'none';
     }
 
     // bfcache handler
