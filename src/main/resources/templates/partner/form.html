@@ -33,6 +33,8 @@
 
       <ps-dirty-banner>⚠ Ungespeicherte Änderungen vorhanden.</ps-dirty-banner>
 
+      <div class="form-grid">
+
       <!-- Adresse (§9 col-2) -->
       <div class="fcard">
         <div class="fcard-hd" onclick="toggleCard('fcard-adresse')">
@@ -106,7 +108,7 @@
       </div>
 
       <!-- Kommentar -->
-      <div class="fcard">
+      <div class="fcard col-wide">
         <div class="fcard-hd" onclick="toggleCard('fcard-kommentar')">
           <span class="fcard-title">Kommentar</span>
           <span class="fcard-chv open">▾</span>
@@ -118,7 +120,7 @@
       </div>
 
       <!-- Audit-Info -->
-      <div class="fcard" th:if="${partner.id != null}">
+      <div class="fcard col-wide" th:if="${partner.id != null}">
         <div class="fcard-hd" onclick="toggleCard('fcard-audit')">
           <span class="fcard-title">Audit-Info</span>
           <span class="fcard-chv open">▾</span>
@@ -131,12 +133,16 @@
         </div>
       </div>
 
+      </div><!-- /.form-grid -->
+
     </form>
+
+    <div class="form-grid" th:if="${partner.id != null}">
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontaktmöglichkeiten -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard" th:if="${partner.id != null}" id="contacts-card">
+    <div class="fcard col-wide" id="contacts-card">
       <div class="fcard-hd" onclick="toggleCard('fcard-contacts')">
         <span class="fcard-title">Kontaktmöglichkeiten</span>
         <span class="fcard-chv open">▾</span>
@@ -264,7 +270,7 @@
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontakthistorie (§15) -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard" th:if="${partner.id != null}" id="history-card">
+    <div class="fcard col-wide" id="history-card">
       <div class="fcard-hd" onclick="toggleCard('fcard-history')">
         <span class="fcard-title">Kontakthistorie</span>
         <span class="fcard-chv open">▾</span>
@@ -305,6 +311,8 @@
       </div>
       </div>
     </div>
+
+    </div><!-- /.form-grid -->
 
   </div><!-- /#page -->
 

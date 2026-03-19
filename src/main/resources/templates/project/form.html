@@ -31,6 +31,8 @@
 
       <ps-dirty-banner>⚠ Ungespeicherte Änderungen vorhanden.</ps-dirty-banner>
 
+      <div class="form-grid">
+
       <!-- ---------------------------------------------------------------- -->
       <!-- Allgemein -->
       <!-- ---------------------------------------------------------------- -->
@@ -127,7 +129,7 @@
       <!-- ---------------------------------------------------------------- -->
       <!-- Zuordnung (read-only nach Anlage) -->
       <!-- ---------------------------------------------------------------- -->
-      <div class="fcard" th:if="${project.customerId != null or project.partnerId != null}">
+      <div class="fcard col-wide" th:if="${project.customerId != null or project.partnerId != null}">
         <div class="fcard-hd" onclick="toggleCard('fcard-zuordnung')">
           <span class="fcard-title">Zuordnung</span>
           <span class="fcard-chv open">▾</span>
@@ -175,7 +177,7 @@
       </div>
 
       <!-- Audit-Info -->
-      <div class="fcard" th:if="${project.id != null}">
+      <div class="fcard col-wide" th:if="${project.id != null}">
         <div class="fcard-hd" onclick="toggleCard('fcard-audit')">
           <span class="fcard-title">Audit-Info</span>
           <span class="fcard-chv open">▾</span>
@@ -190,12 +192,16 @@
         </div>
       </div>
 
+      </div><!-- /.form-grid -->
+
     </form>
+
+    <div class="form-grid" th:if="${project.id != null}">
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Positionen (Freiberufler-Zuordnungen) -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard col-wide" th:if="${project.id != null}" id="positions-card">
+    <div class="fcard col-wide" id="positions-card">
       <div class="fcard-hd" onclick="toggleCard('fcard-positions')">
         <span class="fcard-title">Freiberufler</span>
         <span class="fcard-chv open">▾</span>
@@ -248,7 +254,7 @@
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontakthistorie -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard" th:if="${project.id != null}" id="history-card">
+    <div class="fcard col-wide" id="history-card">
       <div class="fcard-hd" onclick="toggleCard('fcard-history')">
         <span class="fcard-title">Projekthistorie</span>
         <span class="fcard-chv open">▾</span>
@@ -288,6 +294,8 @@
       </div>
       </div>
     </div>
+
+    </div><!-- /.form-grid -->
 
   </div><!-- /#page -->
 

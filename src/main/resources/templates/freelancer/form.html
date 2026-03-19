@@ -37,6 +37,8 @@
 
       <ps-dirty-banner>⚠ Ungespeicherte Änderungen vorhanden.</ps-dirty-banner>
 
+      <div class="form-grid">
+
       <!-- Adresse -->
       <div class="fcard">
         <div class="fcard-hd" onclick="toggleCard('fcard-adresse')">
@@ -181,7 +183,7 @@
       </div>
 
       <!-- Verfügbarkeit & Konditionen -->
-      <div class="fcard">
+      <div class="fcard col-wide">
         <div class="fcard-hd" onclick="toggleCard('fcard-verfuegbarkeit')">
           <span class="fcard-title">Verfügbarkeit &amp; Konditionen</span>
           <span class="fcard-chv open">▾</span>
@@ -226,7 +228,7 @@
       </div>
 
       <!-- Kodierung & Skills -->
-      <div class="fcard">
+      <div class="fcard col-wide">
         <div class="fcard-hd" onclick="toggleCard('fcard-kodierung')">
           <span class="fcard-title">Kodierung &amp; Skills</span>
           <span class="fcard-chv open">▾</span>
@@ -270,7 +272,7 @@
       </div>
 
       <!-- Audit-Info -->
-      <div class="fcard" th:if="${freelancer.id != null}">
+      <div class="fcard col-wide" th:if="${freelancer.id != null}">
         <div class="fcard-hd" onclick="toggleCard('fcard-audit')">
           <span class="fcard-title">Audit-Info</span>
           <span class="fcard-chv open">▾</span>
@@ -283,12 +285,16 @@
         </div>
       </div>
 
+      </div><!-- /.form-grid -->
+
     </form>
+
+    <div class="form-grid" th:if="${freelancer.id != null}">
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontaktmöglichkeiten -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard" th:if="${freelancer.id != null}" id="contacts-card">
+    <div class="fcard col-wide" id="contacts-card">
       <div class="fcard-hd" onclick="toggleCard('fcard-contacts')">
         <span class="fcard-title">Kontaktmöglichkeiten</span>
         <span class="fcard-chv open">▾</span>
@@ -329,7 +335,7 @@
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontakthistorie -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard" th:if="${freelancer.id != null}" id="history-card">
+    <div class="fcard col-wide" id="history-card">
       <div class="fcard-hd" onclick="toggleCard('fcard-history')">
         <span class="fcard-title">Kontakthistorie</span>
         <span class="fcard-chv open">▾</span>
@@ -367,6 +373,8 @@
       </div>
       </div>
     </div>
+
+    </div><!-- /.form-grid -->
 
   </div><!-- /#page -->
 

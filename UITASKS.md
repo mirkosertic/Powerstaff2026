@@ -107,8 +107,8 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 
 **Betroffen:** `freelancer/form.html`, `partner/form.html`, `kunde/form.html`, `project/form.html`
 
-- [ ] `<div id="page">` Inhalt in `<div class="form-grid">` einbetten
-- [ ] Cards auf `.col-wide` (volle Breite) vs. halbe Spalte aufteilen:
+- [x] `<div id="page">` Inhalt in `<div class="form-grid">` einbetten
+- [x] Cards auf `.col-wide` (volle Breite) vs. halbe Spalte aufteilen:
   - Adresse: halbe Breite
   - Kontaktinformationen: halbe Breite
   - Kommentar + Einsatzdetails: halbe Breite
@@ -116,7 +116,7 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
   - Kodierung & Skills: volle Breite (`.col-wide`)
   - Kontaktmöglichkeiten: volle Breite (`.col-wide`)
   - Kontakthistorie: volle Breite (`.col-wide`)
-- [ ] Analoges Mapping für partner, kunde, project
+- [x] Analoges Mapping für partner, kunde, project
 
 **Commit:** `feat(ui): 2-spaltiges form-grid Layout für Formular-Cards`
 
@@ -198,7 +198,7 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 | U.2    | ✅ erledigt | a6c4244  |
 | U.3    | ✅ erledigt | e606861  |
 | U.4    | ✅ erledigt | eec5fb0  |
-| U.5    | ⬜ offen    | –        |
+| U.5    | ✅ erledigt | 87c3a1f  |
 | U.6    | ⬜ offen    | –        |
 | U.7    | ⬜ offen    | –        |
 | U.8    | ⬜ offen    | –        |

@@ -37,6 +37,8 @@
 
       <ps-dirty-banner>⚠ Ungespeicherte Änderungen vorhanden.</ps-dirty-banner>
 
+      <div class="form-grid">
+
       <!-- Adresse -->
       <div class="fcard">
         <div class="fcard-hd" onclick="toggleCard('fcard-adresse')">
@@ -132,7 +134,7 @@
       </div>
 
       <!-- Audit-Info -->
-      <div class="fcard" th:if="${kunde.id != null}">
+      <div class="fcard col-wide" th:if="${kunde.id != null}">
         <div class="fcard-hd" onclick="toggleCard('fcard-audit')">
           <span class="fcard-title">Audit-Info</span>
           <span class="fcard-chv open">▾</span>
@@ -147,12 +149,16 @@
         </div>
       </div>
 
+      </div><!-- /.form-grid -->
+
     </form>
+
+    <div class="form-grid" th:if="${kunde.id != null}">
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Projekte -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard col-wide" th:if="${kunde.id != null}">
+    <div class="fcard col-wide">
       <div class="fcard-hd" onclick="toggleCard('fcard-projekte')">
         <span class="fcard-title">Projekte</span>
         <span class="fcard-chv open">▾</span>
@@ -194,7 +200,7 @@
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontaktmöglichkeiten -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard" th:if="${kunde.id != null}" id="contacts-card">
+    <div class="fcard col-wide" id="contacts-card">
       <div class="fcard-hd" onclick="toggleCard('fcard-contacts')">
         <span class="fcard-title">Kontaktmöglichkeiten</span>
         <span class="fcard-chv open">▾</span>
@@ -235,7 +241,7 @@
     <!-- ------------------------------------------------------------------ -->
     <!-- Kontakthistorie -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard" th:if="${kunde.id != null}" id="history-card">
+    <div class="fcard col-wide" id="history-card">
       <div class="fcard-hd" onclick="toggleCard('fcard-history')">
         <span class="fcard-title">Kontakthistorie</span>
         <span class="fcard-chv open">▾</span>
@@ -273,6 +279,8 @@
       </div>
       </div>
     </div>
+
+    </div><!-- /.form-grid -->
 
   </div><!-- /#page -->
 
