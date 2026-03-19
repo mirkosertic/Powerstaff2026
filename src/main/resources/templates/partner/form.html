@@ -295,7 +295,7 @@
             </span>
             <div class="hacts">
               <button type="button" class="ibtn"
-                      th:attr="data-history-id=${entry.id},data-partner-id=${partner.id},data-type-id=${entry.typeId},data-desc=${entry.description}"
+                      th:attr="data-history-id=${entry.id},data-type-id=${entry.typeId},data-desc=${entry.description}"
                       onclick="editHistory(this)">✎</button>
               <button type="button" class="ibtn del"
                       th:attr="data-history-id=${entry.id},data-partner-id=${partner.id}"
@@ -374,6 +374,12 @@
   <div id="modal-history-body" style="display:none">
     <input type="hidden" id="history-edit-id"/>
     <div class="field-grid col-1">
+      <label>Typ
+        <select id="history-type-id">
+          <option th:each="ht : ${historyTypes}" th:value="${ht.id()}"
+                  th:text="${ht.description()}">Typ</option>
+        </select>
+      </label>
       <label>Beschreibung
         <textarea id="history-description" rows="4" placeholder="Gesprächsnotiz..."></textarea>
       </label>
@@ -540,25 +546,25 @@
         .then(function() { location.reload(); });
     }
 
-    // ---- History ----
+    // ---- History (AJAX) ----
     document.getElementById('btn-history-save')?.addEventListener('click', function() {
       if (!partnerId) return;
       var editId = document.getElementById('history-edit-id').value;
+      var typeId = parseInt(document.getElementById('history-type-id').value);
       var desc = document.getElementById('history-description').value;
-      var url, method;
-      if (editId) {
-        url = '/partner/' + partnerId + '/history/' + editId;
-        method = 'PUT';
-      } else {
-        url = '/partner/' + partnerId + '/history';
-        method = 'POST';
-      }
+      if (!desc.trim()) return;
+      var url = editId
+          ? '/partner/' + partnerId + '/history/' + editId
+          : '/partner/' + partnerId + '/history';
+      var method = editId ? 'PUT' : 'POST';
       apiFetch(url, {
         method: method,
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({typeId: 1, description: desc})
+        body: JSON.stringify({typeId: typeId, description: desc})
       }).then(function() {
         closeModal('modal-history');
+        document.getElementById('history-description').value = '';
+        document.getElementById('history-edit-id').value = '';
         location.reload();
       });
     });
@@ -566,6 +572,7 @@
     function editHistory(btn) {
       document.getElementById('history-edit-id').value = btn.dataset.historyId;
       document.getElementById('history-description').value = btn.dataset.desc;
+      document.getElementById('history-type-id').value = btn.dataset.typeId;
       openModal('modal-history');
     }
 

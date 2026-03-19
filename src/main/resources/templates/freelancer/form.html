@@ -31,9 +31,8 @@
       <input type="hidden" name="id" th:value="${freelancer.id}"/>
       <input type="hidden" name="dbVersion" th:value="${freelancer.dbVersion}"/>
 
-      <!-- Hidden-Fields für Unified Save (JS befüllt diese) -->
+      <!-- Hidden-Field für Kontakte (JS befüllt, History wird per AJAX verwaltet) -->
       <input type="hidden" name="contactsJson" id="contacts-json" value="[]"/>
-      <input type="hidden" name="historyJson" id="history-json" value="[]"/>
 
       <ps-dirty-banner>⚠ Ungespeicherte Änderungen vorhanden.</ps-dirty-banner>
 
@@ -369,8 +368,11 @@
               </span>
             </span>
             <div class="hacts">
+              <button type="button" class="ibtn"
+                      th:attr="data-history-id=${entry.id()},data-type-id=${entry.typeId()},data-desc=${entry.description()}"
+                      onclick="editHistory(this)">✎</button>
               <button type="button" class="ibtn del"
-                      th:attr="data-history-id=${entry.id()},data-freelancer-id=${freelancer.id}"
+                      th:attr="data-history-id=${entry.id()}"
                       onclick="deleteHistoryEntry(this)">🗑</button>
             </div>
           </div>
@@ -538,13 +540,13 @@
     });
 
     // ---- Contacts (inline: saved in contactsJson hidden field) ----
-    var contacts = /*[[${#lists.isEmpty(contacts)}]]*/ true
-        ? []
-        : JSON.parse(document.getElementById('contacts-json').value);
-
+    var contacts = /*[[${contacts}]]*/ [];
     function renderContacts() {
-      document.getElementById('contacts-json').value = JSON.stringify(contacts);
+      document.getElementById('contacts-json').value = JSON.stringify(
+        contacts.map(function(c) { return {id: c.id, type: c.type, value: c.value}; })
+      );
     }
+    renderContacts(); // initialize hidden field with server-rendered contacts
 
     document.getElementById('btn-contact-save')?.addEventListener('click', function() {
       var type = document.getElementById('contact-type').value;
@@ -567,28 +569,40 @@
       }
     }
 
-    // ---- History (inline: saved in historyJson hidden field) ----
-    var history = [];
-    function renderHistory() {
-      document.getElementById('history-json').value = JSON.stringify(history);
-    }
-
+    // ---- History (AJAX) ----
     document.getElementById('btn-history-save')?.addEventListener('click', function() {
+      if (!freelancerId) return;
+      var editId = document.getElementById('history-edit-id').value;
       var typeId = parseInt(document.getElementById('history-type-id').value);
       var desc = document.getElementById('history-description').value;
       if (!desc.trim()) return;
-      history.push({id: null, typeId: typeId, description: desc});
-      renderHistory();
-      closeModal('modal-history');
-      document.getElementById('history-description').value = '';
-      location.reload();
+      var url = editId
+          ? '/freelancer/' + freelancerId + '/history/' + editId
+          : '/freelancer/' + freelancerId + '/history';
+      var method = editId ? 'PUT' : 'POST';
+      apiFetch(url, {
+        method: method,
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({typeId: typeId, description: desc})
+      }).then(function() {
+        closeModal('modal-history');
+        document.getElementById('history-description').value = '';
+        document.getElementById('history-edit-id').value = '';
+        location.reload();
+      });
     });
 
+    function editHistory(btn) {
+      document.getElementById('history-edit-id').value = btn.dataset.historyId;
+      document.getElementById('history-description').value = btn.dataset.desc;
+      document.getElementById('history-type-id').value = btn.dataset.typeId;
+      openModal('modal-history');
+    }
+
     function deleteHistoryEntry(btn) {
-      var hId = parseInt(btn.dataset.historyId);
-      history = history.filter(function(h) { return h.id !== hId; });
-      renderHistory();
-      location.reload();
+      if (!freelancerId) return;
+      apiFetch('/freelancer/' + freelancerId + '/history/' + btn.dataset.historyId, { method: 'DELETE' })
+        .then(function() { location.reload(); });
     }
 
     // ---- Tags (AJAX) ----

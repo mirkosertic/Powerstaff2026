@@ -8,7 +8,6 @@ import de.mirkosertic.powerstaff.freelancer.command.Freelancer;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerContactEntry;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerHasPositionsException;
-import de.mirkosertic.powerstaff.freelancer.command.FreelancerHistoryEntry;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerTagCommandService;
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerQueryService;
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerSearchCriteria;
@@ -155,14 +154,11 @@ public class FreelancerController {
     @ResponseBody
     public ResponseEntity<?> save(@ModelAttribute Freelancer freelancer,
                                   @RequestParam(required = false, defaultValue = "[]") String contactsJson,
-                                  @RequestParam(required = false, defaultValue = "[]") String historyJson,
                                   HttpServletResponse response) throws IOException {
         try {
             List<FreelancerContactEntry> contacts = objectMapper.readValue(
                     contactsJson, new TypeReference<>() {});
-            List<FreelancerHistoryEntry> history = objectMapper.readValue(
-                    historyJson, new TypeReference<>() {});
-            var saved = commandService.save(freelancer, contacts, history);
+            var saved = commandService.save(freelancer, contacts);
             response.sendRedirect("/freelancer/" + saved.getId());
             return null;
         } catch (OptimisticLockingFailureException e) {

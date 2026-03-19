@@ -33,6 +33,16 @@ public class KundeCommandService {
         return kundeRepository.save(kunde);
     }
 
+    /**
+     * Speichert Kunden-Stammdaten und Kontakte ohne History-Verarbeitung.
+     * History wird über KundeHistoryController (AJAX) verwaltet.
+     */
+    public Kunde save(Kunde kunde, List<KundeContactEntry> contacts) {
+        Kunde saved = kundeRepository.save(kunde);
+        replaceContacts(saved.getId(), contacts);
+        return saved;
+    }
+
     public Kunde save(Kunde kunde,
                       List<KundeContactEntry> contacts,
                       List<KundeHistoryEntry> history) {
