@@ -291,28 +291,30 @@
         <button type="button" class="btn btn-sm btn-ghost"
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
-      <div class="chist" id="history-list">
-        <div class="chist-entry" th:each="entry : ${history}">
-          <div class="chist-meta">
-            <span class="cbadge" th:text="${entry.typeDescription()}">Typ</span>
-            <span th:text="${#temporals.format(entry.creationDate(),'dd.MM.yyyy HH:mm')}"></span>
-            von <strong th:text="${entry.creationUser()}"></strong>
-            <span th:if="${entry.changedDate() != null and entry.changedUser() != null
-                           and !entry.creationDate().equals(entry.changedDate())}">
-              · geändert <span th:text="${#temporals.format(entry.changedDate(),'dd.MM.yyyy HH:mm')}"></span>
-              von <strong th:text="${entry.changedUser()}"></strong>
+      <div class="hlist" id="history-list">
+        <div class="hitem" th:each="entry : ${history}">
+          <div class="hitem-hd">
+            <span class="hbadge" th:text="${entry.typeDescription()}">Typ</span>
+            <span class="hmeta">
+              <span th:text="${#temporals.format(entry.creationDate(),'dd.MM.yyyy HH:mm')}"></span>
+              von <strong th:text="${entry.creationUser()}"></strong>
+              <span th:if="${entry.changedDate() != null and entry.changedUser() != null
+                             and !entry.creationDate().equals(entry.changedDate())}">
+                · geändert <span th:text="${#temporals.format(entry.changedDate(),'dd.MM.yyyy HH:mm')}"></span>
+                von <strong th:text="${entry.changedUser()}"></strong>
+              </span>
             </span>
+            <div class="hacts">
+              <button type="button" class="ibtn del"
+                      th:attr="data-history-id=${entry.id()},data-freelancer-id=${freelancer.id}"
+                      onclick="deleteHistoryEntry(this)">🗑</button>
+            </div>
           </div>
-          <div class="chist-text" th:text="${entry.description()}"></div>
-          <div class="chist-actions">
-            <button type="button" class="ibtn del"
-                    th:attr="data-history-id=${entry.id()},data-freelancer-id=${freelancer.id}"
-                    onclick="deleteHistoryEntry(this)">🗑</button>
-          </div>
+          <div class="hbody" th:text="${entry.description()}"></div>
         </div>
         <p th:if="${history.isEmpty()}"
-           style="font-size:.82rem;color:var(--text-3);font-style:italic">
-          Keine Historieneinträge vorhanden.
+           style="font-size:.82rem;color:var(--text-3);font-style:italic;margin:4px 6px">
+          Noch keine Historieneinträge vorhanden.
         </p>
       </div>
     </div>

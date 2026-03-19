@@ -192,15 +192,15 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 
 ## Fortschritt
 
-| Task | Status | Commit |
-|------|--------|--------|
-| U.1  | ⬜ offen | – |
-| U.2  | ⬜ offen | – |
-| U.3  | ⬜ offen | – |
-| U.4  | ⬜ offen | – |
-| U.5  | ⬜ offen | – |
-| U.6  | ⬜ offen | – |
-| U.7  | ⬜ offen | – |
-| U.8  | ⬜ offen | – |
-| U.9  | ⬜ offen | – |
-| U.10 | ⬜ offen | – |
+| Task   | Status      | Commit   |
+|--------|-------------|----------|
+| U.1    | ✅ erledigt | ac62cb3  |
+| U.2    | ✅ erledigt | a6c4244  |
+| U.3    | ⬜ offen    | –        |
+| U.4    | ⬜ offen    | –        |
+| U.5    | ⬜ offen    | –        |
+| U.6    | ⬜ offen    | –        |
+| U.7    | ⬜ offen    | –        |
+| U.8    | ⬜ offen    | –        |
+| U.9    | ⬜ offen    | –        |
+| U.10   | ⬜ offen    | –        |
