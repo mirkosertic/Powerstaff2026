@@ -21,7 +21,8 @@
   <div id="page">
 
     <!-- Kontaktsperre-Banner -->
-    <div class="banner banner-forbidden" th:if="${freelancer.contactForbidden}">
+    <div class="banner banner-forbidden"
+         th:style="${freelancer.contactForbidden} ? '' : 'display:none'">
       Kontaktsperre aktiv – keine Kontaktaufnahme erlaubt.
     </div>
 

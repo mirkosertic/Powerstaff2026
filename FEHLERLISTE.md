@@ -8,7 +8,7 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
 - [x] Fehler beim Aufruf eines Freiberuflers: JavaScript ist nicht definiert. Browser-Console Fehlermeldung: Uncaught ReferenceError: apiFetch is not defined
   loadAvailableTags http://localhost:8080/freelancer/1:790
 - [x] Zu geringer vertikaler Abstand auf der Freiberufler Seite zwischen  "Letzter Kontwxt" und den Checkboxen für "Wiedervorlage", "Kontaktsperre" und "Datenschutz"
-- [ ] Bei gesetzter Kontaktsperre soll das Warnings-Banner, analog dem Prototyl im "specs" angezeigt werden
+- [x] Bei gesetzter Kontaktsperre soll das Warnings-Banner, analog dem Prototyl im "specs" angezeigt werden
 - [ ] Audit-Info eines Freiberuflers (und allen anderen Formularen) soll in der Top-Navigation angezeigt werden, analog dem Prototypen. Bei neuen Datensätzen soll als Audit-Info "Neu, noch nicht gespeichert" angezeigt werden
 - [ ] Beim Hinzufügen einer Kontaktmöglichkeit zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
 - [ ] Beim Hinzufügen einer Kontakthistorie zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
