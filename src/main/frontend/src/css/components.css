@@ -153,6 +153,7 @@
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
+  margin-top: 14px;
 }
 
 /* Einzelne Pill */
