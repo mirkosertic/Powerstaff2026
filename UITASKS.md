@@ -182,9 +182,9 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 
 **Betroffen:** alle `*ControllerIT.groovy`
 
-- [ ] `./mvnw clean verify` muss nach allen Änderungen grün sein
-- [ ] `ProfileSearchControllerIT`: `containsString('id="chat-page"')` etc. weiterhin gültig
-- [ ] Ggf. neue Assertions für `.fcard-hd` Struktur ergänzen
+- [x] `./mvnw clean verify` muss nach allen Änderungen grün sein (320 Tests, 0 Fehler)
+- [x] `ProfileSearchControllerIT`: `containsString('id="chat-page"')` etc. weiterhin gültig
+- [x] Ggf. neue Assertions für `.fcard-hd` Struktur ergänzen (nicht nötig, alle grün)
 
 **Commit:** `test: Controller-ITs nach UI-Refactoring validiert`
 
@@ -202,5 +202,5 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 | U.6    | ✅ erledigt | aa09f85  |
 | U.7    | ✅ erledigt | 2df2a47  |
 | U.8    | ✅ erledigt | (validiert, kein commit nötig) |
-| U.9    | ⬜ offen    | –        |
-| U.10   | ⬜ offen    | –        |
+| U.9    | ✅ erledigt | 72b6e10  |
+| U.10   | ✅ erledigt | 72b6e10  |
