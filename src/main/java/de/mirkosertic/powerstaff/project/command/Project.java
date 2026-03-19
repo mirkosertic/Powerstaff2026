@@ -9,7 +9,9 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 @Table("project")
 public class Project {
@@ -41,10 +43,10 @@ public class Project {
     private String projectNumber;
 
     @Column("entry_date")
-    private LocalDateTime entryDate;
+    private LocalDate entryDate;
 
     @Column("start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     private String duration;
 
@@ -99,11 +101,11 @@ public class Project {
     public String getProjectNumber() { return projectNumber; }
     public void setProjectNumber(String projectNumber) { this.projectNumber = projectNumber; }
 
-    public LocalDateTime getEntryDate() { return entryDate; }
-    public void setEntryDate(LocalDateTime entryDate) { this.entryDate = entryDate; }
+    public LocalDate getEntryDate() { return entryDate; }
+    public void setEntryDate(LocalDate entryDate) { this.entryDate = entryDate; }
 
-    public LocalDateTime getStartDate() { return startDate; }
-    public void setStartDate(LocalDateTime startDate) { this.startDate = startDate; }
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
 
     public String getDuration() { return duration; }
     public void setDuration(String duration) { this.duration = duration; }

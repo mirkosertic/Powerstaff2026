@@ -1,0 +1,31 @@
+# Gefundene Fehler
+
+Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jeder Befund soll einzeln korrigiert und via MAven build überprüft. Im Anschlus darf der EIntrag in der Liste als erledigt markiert werden, und der Change via Git in die Versionskontrolle aufgenommen werden.
+
+- [ ] Ich möchte, dass initial ein Admin-Benutzer via Flyway in der Datenbank angelegt wird. Es soll aktiv sein, und kein Passwort-Reset erfordern. Das Kennwort soll "admin" sein, jedoch soll der bcrypt-Hash von "admin" für das Login verwendet werden.
+- [ ] Spring Security Hashes sollen in der DB mit dem {bcrypt} Prefix versehen werden, falls kein Prefix gesetzt ist, soll bcrypt als Hashing Algorithmus per Default verwendet werden. Dies soll durch den Einsatz eines "DelegatingPasswordEncoder"s verwendert werden. bcrypt und noop sollen Initial unterstützt werden. Gerne dafür auch die Architekturbeschreibung ergänzen. Perspektivisch sollen dadurch Update-Probleme von Spring Security besser behandelbar sein.
+- [ ] Der Node Frontend-Build soll deine Artefakte nicht nach src/main/frontend generieren, sondern nach target/classes. Der Build sollte keine Inhalte im "src" Verzeichnis verändern oder dorthin schreiben, damit das Git-Repo auch nicht "dirty" wird. Ebenfalls soll so verhindert werden, dass aus Versehen Frontend-Build-Artefakte committed werden.
+- [ ] Fehler beim Aufruf eines Freiberuflers: JavaScript ist nicht definiert. Browser-Console Fehlermeldung: Uncaught ReferenceError: apiFetch is not defined
+  loadAvailableTags http://localhost:8080/freelancer/1:790
+- [ ] Zu geringer vertikaler Abstand auf der Freiberufler Seite zwischen  "Letzter Kontwxt" und den Checkboxen für "Wiedervorlage", "Kontaktsperre" und "Datenschutz"
+- [ ] Bei gesetzter Kontaktsperre soll das Warnings-Banner, analog dem Prototyl im "specs" angezeigt werden
+- [ ] Audit-Info eines Freiberuflers (und allen anderen Formularen) soll in der Top-Navigation angezeigt werden, analog dem Prototypen. Bei neuen Datensätzen soll als Audit-Info "Neu, noch nicht gespeichert" angezeigt werden
+- [ ] Beim Hinzufügen einer Kontaktmöglichkeit zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
+- [ ] Beim Hinzufügen einer Kontakthistorie zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
+- [ ] Kontaktmöglichkeiten können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert
+- [ ] Kontakthistorien-Einträge können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert
+- [ ] Freelancer.availabilityAsDate ist nur ein Datumsfeld, z.B. der Datepicker sollte keine Zeitangabe erlauben
+- [ ] Der Suche Button für die QBE Suche fehlt für Freiberufler und vermutlich auch den anderen Aggregaten. Er ist im Prototyp vorhanden, und die QBE Suche ist spezifiziert, jedoch die Implementierung fehlt.
+- [ ] Der Prototyp und die Implementierung der Forms im Projekt verwenden unterschiedliche Zeichensätze.
+- [ ] Die Checkbox "Datenschutz" ist im Prototypen als "DSGVO EInwilligung" hinterlegt und befindet sich im Bereich "Verfügbarkeit und Konditionen". Das ist auch korrekt so. Die Implementierung und eventuell auch die Spezifikation muss angepasst werden.
+- [ ] Die Breite von "Verfügbarkeit und Konditionen" ist im Prototyp anders als in der Implementierung des Freiberufler-Formulars.
+- [x] Die Anzeige eines existierenden Projektes erzeugt einen technischen Fehler: 2026-03-19 13:00:59 [http-nio-127.0.0.1-8080-exec-10] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/project/form.html]")] with root cause
+  org.springframework.expression.spel.SpelParseException: Expression [#temporals.format(project.entryDate,'yyyy-MM-dd\'T\'HH:mm')] @50: EL1065E: Unexpected escape character
+  at org.springframework.expression.spel.standard.Tokenizer.raiseParseException(Tokenizer.java:586).. . Vermutlich liegt es daran, dass auf der Projektmaske die Datepicker auch eine Uhrzeit-Komponente haben. Sie benötigen allerdings nur ein Datum, also keine Uhrzeit. Bei der Anzeige des Fehlers wird übrigens die Default Spring Boot Whilelabel Error Page angezeigt. Eigentlich sollte doch eine generelle Fehlerseite im Projekt-Design-System angezeigt werden, oder?
+- [ ] Das Hamburger-Menu in der Profilsuche soll linksbündig angezeigt werden, im Moment ist es zentriert
+- [ ] Das Textfeld für die Prompt-Eingabe in der Profilsuche soll über die komplette Breite der Seite gehen, und es könnte auch höher sein, da u.U. auch größere Texte eingegeben werden. Der Senden-Button soll inline im Prompt-Feld analog Claude angezeigt werden, ebenfalls soll ein "Abbrechen" bzw. Stop-Button vorgesehen sein.
+- [ ] Das Layout vom "Chat Löschen" Overlay-Dialog ist schräg, der Schlißen-Button wird zentriert angezeigt, und insgesamt ist die Darstellung sehr gedrungen.
+- [ ] Die Paginierung links oben im Administrationsbereich ist falsch.
+- [ ] Die Darstellung im Adninistrationsbereich bzw. die Tabelle der Historientypen könnte mehr Abstand zu sen Seiten gebrauchen. Auch kann die Tabelle gerne etwas breiter sein, und natürlich auch gemäß dem Designsystem formatiert.
+- [ ] Es fehlt die Bestätigung beim Speichern eines Freiberuflers, und vermutlich aich der anderen Aggregate, in Form des grünen Banners. Dies ist im Prototypen umgesetzt, und soll auch so für alle Formulare der Anwendung implementiert sein.
+- [ ] Freelancer Kodierung ist optional, allerdings soll die Kodierung auf Dubletten geprüft werden, wenn der Code schon vorhanden ist. In diesem Fall soll beim Speichern eine Warnung ausgegeben werden. Im Moment wird ein leere Code als '' in der Datenbank gespeichert, das UniqueConstraintViolations erzeugt. Das Datenmodell bzw. der Index muss vermutlich angepasst werden, genau wie die Spezifikationen.
