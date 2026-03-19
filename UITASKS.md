@@ -204,3 +204,27 @@ und dem Design-System `specs/UI-DESIGNSYSTEM.md`. Nur CSS-Klassen aus
 | U.8    | ✅ erledigt | (validiert, kein commit nötig) |
 | U.9    | ✅ erledigt | 72b6e10  |
 | U.10   | ✅ erledigt | 72b6e10  |
+| U.11   | ✅ erledigt | 9dffc3f  |
+
+---
+
+## U.11 – Kontakthistorie AJAX-Endpunkte (alle 4 Formulare)
+
+**Betroffen:** `freelancer/form.html`, `partner/form.html`, `kunde/form.html`,
+`freelancer/command/`, `freelancer/api/`, `partner/command/`, `partner/api/`,
+`customer/command/`, `customer/api/`
+
+- [x] `FreelancerHistoryCommandService` + `FreelancerHistoryController` (POST/PUT/DELETE)
+- [x] `PartnerHistoryCommandService` + `PartnerHistoryController` (POST/PUT/DELETE)
+- [x] `PartnerContactCommandService` + `PartnerContactController` (POST/DELETE) – fehlende Endpunkte ergänzt
+- [x] `KundeHistoryCommandService` + `KundeHistoryController` (POST/PUT/DELETE)
+- [x] `FreelancerCommandService`: neues `save(Freelancer, contacts)` ohne History-Replace
+- [x] `KundeCommandService`: neues `save(Kunde, contacts)` ohne History-Replace
+- [x] `PartnerController.save()` nutzt `save(partner)` – kein versehentliches Löschen per Form
+- [x] `PartnerController`: `historyTypes` jetzt im Model (für Typ-Auswahl im Modal)
+- [x] Alle 3 Formulare: History-JS auf AJAX umgestellt (kein `location.reload` nach leerem Array)
+- [x] Formulare: Bearbeiten-Button (✎) für Historieneinträge hinzugefügt
+- [x] Partner-Modal: Typ-Auswahl ergänzt (war hardcoded `typeId:1`)
+- [x] Freelancer/Kunde: Kontakte-JS initialisiert korrekt aus Server-Daten
+
+**Commit:** `feat(ui): Kontakthistorie AJAX-Endpunkte und funktionierende UI für alle Formulare`
