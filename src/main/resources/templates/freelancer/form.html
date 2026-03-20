@@ -192,14 +192,6 @@
                    th:checked="${freelancer.showAgain}"/>
             🔔 Wiedervorlage
           </label>
-          <label class="cbfield"
-                 id="cb-datenschutz"
-                 th:classappend="${freelancer.datenschutz} ? ' on' : ''"
-                 onclick="toggleCbField(this)">
-            <input type="checkbox" name="datenschutz" value="true"
-                   th:checked="${freelancer.datenschutz}"/>
-            🛡 Datenschutz
-          </label>
         </div>
         </div>
       </div>
@@ -269,6 +261,16 @@
             <label>GULP-ID</label>
             <input type="text" name="gulpId" th:value="${freelancer.gulpId}"/>
           </div>
+        </div>
+        <div class="cbrow">
+          <label class="cbfield"
+                 id="cb-datenschutz"
+                 th:classappend="${freelancer.datenschutz} ? ' on' : ''"
+                 onclick="toggleCbField(this)">
+            <input type="checkbox" name="datenschutz" value="true"
+                   th:checked="${freelancer.datenschutz}"/>
+            🛡 DSGVO Einwilligung
+          </label>
         </div>
         </div>
       </div>
