@@ -96,9 +96,12 @@
       <!-- Eingabebereich (§27) -->
       <div id="chat-input-area">
         <ps-chat-input id="ps-chat-input-el">
-          <textarea id="chat-input" rows="1"
+          <textarea id="chat-input" rows="3"
                     placeholder="Nachricht eingeben… (Enter = Senden, Shift+Enter = Zeilenumbruch)"></textarea>
-          <button type="button" id="chat-send" class="btn btn-pri">Senden</button>
+          <div class="chat-input-btns">
+            <button type="button" id="chat-stop" class="btn btn-ghost btn-sm" hidden>⏹ Stop</button>
+            <button type="button" id="chat-send" class="btn btn-pri btn-sm">↑ Senden</button>
+          </div>
         </ps-chat-input>
       </div>
     </div>
@@ -208,6 +211,8 @@
       return wrapper;
     }
 
+    let currentAbortCtrl = null;
+
     if (inputEl) {
       inputEl.addEventListener('ps-send', function(e) {
         const text = e.detail.text;
@@ -222,26 +227,39 @@
         typingEl.querySelector('.msg-bubble').innerHTML =
           '<div class="typing-dots"><span></span><span></span><span></span></div>';
 
-        // Disable input
+        // Disable input, show stop button
+        currentAbortCtrl = new AbortController();
         inputEl.setAttribute('pending', '');
 
         apiFetch('/profilesearch/chat/' + CHAT_ID + '/send', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text })
+          body: JSON.stringify({ message: text }),
+          signal: currentAbortCtrl.signal
         })
         .then(r => r.json())
         .then(data => {
           typingEl.remove();
           appendMsg('assistant', data.content, data.id);
         })
-        .catch(() => {
+        .catch((err) => {
           typingEl.remove();
-          appendMsg('assistant', 'Fehler beim Senden. Bitte erneut versuchen.', null);
+          if (err && err.name !== 'AbortError') {
+            appendMsg('assistant', 'Fehler beim Senden. Bitte erneut versuchen.', null);
+          }
         })
         .finally(() => {
+          currentAbortCtrl = null;
           inputEl.removeAttribute('pending');
         });
+      });
+
+      inputEl.addEventListener('ps-stop', function() {
+        if (currentAbortCtrl) {
+          currentAbortCtrl.abort();
+          currentAbortCtrl = null;
+        }
+        inputEl.removeAttribute('pending');
       });
     }
 
