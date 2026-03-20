@@ -39,4 +39,11 @@ public class FreelancerTagCommandService {
     public void removeTag(long freelancerTagId) {
         tagRepository.deleteById(freelancerTagId);
     }
+
+    /**
+     * Entfernt eine Tag-Zuordnung anhand von Freiberufler-ID und Tag-Entity-ID.
+     */
+    public void removeTagByTagId(long freelancerId, long tagId) {
+        tagRepository.deleteByFreelancerIdAndTagId(freelancerId, tagId);
+    }
 }

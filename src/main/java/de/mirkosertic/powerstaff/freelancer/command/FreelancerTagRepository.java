@@ -9,4 +9,6 @@ interface FreelancerTagRepository extends CrudRepository<FreelancerTag, Long> {
     List<FreelancerTag> findByFreelancerId(Long freelancerId);
 
     boolean existsByFreelancerIdAndTagId(Long freelancerId, Long tagId);
+
+    void deleteByFreelancerIdAndTagId(Long freelancerId, Long tagId);
 }

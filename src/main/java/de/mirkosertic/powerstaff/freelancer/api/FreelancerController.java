@@ -268,13 +268,12 @@ public class FreelancerController {
         }
     }
 
-    @DeleteMapping("/{id}/tags/{freelancerTagId}")
+    @DeleteMapping("/{id}/tags/{tagId}")
     @ResponseBody
     public ResponseEntity<?> removeTag(@PathVariable long id,
-                                       @PathVariable long freelancerTagId) {
-        tagCommandService.removeTag(freelancerTagId);
-        List<TagInfo> updated = queryService.findTagsByFreelancerId(id);
-        return ResponseEntity.ok(Map.of("ok", true, "tags", updated));
+                                       @PathVariable long tagId) {
+        tagCommandService.removeTagByTagId(id, tagId);
+        return ResponseEntity.ok(Map.of("ok", true));
     }
 
     @GetMapping("/{id}/available-tags/{type}")

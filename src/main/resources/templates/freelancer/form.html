@@ -314,7 +314,7 @@
                 <span class="chip" th:each="tag : ${tags}" th:if="${tag.type() == tagType}">
                   <span th:text="${tag.name()}">Tag</span>
                   <button type="button" class="chip-x"
-                          th:attr="data-freelancer-id=${freelancer.id},data-tag-id=${tag.id()}"
+                          th:attr="data-tag-id=${tag.id()},data-tag-type=${tag.type().name()}"
                           onclick="removeTag(this)">×</button>
                 </span>
               </div>
@@ -565,29 +565,46 @@
   <script th:inline="javascript">
     var freelancerId = /*[[${freelancer.id}]]*/ null;
 
+    // ---- Pending tag operations (deferred until Save) ----
+    var pendingTagAdds    = []; // [{tagId, tagName, tagType}]
+    var pendingTagRemoves = []; // [tagId (tag entity ID)]
+
     // ---- Save with Unified Save + optimistic locking ----
-    document.getElementById('freelancer-form')?.addEventListener('submit', function(e) {
+    document.getElementById('freelancer-form')?.addEventListener('submit', async function(e) {
       e.preventDefault();
       var form = this;
       form.classList.add('was-validated');
       if (!form.checkValidity()) return;
+      // Process pending tag operations before saving
+      if (freelancerId) {
+        for (var i = 0; i < pendingTagAdds.length; i++) {
+          await apiFetch('/freelancer/' + freelancerId + '/tags', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({tagId: pendingTagAdds[i].tagId})
+          });
+        }
+        for (var j = 0; j < pendingTagRemoves.length; j++) {
+          await apiFetch('/freelancer/' + freelancerId + '/tags/' + pendingTagRemoves[j], { method: 'DELETE' });
+        }
+        pendingTagAdds = [];
+        pendingTagRemoves = [];
+      }
       var data = new URLSearchParams(new FormData(form));
-      apiFetch('/freelancer/save', { method: 'POST', body: data,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
-        .then(function(r) {
-          if (r.ok && r.redirected) { location.href = r.url; return; }
-          if (r.status === 409) {
-            return r.json().then(function(body) {
-              if (body && body.duplicateCode) {
-                var banner = document.getElementById('banner-duplicate-code');
-                if (banner) { banner.classList.remove('hidden'); banner.scrollIntoView({behavior:'smooth',block:'start'}); }
-              } else {
-                openModal('modal-conflict');
-              }
-            });
-          }
-          if (r.ok) { location.reload(); }
-        });
+      var r = await apiFetch('/freelancer/save', { method: 'POST', body: data,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'} });
+      if (r.ok && r.redirected) { location.href = r.url; return; }
+      if (r.status === 409) {
+        var body = await r.json();
+        if (body && body.duplicateCode) {
+          var banner = document.getElementById('banner-duplicate-code');
+          if (banner) { banner.classList.remove('hidden'); banner.scrollIntoView({behavior:'smooth',block:'start'}); }
+        } else {
+          openModal('modal-conflict');
+        }
+        return;
+      }
+      if (r.ok) { location.reload(); }
     });
 
     // Dubletten-Banner ausblenden, sobald das Code-Feld geändert wird
@@ -704,7 +721,7 @@
         .then(function() { location.reload(); });
     }
 
-    // ---- Tags (AJAX) ----
+    // ---- Tags (deferred until Save) ----
     function loadAvailableTags(typeEl) {
       var type = typeEl.dataset.tagType;
       apiFetch('/freelancer/' + freelancerId + '/available-tags/' + type, { method: 'GET' })
@@ -722,23 +739,63 @@
 
     function addTag(selectEl) {
       var tagId = parseInt(selectEl.value);
-      if (!tagId || !freelancerId) return;
-      apiFetch('/freelancer/' + freelancerId + '/tags', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({tagId: tagId})
-      }).then(function(r) {
-        if (r.ok) { location.reload(); }
-      });
+      if (!tagId) return;
+      var tagName = selectEl.options[selectEl.selectedIndex].text;
+      var tagType = selectEl.dataset.tagType;
+
+      // Queue the add
+      pendingTagAdds.push({tagId: tagId, tagName: tagName, tagType: tagType});
+
+      // Remove option from select so it can't be added twice
+      var opt = selectEl.querySelector('option[value="' + tagId + '"]');
+      if (opt) opt.remove();
+      selectEl.value = '';
+
+      // Render chip in DOM
+      var chipsRow = document.getElementById('chips-' + tagType);
+      if (chipsRow) {
+        var chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerHTML =
+          '<span>' + tagName.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>' +
+          '<button type="button" class="chip-x" data-tag-id="' + tagId + '" data-tag-type="' + tagType + '" data-pending="true" onclick="removeTag(this)">×</button>';
+        chipsRow.appendChild(chip);
+      }
+
+      // Mark unsaved changes
+      var dirtyBanner = document.querySelector('ps-dirty-banner');
+      if (dirtyBanner) dirtyBanner.classList.add('visible');
     }
 
     function removeTag(btn) {
-      var freelancerTagId = btn.dataset.tagId;
-      if (!freelancerTagId || !freelancerId) return;
-      apiFetch('/freelancer/' + freelancerId + '/tags/' + freelancerTagId, { method: 'DELETE' })
-        .then(function(r) {
-          if (r.ok) { location.reload(); }
-        });
+      var tagId    = parseInt(btn.dataset.tagId);
+      var tagType  = btn.dataset.tagType;
+      var isPending = btn.dataset.pending === 'true';
+      var tagName  = btn.closest('.chip')?.querySelector('span')?.textContent || '';
+
+      // Remove chip from DOM
+      var chip = btn.closest('.chip');
+      if (chip) chip.remove();
+
+      if (isPending) {
+        // Was only queued — just cancel the add
+        pendingTagAdds = pendingTagAdds.filter(function(t) { return t.tagId !== tagId; });
+      } else {
+        // Queue the remove
+        pendingTagRemoves.push(tagId);
+        // Mark unsaved changes
+        var dirtyBanner = document.querySelector('ps-dirty-banner');
+        if (dirtyBanner) dirtyBanner.classList.add('visible');
+      }
+
+      // Restore option to dropdown so the tag can be re-added
+      var sel = document.getElementById('tag-select-' + tagType);
+      if (sel && tagName) {
+        var opt = document.createElement('option');
+        opt.value = tagId;
+        opt.textContent = tagName;
+        sel.appendChild(opt);
+      }
     }
 
     // Load available tags for all selects on page load
