@@ -10,9 +10,8 @@ import de.mirkosertic.powerstaff.customer.command.KundeHistoryEntry;
 import de.mirkosertic.powerstaff.customer.command.KundeHasProjectsException;
 import de.mirkosertic.powerstaff.customer.query.KundeQueryService;
 import de.mirkosertic.powerstaff.customer.query.KundeSearchCriteria;
+import de.mirkosertic.powerstaff.project.command.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
-import de.mirkosertic.powerstaff.project.query.ProjectQueryService;
-import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,20 +47,17 @@ public class KundeController {
     private final KundeQueryService queryService;
     private final HistoryTypeQueryService historyTypeQueryService;
     private final RememberedProjectService rememberedProjectService;
-    private final ProjectQueryService projectQueryService;
     private final ObjectMapper objectMapper;
 
     public KundeController(KundeCommandService commandService,
                            KundeQueryService queryService,
                            HistoryTypeQueryService historyTypeQueryService,
                            RememberedProjectService rememberedProjectService,
-                           ProjectQueryService projectQueryService,
                            ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.historyTypeQueryService = historyTypeQueryService;
         this.rememberedProjectService = rememberedProjectService;
-        this.projectQueryService = projectQueryService;
         this.objectMapper = objectMapper;
     }
 
@@ -150,10 +146,7 @@ public class KundeController {
 
     private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
         if (principal == null) return null;
-        return rememberedProjectService.get(principal.getName())
-                .flatMap(projectQueryService::findById)
-                .map(p -> new RememberedProjectInfo(p.projectNumber(), p.descriptionShort()))
-                .orElse(null);
+        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);
     }
 
     // -------------------------------------------------------------------------
@@ -242,6 +235,8 @@ public class KundeController {
         if (c.comments()   != null) b.queryParam("comments",   c.comments());
         if (c.kreditorNr() != null) b.queryParam("kreditorNr", c.kreditorNr());
         if (c.debitorNr()  != null) b.queryParam("debitorNr",  c.debitorNr());
+        if (c.sortField()  != null) b.queryParam("sortField",  c.sortField());
+        if (c.sortDir()    != null) b.queryParam("sortDir",    c.sortDir());
         return b.build().toUriString();
     }
 }

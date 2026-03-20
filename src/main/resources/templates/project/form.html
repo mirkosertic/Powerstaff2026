@@ -3,7 +3,7 @@
       th:replace="~{fragments/layout :: layout('Projekt', 'project', ~{::body})}">
 <body>
 
-  <!-- Toolbar (§6) – kein Neu-Button für Projekte -->
+  <!-- Toolbar (§6) – kein Neu-Button für Projekte, kein Toolbar-Suchbutton (QBE im Formular) -->
   <div th:replace="~{fragments/toolbar :: toolbar(
       'Projekt',
       @{/project/first},
@@ -18,32 +18,7 @@
       ${project.id != null}
         ? 'Erfasst: ' + ${#temporals.format(project.creationDate,'dd.MM.yyyy')} + ' ' + ${project.creationUser} + ' · Geändert: ' + ${#temporals.format(project.changedDate,'dd.MM.yyyy')} + ' ' + ${project.changedUser}
         : 'Neu, noch nicht gespeichert',
-      'search-panel')}">
-  </div>
-
-  <!-- QBE-Suchpanel -->
-  <div id="search-panel" class="hidden">
-    <form th:action="@{/project/search}" method="post" id="search-form">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-      <div class="fcard">
-        <div class="fcard-hd"><span class="fcard-title">Projekte suchen</span></div>
-        <div class="fcard-body">
-          <div class="fg2">
-            <div class="fg"><label>Projektnummer</label><input type="text" name="projectNumber"/></div>
-            <div class="fg"><label>Kurzbeschreibung</label><input type="text" name="descriptionShort"/></div>
-            <div class="fg"><label>Skills</label><input type="text" name="skills"/></div>
-            <div class="fg"><label>Einsatzort</label><input type="text" name="workplace"/></div>
-            <div class="fg"><label>Laufzeit</label><input type="text" name="duration"/></div>
-            <div class="fg"><label>Debitor-Nr.</label><input type="text" name="debitorNr"/></div>
-          </div>
-          <div class="btn-row">
-            <button type="submit" class="btn btn-pri">🔍 Suchen</button>
-            <button type="button" class="btn btn-ghost" onclick="toggleSearchPanel('search-panel')">Abbrechen</button>
-          </div>
-        </div>
-      </div>
-    </form>
-    <div id="search-results"></div>
+      null)}">
   </div>
 
   <!-- Page Content -->
@@ -215,9 +190,19 @@
         </div>
       </div>
 
+      <!-- QBE-Suche starten -->
+      <div class="btn-row mt-md">
+        <button type="button" class="btn btn-ghost" id="btn-qbe-search">🔍 In Datenbank suchen</button>
+      </div>
+
       </div><!-- /.form-grid -->
 
     </form>
+
+    <!-- Suchergebnisse (nur sichtbar nach Suche) -->
+    <div id="search-results" class="hidden">
+      <div id="search-results-inner"></div>
+    </div>
 
     <div class="form-grid" th:if="${project.id != null}">
 
@@ -566,24 +551,31 @@
     location.reload();
   });
 
-  // ---- Freiberufler über Code zuordnen ----
+  // ---- Freiberufler über Code zuordnen (2-Schritt: lookup → assign) ----
   document.getElementById('btn-assign-by-code')?.addEventListener('click', async () => {
     const code = document.getElementById('assign-code-input').value.trim();
     document.getElementById('assign-code-not-found').classList.add('hidden');
     document.getElementById('assign-code-already-assigned').classList.add('hidden');
     if (!code) return;
-    const resp = await apiFetch(`/project/${PROJECT_ID}/positions/assign-by-code`, {
+    // Schritt 1: Freiberufler per Code nachschlagen
+    const lookupResp = await fetch('/freelancer/lookup?code=' + encodeURIComponent(code));
+    if (lookupResp.status === 404) {
+      document.getElementById('assign-code-not-found').classList.remove('hidden');
+      return;
+    }
+    if (!lookupResp.ok) return;
+    const freelancer = await lookupResp.json();
+    // Schritt 2: Freiberufler dem Projekt zuordnen
+    const assignResp = await apiFetch(`/project/${PROJECT_ID}/positions/assign`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code })
+      body: JSON.stringify({ freelancerId: freelancer.id })
     });
-    if (resp.ok) {
+    if (assignResp.ok) {
       closeModal('modal-assign-by-code');
       document.getElementById('assign-code-input').value = '';
       location.reload();
-    } else if (resp.status === 404) {
-      document.getElementById('assign-code-not-found').classList.remove('hidden');
-    } else if (resp.status === 409) {
+    } else if (assignResp.status === 409) {
       document.getElementById('assign-code-already-assigned').classList.remove('hidden');
     }
   });
@@ -652,13 +644,41 @@
 
   <!-- QBE-Suche AJAX -->
   <script>
-  document.getElementById('search-form')?.addEventListener('submit', function(e) {
-    e.preventDefault();
-    var data = new URLSearchParams(new FormData(this));
-    apiFetch('/project/search', { method: 'POST', body: data,
+  var _lastSearchParams = null;
+
+  function executeSearch(params) {
+    apiFetch('/project/search', { method: 'POST', body: params,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
       .then(function(r) { return r.text(); })
-      .then(function(html) { document.getElementById('search-results').innerHTML = html; });
+      .then(function(html) {
+        var inner = document.getElementById('search-results-inner');
+        var wrapper = document.getElementById('search-results');
+        inner.innerHTML = html;
+        wrapper.classList.remove('hidden');
+        wrapper.scrollIntoView({behavior: 'smooth', block: 'start'});
+        inner.querySelectorAll('.sort-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var p = new URLSearchParams(_lastSearchParams);
+            var field = this.dataset.sort;
+            var currentField = p.get('sortField') || '';
+            var currentDir = p.get('sortDir') || 'asc';
+            var newDir = (currentField === field && currentDir === 'asc') ? 'desc' : 'asc';
+            p.set('sortField', field);
+            p.set('sortDir', newDir);
+            _lastSearchParams = p;
+            executeSearch(p);
+          });
+        });
+      });
+  }
+
+  document.getElementById('btn-qbe-search')?.addEventListener('click', function() {
+    var form = document.getElementById('project-form');
+    var data = new URLSearchParams(new FormData(form));
+    data.set('sortField', '');
+    data.set('sortDir', '');
+    _lastSearchParams = data;
+    executeSearch(data);
   });
   </script>
 

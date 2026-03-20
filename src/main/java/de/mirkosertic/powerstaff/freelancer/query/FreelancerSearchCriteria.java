@@ -19,6 +19,8 @@ public record FreelancerSearchCriteria(
         String code,
         String skills,
         Long salaryLongMax,
-        Long salaryPerDayLongMax
+        Long salaryPerDayLongMax,
+        String sortField,
+        String sortDir
 ) {
 }

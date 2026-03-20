@@ -1,5 +1,6 @@
 package de.mirkosertic.powerstaff.project.command;
 
+import de.mirkosertic.powerstaff.project.query.ProjectQueryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,9 +11,12 @@ import java.util.Optional;
 public class RememberedProjectService {
 
     private final RememberedProjectRepository repository;
+    private final ProjectQueryService projectQueryService;
 
-    public RememberedProjectService(RememberedProjectRepository repository) {
+    public RememberedProjectService(RememberedProjectRepository repository,
+                                    ProjectQueryService projectQueryService) {
         this.repository = repository;
+        this.projectQueryService = projectQueryService;
     }
 
     /**
@@ -31,5 +35,16 @@ public class RememberedProjectService {
 
     public void clear(String userId) {
         repository.deleteById(userId);
+    }
+
+    /**
+     * Gibt die Anzeige-Infos des gemerkten Projekts zurück.
+     * Für andere Module – vermeidet direkten Zugriff auf ProjectQueryService aus Fremd-Modulen.
+     */
+    @Transactional(readOnly = true)
+    public Optional<RememberedProjectInfo> getRememberedProjectInfo(String userId) {
+        return get(userId)
+                .flatMap(projectQueryService::findById)
+                .map(p -> new RememberedProjectInfo(p.projectNumber(), p.descriptionShort()));
     }
 }

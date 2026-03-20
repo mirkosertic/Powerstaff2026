@@ -7,10 +7,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
 public class ProjectQueryService {
+
+    private static final Set<String> SORT_FIELDS_ALLOWLIST = Set.of(
+            "project_number", "description_short", "status");
+    private static final String DEFAULT_SORT = "entry_date DESC";
 
     private static final String SELECT_PROJECT = """
             SELECT id, db_version, creation_date, creation_user, changed_date, changed_user,
@@ -78,7 +83,14 @@ public class ProjectQueryService {
             sql.append(" AND status = ?");
             params.add(criteria.status());
         }
-        sql.append(" ORDER BY entry_date DESC LIMIT ? OFFSET ?");
+        String orderBy;
+        if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
+            String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
+            orderBy = criteria.sortField() + " " + dir;
+        } else {
+            orderBy = DEFAULT_SORT;
+        }
+        sql.append(" ORDER BY ").append(orderBy).append(" LIMIT ? OFFSET ?");
         params.add(limit);
         params.add(offset);
 

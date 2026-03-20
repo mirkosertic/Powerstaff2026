@@ -1,6 +1,5 @@
 package de.mirkosertic.powerstaff.project.api;
 
-import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService;
 import de.mirkosertic.powerstaff.project.command.FreelancerAlreadyAssignedException;
 import de.mirkosertic.powerstaff.project.command.BothFKsException;
 import de.mirkosertic.powerstaff.project.command.Project;
@@ -11,8 +10,8 @@ import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
 import de.mirkosertic.powerstaff.project.query.ProjectHistoryQueryService;
 import de.mirkosertic.powerstaff.project.query.ProjectPositionQueryService;
 import de.mirkosertic.powerstaff.project.query.ProjectQueryService;
+import de.mirkosertic.powerstaff.project.command.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.project.query.ProjectSearchCriteria;
-import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.shared.query.ProjectPositionStatusQueryService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -48,7 +47,6 @@ public class ProjectController {
     private final ProjectPositionCommandService positionCommandService;
     private final ProjectPositionStatusQueryService statusQueryService;
     private final RememberedProjectService rememberedProjectService;
-    private final FreelancerCommandService freelancerCommandService;
 
     public ProjectController(ProjectCommandService commandService,
                              ProjectQueryService queryService,
@@ -56,8 +54,7 @@ public class ProjectController {
                              ProjectPositionQueryService positionQueryService,
                              ProjectPositionCommandService positionCommandService,
                              ProjectPositionStatusQueryService statusQueryService,
-                             RememberedProjectService rememberedProjectService,
-                             FreelancerCommandService freelancerCommandService) {
+                             RememberedProjectService rememberedProjectService) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.historyQueryService = historyQueryService;
@@ -65,7 +62,6 @@ public class ProjectController {
         this.positionCommandService = positionCommandService;
         this.statusQueryService = statusQueryService;
         this.rememberedProjectService = rememberedProjectService;
-        this.freelancerCommandService = freelancerCommandService;
     }
 
     // -------------------------------------------------------------------------
@@ -163,10 +159,7 @@ public class ProjectController {
     }
 
     private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
-        return rememberedProjectService.get(principal.getName())
-                .flatMap(id -> queryService.findById(id))
-                .map(p -> new RememberedProjectInfo(p.projectNumber(), p.descriptionShort()))
-                .orElse(null);
+        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);
     }
 
     // -------------------------------------------------------------------------
@@ -279,23 +272,18 @@ public class ProjectController {
         return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));
     }
 
-    record AssignByCodeRequest(String code) {}
+    record AssignByIdRequest(Long freelancerId) {}
 
-    @PostMapping("/{projectId}/positions/assign-by-code")
+    @PostMapping("/{projectId}/positions/assign")
     @ResponseBody
-    public ResponseEntity<?> assignByCode(@PathVariable long projectId,
-                                          @RequestBody AssignByCodeRequest request) {
-        if (request.code() == null || request.code().isBlank()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "code required"));
-        }
-        var lookup = freelancerCommandService.findByCode(request.code().trim());
-        if (lookup.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("notFound", true));
+    public ResponseEntity<?> assignById(@PathVariable long projectId,
+                                        @RequestBody AssignByIdRequest request) {
+        if (request.freelancerId() == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "freelancerId required"));
         }
         try {
             positionCommandService.assignFreelancerToProject(
-                    lookup.get().id(), projectId, null, null, null);
+                    request.freelancerId(), projectId, null, null, null);
             return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));
         } catch (FreelancerAlreadyAssignedException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -314,6 +302,8 @@ public class ProjectController {
         if (c.status()           != null) b.queryParam("status",           c.status());
         if (c.debitorNr()        != null) b.queryParam("debitorNr",        c.debitorNr());
         if (c.kreditorNr()       != null) b.queryParam("kreditorNr",       c.kreditorNr());
+        if (c.sortField()        != null) b.queryParam("sortField",        c.sortField());
+        if (c.sortDir()          != null) b.queryParam("sortDir",          c.sortDir());
         return b.build().toUriString();
     }
 }

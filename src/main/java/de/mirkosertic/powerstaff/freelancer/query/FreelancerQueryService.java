@@ -9,10 +9,16 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
 public class FreelancerQueryService {
+
+    private static final Set<String> SORT_FIELDS_ALLOWLIST = Set.of(
+            "name1", "name2", "company", "city", "availability_as_date",
+            "salary_per_day_long", "code");
+    private static final String DEFAULT_SORT = "name1 ASC, name2 ASC";
 
     private static final String SELECT_FREELANCER = """
             SELECT id, db_version, creation_date, creation_user, changed_date, changed_user,
@@ -83,7 +89,14 @@ public class FreelancerQueryService {
             sql.append(" AND salary_per_day_long <= ?");
             params.add(criteria.salaryPerDayLongMax());
         }
-        sql.append(" ORDER BY name1 ASC, name2 ASC LIMIT ? OFFSET ?");
+        String orderBy;
+        if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
+            String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
+            orderBy = criteria.sortField() + " " + dir;
+        } else {
+            orderBy = DEFAULT_SORT;
+        }
+        sql.append(" ORDER BY ").append(orderBy).append(" LIMIT ? OFFSET ?");
         params.add(limit);
         params.add(offset);
 

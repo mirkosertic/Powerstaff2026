@@ -697,6 +697,24 @@
 /* Inline-Form (z.B. Logout-Formular in Navigation) */
 form.inline { display: inline; }
 
+/* -----------------------------------------------------------------------------
+   §30 Sortier-Buttons in Tabellen-Spaltenköpfen
+   ----------------------------------------------------------------------------- */
+
+.sort-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  padding: 0;
+  color: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
 /* Logout-Button (unstyled, inherits nav styling) */
 .btn-logout {
   background: none;

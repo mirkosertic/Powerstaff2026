@@ -42,7 +42,7 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
 - [x] Es wurden MVC / API Endpunkte geändert oder hinzugefügt, ohne einen UNit oder IT Test dafür zu schreiben.
   Die Skills bzw. die Claude Instruktionen sagen aber, dass das sein muss. Damit könnten auch Thymeleaf-Fehler besser und
   sofort erkannt werden.
-- [ ] Die QBE Suche bzw. das Drücken des Suche-Buttons in allen Formularen öffnet
+- [x] Die QBE Suche bzw. das Drücken des Suche-Buttons in allen Formularen öffnet
   ein neues Modal, in dem die Suchfelder ausgefüllt werden. Die Suchergebnislisrte wird
   dann darunter angezeigt. Die Idee war, dass die QBE Suche das gleiche
   Formular nutzt, welches für die Bearbeitung der Daten genutzt wird. Der Ablauf ist also

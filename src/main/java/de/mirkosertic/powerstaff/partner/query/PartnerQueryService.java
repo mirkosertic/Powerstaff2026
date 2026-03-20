@@ -7,10 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
 public class PartnerQueryService {
+
+    private static final Set<String> SORT_FIELDS_ALLOWLIST = Set.of("name1", "company", "city");
+    private static final String DEFAULT_SORT = "company ASC";
 
     private static final String SELECT_PARTNER = """
             SELECT id, db_version, creation_date, creation_user, changed_date, changed_user,
@@ -109,7 +113,14 @@ public class PartnerQueryService {
             sql.append(" AND kreditor_nr LIKE ?");
             params.add("%" + criteria.kreditorNr() + "%");
         }
-        sql.append(" ORDER BY company ASC LIMIT ? OFFSET ?");
+        String orderBy;
+        if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
+            String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
+            orderBy = criteria.sortField() + " " + dir;
+        } else {
+            orderBy = DEFAULT_SORT;
+        }
+        sql.append(" ORDER BY ").append(orderBy).append(" LIMIT ? OFFSET ?");
         params.add(limit);
         params.add(offset);
 

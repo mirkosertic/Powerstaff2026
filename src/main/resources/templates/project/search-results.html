@@ -2,16 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="results">
+  <p th:if="${totalCount != null}">
+    <strong th:text="${totalCount}">0</strong> Treffer gefunden.
+  </p>
   <p th:if="${#lists.isEmpty(results)}"
      class="text-muted">Keine Treffer.</p>
   <table th:unless="${#lists.isEmpty(results)}" class="data-table">
     <thead>
       <tr>
-        <th>Projektnummer</th>
-        <th>Kurzbeschreibung</th>
+        <th><button type="button" class="sort-btn" data-sort="project_number">Projektnummer</button></th>
+        <th><button type="button" class="sort-btn" data-sort="description_short">Kurzbeschreibung</button></th>
         <th>Einsatzort</th>
         <th>Start</th>
-        <th>Status</th>
+        <th><button type="button" class="sort-btn" data-sort="status">Status</button></th>
         <th>Stundensatz</th>
       </tr>
     </thead>

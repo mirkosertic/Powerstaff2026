@@ -13,9 +13,8 @@ import de.mirkosertic.powerstaff.partner.command.PartnerHasProjectsException;
 import de.mirkosertic.powerstaff.partner.query.PartnerFreelancerView;
 import de.mirkosertic.powerstaff.partner.query.PartnerQueryService;
 import de.mirkosertic.powerstaff.partner.query.PartnerSearchCriteria;
+import de.mirkosertic.powerstaff.project.command.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
-import de.mirkosertic.powerstaff.project.query.ProjectQueryService;
-import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,7 +52,6 @@ public class PartnerController {
     private final FreelancerCommandService freelancerCommandService;
     private final HistoryTypeQueryService historyTypeQueryService;
     private final RememberedProjectService rememberedProjectService;
-    private final ProjectQueryService projectQueryService;
     private final ObjectMapper objectMapper;
 
     public PartnerController(PartnerCommandService commandService,
@@ -61,14 +59,12 @@ public class PartnerController {
                              FreelancerCommandService freelancerCommandService,
                              HistoryTypeQueryService historyTypeQueryService,
                              RememberedProjectService rememberedProjectService,
-                             ProjectQueryService projectQueryService,
                              ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.freelancerCommandService = freelancerCommandService;
         this.historyTypeQueryService = historyTypeQueryService;
         this.rememberedProjectService = rememberedProjectService;
-        this.projectQueryService = projectQueryService;
         this.objectMapper = objectMapper;
     }
 
@@ -155,10 +151,7 @@ public class PartnerController {
 
     private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
         if (principal == null) return null;
-        return rememberedProjectService.get(principal.getName())
-                .flatMap(projectQueryService::findById)
-                .map(p -> new RememberedProjectInfo(p.projectNumber(), p.descriptionShort()))
-                .orElse(null);
+        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);
     }
 
     // -------------------------------------------------------------------------
@@ -248,6 +241,8 @@ public class PartnerController {
         if (criteria.comments()   != null) b.queryParam("comments",   criteria.comments());
         if (criteria.debitorNr()  != null) b.queryParam("debitorNr",  criteria.debitorNr());
         if (criteria.kreditorNr() != null) b.queryParam("kreditorNr", criteria.kreditorNr());
+        if (criteria.sortField()  != null) b.queryParam("sortField",  criteria.sortField());
+        if (criteria.sortDir()    != null) b.queryParam("sortDir",    criteria.sortDir());
         return b.build().toUriString();
     }
 

@@ -9,6 +9,8 @@ public record ProjectSearchCriteria(
         String duration,
         Integer status,
         String debitorNr,
-        String kreditorNr
+        String kreditorNr,
+        String sortField,
+        String sortDir
 ) {
 }

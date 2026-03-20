@@ -1,8 +1,6 @@
 package de.mirkosertic.powerstaff.project.api
 
 import de.mirkosertic.powerstaff.AbstractContainerBaseIT
-import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService
-import de.mirkosertic.powerstaff.freelancer.command.FreelancerLookupResult
 import de.mirkosertic.powerstaff.project.command.BothFKsException
 import de.mirkosertic.powerstaff.project.command.FreelancerAlreadyAssignedException
 import de.mirkosertic.powerstaff.project.command.Project
@@ -71,9 +69,6 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
     @MockitoBean
     RememberedProjectService rememberedProjectService
 
-    @MockitoBean
-    FreelancerCommandService freelancerCommandService
-
     def setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .apply(springSecurity())
@@ -112,10 +107,10 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
         when(statusQueryService.findAll()).thenReturn([])
 
         when(rememberedProjectService.get(anyString())).thenReturn(Optional.empty())
+        when(rememberedProjectService.getRememberedProjectInfo(anyString())).thenReturn(Optional.empty())
         doNothing().when(rememberedProjectService).set(anyString(), anyLong())
         doNothing().when(rememberedProjectService).clear(anyString())
 
-        when(freelancerCommandService.findByCode(anyString())).thenReturn(Optional.empty())
         doNothing().when(positionCommandService).assignFreelancerToProject(anyLong(), anyLong(), any(), any(), any())
     }
 
@@ -284,70 +279,47 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
     }
 
     // -------------------------------------------------------------------------
-    // Freiberufler per Code zuordnen (assign-by-code)
+    // Freiberufler per ID zuordnen (assign)
     // -------------------------------------------------------------------------
 
-    def "POST /project/{id}/positions/assign-by-code mit leerem Code gibt 400 zurueck"() {
+    def "POST /project/{id}/positions/assign ohne freelancerId gibt 400 zurueck"() {
         when:
         def result = mockMvc.perform(
-                post('/project/42/positions/assign-by-code')
+                post('/project/42/positions/assign')
                         .with(user('testuser'))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content('{"code":""}'))
+                        .content('{"freelancerId":null}'))
 
         then:
         result.andExpect(status().isBadRequest())
     }
 
-    def "POST /project/{id}/positions/assign-by-code mit unbekanntem Code gibt 404 zurueck"() {
-        given:
-        when(freelancerCommandService.findByCode('UNBEKANNT')).thenReturn(Optional.empty())
-
+    def "POST /project/{id}/positions/assign Erfolg gibt Positions-Liste zurueck (200)"() {
         when:
         def result = mockMvc.perform(
-                post('/project/42/positions/assign-by-code')
+                post('/project/42/positions/assign')
                         .with(user('testuser'))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content('{"code":"UNBEKANNT"}'))
-
-        then:
-        result.andExpect(status().isNotFound())
-              .andExpect(jsonPath('$.notFound').value(true))
-    }
-
-    def "POST /project/{id}/positions/assign-by-code Erfolg gibt Positions-Liste zurueck (200)"() {
-        given:
-        when(freelancerCommandService.findByCode('CODE-001')).thenReturn(
-                Optional.of(new FreelancerLookupResult(77L, null, 'Musterfirma GmbH')))
-
-        when:
-        def result = mockMvc.perform(
-                post('/project/42/positions/assign-by-code')
-                        .with(user('testuser'))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content('{"code":"CODE-001"}'))
+                        .content('{"freelancerId":77}'))
 
         then:
         result.andExpect(status().isOk())
     }
 
-    def "POST /project/{id}/positions/assign-by-code bei bereits zugeordnetem Freiberufler gibt 409 zurueck"() {
+    def "POST /project/{id}/positions/assign bei bereits zugeordnetem Freiberufler gibt 409 zurueck"() {
         given:
-        when(freelancerCommandService.findByCode('CODE-001')).thenReturn(
-                Optional.of(new FreelancerLookupResult(77L, null, 'Musterfirma GmbH')))
         doThrow(new FreelancerAlreadyAssignedException(77L, 42L))
                 .when(positionCommandService).assignFreelancerToProject(anyLong(), anyLong(), any(), any(), any())
 
         when:
         def result = mockMvc.perform(
-                post('/project/42/positions/assign-by-code')
+                post('/project/42/positions/assign')
                         .with(user('testuser'))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content('{"code":"CODE-001"}'))
+                        .content('{"freelancerId":77}'))
 
         then:
         result.andExpect(status().isConflict())

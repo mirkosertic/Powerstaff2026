@@ -57,9 +57,9 @@
 
   <!-- Aktionen -->
   <div id="tb-actions">
-    <button type="button" class="btn btn-ghost"
-            th:if="${searchPanelId != null}"
-            th:attr="onclick='toggleSearchPanel(\'' + ${searchPanelId} + '\')'">🔍 Suche</button>
+    <a class="btn btn-ghost"
+       th:if="${searchPanelId != null}"
+       th:href="${newUrl}">🔍 Suche</a>
 
     <a class="btn btn-ghost"
        th:href="${newUrl}"

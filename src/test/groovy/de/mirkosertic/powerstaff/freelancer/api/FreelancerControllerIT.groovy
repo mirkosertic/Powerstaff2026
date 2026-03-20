@@ -11,9 +11,6 @@ import de.mirkosertic.powerstaff.freelancer.query.FreelancerSearchResult
 import de.mirkosertic.powerstaff.project.command.FreelancerAlreadyAssignedException
 import de.mirkosertic.powerstaff.project.command.ProjectPositionCommandService
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService
-import de.mirkosertic.powerstaff.project.query.ProjectDetailView
-import de.mirkosertic.powerstaff.project.query.ProjectQueryService
-import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo
 import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -68,9 +65,6 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
     RememberedProjectService rememberedProjectService
 
     @MockitoBean
-    ProjectQueryService projectQueryService
-
-    @MockitoBean
     ProjectPositionCommandService positionCommandService
 
     def setup() {
@@ -122,7 +116,7 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
         when(historyTypeQueryService.findAll()).thenReturn([])
 
         when(rememberedProjectService.get(anyString())).thenReturn(Optional.empty())
-        when(projectQueryService.findById(anyLong())).thenReturn(Optional.empty())
+        when(rememberedProjectService.getRememberedProjectInfo(anyString())).thenReturn(Optional.empty())
         doNothing().when(positionCommandService).assignFreelancerToProject(anyLong(), anyLong(), any(), any(), any())
     }
 

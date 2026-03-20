@@ -10,6 +10,8 @@ public record KundeSearchCriteria(
         String city,
         String comments,
         String kreditorNr,
-        String debitorNr
+        String debitorNr,
+        String sortField,
+        String sortDir
 ) {
 }

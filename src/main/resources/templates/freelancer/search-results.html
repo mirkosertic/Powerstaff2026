@@ -15,13 +15,13 @@
   <table class="data-table" th:if="${results != null and !results.isEmpty()}">
     <thead>
       <tr>
-        <th>Name 1</th>
-        <th>Name 2</th>
-        <th>Firma</th>
-        <th>Ort</th>
-        <th>Verfügbar ab</th>
-        <th>Tagessatz</th>
-        <th>Code</th>
+        <th><button type="button" class="sort-btn" data-sort="name1">Name 1</button></th>
+        <th><button type="button" class="sort-btn" data-sort="name2">Name 2</button></th>
+        <th><button type="button" class="sort-btn" data-sort="company">Firma</button></th>
+        <th><button type="button" class="sort-btn" data-sort="city">Ort</button></th>
+        <th><button type="button" class="sort-btn" data-sort="availability_as_date">Verfügbar ab</button></th>
+        <th><button type="button" class="sort-btn" data-sort="salary_per_day_long">Tagessatz</button></th>
+        <th><button type="button" class="sort-btn" data-sort="code">Code</button></th>
         <th></th>
       </tr>
     </thead>

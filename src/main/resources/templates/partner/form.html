@@ -21,31 +21,6 @@
       'search-panel')}">
   </div>
 
-  <!-- QBE-Suchpanel -->
-  <div id="search-panel" class="hidden">
-    <form th:action="@{/partner/search}" method="post" id="search-form">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-      <div class="fcard">
-        <div class="fcard-hd"><span class="fcard-title">Partner suchen</span></div>
-        <div class="fcard-body">
-          <div class="fg2">
-            <div class="fg"><label>Firma</label><input type="text" name="company"/></div>
-            <div class="fg"><label>Name</label><input type="text" name="name1"/></div>
-            <div class="fg"><label>Vorname</label><input type="text" name="name2"/></div>
-            <div class="fg"><label>Ort</label><input type="text" name="city"/></div>
-            <div class="fg"><label>PLZ</label><input type="text" name="plz"/></div>
-            <div class="fg"><label>Kommentar</label><input type="text" name="comments"/></div>
-          </div>
-          <div class="btn-row">
-            <button type="submit" class="btn btn-pri">🔍 Suchen</button>
-            <button type="button" class="btn btn-ghost" onclick="toggleSearchPanel('search-panel')">Abbrechen</button>
-          </div>
-        </div>
-      </div>
-    </form>
-    <div id="search-results"></div>
-  </div>
-
   <!-- Page Content -->
   <div id="page">
 
@@ -168,9 +143,19 @@
         </div>
       </div>
 
+      <!-- QBE-Suche starten -->
+      <div class="btn-row mt-md">
+        <button type="button" class="btn btn-ghost" id="btn-qbe-search">🔍 In Datenbank suchen</button>
+      </div>
+
       </div><!-- /.form-grid -->
 
     </form>
+
+    <!-- Suchergebnisse (nur sichtbar nach Suche) -->
+    <div id="search-results" class="hidden">
+      <div id="search-results-inner"></div>
+    </div>
 
     <div class="form-grid" th:if="${partner.id != null}">
 
@@ -682,13 +667,41 @@
     }
 
     // ---- QBE-Suche ----
-    document.getElementById('search-form')?.addEventListener('submit', function(e) {
-      e.preventDefault();
-      var data = new URLSearchParams(new FormData(this));
-      apiFetch('/partner/search', { method: 'POST', body: data,
+    var _lastSearchParams = null;
+
+    function executeSearch(params) {
+      apiFetch('/partner/search', { method: 'POST', body: params,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
         .then(function(r) { return r.text(); })
-        .then(function(html) { document.getElementById('search-results').innerHTML = html; });
+        .then(function(html) {
+          var inner = document.getElementById('search-results-inner');
+          var wrapper = document.getElementById('search-results');
+          inner.innerHTML = html;
+          wrapper.classList.remove('hidden');
+          wrapper.scrollIntoView({behavior: 'smooth', block: 'start'});
+          inner.querySelectorAll('.sort-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              var p = new URLSearchParams(_lastSearchParams);
+              var field = this.dataset.sort;
+              var currentField = p.get('sortField') || '';
+              var currentDir = p.get('sortDir') || 'asc';
+              var newDir = (currentField === field && currentDir === 'asc') ? 'desc' : 'asc';
+              p.set('sortField', field);
+              p.set('sortDir', newDir);
+              _lastSearchParams = p;
+              executeSearch(p);
+            });
+          });
+        });
+    }
+
+    document.getElementById('btn-qbe-search')?.addEventListener('click', function() {
+      var form = document.getElementById('partner-form');
+      var data = new URLSearchParams(new FormData(form));
+      data.set('sortField', '');
+      data.set('sortDir', '');
+      _lastSearchParams = data;
+      executeSearch(data);
     });
 
     // bfcache handler

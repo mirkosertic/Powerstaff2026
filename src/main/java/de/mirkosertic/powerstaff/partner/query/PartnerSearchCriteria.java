@@ -10,9 +10,11 @@ public record PartnerSearchCriteria(
         String city,
         String comments,
         String debitorNr,
-        String kreditorNr
+        String kreditorNr,
+        String sortField,
+        String sortDir
 ) {
     public static PartnerSearchCriteria empty() {
-        return new PartnerSearchCriteria(null, null, null, null, null, null, null, null, null, null);
+        return new PartnerSearchCriteria(null, null, null, null, null, null, null, null, null, null, null, null);
     }
 }

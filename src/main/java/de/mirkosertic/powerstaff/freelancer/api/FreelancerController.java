@@ -16,9 +16,8 @@ import de.mirkosertic.powerstaff.freelancer.query.FreelancerSearchCriteria;
 import de.mirkosertic.powerstaff.freelancer.query.TagInfo;
 import de.mirkosertic.powerstaff.project.command.FreelancerAlreadyAssignedException;
 import de.mirkosertic.powerstaff.project.command.ProjectPositionCommandService;
+import de.mirkosertic.powerstaff.project.command.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
-import de.mirkosertic.powerstaff.project.query.ProjectQueryService;
-import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.shared.TagType;
 import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService;
 import jakarta.servlet.http.Cookie;
@@ -56,7 +55,6 @@ public class FreelancerController {
     private final FreelancerTagCommandService tagCommandService;
     private final HistoryTypeQueryService historyTypeQueryService;
     private final RememberedProjectService rememberedProjectService;
-    private final ProjectQueryService projectQueryService;
     private final ProjectPositionCommandService positionCommandService;
     private final ObjectMapper objectMapper;
 
@@ -65,7 +63,6 @@ public class FreelancerController {
                                 FreelancerTagCommandService tagCommandService,
                                 HistoryTypeQueryService historyTypeQueryService,
                                 RememberedProjectService rememberedProjectService,
-                                ProjectQueryService projectQueryService,
                                 ProjectPositionCommandService positionCommandService,
                                 ObjectMapper objectMapper) {
         this.commandService = commandService;
@@ -73,7 +70,6 @@ public class FreelancerController {
         this.tagCommandService = tagCommandService;
         this.historyTypeQueryService = historyTypeQueryService;
         this.rememberedProjectService = rememberedProjectService;
-        this.projectQueryService = projectQueryService;
         this.positionCommandService = positionCommandService;
         this.objectMapper = objectMapper;
     }
@@ -164,10 +160,7 @@ public class FreelancerController {
 
     private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
         if (principal == null) return null;
-        return rememberedProjectService.get(principal.getName())
-                .flatMap(projectQueryService::findById)
-                .map(p -> new RememberedProjectInfo(p.projectNumber(), p.descriptionShort()))
-                .orElse(null);
+        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);
     }
 
     // -------------------------------------------------------------------------
@@ -292,6 +285,8 @@ public class FreelancerController {
         if (c.skills()          != null) b.queryParam("skills",          c.skills());
         if (c.salaryLongMax()   != null) b.queryParam("salaryLongMax",   c.salaryLongMax());
         if (c.salaryPerDayLongMax() != null) b.queryParam("salaryPerDayLongMax", c.salaryPerDayLongMax());
+        if (c.sortField()       != null) b.queryParam("sortField",       c.sortField());
+        if (c.sortDir()         != null) b.queryParam("sortDir",         c.sortDir());
         return b.build().toUriString();
     }
 
@@ -304,5 +299,22 @@ public class FreelancerController {
     public List<TagInfo> availableTags(@PathVariable long id,
                                        @PathVariable TagType type) {
         return queryService.findAvailableTagsByFreelancerIdAndType(id, type);
+    }
+
+    // -------------------------------------------------------------------------
+    // Lookup per Code (für Cross-Modul-Suche ohne direkten Repository-Zugriff)
+    // -------------------------------------------------------------------------
+
+    @GetMapping("/lookup")
+    @ResponseBody
+    public ResponseEntity<?> lookupByCode(@RequestParam String code) {
+        if (code == null || code.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "code required"));
+        }
+        var result = commandService.findByCode(code.trim());
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("notFound", true));
+        }
+        return ResponseEntity.ok(result.get());
     }
 }
