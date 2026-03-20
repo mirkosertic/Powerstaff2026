@@ -59,6 +59,11 @@
       ✓ &nbsp;Datensatz wurde gespeichert.
     </div>
 
+    <!-- Technischer Fehler beim Speichern -->
+    <div class="banner banner-error hidden" id="banner-save-error">
+      ✕ &nbsp;Beim Speichern ist ein technischer Fehler aufgetreten. Bitte erneut versuchen.
+    </div>
+
     <!-- Hauptformular -->
     <form id="kunde-form" th:action="@{/kunde/save}" method="post">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -80,36 +85,42 @@
           <span class="fcard-chv open">▾</span>
         </div>
         <div class="fcard-body" id="fcard-adresse">
-        <div class="fg2">
-          <div class="fg">
+          <!-- Zeile 1: Firma -->
+          <div class="fg mt-md">
             <label>Firma</label>
             <input type="text" name="company" th:value="${kunde.company}" required/>
           </div>
-          <div class="fg">
-            <label>Name 1</label>
-            <input type="text" name="name1" th:value="${kunde.name1}"/>
+          <!-- Zeile 2: Name 1 | Name 2 -->
+          <div class="fg2 mt-md">
+            <div class="fg">
+              <label>Name 1</label>
+              <input type="text" name="name1" th:value="${kunde.name1}"/>
+            </div>
+            <div class="fg">
+              <label>Name 2</label>
+              <input type="text" name="name2" th:value="${kunde.name2}"/>
+            </div>
           </div>
-          <div class="fg">
-            <label>Name 2</label>
-            <input type="text" name="name2" th:value="${kunde.name2}"/>
-          </div>
-          <div class="fg">
+          <!-- Zeile 3: Straße -->
+          <div class="fg mt-md">
             <label>Straße</label>
             <input type="text" name="street" th:value="${kunde.street}"/>
           </div>
-          <div class="fg">
-            <label>PLZ</label>
-            <input type="text" name="plz" th:value="${kunde.plz}" class="input-narrow"/>
+          <!-- Zeile 4: Land | PLZ | Ort -->
+          <div class="fg4 mt-md">
+            <div class="fg">
+              <label>Land</label>
+              <input type="text" name="country" th:value="${kunde.country}"/>
+            </div>
+            <div class="fg">
+              <label>PLZ</label>
+              <input type="text" name="plz" th:value="${kunde.plz}" maxlength="5"/>
+            </div>
+            <div class="fg s2">
+              <label>Ort</label>
+              <input type="text" name="city" th:value="${kunde.city}"/>
+            </div>
           </div>
-          <div class="fg">
-            <label>Ort</label>
-            <input type="text" name="city" th:value="${kunde.city}"/>
-          </div>
-          <div class="fg">
-            <label>Land</label>
-            <input type="text" name="country" th:value="${kunde.country}"/>
-          </div>
-        </div>
         </div>
       </div>
 
@@ -544,7 +555,9 @@
         .then(function(r) {
           if (r.ok && r.redirected) { location.href = r.url; return; }
           if (r.status === 409) { openModal('modal-conflict'); return; }
-          if (r.ok) { location.reload(); }
+          if (r.ok) { location.reload(); return; }
+          var errBanner = document.getElementById('banner-save-error');
+          if (errBanner) { errBanner.classList.remove('hidden'); errBanner.scrollIntoView({behavior:'smooth',block:'start'}); }
         });
     });
 

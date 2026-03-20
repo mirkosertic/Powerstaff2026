@@ -71,6 +71,11 @@
       ⚠ &nbsp;Dieser Code wird bereits von einem anderen Freiberufler verwendet. Bitte einen anderen Code wählen.
     </div>
 
+    <!-- Technischer Fehler beim Speichern -->
+    <div class="banner banner-error hidden" id="banner-save-error">
+      ✕ &nbsp;Beim Speichern ist ein technischer Fehler aufgetreten. Bitte erneut versuchen.
+    </div>
+
     <!-- Hauptformular -->
     <form id="freelancer-form" th:action="@{/freelancer/save}" method="post">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -93,56 +98,65 @@
           <span class="fcard-chv open">▾</span>
         </div>
         <div class="fcard-body" id="fcard-adresse">
-        <div class="fg2">
-          <div class="fg">
-            <label>Titel</label>
-            <input type="text" name="titel" th:value="${freelancer.titel}" placeholder="z.B. Dr."/>
+          <!-- Zeile 1: Anrede | Vorname | Name -->
+          <div class="fg4 mt-md">
+            <div class="fg">
+              <label>Anrede</label>
+              <input type="text" name="titel" th:value="${freelancer.titel}" placeholder="z.B. Dr."/>
+            </div>
+            <div class="fg">
+              <label>Vorname</label>
+              <input type="text" name="name2" th:value="${freelancer.name2}"/>
+            </div>
+            <div class="fg s2">
+              <label>Name</label>
+              <input type="text" name="name1" th:value="${freelancer.name1}" required/>
+            </div>
           </div>
-          <div class="fg">
-            <label>Name 1</label>
-            <input type="text" name="name1" th:value="${freelancer.name1}" required/>
-          </div>
-          <div class="fg">
-            <label>Name 2</label>
-            <input type="text" name="name2" th:value="${freelancer.name2}"/>
-          </div>
-          <div class="fg">
+          <!-- Zeile 2: Firma -->
+          <div class="fg mt-md">
             <label>Firma</label>
             <input type="text" name="company" th:value="${freelancer.company}"/>
           </div>
-          <div class="fg">
+          <!-- Zeile 3: Straße -->
+          <div class="fg mt-md">
             <label>Straße</label>
             <input type="text" name="street" th:value="${freelancer.street}"/>
           </div>
-          <div class="fg">
-            <label>PLZ</label>
-            <input type="text" name="plz" th:value="${freelancer.plz}" class="input-narrow"/>
+          <!-- Zeile 4: Land | PLZ | Ort -->
+          <div class="fg4 mt-md">
+            <div class="fg">
+              <label>Land</label>
+              <input type="text" name="country" th:value="${freelancer.country}"/>
+            </div>
+            <div class="fg">
+              <label>PLZ</label>
+              <input type="text" name="plz" th:value="${freelancer.plz}" maxlength="5"/>
+            </div>
+            <div class="fg s2">
+              <label>Ort</label>
+              <input type="text" name="city" th:value="${freelancer.city}"/>
+            </div>
           </div>
-          <div class="fg">
-            <label>Ort</label>
-            <input type="text" name="city" th:value="${freelancer.city}"/>
+          <!-- Zeile 5: Nationalität | Geburtsdatum | Partner -->
+          <div class="fg3 mt-md">
+            <div class="fg">
+              <label>Nationalität</label>
+              <input type="text" name="nationalitaet" th:value="${freelancer.nationalitaet}"/>
+            </div>
+            <div class="fg">
+              <label>Geburtsdatum</label>
+              <input type="text" name="geburtsdatum" th:value="${freelancer.geburtsdatum}" placeholder="TT.MM.JJJJ"/>
+            </div>
+            <div class="fg">
+              <label>Partner</label>
+              <span th:if="${freelancer.partnerId != null}" class="subsection-label">
+                <a th:href="@{/partner/{id}(id=${freelancer.partnerId})}"
+                   th:text="${freelancer.partnerId}">–</a>
+              </span>
+              <span th:if="${freelancer.partnerId == null}" class="subsection-label text-muted">Kein Partner</span>
+            </div>
           </div>
-          <div class="fg">
-            <label>Land</label>
-            <input type="text" name="country" th:value="${freelancer.country}"/>
-          </div>
-          <div class="fg">
-            <label>Nationalität</label>
-            <input type="text" name="nationalitaet" th:value="${freelancer.nationalitaet}"/>
-          </div>
-          <div class="fg">
-            <label>Geburtsdatum</label>
-            <input type="text" name="geburtsdatum" th:value="${freelancer.geburtsdatum}" placeholder="TT.MM.JJJJ"/>
-          </div>
-          <div class="fg">
-            <label>Partner</label>
-            <span th:if="${freelancer.partnerId != null}" class="subsection-label">
-              <a th:href="@{/partner/{id}(id=${freelancer.partnerId})}"
-                 th:text="${freelancer.partnerId}">–</a>
-            </span>
-            <span th:if="${freelancer.partnerId == null}" class="subsection-label text-muted">Kein Partner</span>
-          </div>
-        </div>
         </div>
       </div>
 
@@ -160,7 +174,7 @@
           </div>
           <div class="fg">
             <label>Kontaktart</label>
-            <select name="kontaktart">
+            <select name="kontaktart" required>
               <option value="" th:selected="${freelancer.kontaktart == null or freelancer.kontaktart.isEmpty()}">–</option>
               <option value="NL"  th:selected="${freelancer.kontaktart == 'NL'}">NL</option>
               <option value="NL1" th:selected="${freelancer.kontaktart == 'NL1'}">NL1</option>
@@ -790,7 +804,10 @@
         }
         return;
       }
-      if (r.ok) { location.reload(); }
+      if (r.ok) { location.reload(); return; }
+      // Technischer Fehler
+      var errBanner = document.getElementById('banner-save-error');
+      if (errBanner) { errBanner.classList.remove('hidden'); errBanner.scrollIntoView({behavior:'smooth',block:'start'}); }
     });
 
     // Dubletten-Banner ausblenden, sobald das Code-Feld geändert wird

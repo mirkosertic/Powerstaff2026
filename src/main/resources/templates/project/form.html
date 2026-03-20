@@ -54,6 +54,11 @@
       ✓ &nbsp;Datensatz wurde gespeichert.
     </div>
 
+    <!-- Technischer Fehler beim Speichern -->
+    <div class="banner banner-error hidden" id="banner-save-error">
+      ✕ &nbsp;Beim Speichern ist ein technischer Fehler aufgetreten. Bitte erneut versuchen.
+    </div>
+
     <!-- Hauptformular -->
     <form id="project-form" th:action="@{/project/save}" method="post">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -466,11 +471,14 @@
     form.classList.add('was-validated');
     if (!form.checkValidity()) return;
     const data = new FormData(form);
-    const resp = await fetch(form.action, { method: 'POST', body: data });
+    const resp = await apiFetch(form.action, { method: 'POST', body: data });
     if (resp.status === 409) {
       openModal('modal-conflict');
     } else if (resp.redirected) {
       window.location = resp.url;
+    } else if (!resp.ok) {
+      const errBanner = document.getElementById('banner-save-error');
+      if (errBanner) { errBanner.classList.remove('hidden'); errBanner.scrollIntoView({behavior:'smooth',block:'start'}); }
     }
   });
 

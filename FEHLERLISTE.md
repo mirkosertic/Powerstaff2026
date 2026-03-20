@@ -22,20 +22,20 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
   Die Audit-Informationen und das ggf. gemerkte Projekt können sich den Platz teilen, wobei das gemerkte
   Projekt gerne mehr Platz bekommen darf, die Audit-Informationen müssen aber jederzeit sichtbar sein.
 - [x] Für Partner und Kunden gibt es keine Kontaktmöglichkeiten und keine Kontakthistorie. Das ist falsch.
-- [ ] Die Feldreihenfolge der Adressfelder für Freiberufler, Paertner und Kunden ist nicht schlüssig.
+- [x] Die Feldreihenfolge der Adressfelder für Freiberufler, Paertner und Kunden ist nicht schlüssig.
   Die Reihenfolge müsste sein Straße (eine Zeile), dann eine zweite Zeile mit Land(klein), Plz (etwas größer,
   Platz für max. 5 Zeichen, und der Rest des Platzes wird für den Ort verwendet.
-- [ ] Die Feldreihenfolge für den Namen der Freiberufler ist nicht ganz logisch. Zuerst muss
+- [x] Die Feldreihenfolge für den Namen der Freiberufler ist nicht ganz logisch. Zuerst muss
   das Feld für die Anrede(etwas kleiner), dann Vorname und dann Name kommen, alles in einer Zeile.
-- [ ] Vor dem Speichern eines Freiberuflers muss geprüft werden, ob das Feld "Kontaktart" mit einem Value <> ""
+- [x] Vor dem Speichern eines Freiberuflers muss geprüft werden, ob das Feld "Kontaktart" mit einem Value <> ""
   gefüllt ist. Es handelt sich um ein Pflichtfeld.
-- [ ] Bei technischen Fehlern beim Speichern eines Aggregates im Projekt soll eine
+- [x] Bei technischen Fehlern beim Speichern eines Aggregates im Projekt soll eine
   rote Fehlermeldung im Formular angezeigt werden. Im Moment werden solche Fehler verschluckt.
 - [x] Beim Hinzufügen einer Kontaktmöglichkeit zu einem Freiberufler, Partner oder Kunden
   wird nach dem Speichern die Liste der Kontaktmöglichkeiten nicht aktualisiert.
 - [x] Beim Hinzufügen einer Kontakthistorie zu einem Freiberufler, Partner oder Kunden
   wird nach dem Speichern die Liste der Historieneinträge nicht aktualisiert.
-- [ ] Es gibt einen Thymeleaf-Fehler beim Anzeigen der Adminseite für Historientypen: 2026-03-20 20:03:08 [http-nio-127.0.0.1-8080-exec-1] ERROR org.thymeleaf.TemplateEngine - [THYMELEAF][http-nio-127.0.0.1-8080-exec-1] Exception processing template "admin/historientypen": An error happened during template parsing (template: "class path resource [templates/admin/historientypen.html]")
+- [x] Es gibt einen Thymeleaf-Fehler beim Anzeigen der Adminseite für Historientypen: 2026-03-20 20:03:08 [http-nio-127.0.0.1-8080-exec-1] ERROR org.thymeleaf.TemplateEngine - [THYMELEAF][http-nio-127.0.0.1-8080-exec-1] Exception processing template "admin/historientypen": An error happened during template parsing (template: "class path resource [templates/admin/historientypen.html]")
   org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/admin/historientypen.html]")
   at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:241)
   at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)

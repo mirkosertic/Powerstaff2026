@@ -350,8 +350,15 @@
   display: none;
 }
 
-/* Kontaktsperre / Fehler */
+/* Kontaktsperre */
 .banner-forbidden {
+  background: var(--danger-l);
+  border-bottom: 2px solid var(--danger);
+  color: var(--danger);
+}
+
+/* Technischer Fehler */
+.banner-error {
   background: var(--danger-l);
   border-bottom: 2px solid var(--danger);
   color: var(--danger);
