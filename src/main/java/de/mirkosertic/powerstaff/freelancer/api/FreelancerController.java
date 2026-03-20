@@ -4,13 +4,13 @@ import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 import de.mirkosertic.powerstaff.freelancer.command.DuplicateCodeException;
-import de.mirkosertic.powerstaff.freelancer.command.DuplicateTagException;
 import de.mirkosertic.powerstaff.freelancer.command.Freelancer;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerContactEntry;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerHistoryEntry;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerHasPositionsException;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerTagCommandService;
+import de.mirkosertic.powerstaff.freelancer.command.FreelancerTagEntry;
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerQueryService;
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerSearchCriteria;
 import de.mirkosertic.powerstaff.freelancer.query.TagInfo;
@@ -24,12 +24,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -149,7 +147,7 @@ public class FreelancerController {
     }
 
     // -------------------------------------------------------------------------
-    // Speichern (Unified Save: Stammdaten + Kontakte + Historie in einer Transaktion)
+    // Speichern (Unified Save: Stammdaten + Kontakte + Historie + Tags in einer Transaktion)
     // -------------------------------------------------------------------------
 
     @PostMapping("/save")
@@ -157,13 +155,16 @@ public class FreelancerController {
     public ResponseEntity<?> save(@ModelAttribute Freelancer freelancer,
                                   @RequestParam(required = false, defaultValue = "[]") String contactsJson,
                                   @RequestParam(required = false, defaultValue = "[]") String historyJson,
+                                  @RequestParam(required = false, defaultValue = "[]") String tagsJson,
                                   HttpServletResponse response) throws IOException {
         try {
-            List<FreelancerContactEntry> contacts = objectMapper.readValue(
+            List<FreelancerContactEntry> contactChanges = objectMapper.readValue(
                     contactsJson, new TypeReference<>() {});
-            List<FreelancerHistoryEntry> newHistory = objectMapper.readValue(
+            List<FreelancerHistoryEntry> historyChanges = objectMapper.readValue(
                     historyJson, new TypeReference<>() {});
-            var saved = commandService.save(freelancer, contacts, newHistory);
+            List<FreelancerTagEntry> tagChanges = objectMapper.readValue(
+                    tagsJson, new TypeReference<>() {});
+            var saved = commandService.save(freelancer, contactChanges, historyChanges, tagChanges);
             response.sendRedirect("/freelancer/" + saved.getId() + "?saved=true");
             return null;
         } catch (DuplicateCodeException e) {
@@ -250,31 +251,8 @@ public class FreelancerController {
     }
 
     // -------------------------------------------------------------------------
-    // Tag-Verwaltung (AJAX)
+    // Tag-Verfügbarkeit (GET – wird für Dropdown-Befüllung benötigt)
     // -------------------------------------------------------------------------
-
-    @PostMapping("/{id}/tags")
-    @ResponseBody
-    public ResponseEntity<?> addTag(@PathVariable long id,
-                                    @RequestBody Map<String, Long> body) {
-        long tagId = body.get("tagId");
-        try {
-            tagCommandService.addTag(id, tagId);
-            List<TagInfo> updated = queryService.findTagsByFreelancerId(id);
-            return ResponseEntity.ok(Map.of("ok", true, "tags", updated));
-        } catch (DuplicateTagException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("duplicate", true));
-        }
-    }
-
-    @DeleteMapping("/{id}/tags/{tagId}")
-    @ResponseBody
-    public ResponseEntity<?> removeTag(@PathVariable long id,
-                                       @PathVariable long tagId) {
-        tagCommandService.removeTagByTagId(id, tagId);
-        return ResponseEntity.ok(Map.of("ok", true));
-    }
 
     @GetMapping("/{id}/available-tags/{type}")
     @ResponseBody

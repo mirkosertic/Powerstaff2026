@@ -79,11 +79,11 @@ class KundeCommandServiceIT extends AbstractContainerBaseIT {
         jdbcClient.sql("DELETE FROM project WHERE project_number = 'IT-CMD-KPRO-001'").update()
     }
 
-    def "Unified Save speichert Kontakte und Historie"() {
+    def "Unified Save speichert Kontakte und Historie via Delta-Commands"() {
         given:
         def kunde = newKunde("IT-Cmd Unified")
-        def contacts = [new KundeContactEntry(null, "EMAIL", "test@example.com")]
-        def history = [new KundeHistoryEntry(null, historyTypeId, "Erstanlage")]
+        def contacts = [new KundeContactEntry("ADD", null, "EMAIL", "test@example.com")]
+        def history = [new KundeHistoryEntry("ADD", null, historyTypeId, "Erstanlage")]
 
         when:
         def saved = commandService.save(kunde, contacts, history)

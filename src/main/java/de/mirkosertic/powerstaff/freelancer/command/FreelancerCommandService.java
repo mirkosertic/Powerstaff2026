@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -17,33 +14,32 @@ public class FreelancerCommandService {
     private final FreelancerRepository freelancerRepository;
     private final FreelancerContactRepository contactRepository;
     private final FreelancerHistoryRepository historyRepository;
+    private final FreelancerTagCommandService tagCommandService;
     private final JdbcClient jdbcClient;
 
     public FreelancerCommandService(FreelancerRepository freelancerRepository,
                                     FreelancerContactRepository contactRepository,
                                     FreelancerHistoryRepository historyRepository,
+                                    FreelancerTagCommandService tagCommandService,
                                     JdbcClient jdbcClient) {
         this.freelancerRepository = freelancerRepository;
         this.contactRepository = contactRepository;
         this.historyRepository = historyRepository;
+        this.tagCommandService = tagCommandService;
         this.jdbcClient = jdbcClient;
     }
 
     /**
-     * Speichert nur die Freiberufler-Stammdaten.
-     */
-    public Freelancer save(Freelancer freelancer) {
-        return freelancerRepository.save(freelancer);
-    }
-
-    /**
-     * Speichert Freiberufler-Stammdaten und Kontakte. Neue History-Einträge (id==null)
-     * werden appended; bestehende History-Einträge bleiben unberührt.
+     * Speichert Freiberufler-Stammdaten, Kontakte, Historie und Tags via Delta-Commands.
+     * Nur Einträge mit op="ADD" oder op="DELETE" werden verarbeitet;
+     * unveränderte Einträge erhalten keinen neuen Audit-Timestamp.
      * Leerer Code wird als NULL gespeichert. Wirft {@link DuplicateCodeException}
      * wenn der Code bereits von einem anderen Freiberufler verwendet wird.
      */
-    public Freelancer save(Freelancer freelancer, List<FreelancerContactEntry> contacts,
-                           List<FreelancerHistoryEntry> newHistoryEntries) {
+    public Freelancer save(Freelancer freelancer,
+                           List<FreelancerContactEntry> contactChanges,
+                           List<FreelancerHistoryEntry> historyChanges,
+                           List<FreelancerTagEntry> tagChanges) {
         // Leeren Code → NULL normalisieren (verhindert UNIQUE-Constraint-Verletzung)
         if (freelancer.getCode() != null && freelancer.getCode().isBlank()) {
             freelancer.setCode(null);
@@ -56,81 +52,50 @@ public class FreelancerCommandService {
                 }
             });
         }
+
         Freelancer saved = freelancerRepository.save(freelancer);
         long freelancerId = saved.getId();
-        replaceContacts(freelancerId, contacts);
-        for (FreelancerHistoryEntry entry : newHistoryEntries) {
-            if (entry.id() == null) {
-                FreelancerHistory history = new FreelancerHistory();
-                history.setDescription(entry.description());
-                history.setTypeId(entry.typeId());
-                history.setFreelancerId(freelancerId);
-                historyRepository.save(history);
-            }
-        }
-        return saved;
-    }
 
-    private void replaceContacts(long freelancerId, List<FreelancerContactEntry> entries) {
-        Set<Long> submittedIds = entries.stream()
-                .filter(e -> e.id() != null)
-                .map(FreelancerContactEntry::id)
-                .collect(Collectors.toSet());
-
-        contactRepository.findByFreelancerId(freelancerId).stream()
-                .filter(c -> !submittedIds.contains(c.getId()))
-                .forEach(c -> contactRepository.deleteById(c.getId()));
-
-        for (FreelancerContactEntry entry : entries) {
-            if (entry.id() != null) {
-                contactRepository.findById(entry.id()).ifPresent(contact -> {
-                    boolean changed = !Objects.equals(entry.type(), contact.getType())
-                            || !Objects.equals(entry.value(), contact.getValue());
-                    if (changed) {
-                        contact.setType(entry.type());
-                        contact.setValue(entry.value());
-                        contactRepository.save(contact);
-                    }
-                });
-            } else {
+        // Kontakt-Delta verarbeiten
+        for (FreelancerContactEntry cmd : contactChanges) {
+            if ("ADD".equals(cmd.op())) {
                 FreelancerContact contact = new FreelancerContact();
-                contact.setType(entry.type());
-                contact.setValue(entry.value());
+                contact.setType(cmd.type());
+                contact.setValue(cmd.value());
                 contact.setFreelancerId(freelancerId);
                 contactRepository.save(contact);
+            } else if ("DELETE".equals(cmd.op()) && cmd.id() != null) {
+                contactRepository.deleteById(cmd.id());
             }
         }
-    }
 
-    private void replaceHistory(long freelancerId, List<FreelancerHistoryEntry> entries) {
-        Set<Long> submittedIds = entries.stream()
-                .filter(e -> e.id() != null)
-                .map(FreelancerHistoryEntry::id)
-                .collect(Collectors.toSet());
-
-        historyRepository.findByFreelancerId(freelancerId).stream()
-                .filter(h -> !submittedIds.contains(h.getId()))
-                .forEach(h -> historyRepository.deleteById(h.getId()));
-
-        for (FreelancerHistoryEntry entry : entries) {
-            if (entry.id() != null) {
-                historyRepository.findById(entry.id()).ifPresent(history -> {
-                    boolean changed = !Objects.equals(entry.description(), history.getDescription())
-                            || !Objects.equals(entry.typeId(), history.getTypeId());
-                    if (changed) {
-                        history.setDescription(entry.description());
-                        history.setTypeId(entry.typeId());
-                        historyRepository.save(history);
-                    }
-                });
-            } else {
+        // Historie-Delta verarbeiten
+        for (FreelancerHistoryEntry cmd : historyChanges) {
+            if ("ADD".equals(cmd.op())) {
                 FreelancerHistory history = new FreelancerHistory();
-                history.setDescription(entry.description());
-                history.setTypeId(entry.typeId());
+                history.setDescription(cmd.description());
+                history.setTypeId(cmd.typeId());
                 history.setFreelancerId(freelancerId);
                 historyRepository.save(history);
+            } else if ("DELETE".equals(cmd.op()) && cmd.id() != null) {
+                historyRepository.deleteById(cmd.id());
             }
         }
+
+        // Tag-Delta verarbeiten
+        for (FreelancerTagEntry cmd : tagChanges) {
+            if ("ADD".equals(cmd.op()) && cmd.tagId() != null) {
+                try {
+                    tagCommandService.addTag(freelancerId, cmd.tagId());
+                } catch (DuplicateTagException ignored) {
+                    // Tag bereits zugeordnet – ignorieren (idempotent)
+                }
+            } else if ("DELETE".equals(cmd.op()) && cmd.tagId() != null) {
+                tagCommandService.removeTagByTagId(freelancerId, cmd.tagId());
+            }
+        }
+
+        return saved;
     }
 
     @Transactional(readOnly = true)

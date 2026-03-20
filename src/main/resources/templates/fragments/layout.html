@@ -53,10 +53,12 @@
     </div>
   </nav>
 
+  <!-- app.js muss VOR dem Content-Block geladen werden, damit apiFetch und
+       andere globale Funktionen in den Inline-Scripts der Templates verfügbar sind. -->
+  <script th:src="@{/generated/app.js}"></script>
+
   <!-- Content-Slot -->
   <th:block th:replace="${content}"/>
-
-  <script th:src="@{/generated/app.js}"></script>
 
 </body>
 </html>

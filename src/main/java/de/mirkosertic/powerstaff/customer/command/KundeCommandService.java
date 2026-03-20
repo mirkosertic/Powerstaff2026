@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,34 +31,42 @@ public class KundeCommandService {
     }
 
     /**
-     * Speichert Kunden-Stammdaten und Kontakte ohne History-Verarbeitung.
-     * History wird über KundeHistoryController (AJAX) verwaltet.
-     */
-    public Kunde save(Kunde kunde, List<KundeContactEntry> contacts) {
-        Kunde saved = kundeRepository.save(kunde);
-        replaceContacts(saved.getId(), contacts);
-        return saved;
-    }
-
-    /**
-     * Speichert Stammdaten, Kontakte und hängt neue Historieneinträge an.
-     * Bestehende History-Einträge (via AJAX verwaltet) bleiben unberührt.
+     * Speichert Kunden-Stammdaten und verarbeitet Kontakt- und Historien-Delta-Commands.
+     * Nur Einträge mit op="ADD" oder op="DELETE" werden verarbeitet;
+     * unveränderte Einträge erhalten keinen neuen Audit-Timestamp.
      */
     public Kunde save(Kunde kunde,
-                      List<KundeContactEntry> contacts,
-                      List<KundeHistoryEntry> newHistoryEntries) {
+                      List<KundeContactEntry> contactChanges,
+                      List<KundeHistoryEntry> historyChanges) {
         Kunde saved = kundeRepository.save(kunde);
         long kundeId = saved.getId();
-        replaceContacts(kundeId, contacts);
-        for (KundeHistoryEntry entry : newHistoryEntries) {
-            if (entry.id() == null) {
-                KundeHistory history = new KundeHistory();
-                history.setDescription(entry.description());
-                history.setTypeId(entry.typeId());
-                history.setKundeId(kundeId);
-                historyRepository.save(history);
+
+        // Kontakt-Delta verarbeiten
+        for (KundeContactEntry cmd : contactChanges) {
+            if ("ADD".equals(cmd.op())) {
+                KundeContact contact = new KundeContact();
+                contact.setType(cmd.type());
+                contact.setValue(cmd.value());
+                contact.setKundeId(kundeId);
+                contactRepository.save(contact);
+            } else if ("DELETE".equals(cmd.op()) && cmd.id() != null) {
+                contactRepository.deleteById(cmd.id());
             }
         }
+
+        // Historie-Delta verarbeiten
+        for (KundeHistoryEntry cmd : historyChanges) {
+            if ("ADD".equals(cmd.op())) {
+                KundeHistory history = new KundeHistory();
+                history.setDescription(cmd.description());
+                history.setTypeId(cmd.typeId());
+                history.setKundeId(kundeId);
+                historyRepository.save(history);
+            } else if ("DELETE".equals(cmd.op()) && cmd.id() != null) {
+                historyRepository.deleteById(cmd.id());
+            }
+        }
+
         return saved;
     }
 
@@ -82,67 +87,5 @@ public class KundeCommandService {
         }
 
         kundeRepository.deleteById(id);
-    }
-
-    private void replaceContacts(long kundeId, List<KundeContactEntry> entries) {
-        Set<Long> submittedIds = entries.stream()
-                .filter(e -> e.id() != null)
-                .map(KundeContactEntry::id)
-                .collect(Collectors.toSet());
-
-        contactRepository.findByKundeId(kundeId).stream()
-                .filter(c -> !submittedIds.contains(c.getId()))
-                .forEach(c -> contactRepository.deleteById(c.getId()));
-
-        for (KundeContactEntry entry : entries) {
-            if (entry.id() != null) {
-                contactRepository.findById(entry.id()).ifPresent(contact -> {
-                    boolean changed = !Objects.equals(entry.type(), contact.getType())
-                            || !Objects.equals(entry.value(), contact.getValue());
-                    if (changed) {
-                        contact.setType(entry.type());
-                        contact.setValue(entry.value());
-                        contactRepository.save(contact);
-                    }
-                });
-            } else {
-                KundeContact contact = new KundeContact();
-                contact.setType(entry.type());
-                contact.setValue(entry.value());
-                contact.setKundeId(kundeId);
-                contactRepository.save(contact);
-            }
-        }
-    }
-
-    private void replaceHistory(long kundeId, List<KundeHistoryEntry> entries) {
-        Set<Long> submittedIds = entries.stream()
-                .filter(e -> e.id() != null)
-                .map(KundeHistoryEntry::id)
-                .collect(Collectors.toSet());
-
-        historyRepository.findByKundeId(kundeId).stream()
-                .filter(h -> !submittedIds.contains(h.getId()))
-                .forEach(h -> historyRepository.deleteById(h.getId()));
-
-        for (KundeHistoryEntry entry : entries) {
-            if (entry.id() != null) {
-                historyRepository.findById(entry.id()).ifPresent(history -> {
-                    boolean changed = !Objects.equals(entry.description(), history.getDescription())
-                            || !Objects.equals(entry.typeId(), history.getTypeId());
-                    if (changed) {
-                        history.setDescription(entry.description());
-                        history.setTypeId(entry.typeId());
-                        historyRepository.save(history);
-                    }
-                });
-            } else {
-                KundeHistory history = new KundeHistory();
-                history.setDescription(entry.description());
-                history.setTypeId(entry.typeId());
-                history.setKundeId(kundeId);
-                historyRepository.save(history);
-            }
-        }
     }
 }

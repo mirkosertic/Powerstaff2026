@@ -2,32 +2,52 @@
 
 Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jeder Befund soll einzeln korrigiert und via MAven build überprüft. Im Anschlus darf der EIntrag in der Liste als erledigt markiert werden, und der Change via Git in die Versionskontrolle aufgenommen werden.
 
-- [x] Ich möchte, dass initial ein Admin-Benutzer via Flyway in der Datenbank angelegt wird. Es soll aktiv sein, und kein Passwort-Reset erfordern. Das Kennwort soll "admin" sein, jedoch soll der bcrypt-Hash von "admin" für das Login verwendet werden.
-- [x] Spring Security Hashes sollen in der DB mit dem {bcrypt} Prefix versehen werden, falls kein Prefix gesetzt ist, soll bcrypt als Hashing Algorithmus per Default verwendet werden. Dies soll durch den Einsatz eines "DelegatingPasswordEncoder"s verwendert werden. bcrypt und noop sollen Initial unterstützt werden. Gerne dafür auch die Architekturbeschreibung ergänzen. Perspektivisch sollen dadurch Update-Probleme von Spring Security besser behandelbar sein.
-- [x] Der Node Frontend-Build soll deine Artefakte nicht nach src/main/frontend generieren, sondern nach target/classes. Der Build sollte keine Inhalte im "src" Verzeichnis verändern oder dorthin schreiben, damit das Git-Repo auch nicht "dirty" wird. Ebenfalls soll so verhindert werden, dass aus Versehen Frontend-Build-Artefakte committed werden.
-- [x] Fehler beim Aufruf eines Freiberuflers: JavaScript ist nicht definiert. Browser-Console Fehlermeldung: Uncaught ReferenceError: apiFetch is not defined
-  loadAvailableTags http://localhost:8080/freelancer/1:790
-- [x] Zu geringer vertikaler Abstand auf der Freiberufler Seite zwischen  "Letzter Kontwxt" und den Checkboxen für "Wiedervorlage", "Kontaktsperre" und "Datenschutz"
-- [x] Bei gesetzter Kontaktsperre soll das Warnings-Banner, analog dem Prototyl im "specs" angezeigt werden
-- [x] Audit-Info eines Freiberuflers (und allen anderen Formularen) soll in der Top-Navigation angezeigt werden, analog dem Prototypen. Bei neuen Datensätzen soll als Audit-Info "Neu, noch nicht gespeichert" angezeigt werden
-- [x] Beim Hinzufügen einer Kontaktmöglichkeit zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
-- [x] Beim Hinzufügen einer Kontakthistorie zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
-- [x] Kontaktmöglichkeiten können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert
-- [x] Kontakthistorien-Einträge können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert
-- [x] Freelancer.availabilityAsDate ist nur ein Datumsfeld, z.B. der Datepicker sollte keine Zeitangabe erlauben
-- [x] Der Suche Button für die QBE Suche fehlt für Freiberufler und vermutlich auch den anderen Aggregaten. Er ist im Prototyp vorhanden, und die QBE Suche ist spezifiziert, jedoch die Implementierung fehlt.
-- [x] Der Prototyp und die Implementierung der Forms im Projekt verwenden unterschiedliche Zeichensätze.
-- [x] Die Checkbox "Datenschutz" ist im Prototypen als "DSGVO EInwilligung" hinterlegt und befindet sich im Bereich "Verfügbarkeit und Konditionen". Das ist auch korrekt so. Die Implementierung und eventuell auch die Spezifikation muss angepasst werden.
-- [x] Die Breite von "Verfügbarkeit und Konditionen" ist im Prototyp anders als in der Implementierung des Freiberufler-Formulars.
-- [x] Die Anzeige eines existierenden Projektes erzeugt einen technischen Fehler: 2026-03-19 13:00:59 [http-nio-127.0.0.1-8080-exec-10] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/project/form.html]")] with root cause
-  org.springframework.expression.spel.SpelParseException: Expression [#temporals.format(project.entryDate,'yyyy-MM-dd\'T\'HH:mm')] @50: EL1065E: Unexpected escape character
-  at org.springframework.expression.spel.standard.Tokenizer.raiseParseException(Tokenizer.java:586).. . Vermutlich liegt es daran, dass auf der Projektmaske die Datepicker auch eine Uhrzeit-Komponente haben. Sie benötigen allerdings nur ein Datum, also keine Uhrzeit. Bei der Anzeige des Fehlers wird übrigens die Default Spring Boot Whilelabel Error Page angezeigt. Eigentlich sollte doch eine generelle Fehlerseite im Projekt-Design-System angezeigt werden, oder?
-- [x] Das Hamburger-Menu in der Profilsuche soll linksbündig angezeigt werden, im Moment ist es zentriert
-- [x] Das Textfeld für die Prompt-Eingabe in der Profilsuche soll über die komplette Breite der Seite gehen, und es könnte auch höher sein, da u.U. auch größere Texte eingegeben werden. Der Senden-Button soll inline im Prompt-Feld analog Claude angezeigt werden, ebenfalls soll ein "Abbrechen" bzw. Stop-Button vorgesehen sein.
-- [x] Das Layout vom "Chat Löschen" Overlay-Dialog ist schräg, der Schlißen-Button wird zentriert angezeigt, und insgesamt ist die Darstellung sehr gedrungen.
-- [x] Die Paginierung links oben im Administrationsbereich ist falsch.
-- [x] Die Darstellung im Adninistrationsbereich bzw. die Tabelle der Historientypen könnte mehr Abstand zu sen Seiten gebrauchen. Auch kann die Tabelle gerne etwas breiter sein, und natürlich auch gemäß dem Designsystem formatiert.
-- [x] Es fehlt die Bestätigung beim Speichern eines Freiberuflers, und vermutlich aich der anderen Aggregate, in Form des grünen Banners. Dies ist im Prototypen umgesetzt, und soll auch so für alle Formulare der Anwendung implementiert sein.
-- [x] Freelancer Kodierung ist optional, allerdings soll die Kodierung auf Dubletten geprüft werden, wenn der Code schon vorhanden ist. In diesem Fall soll beim Speichern eine Warnung ausgegeben werden. Im Moment wird ein leere Code als '' in der Datenbank gespeichert, das UniqueConstraintViolations erzeugt. Das Datenmodell bzw. der Index muss vermutlich angepasst werden, genau wie die Spezifikationen.
-- [x] Die Zuordnung  bzw. das Entfernen von Tags soll auch erst gespeichert werden, wenn der Speichern - Button gedrückt wird. Bis dahin soll bei Änderungen an den Tags der Hinweis zu den nicht gespeicherten Änderungen angezeigt werden
-- [x] Es wird inline-Css in den Formularen verwendet, z.B. für PLZ. Die Styles sollten aber ausschließlich aus dem Designsystem kommen! Bitte prüfe alle Stellen im Frontend auf inline-CSS und korrigiere das.
+- [x] Die Anzeige der Freiberufler Seite erzeugt folgenden JavaScript-Fehler im Browser: Uncaught ReferenceError: apiFetch is not defined
+  loadAvailableTags http://localhost:8080/freelancer/1:914
+  <anonymous> http://localhost:8080/freelancer/1:991
+  <anonymous> http://localhost:8080/freelancer/1:990
+- [ ] Im Prototypen im Verzeichnis "prototype/freiberufler.html" haben die DSVO oder Kontaktsperre
+  Checkbox tatsächlich auch eine sichtbare Checkbox. Die entsprechenden Checkboen
+  in der Implementierung sind nicht sichtbar. Bitte passe die Darstellung für Checkboxen
+  der Implementierung dem Prototypen an.
+- [ ] Die Audit-Info wird jetzt in der Navbar als auch unten auf der Seite in
+  allen Formularen angezeigt. Das ist redundant; sie soll nur in der Navbar angezeigt werden, der untere
+  Block auf den Seiten kann also entfernt werden.
+- [ ] Das gemeerkte Projekt wird auf der Freiberufler, Kunden, Partner und Profilsuche Seite nicht angezeigt,
+  dafür abber auf de Projektseite selber, wo es nicht hingehört und redundant ist, da es immer identisch mit dem
+  aktuellen Projekt ist.
+- [ ] Auf der Projektseite fehlt die Zuordnungsmöglichkeit eines Freiberuflers über den Code.
+- [ ] Auf der Freiberufler-Seite fehlt ein Button für die Zuordnung des Freiberuflers zum aktuell gemerkten Projekt, falls vorhanden.
+- [ ] Das gemerkte Projekt wird zu schmal in der Navbar engezeigt. Es könnte größer sein.
+  Die Audit-Informationen und das ggf. gemerkte Projekt können sich den Platz teilen, wobei das gemerkte
+  Projekt gerne mehr Platz bekommen darf, die Audit-Informationen müssen aber jederzeit sichtbar sein.
+- [x] Für Partner und Kunden gibt es keine Kontaktmöglichkeiten und keine Kontakthistorie. Das ist falsch.
+- [ ] Die Feldreihenfolge der Adressfelder für Freiberufler, Paertner und Kunden ist nicht schlüssig.
+  Die Reihenfolge müsste sein Straße (eine Zeile), dann eine zweite Zeile mit Land(klein), Plz (etwas größer,
+  Platz für max. 5 Zeichen, und der Rest des Platzes wird für den Ort verwendet.
+- [ ] Die Feldreihenfolge für den Namen der Freiberufler ist nicht ganz logisch. Zuerst muss
+  das Feld für die Anrede(etwas kleiner), dann Vorname und dann Name kommen, alles in einer Zeile.
+- [ ] Vor dem Speichern eines Freiberuflers muss geprüft werden, ob das Feld "Kontaktart" mit einem Value <> ""
+  gefüllt ist. Es handelt sich um ein Pflichtfeld.
+- [ ] Bei technischen Fehlern beim Speichern eines Aggregates im Projekt soll eine
+  rote Fehlermeldung im Formular angezeigt werden. Im Moment werden solche Fehler verschluckt.
+- [x] Beim Hinzufügen einer Kontaktmöglichkeit zu einem Freiberufler, Partner oder Kunden
+  wird nach dem Speichern die Liste der Kontaktmöglichkeiten nicht aktualisiert.
+- [x] Beim Hinzufügen einer Kontakthistorie zu einem Freiberufler, Partner oder Kunden
+  wird nach dem Speichern die Liste der Historieneinträge nicht aktualisiert.
+- [ ] Es gibt einen Thymeleaf-Fehler beim Anzeigen der Adminseite für Historientypen: 2026-03-20 20:03:08 [http-nio-127.0.0.1-8080-exec-1] ERROR org.thymeleaf.TemplateEngine - [THYMELEAF][http-nio-127.0.0.1-8080-exec-1] Exception processing template "admin/historientypen": An error happened during template parsing (template: "class path resource [templates/admin/historientypen.html]")
+  org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/admin/historientypen.html]")
+  at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:241)
+  at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
+- [ ] Es wurden MVC / API Endpunkte geändert oder hinzugefügt, ohne einen UNit oder IT Test dafür zu schreiben.
+  Die Skills bzw. die Claude Instruktionen sagen aber, dass das sein muss. Damit könnten auch Thymeleaf-Fehler besser und
+  sofort erkannt werden.
+- [ ] Die QBE Suche bzw. das Drücken des Suche-Buttons in allen Formularen öffnet
+  ein neues Modal, in dem die Suchfelder ausgefüllt werden. Die Suchergebnislisrte wird
+  dann darunter angezeigt. Die Idee war, dass die QBE Suche das gleiche
+  Formular nutzt, welches für die Bearbeitung der Daten genutzt wird. Der Ablauf ist also
+  Neu(Formular leeren)->Suchfelder befüllen->QBE-Suche starten->Suchergebnis wird angezeigt.
+  Die Ergebnisliste soll via Infinite Scroll geladen werden, mit Sortierung und Navigation auf
+  den Freiberufler. Das Suchkonzept wurde hier nicht richtig umgesetzt. Bitte achte
+  bei der Implementierung für Initie-Scroll auf die Sortiermöglichkeiten. Ein
+  Umsortieren der Liste muss das Ergebnis komplett neu laden, eine Sortierung auf HTML Seite wäre sinnlos.

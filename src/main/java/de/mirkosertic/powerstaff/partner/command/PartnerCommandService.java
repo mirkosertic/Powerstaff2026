@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -37,97 +34,43 @@ public class PartnerCommandService {
     }
 
     /**
-     * Speichert Partner-Stammdaten und Kontaktmöglichkeiten ohne History-Verarbeitung.
-     * History wird über PartnerHistoryController (AJAX) verwaltet.
-     */
-    public Partner save(Partner partner, List<PartnerContactEntry> contacts) {
-        Partner saved = partnerRepository.save(partner);
-        replaceContacts(saved.getId(), contacts);
-        return saved;
-    }
-
-    /**
-     * Speichert Partner-Stammdaten, Kontaktmöglichkeiten und hängt neue Historieneinträge an.
-     * Bestehende History-Einträge (via AJAX verwaltet) bleiben unberührt.
+     * Speichert Partner-Stammdaten und verarbeitet Kontakt- und Historien-Delta-Commands.
+     * Nur Einträge mit op="ADD" oder op="DELETE" werden verarbeitet;
+     * unveränderte Einträge erhalten keinen neuen Audit-Timestamp.
      */
     public Partner save(Partner partner,
-                        List<PartnerContactEntry> contacts,
-                        List<PartnerHistoryEntry> newHistoryEntries) {
+                        List<PartnerContactEntry> contactChanges,
+                        List<PartnerHistoryEntry> historyChanges) {
         Partner saved = partnerRepository.save(partner);
         long partnerId = saved.getId();
-        replaceContacts(partnerId, contacts);
-        for (PartnerHistoryEntry entry : newHistoryEntries) {
-            if (entry.id() == null) {
-                PartnerHistory history = new PartnerHistory();
-                history.setDescription(entry.description());
-                history.setTypeId(entry.typeId());
-                history.setPartnerId(partnerId);
-                historyRepository.save(history);
-            }
-        }
-        return saved;
-    }
 
-    private void replaceContacts(long partnerId, List<PartnerContactEntry> entries) {
-        Set<Long> submittedIds = entries.stream()
-                .filter(e -> e.id() != null)
-                .map(PartnerContactEntry::id)
-                .collect(Collectors.toSet());
-
-        contactRepository.findByPartnerId(partnerId).stream()
-                .filter(c -> !submittedIds.contains(c.getId()))
-                .forEach(c -> contactRepository.deleteById(c.getId()));
-
-        for (PartnerContactEntry entry : entries) {
-            if (entry.id() != null) {
-                contactRepository.findById(entry.id()).ifPresent(contact -> {
-                    boolean changed = !Objects.equals(entry.type(), contact.getType())
-                            || !Objects.equals(entry.value(), contact.getValue());
-                    if (changed) {
-                        contact.setType(entry.type());
-                        contact.setValue(entry.value());
-                        contactRepository.save(contact);
-                    }
-                });
-            } else {
+        // Kontakt-Delta verarbeiten
+        for (PartnerContactEntry cmd : contactChanges) {
+            if ("ADD".equals(cmd.op())) {
                 PartnerContact contact = new PartnerContact();
-                contact.setType(entry.type());
-                contact.setValue(entry.value());
+                contact.setType(cmd.type());
+                contact.setValue(cmd.value());
                 contact.setPartnerId(partnerId);
                 contactRepository.save(contact);
+            } else if ("DELETE".equals(cmd.op()) && cmd.id() != null) {
+                contactRepository.deleteById(cmd.id());
             }
         }
-    }
 
-    private void replaceHistory(long partnerId, List<PartnerHistoryEntry> entries) {
-        Set<Long> submittedIds = entries.stream()
-                .filter(e -> e.id() != null)
-                .map(PartnerHistoryEntry::id)
-                .collect(Collectors.toSet());
-
-        historyRepository.findByPartnerId(partnerId).stream()
-                .filter(h -> !submittedIds.contains(h.getId()))
-                .forEach(h -> historyRepository.deleteById(h.getId()));
-
-        for (PartnerHistoryEntry entry : entries) {
-            if (entry.id() != null) {
-                historyRepository.findById(entry.id()).ifPresent(history -> {
-                    boolean changed = !Objects.equals(entry.description(), history.getDescription())
-                            || !Objects.equals(entry.typeId(), history.getTypeId());
-                    if (changed) {
-                        history.setDescription(entry.description());
-                        history.setTypeId(entry.typeId());
-                        historyRepository.save(history);
-                    }
-                });
-            } else {
+        // Historie-Delta verarbeiten
+        for (PartnerHistoryEntry cmd : historyChanges) {
+            if ("ADD".equals(cmd.op())) {
                 PartnerHistory history = new PartnerHistory();
-                history.setDescription(entry.description());
-                history.setTypeId(entry.typeId());
+                history.setDescription(cmd.description());
+                history.setTypeId(cmd.typeId());
                 history.setPartnerId(partnerId);
                 historyRepository.save(history);
+            } else if ("DELETE".equals(cmd.op()) && cmd.id() != null) {
+                historyRepository.deleteById(cmd.id());
             }
         }
+
+        return saved;
     }
 
     @Transactional(readOnly = true)

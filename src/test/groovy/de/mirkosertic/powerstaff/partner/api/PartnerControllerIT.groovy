@@ -200,8 +200,8 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
                         .param("id", "42")
                         .param("dbVersion", "0")
                         .param("company", "Test GmbH")
-                        .param("contactsJson", '[{"id":null,"type":"EMAIL","value":"info@example.com"}]')
-                        .param("historyJson", '[{"id":null,"typeId":1,"description":"Erstkontakt"}]'))
+                        .param("contactsJson", '[{"op":"ADD","id":null,"type":"EMAIL","value":"info@example.com"}]')
+                        .param("historyJson", '[{"op":"ADD","id":null,"typeId":1,"description":"Erstkontakt"}]'))
 
         then:
         result.andExpect(status().is3xxRedirection())

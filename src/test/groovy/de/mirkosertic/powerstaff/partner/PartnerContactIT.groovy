@@ -26,10 +26,10 @@ class PartnerContactIT extends AbstractContainerBaseIT {
         jdbcClient.sql("DELETE FROM partner WHERE company LIKE 'IT-Contact%'").update()
     }
 
-    def "Kontakt anlegen und per findContactsByPartner lesen"() {
+    def "Kontakt per ADD-Delta anlegen und per findContactsByPartner lesen"() {
         given:
         def partner = partnerService.save(newPartner("IT-Contact GmbH"),
-                [new PartnerContactEntry(null, "EMAIL", "IT-Contact test@example.com")],
+                [new PartnerContactEntry("ADD", null, "EMAIL", "IT-Contact test@example.com")],
                 [])
 
         when:
@@ -42,50 +42,31 @@ class PartnerContactIT extends AbstractContainerBaseIT {
         list[0].partnerId() == partner.id
     }
 
-    def "Kontakt loeschen entfernt den Eintrag"() {
+    def "Kontakt per DELETE-Delta loeschen entfernt den Eintrag"() {
         given:
         def partner = partnerService.save(newPartner("IT-Contact Delete GmbH"),
-                [new PartnerContactEntry(null, "TELEFON", "IT-Contact 0800-123456")],
+                [new PartnerContactEntry("ADD", null, "TELEFON", "IT-Contact 0800-123456")],
                 [])
+        def contactId = queryService.findContactsByPartner(partner.id)[0].id()
 
         when:
-        partnerService.save(partner, [], [])
+        partnerService.save(partner, [new PartnerContactEntry("DELETE", contactId, null, null)], [])
 
         then:
         queryService.findContactsByPartner(partner.id).isEmpty()
     }
 
-    def "Kontakt aktualisieren aendert den Wert"() {
-        given:
-        def partner = partnerService.save(newPartner("IT-Contact Update GmbH"),
-                [new PartnerContactEntry(null, "WEB", "IT-Contact http://old.example.com")],
-                [])
-        def contactId = queryService.findContactsByPartner(partner.id)[0].id()
-
-        when:
-        partnerService.save(partner,
-                [new PartnerContactEntry(contactId, "WEB", "IT-Contact http://new.example.com")],
-                [])
-
-        then:
-        def list = queryService.findContactsByPartner(partner.id)
-        list.size() == 1
-        list[0].value() == "IT-Contact http://new.example.com"
-    }
-
-    def "Kontakt unveraendert speichern beruehrt changed_date nicht (Audit Trail)"() {
+    def "leere Delta-Liste beruehrt bestehende Kontakte nicht (Audit Trail)"() {
         given:
         def partner = partnerService.save(newPartner("IT-Contact NoAudit GmbH"),
-                [new PartnerContactEntry(null, "EMAIL", "IT-Contact audit@example.com")],
+                [new PartnerContactEntry("ADD", null, "EMAIL", "IT-Contact audit@example.com")],
                 [])
         def contactId = queryService.findContactsByPartner(partner.id)[0].id()
         def changedDateBefore = jdbcClient.sql("SELECT changed_date FROM partner_contact WHERE id = :id")
                 .param("id", contactId).query(String.class).single()
 
-        when:
-        partnerService.save(partner,
-                [new PartnerContactEntry(contactId, "EMAIL", "IT-Contact audit@example.com")],
-                [])
+        when: "leere Delta-Liste → kein Eingriff in Kontakte"
+        partnerService.save(partner, [], [])
 
         then:
         def changedDateAfter = jdbcClient.sql("SELECT changed_date FROM partner_contact WHERE id = :id")
@@ -104,9 +85,9 @@ class PartnerContactIT extends AbstractContainerBaseIT {
     def "mehrere Kontakte werden nach type und value sortiert zurueckgegeben"() {
         given:
         def partner = partnerService.save(newPartner("IT-Contact Sort GmbH"),
-                [new PartnerContactEntry(null, "XING", "IT-Contact xing.com/max"),
-                 new PartnerContactEntry(null, "EMAIL", "IT-Contact b@example.com"),
-                 new PartnerContactEntry(null, "EMAIL", "IT-Contact a@example.com")],
+                [new PartnerContactEntry("ADD", null, "XING", "IT-Contact xing.com/max"),
+                 new PartnerContactEntry("ADD", null, "EMAIL", "IT-Contact b@example.com"),
+                 new PartnerContactEntry("ADD", null, "EMAIL", "IT-Contact a@example.com")],
                 [])
 
         when:

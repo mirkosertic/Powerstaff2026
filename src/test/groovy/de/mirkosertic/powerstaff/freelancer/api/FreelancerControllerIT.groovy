@@ -1,7 +1,6 @@
 package de.mirkosertic.powerstaff.freelancer.api
 
 import de.mirkosertic.powerstaff.AbstractContainerBaseIT
-import de.mirkosertic.powerstaff.freelancer.command.DuplicateTagException
 import de.mirkosertic.powerstaff.freelancer.command.Freelancer
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerHasPositionsException
@@ -13,7 +12,6 @@ import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.OptimisticLockingFailureException
-import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -30,7 +28,6 @@ import static org.mockito.Mockito.when
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie
@@ -88,7 +85,8 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
         when(commandService.findById(42L)).thenReturn(Optional.of(testFreelancer))
         when(commandService.findById(-999L)).thenReturn(Optional.empty())
         when(commandService.save(any())).thenReturn(testFreelancer)
-        when(commandService.save(any(), any(), any())).thenReturn(testFreelancer)
+        // Unified Save mit 4 Parametern: freelancer, contactChanges, historyChanges, tagChanges
+        when(commandService.save(any(), any(), any(), any())).thenReturn(testFreelancer)
 
         when(queryService.findFirst()).thenReturn(Optional.of(detailView))
         when(queryService.findLast()).thenReturn(Optional.of(detailView))
@@ -184,10 +182,27 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
     }
 
     // -------------------------------------------------------------------------
-    // Save
+    // Save (Unified Save mit Delta-Commands)
     // -------------------------------------------------------------------------
 
-    def "POST /freelancer/save ohne Kontakte und Historie leitet auf Freelancer-Formular weiter (302)"() {
+    def "POST /freelancer/save mit Kontakt- und Tag-Delta leitet auf Freelancer-Formular weiter (302)"() {
+        when:
+        def result = mockMvc.perform(
+                post("/freelancer/save")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("id", "42")
+                        .param("dbVersion", "0")
+                        .param("name1", "Mustermann")
+                        .param("contactsJson", '[{"op":"ADD","id":null,"type":"EMAIL","value":"test@example.com"}]')
+                        .param("historyJson", "[]")
+                        .param("tagsJson", '[{"op":"ADD","tagId":1}]'))
+
+        then:
+        result.andExpect(status().is3xxRedirection())
+    }
+
+    def "POST /freelancer/save ohne Delta-Parameter leitet auf Freelancer-Formular weiter (302)"() {
         when:
         def result = mockMvc.perform(
                 post("/freelancer/save")
@@ -205,7 +220,7 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
 
     def "POST /freelancer/save bei OptimisticLockingFailureException gibt 409 JSON zurueck"() {
         given:
-        when(commandService.save(any(), any(), any())).thenThrow(new OptimisticLockingFailureException("conflict"))
+        when(commandService.save(any(), any(), any(), any())).thenThrow(new OptimisticLockingFailureException("conflict"))
 
         when:
         def result = mockMvc.perform(
@@ -270,51 +285,8 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
     }
 
     // -------------------------------------------------------------------------
-    // Tag-Verwaltung
+    // Verfuegbare Tags (GET-Endpoint bleibt erhalten)
     // -------------------------------------------------------------------------
-
-    def "POST /freelancer/{id}/tags fuegt Tag hinzu und liefert 200 JSON"() {
-        when:
-        def result = mockMvc.perform(
-                post("/freelancer/42/tags")
-                        .with(csrf())
-                        .with(user("testuser"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content('{"tagId": 5}'))
-
-        then:
-        result.andExpect(status().isOk())
-              .andExpect(jsonPath('$.ok').value(true))
-    }
-
-    def "POST /freelancer/{id}/tags bei DuplicateTagException gibt 409 JSON zurueck"() {
-        given:
-        doThrow(new DuplicateTagException(42L, 5L)).when(tagCommandService).addTag(42L, 5L)
-
-        when:
-        def result = mockMvc.perform(
-                post("/freelancer/42/tags")
-                        .with(csrf())
-                        .with(user("testuser"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content('{"tagId": 5}'))
-
-        then:
-        result.andExpect(status().isConflict())
-              .andExpect(jsonPath('$.duplicate').value(true))
-    }
-
-    def "DELETE /freelancer/{id}/tags/{tagId} entfernt Tag und liefert 200 JSON"() {
-        when:
-        def result = mockMvc.perform(
-                delete("/freelancer/42/tags/10")
-                        .with(csrf())
-                        .with(user("testuser")))
-
-        then:
-        result.andExpect(status().isOk())
-              .andExpect(jsonPath('$.ok').value(true))
-    }
 
     def "GET /freelancer/{id}/available-tags/{type} liefert verfuegbare Tags als JSON"() {
         when:

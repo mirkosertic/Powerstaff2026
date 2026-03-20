@@ -6,6 +6,7 @@ import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerContactEntry
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerHasPositionsException
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerHistoryEntry
+import de.mirkosertic.powerstaff.freelancer.command.FreelancerTagEntry
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.simple.JdbcClient
@@ -34,11 +35,11 @@ class FreelancerCommandServiceIT extends AbstractContainerBaseIT {
 
     def "Unified Save speichert Stammdaten, Kontakte und Historie transaktional"() {
         given:
-        def contacts = [new FreelancerContactEntry(null, "EMAIL", "it-cmd@example.com")]
-        def history = [new FreelancerHistoryEntry(null, historyTypeId, "IT-Cmd Ersteintrag")]
+        def contacts = [new FreelancerContactEntry("ADD", null, "EMAIL", "it-cmd@example.com")]
+        def history = [new FreelancerHistoryEntry("ADD", null, historyTypeId, "IT-Cmd Ersteintrag")]
 
         when:
-        def saved = commandService.save(newFreelancer("IT-Cmd Unified"), contacts, history)
+        def saved = commandService.save(newFreelancer("IT-Cmd Unified"), contacts, history, [])
 
         then:
         saved.id != null
@@ -54,33 +55,32 @@ class FreelancerCommandServiceIT extends AbstractContainerBaseIT {
         savedHistory == ["IT-Cmd Ersteintrag"]
     }
 
-    def "Unified Save loescht entfernte Kontakte (Replace-Logik)"() {
+    def "Unified Save loescht Kontakt per DELETE-Delta-Command"() {
         given:
-        def freelancer = commandService.save(newFreelancer("IT-Cmd Replace"),
-                [new FreelancerContactEntry(null, "EMAIL", "alt@example.com")], [])
+        def freelancer = commandService.save(newFreelancer("IT-Cmd Delete-Contact"),
+                [new FreelancerContactEntry("ADD", null, "EMAIL", "alt@example.com")], [], [])
         def contactId = jdbcClient.sql("SELECT id FROM freelancer_contact WHERE freelancer_id = :id")
                 .param("id", freelancer.id).query(Long.class).single()
 
         when:
-        commandService.save(freelancer, [], [])
+        commandService.save(freelancer, [new FreelancerContactEntry("DELETE", contactId, null, null)], [], [])
 
         then:
         jdbcClient.sql("SELECT COUNT(*) FROM freelancer_contact WHERE freelancer_id = :id")
                 .param("id", freelancer.id).query(Long.class).single() == 0
     }
 
-    def "Unified Save aktualisiert geaenderte Kontakte und beruehrt unveraenderte nicht"() {
+    def "Unified Save beruehrt unveraenderte Kontakte nicht (kein Delta-Eintrag)"() {
         given:
-        def freelancer = commandService.save(newFreelancer("IT-Cmd Update"),
-                [new FreelancerContactEntry(null, "EMAIL", "alt@example.com")], [])
+        def freelancer = commandService.save(newFreelancer("IT-Cmd No-Touch"),
+                [new FreelancerContactEntry("ADD", null, "EMAIL", "alt@example.com")], [], [])
         def contactId = jdbcClient.sql("SELECT id FROM freelancer_contact WHERE freelancer_id = :id")
                 .param("id", freelancer.id).query(Long.class).single()
         def changedBefore = jdbcClient.sql("SELECT changed_date FROM freelancer_contact WHERE id = :id")
                 .param("id", contactId).query(String.class).single()
 
-        when: "unveraenderten Kontakt speichern"
-        commandService.save(freelancer,
-                [new FreelancerContactEntry(contactId, "EMAIL", "alt@example.com")], [])
+        when: "leere Kontakt-Delta-Liste → kein Eingriff"
+        commandService.save(freelancer, [], [], [])
 
         then: "Audit-Datum bleibt identisch"
         jdbcClient.sql("SELECT changed_date FROM freelancer_contact WHERE id = :id")

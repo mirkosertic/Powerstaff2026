@@ -35,11 +35,11 @@ class PartnerHistoryIT extends AbstractContainerBaseIT {
         jdbcClient.sql("DELETE FROM historytype WHERE description = 'IT-History-Typ'").update()
     }
 
-    def "Historieneintrag anlegen und per findHistoryByPartner lesen"() {
+    def "Historieneintrag per ADD-Delta anlegen und per findHistoryByPartner lesen"() {
         given:
         def partner = partnerService.save(newPartner("IT-History GmbH"),
                 [],
-                [new PartnerHistoryEntry(null, historyTypeId, "IT-History erster Eintrag")])
+                [new PartnerHistoryEntry("ADD", null, historyTypeId, "IT-History erster Eintrag")])
 
         when:
         def list = queryService.findHistoryByPartner(partner.id)
@@ -52,50 +52,31 @@ class PartnerHistoryIT extends AbstractContainerBaseIT {
         list[0].partnerId() == partner.id
     }
 
-    def "Historieneintrag loeschen entfernt den Eintrag"() {
+    def "Historieneintrag per DELETE-Delta loeschen entfernt den Eintrag"() {
         given:
         def partner = partnerService.save(newPartner("IT-History Delete GmbH"),
                 [],
-                [new PartnerHistoryEntry(null, historyTypeId, "IT-History zum Loeschen")])
+                [new PartnerHistoryEntry("ADD", null, historyTypeId, "IT-History zum Loeschen")])
+        def historyId = queryService.findHistoryByPartner(partner.id)[0].id()
 
         when:
-        partnerService.save(partner, [], [])
+        partnerService.save(partner, [], [new PartnerHistoryEntry("DELETE", historyId, null, null)])
 
         then:
         queryService.findHistoryByPartner(partner.id).isEmpty()
     }
 
-    def "Historieneintrag aktualisieren aendert die Beschreibung"() {
-        given:
-        def partner = partnerService.save(newPartner("IT-History Update GmbH"),
-                [],
-                [new PartnerHistoryEntry(null, historyTypeId, "IT-History alter Text")])
-        def historyId = queryService.findHistoryByPartner(partner.id)[0].id()
-
-        when:
-        partnerService.save(partner,
-                [],
-                [new PartnerHistoryEntry(historyId, historyTypeId, "IT-History neuer Text")])
-
-        then:
-        def list = queryService.findHistoryByPartner(partner.id)
-        list.size() == 1
-        list[0].description() == "IT-History neuer Text"
-    }
-
-    def "Historieneintrag unveraendert speichern beruehrt changed_date nicht (Audit Trail)"() {
+    def "leere Delta-Liste beruehrt bestehende Historieneintraege nicht (Audit Trail)"() {
         given:
         def partner = partnerService.save(newPartner("IT-History NoAudit GmbH"),
                 [],
-                [new PartnerHistoryEntry(null, historyTypeId, "IT-History unveraenderter Text")])
+                [new PartnerHistoryEntry("ADD", null, historyTypeId, "IT-History unveraenderter Text")])
         def historyId = queryService.findHistoryByPartner(partner.id)[0].id()
         def changedDateBefore = jdbcClient.sql("SELECT changed_date FROM partner_history WHERE id = :id")
                 .param("id", historyId).query(String.class).single()
 
-        when:
-        partnerService.save(partner,
-                [],
-                [new PartnerHistoryEntry(historyId, historyTypeId, "IT-History unveraenderter Text")])
+        when: "leere Delta-Liste → kein Eingriff"
+        partnerService.save(partner, [], [])
 
         then:
         def changedDateAfter = jdbcClient.sql("SELECT changed_date FROM partner_history WHERE id = :id")

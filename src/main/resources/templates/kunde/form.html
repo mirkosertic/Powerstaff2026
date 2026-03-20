@@ -440,7 +440,115 @@
   <script th:inline="javascript">
     var kundeId = /*[[${kunde.id}]]*/ null;
 
-    // ---- Save with Unified Save + optimistic locking ----
+    // ---- Delta-Tracking: Contacts ----
+    var contactChanges = [];
+    var _localContactId = 0;
+
+    function renderContactsJson() {
+      document.getElementById('contacts-json').value = JSON.stringify(contactChanges);
+    }
+
+    document.getElementById('btn-contact-save')?.addEventListener('click', function() {
+      var type = document.getElementById('contact-type').value;
+      var value = document.getElementById('contact-value').value;
+      if (!value.trim()) return;
+      var localId = --_localContactId;
+      contactChanges.push({op: 'ADD', id: null, _localId: localId, type: type, value: value});
+      renderContactsJson();
+      // DOM sofort aktualisieren
+      var emptyMsg = document.querySelector('#contacts-list .text-muted-block');
+      if (emptyMsg) emptyMsg.remove();
+      var list = document.getElementById('contacts-list');
+      if (list) {
+        var item = document.createElement('div');
+        item.className = 'citem';
+        item.innerHTML =
+          '<span class="cbadge">' + escHtml(type) + '</span>' +
+          '<span class="cval">' + escHtml(value) + '</span>' +
+          '<div class="cacts"><button type="button" class="ibtn del"' +
+          ' data-local-id="' + localId + '" onclick="deleteContact(this)">🗑</button></div>';
+        list.appendChild(item);
+      }
+      closeModal('modal-contact');
+      document.getElementById('contact-value').value = '';
+      var dirty = document.querySelector('ps-dirty-banner');
+      if (dirty) dirty.classList.add('visible');
+    });
+
+    function deleteContact(btn) {
+      var localId = btn.dataset.localId ? parseInt(btn.dataset.localId) : null;
+      var contactId = btn.dataset.contactId ? parseInt(btn.dataset.contactId) : null;
+      if (localId) {
+        contactChanges = contactChanges.filter(function(c) {
+          return !(c.op === 'ADD' && c._localId === localId);
+        });
+      } else if (contactId) {
+        contactChanges.push({op: 'DELETE', id: contactId});
+      }
+      btn.closest('.citem')?.remove();
+      renderContactsJson();
+      var dirty = document.querySelector('ps-dirty-banner');
+      if (dirty) dirty.classList.add('visible');
+    }
+
+    // ---- Delta-Tracking: History ----
+    var historyChanges = [];
+    var _localHistoryId = 0;
+
+    function renderHistoryJson() {
+      document.getElementById('history-json').value = JSON.stringify(historyChanges);
+    }
+
+    document.getElementById('btn-history-save')?.addEventListener('click', function() {
+      var typeId = parseInt(document.getElementById('history-type-id').value);
+      var desc = document.getElementById('history-description').value;
+      if (!desc.trim()) return;
+      var localId = --_localHistoryId;
+      historyChanges.push({op: 'ADD', id: null, _localId: localId, typeId: typeId, description: desc});
+      renderHistoryJson();
+      // DOM sofort aktualisieren
+      var emptyMsg = document.querySelector('#history-list .text-muted');
+      if (emptyMsg) emptyMsg.remove();
+      var list = document.getElementById('history-list');
+      if (list) {
+        var typeSel = document.getElementById('history-type-id');
+        var typeLabel = typeSel && typeSel.options[typeSel.selectedIndex]
+          ? typeSel.options[typeSel.selectedIndex].text : 'Typ ' + typeId;
+        var div = document.createElement('div');
+        div.className = 'hitem';
+        div.innerHTML =
+          '<div class="hitem-hd">' +
+          '<span class="hbadge">' + escHtml(typeLabel) + '</span>' +
+          '<span class="hmeta">Neu – noch nicht gespeichert</span>' +
+          '<div class="hacts"><button type="button" class="ibtn del"' +
+          ' data-local-id="' + localId + '" onclick="deleteHistoryEntry(this)">🗑</button></div>' +
+          '</div>' +
+          '<div class="hbody">' + escHtml(desc) + '</div>';
+        list.appendChild(div);
+      }
+      closeModal('modal-history');
+      document.getElementById('history-description').value = '';
+      var dirty = document.querySelector('ps-dirty-banner');
+      if (dirty) dirty.classList.add('visible');
+    });
+
+    function deleteHistoryEntry(btn) {
+      var localId = btn.dataset.localId ? parseInt(btn.dataset.localId) : null;
+      var historyId = btn.dataset.historyId ? parseInt(btn.dataset.historyId) : null;
+      if (localId) {
+        historyChanges = historyChanges.filter(function(h) {
+          return !(h.op === 'ADD' && h._localId === localId);
+        });
+      } else if (historyId) {
+        historyChanges.push({op: 'DELETE', id: historyId});
+      }
+      btn.closest('.hitem')?.remove();
+      renderHistoryJson();
+      var dirty = document.querySelector('ps-dirty-banner');
+      if (dirty) dirty.classList.add('visible');
+    }
+
+    // ---- Speichern (Unified Save) ----
     document.getElementById('kunde-form')?.addEventListener('submit', function(e) {
       e.preventDefault();
       var form = this;
@@ -456,7 +564,7 @@
         });
     });
 
-    // ---- Delete ----
+    // ---- Löschen ----
     document.getElementById('btn-delete-confirm')?.addEventListener('click', function() {
       if (!kundeId) return;
       apiFetch('/kunde/delete/' + kundeId, { method: 'POST' })
@@ -478,90 +586,6 @@
           }
         });
     });
-
-    // ---- Contacts (inline: saved in contactsJson hidden field) ----
-    var contacts = /*[[${contacts}]]*/ [];
-    function renderContacts() {
-      document.getElementById('contacts-json').value = JSON.stringify(
-        contacts.map(function(c) { return {id: c.id, type: c.type, value: c.value}; })
-      );
-    }
-    renderContacts(); // initialize hidden field with server-rendered contacts
-
-    document.getElementById('btn-contact-save')?.addEventListener('click', function() {
-      var type = document.getElementById('contact-type').value;
-      var value = document.getElementById('contact-value').value;
-      if (!value.trim()) return;
-      contacts.push({id: null, type: type, value: value});
-      renderContacts();
-      closeModal('modal-contact');
-      document.getElementById('contact-value').value = '';
-    });
-
-    function deleteContact(btn) {
-      var contactId = parseInt(btn.dataset.contactId);
-      contacts = contacts.filter(function(c) { return c.id !== contactId; });
-      renderContacts();
-    }
-
-    // ---- History: AJAX für bestehende, lokale Queue für neue Datensätze ----
-    var historyQueue = [];
-    function renderHistoryQueue() {
-      document.getElementById('history-json').value = JSON.stringify(
-        historyQueue.map(function(h) { return {id: null, typeId: h.typeId, description: h.description}; })
-      );
-      var list = document.getElementById('history-list');
-      var queued = list.querySelectorAll('.hitem-queued');
-      queued.forEach(function(el) { el.remove(); });
-      historyQueue.forEach(function(h) {
-        var div = document.createElement('div');
-        div.className = 'hitem hitem-queued';
-        div.innerHTML = '<div class="hitem-hd"><span class="hbadge">Typ ' + h.typeId + '</span><span class="hmeta">Neu – noch nicht gespeichert</span></div><div class="hbody">' + h.description + '</div>';
-        list.appendChild(div);
-      });
-    }
-
-    document.getElementById('btn-history-save')?.addEventListener('click', function() {
-      var editId = document.getElementById('history-edit-id').value;
-      var typeId = parseInt(document.getElementById('history-type-id').value);
-      var desc = document.getElementById('history-description').value;
-      if (!desc.trim()) return;
-      if (!kundeId) {
-        historyQueue.push({typeId: typeId, description: desc});
-        renderHistoryQueue();
-        closeModal('modal-history');
-        document.getElementById('history-description').value = '';
-        document.getElementById('history-edit-id').value = '';
-        return;
-      }
-      var url = editId
-          ? '/kunde/' + kundeId + '/history/' + editId
-          : '/kunde/' + kundeId + '/history';
-      var method = editId ? 'PUT' : 'POST';
-      apiFetch(url, {
-        method: method,
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({typeId: typeId, description: desc})
-      }).then(function() {
-        closeModal('modal-history');
-        document.getElementById('history-description').value = '';
-        document.getElementById('history-edit-id').value = '';
-        location.reload();
-      });
-    });
-
-    function editHistory(btn) {
-      document.getElementById('history-edit-id').value = btn.dataset.historyId;
-      document.getElementById('history-description').value = btn.dataset.desc;
-      document.getElementById('history-type-id').value = btn.dataset.typeId;
-      openModal('modal-history');
-    }
-
-    function deleteHistoryEntry(btn) {
-      if (!kundeId) return;
-      apiFetch('/kunde/' + kundeId + '/history/' + btn.dataset.historyId, { method: 'DELETE' })
-        .then(function() { location.reload(); });
-    }
 
     // ---- QBE-Suche ----
     document.getElementById('search-form')?.addEventListener('submit', function(e) {

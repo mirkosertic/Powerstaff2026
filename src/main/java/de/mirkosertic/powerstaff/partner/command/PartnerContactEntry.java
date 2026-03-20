@@ -1,8 +1,9 @@
 package de.mirkosertic.powerstaff.partner.command;
 
 /**
- * DTO für einen Kontakteintrag im Unified-Save-Request.
- * id == null bedeutet: neuer Eintrag (INSERT); id != null: bestehender Eintrag (UPDATE).
+ * Delta-Command für einen Kontakteintrag im Unified-Save-Request.
+ * op="ADD": id==null, type und value gesetzt → neuer Eintrag.
+ * op="DELETE": id gesetzt → bestehender Eintrag wird gelöscht.
  */
-public record PartnerContactEntry(Long id, String type, String value) {
+public record PartnerContactEntry(String op, Long id, String type, String value) {
 }
