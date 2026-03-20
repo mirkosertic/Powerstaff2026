@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Table("freelancer")
@@ -75,7 +76,7 @@ public class Freelancer {
     private String kontaktart;
 
     @Column("availability_as_date")
-    private LocalDateTime availabilityAsDate;
+    private LocalDate availabilityAsDate;
 
     @Column("salary_long")
     private Long salaryLong;
@@ -181,8 +182,8 @@ public class Freelancer {
     public String getKontaktart() { return kontaktart; }
     public void setKontaktart(String kontaktart) { this.kontaktart = kontaktart; }
 
-    public LocalDateTime getAvailabilityAsDate() { return availabilityAsDate; }
-    public void setAvailabilityAsDate(LocalDateTime availabilityAsDate) { this.availabilityAsDate = availabilityAsDate; }
+    public LocalDate getAvailabilityAsDate() { return availabilityAsDate; }
+    public void setAvailabilityAsDate(LocalDate availabilityAsDate) { this.availabilityAsDate = availabilityAsDate; }
 
     public Long getSalaryLong() { return salaryLong; }
     public void setSalaryLong(Long salaryLong) { this.salaryLong = salaryLong; }
