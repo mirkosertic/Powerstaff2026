@@ -14,6 +14,8 @@ import de.mirkosertic.powerstaff.freelancer.command.FreelancerTagEntry;
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerQueryService;
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerSearchCriteria;
 import de.mirkosertic.powerstaff.freelancer.query.TagInfo;
+import de.mirkosertic.powerstaff.project.command.FreelancerAlreadyAssignedException;
+import de.mirkosertic.powerstaff.project.command.ProjectPositionCommandService;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
 import de.mirkosertic.powerstaff.project.query.ProjectQueryService;
 import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo;
@@ -55,6 +57,7 @@ public class FreelancerController {
     private final HistoryTypeQueryService historyTypeQueryService;
     private final RememberedProjectService rememberedProjectService;
     private final ProjectQueryService projectQueryService;
+    private final ProjectPositionCommandService positionCommandService;
     private final ObjectMapper objectMapper;
 
     public FreelancerController(FreelancerCommandService commandService,
@@ -63,6 +66,7 @@ public class FreelancerController {
                                 HistoryTypeQueryService historyTypeQueryService,
                                 RememberedProjectService rememberedProjectService,
                                 ProjectQueryService projectQueryService,
+                                ProjectPositionCommandService positionCommandService,
                                 ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
@@ -70,6 +74,7 @@ public class FreelancerController {
         this.historyTypeQueryService = historyTypeQueryService;
         this.rememberedProjectService = rememberedProjectService;
         this.projectQueryService = projectQueryService;
+        this.positionCommandService = positionCommandService;
         this.objectMapper = objectMapper;
     }
 
@@ -212,6 +217,27 @@ public class FreelancerController {
         } catch (FreelancerHasPositionsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("blocked", true, "projectIds", e.getProjectIds()));
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Zum gemerkten Projekt zuordnen
+    // -------------------------------------------------------------------------
+
+    @PostMapping("/{id}/assign-to-remembered-project")
+    @ResponseBody
+    public ResponseEntity<?> assignToRememberedProject(@PathVariable long id, Principal principal) {
+        var projectId = rememberedProjectService.get(principal.getName());
+        if (projectId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("noProject", true));
+        }
+        try {
+            positionCommandService.assignFreelancerToProject(id, projectId.get(), null, null, null);
+            return ResponseEntity.ok(Map.of("projectId", projectId.get()));
+        } catch (FreelancerAlreadyAssignedException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("alreadyAssigned", true));
         }
     }
 

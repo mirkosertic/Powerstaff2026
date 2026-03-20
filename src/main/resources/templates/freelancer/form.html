@@ -76,6 +76,18 @@
       ✕ &nbsp;Beim Speichern ist ein technischer Fehler aufgetreten. Bitte erneut versuchen.
     </div>
 
+    <!-- Zum gemerkten Projekt zuordnen -->
+    <div class="banner banner-info" id="banner-assign-project"
+         th:if="${freelancer.id != null and rememberedProject != null}">
+      📌 Gemerktes Projekt: <strong th:text="${rememberedProject.projectNumber}"></strong>
+      – <span th:text="${rememberedProject.shortDescription}"></span>
+      &nbsp;
+      <button type="button" class="btn btn-sm btn-ghost" onclick="assignToRememberedProject()">
+        Freiberufler diesem Projekt zuordnen
+      </button>
+      <span class="text-muted hidden" id="assign-already-msg">– Bereits zugeordnet</span>
+    </div>
+
     <!-- Hauptformular -->
     <form id="freelancer-form" th:action="@{/freelancer/save}" method="post">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -866,6 +878,27 @@
           document.getElementById('search-results').innerHTML = html;
         });
     });
+
+    // ---- Zum gemerkten Projekt zuordnen ----
+    function assignToRememberedProject() {
+      if (!freelancerId) return;
+      apiFetch('/freelancer/' + freelancerId + '/assign-to-remembered-project', { method: 'POST' })
+        .then(function(r) {
+          if (r.status === 409) {
+            var msg = document.getElementById('assign-already-msg');
+            if (msg) msg.classList.remove('hidden');
+            return;
+          }
+          if (r.ok) {
+            var banner = document.getElementById('banner-assign-project');
+            if (banner) {
+              banner.innerHTML = '✓ &nbsp;Freiberufler wurde dem gemerkten Projekt zugeordnet.';
+              banner.classList.remove('banner-info');
+              banner.classList.add('banner-success');
+            }
+          }
+        });
+    }
 
     // bfcache handler
     window.addEventListener('pageshow', function(e) {

@@ -16,8 +16,8 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
 - [x] Das gemeerkte Projekt wird auf der Freiberufler, Kunden, Partner und Profilsuche Seite nicht angezeigt,
   dafür abber auf de Projektseite selber, wo es nicht hingehört und redundant ist, da es immer identisch mit dem
   aktuellen Projekt ist.
-- [ ] Auf der Projektseite fehlt die Zuordnungsmöglichkeit eines Freiberuflers über den Code.
-- [ ] Auf der Freiberufler-Seite fehlt ein Button für die Zuordnung des Freiberuflers zum aktuell gemerkten Projekt, falls vorhanden.
+- [x] Auf der Projektseite fehlt die Zuordnungsmöglichkeit eines Freiberuflers über den Code.
+- [x] Auf der Freiberufler-Seite fehlt ein Button für die Zuordnung des Freiberuflers zum aktuell gemerkten Projekt, falls vorhanden.
 - [x] Das gemerkte Projekt wird zu schmal in der Navbar engezeigt. Es könnte größer sein.
   Die Audit-Informationen und das ggf. gemerkte Projekt können sich den Platz teilen, wobei das gemerkte
   Projekt gerne mehr Platz bekommen darf, die Audit-Informationen müssen aber jederzeit sichtbar sein.

@@ -1,5 +1,7 @@
 package de.mirkosertic.powerstaff.project.api;
 
+import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService;
+import de.mirkosertic.powerstaff.project.command.FreelancerAlreadyAssignedException;
 import de.mirkosertic.powerstaff.project.command.BothFKsException;
 import de.mirkosertic.powerstaff.project.command.Project;
 import de.mirkosertic.powerstaff.project.command.ProjectCommandService;
@@ -46,6 +48,7 @@ public class ProjectController {
     private final ProjectPositionCommandService positionCommandService;
     private final ProjectPositionStatusQueryService statusQueryService;
     private final RememberedProjectService rememberedProjectService;
+    private final FreelancerCommandService freelancerCommandService;
 
     public ProjectController(ProjectCommandService commandService,
                              ProjectQueryService queryService,
@@ -53,7 +56,8 @@ public class ProjectController {
                              ProjectPositionQueryService positionQueryService,
                              ProjectPositionCommandService positionCommandService,
                              ProjectPositionStatusQueryService statusQueryService,
-                             RememberedProjectService rememberedProjectService) {
+                             RememberedProjectService rememberedProjectService,
+                             FreelancerCommandService freelancerCommandService) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.historyQueryService = historyQueryService;
@@ -61,6 +65,7 @@ public class ProjectController {
         this.positionCommandService = positionCommandService;
         this.statusQueryService = statusQueryService;
         this.rememberedProjectService = rememberedProjectService;
+        this.freelancerCommandService = freelancerCommandService;
     }
 
     // -------------------------------------------------------------------------
@@ -272,6 +277,30 @@ public class ProjectController {
                                             @PathVariable long posId) {
         positionCommandService.delete(posId);
         return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));
+    }
+
+    record AssignByCodeRequest(String code) {}
+
+    @PostMapping("/{projectId}/positions/assign-by-code")
+    @ResponseBody
+    public ResponseEntity<?> assignByCode(@PathVariable long projectId,
+                                          @RequestBody AssignByCodeRequest request) {
+        if (request.code() == null || request.code().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "code required"));
+        }
+        var lookup = freelancerCommandService.findByCode(request.code().trim());
+        if (lookup.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("notFound", true));
+        }
+        try {
+            positionCommandService.assignFreelancerToProject(
+                    lookup.get().id(), projectId, null, null, null);
+            return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));
+        } catch (FreelancerAlreadyAssignedException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("alreadyAssigned", true));
+        }
     }
 
     private String buildSearchMoreUrl(ProjectSearchCriteria c, int offset) {

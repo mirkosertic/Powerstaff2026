@@ -271,6 +271,10 @@
          class="text-muted">
         Keine Freiberufler zugeordnet.
       </p>
+      <div class="list-hd" th:if="${project.id != null}">
+        <button type="button" class="btn btn-sm btn-ghost"
+                onclick="openModal('modal-assign-by-code')">＋ Freiberufler über Code zuordnen</button>
+      </div>
       </div>
     </div>
 
@@ -428,6 +432,32 @@
     </div>
   </div>
 
+  <!-- Freiberufler über Code zuordnen -->
+  <div th:replace="~{fragments/modal :: modal(
+      'modal-assign-by-code',
+      'Freiberufler über Code zuordnen',
+      ~{::div#modal-assign-by-code-body},
+      ~{::div#modal-assign-by-code-footer})}">
+  </div>
+  <div class="hidden">
+    <div id="modal-assign-by-code-body">
+      <div class="fg">
+        <label for="assign-code-input">Kodierung</label>
+        <input type="text" id="assign-code-input" placeholder="z.B. MK-2026" autocomplete="off" maxlength="20"/>
+      </div>
+      <p class="text-muted hidden" id="assign-code-not-found">
+        ✕ Kein Freiberufler mit dieser Kodierung gefunden.
+      </p>
+      <p class="text-muted hidden" id="assign-code-already-assigned">
+        ✕ Dieser Freiberufler ist dem Projekt bereits zugeordnet.
+      </p>
+    </div>
+    <div id="modal-assign-by-code-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-assign-by-code')">Abbrechen</button>
+      <button type="button" class="btn btn-pri" id="btn-assign-by-code">Zuordnen</button>
+    </div>
+  </div>
+
   <!-- Kontakthistorie-Modal (Neuanlage + Bearbeitung) -->
   <div th:replace="~{fragments/modal :: modal(
       'modal-history',
@@ -534,6 +564,28 @@
     await apiFetch(`/project/${PROJECT_ID}/positions/${deletePosId}/delete`, { method: 'POST' });
     closeModal('modal-delete-position');
     location.reload();
+  });
+
+  // ---- Freiberufler über Code zuordnen ----
+  document.getElementById('btn-assign-by-code')?.addEventListener('click', async () => {
+    const code = document.getElementById('assign-code-input').value.trim();
+    document.getElementById('assign-code-not-found').classList.add('hidden');
+    document.getElementById('assign-code-already-assigned').classList.add('hidden');
+    if (!code) return;
+    const resp = await apiFetch(`/project/${PROJECT_ID}/positions/assign-by-code`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    });
+    if (resp.ok) {
+      closeModal('modal-assign-by-code');
+      document.getElementById('assign-code-input').value = '';
+      location.reload();
+    } else if (resp.status === 404) {
+      document.getElementById('assign-code-not-found').classList.remove('hidden');
+    } else if (resp.status === 409) {
+      document.getElementById('assign-code-already-assigned').classList.remove('hidden');
+    }
   });
 
   // ---- Kontakthistorie ----
