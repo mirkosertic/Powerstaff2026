@@ -11,6 +11,12 @@
     <button class="sidebar-toggle-mobile btn btn-ghost btn-sm"
             onclick="openSidebar()" title="Chat-Verlauf">☰</button>
 
+    <!-- Gemerktes Projekt -->
+    <div id="tb-project" th:if="${rememberedProject != null}">
+      📌 <strong th:text="${rememberedProject.projectNumber}"></strong>
+      – <span th:text="${rememberedProject.shortDescription}"></span>
+    </div>
+
     <!-- Aktionen -->
     <div id="tb-actions">
       <form th:action="@{/profilesearch/chat/new}" method="post" class="inline">

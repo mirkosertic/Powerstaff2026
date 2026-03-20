@@ -6,19 +6,19 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
   loadAvailableTags http://localhost:8080/freelancer/1:914
   <anonymous> http://localhost:8080/freelancer/1:991
   <anonymous> http://localhost:8080/freelancer/1:990
-- [ ] Im Prototypen im Verzeichnis "prototype/freiberufler.html" haben die DSVO oder Kontaktsperre
+- [x] Im Prototypen im Verzeichnis "prototype/freiberufler.html" haben die DSVO oder Kontaktsperre
   Checkbox tatsächlich auch eine sichtbare Checkbox. Die entsprechenden Checkboen
   in der Implementierung sind nicht sichtbar. Bitte passe die Darstellung für Checkboxen
   der Implementierung dem Prototypen an.
-- [ ] Die Audit-Info wird jetzt in der Navbar als auch unten auf der Seite in
+- [x] Die Audit-Info wird jetzt in der Navbar als auch unten auf der Seite in
   allen Formularen angezeigt. Das ist redundant; sie soll nur in der Navbar angezeigt werden, der untere
   Block auf den Seiten kann also entfernt werden.
-- [ ] Das gemeerkte Projekt wird auf der Freiberufler, Kunden, Partner und Profilsuche Seite nicht angezeigt,
+- [x] Das gemeerkte Projekt wird auf der Freiberufler, Kunden, Partner und Profilsuche Seite nicht angezeigt,
   dafür abber auf de Projektseite selber, wo es nicht hingehört und redundant ist, da es immer identisch mit dem
   aktuellen Projekt ist.
 - [ ] Auf der Projektseite fehlt die Zuordnungsmöglichkeit eines Freiberuflers über den Code.
 - [ ] Auf der Freiberufler-Seite fehlt ein Button für die Zuordnung des Freiberuflers zum aktuell gemerkten Projekt, falls vorhanden.
-- [ ] Das gemerkte Projekt wird zu schmal in der Navbar engezeigt. Es könnte größer sein.
+- [x] Das gemerkte Projekt wird zu schmal in der Navbar engezeigt. Es könnte größer sein.
   Die Audit-Informationen und das ggf. gemerkte Projekt können sich den Platz teilen, wobei das gemerkte
   Projekt gerne mehr Platz bekommen darf, die Audit-Informationen müssen aber jederzeit sichtbar sein.
 - [x] Für Partner und Kunden gibt es keine Kontaktmöglichkeiten und keine Kontakthistorie. Das ist falsch.

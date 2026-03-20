@@ -173,13 +173,13 @@
   user-select: none;
 }
 
-/* Checkbox verstecken – die Pill selbst ist die visuelle Darstellung */
+/* Checkbox sichtbar – als Teil der Pill anzeigen */
 .cbfield input[type="checkbox"] {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
+  width: 14px;
+  height: 14px;
+  accent-color: var(--pri);
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .cbfield:hover {

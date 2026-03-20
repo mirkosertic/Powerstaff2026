@@ -7,6 +7,8 @@ import de.mirkosertic.powerstaff.profilesearch.query.ChatListView;
 import de.mirkosertic.powerstaff.profilesearch.query.MessageView;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
+import de.mirkosertic.powerstaff.project.query.ProjectQueryService;
+import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -35,15 +37,18 @@ public class ProfileSearchController {
     private final ProfileSearchQueryService queryService;
     private final LlmService llmService;
     private final RememberedProjectService rememberedProjectService;
+    private final ProjectQueryService projectQueryService;
 
     public ProfileSearchController(ProfileSearchCommandService commandService,
                                    ProfileSearchQueryService queryService,
                                    LlmService llmService,
-                                   RememberedProjectService rememberedProjectService) {
+                                   RememberedProjectService rememberedProjectService,
+                                   ProjectQueryService projectQueryService) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.llmService = llmService;
         this.rememberedProjectService = rememberedProjectService;
+        this.projectQueryService = projectQueryService;
     }
 
     @GetMapping
@@ -71,6 +76,7 @@ public class ProfileSearchController {
         model.addAttribute("sidebar", sidebar);
         model.addAttribute("totalChats", totalChats);
         model.addAttribute("pageSize", PAGE_SIZE);
+        model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
         return "profilesearch/form";
     }
 
@@ -131,6 +137,14 @@ public class ProfileSearchController {
         var saved = commandService.addMessage(chatId, "assistant", assistantReply);
 
         return new SendResponse(saved.getId(), "assistant", assistantReply);
+    }
+
+    private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
+        if (principal == null) return null;
+        return rememberedProjectService.get(principal.getName())
+                .flatMap(projectQueryService::findById)
+                .map(p -> new RememberedProjectInfo(p.projectNumber(), p.descriptionShort()))
+                .orElse(null);
     }
 
     @GetMapping("/sidebar-more")

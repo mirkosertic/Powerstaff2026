@@ -179,9 +179,10 @@
   text-align: center;
 }
 
-/* Audit-Info – wächst flexibel */
+/* Audit-Info – immer sichtbar, minimale Breite */
 #tb-audit {
   flex: 1;
+  min-width: 0;
   padding: 0 14px;
   font-size: .75rem;
   color: var(--text-3);
@@ -192,6 +193,21 @@
 #tb-audit strong {
   color: var(--text-2);
   font-weight: 600;
+}
+
+/* Gemerktes Projekt – bekommt mehr Platz als Audit-Info */
+#tb-project {
+  flex: 2;
+  min-width: 0;
+  padding: 4px 14px;
+  font-size: .8rem;
+  color: var(--text-2);
+  background: var(--pri-l);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Aktionen – rechter Rand */

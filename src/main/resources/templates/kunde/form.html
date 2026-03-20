@@ -14,7 +14,7 @@
       @{/kunde/new},
       'kunde-form',
       ${kunde.id != null} ? 'modal-delete' : null,
-      null,
+      ${rememberedProject},
       ${kunde.id != null}
         ? 'Erfasst: ' + ${#temporals.format(kunde.creationDate,'dd.MM.yyyy')} + ' ' + ${kunde.creationUser} + ' · Geändert: ' + ${#temporals.format(kunde.changedDate,'dd.MM.yyyy')} + ' ' + ${kunde.changedUser}
         : 'Neu, noch nicht gespeichert',
@@ -164,22 +164,6 @@
             <input type="text" name="kreditorNr" th:value="${kunde.kreditorNr}"/>
           </div>
         </div>
-        </div>
-      </div>
-
-      <!-- Audit-Info -->
-      <div class="fcard col-wide" th:if="${kunde.id != null}">
-        <div class="fcard-hd" onclick="toggleCard('fcard-audit')">
-          <span class="fcard-title">Audit-Info</span>
-          <span class="fcard-chv open">▾</span>
-        </div>
-        <div class="fcard-body" id="fcard-audit">
-        <p class="subsection-label">Erfasst:
-          <span th:text="${#temporals.format(kunde.creationDate,'dd.MM.yyyy HH:mm')}"></span>
-          von <span th:text="${kunde.creationUser}"></span></p>
-        <p class="subsection-label">Geändert:
-          <span th:text="${#temporals.format(kunde.changedDate,'dd.MM.yyyy HH:mm')}"></span>
-          von <span th:text="${kunde.changedUser}"></span></p>
         </div>
       </div>
 

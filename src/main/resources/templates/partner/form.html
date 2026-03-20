@@ -14,7 +14,7 @@
       @{/partner/new},
       'partner-form',
       ${partner.id != null} ? 'modal-delete' : null,
-      null,
+      ${rememberedProject},
       ${partner.id != null}
         ? 'Erfasst: ' + ${#temporals.format(partner.creationDate,'dd.MM.yyyy')} + ' ' + ${partner.creationUser} + ' · Geändert: ' + ${#temporals.format(partner.changedDate,'dd.MM.yyyy')} + ' ' + ${partner.changedUser}
         : 'Neu, noch nicht gespeichert',
@@ -154,20 +154,6 @@
         <div class="fcard-body" id="fcard-kommentar">
         <textarea name="comments" rows="5" th:text="${partner.comments}"
                   placeholder="Freie Notizen zum Partner..."></textarea>
-        </div>
-      </div>
-
-      <!-- Audit-Info -->
-      <div class="fcard col-wide" th:if="${partner.id != null}">
-        <div class="fcard-hd" onclick="toggleCard('fcard-audit')">
-          <span class="fcard-title">Audit-Info</span>
-          <span class="fcard-chv open">▾</span>
-        </div>
-        <div class="fcard-body" id="fcard-audit">
-        <p class="subsection-label">Erfasst: <span th:text="${#temporals.format(partner.creationDate,'dd.MM.yyyy HH:mm')}"></span>
-          von <span th:text="${partner.creationUser}"></span></p>
-        <p class="subsection-label">Geändert: <span th:text="${#temporals.format(partner.changedDate,'dd.MM.yyyy HH:mm')}"></span>
-          von <span th:text="${partner.changedUser}"></span></p>
         </div>
       </div>
 

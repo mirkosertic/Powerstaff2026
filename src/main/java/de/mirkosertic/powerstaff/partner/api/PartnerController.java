@@ -13,6 +13,9 @@ import de.mirkosertic.powerstaff.partner.command.PartnerHasProjectsException;
 import de.mirkosertic.powerstaff.partner.query.PartnerFreelancerView;
 import de.mirkosertic.powerstaff.partner.query.PartnerQueryService;
 import de.mirkosertic.powerstaff.partner.query.PartnerSearchCriteria;
+import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
+import de.mirkosertic.powerstaff.project.query.ProjectQueryService;
+import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -48,17 +52,23 @@ public class PartnerController {
     private final PartnerQueryService queryService;
     private final FreelancerCommandService freelancerCommandService;
     private final HistoryTypeQueryService historyTypeQueryService;
+    private final RememberedProjectService rememberedProjectService;
+    private final ProjectQueryService projectQueryService;
     private final ObjectMapper objectMapper;
 
     public PartnerController(PartnerCommandService commandService,
                              PartnerQueryService queryService,
                              FreelancerCommandService freelancerCommandService,
                              HistoryTypeQueryService historyTypeQueryService,
+                             RememberedProjectService rememberedProjectService,
+                             ProjectQueryService projectQueryService,
                              ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.freelancerCommandService = freelancerCommandService;
         this.historyTypeQueryService = historyTypeQueryService;
+        this.rememberedProjectService = rememberedProjectService;
+        this.projectQueryService = projectQueryService;
         this.objectMapper = objectMapper;
     }
 
@@ -109,7 +119,7 @@ public class PartnerController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/{id}")
-    public String show(@PathVariable long id, HttpServletResponse response, Model model) {
+    public String show(@PathVariable long id, HttpServletResponse response, Model model, Principal principal) {
         var partner = commandService.findById(id).orElseThrow();
         var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, String.valueOf(id));
         cookie.setPath("/partner");
@@ -121,12 +131,13 @@ public class PartnerController {
         model.addAttribute("freelancers", queryService.findFreelancersByPartner(id));
         model.addAttribute("projects", queryService.findProjectsByPartner(id));
         model.addAttribute("historyTypes", historyTypeQueryService.findAll());
+        model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
         model.addAttribute("activePage", "partner");
         return "partner/form";
     }
 
     @GetMapping("/new")
-    public String newForm(HttpServletResponse response, Model model) {
+    public String newForm(HttpServletResponse response, Model model, Principal principal) {
         var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, "");
         cookie.setPath("/partner");
         cookie.setMaxAge(0); // delete
@@ -137,8 +148,17 @@ public class PartnerController {
         model.addAttribute("freelancers", List.of());
         model.addAttribute("projects", List.of());
         model.addAttribute("historyTypes", historyTypeQueryService.findAll());
+        model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
         model.addAttribute("activePage", "partner");
         return "partner/form";
+    }
+
+    private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
+        if (principal == null) return null;
+        return rememberedProjectService.get(principal.getName())
+                .flatMap(projectQueryService::findById)
+                .map(p -> new RememberedProjectInfo(p.projectNumber(), p.descriptionShort()))
+                .orElse(null);
     }
 
     // -------------------------------------------------------------------------

@@ -10,6 +10,9 @@ import de.mirkosertic.powerstaff.customer.command.KundeHistoryEntry;
 import de.mirkosertic.powerstaff.customer.command.KundeHasProjectsException;
 import de.mirkosertic.powerstaff.customer.query.KundeQueryService;
 import de.mirkosertic.powerstaff.customer.query.KundeSearchCriteria;
+import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
+import de.mirkosertic.powerstaff.project.query.ProjectQueryService;
+import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -43,15 +47,21 @@ public class KundeController {
     private final KundeCommandService commandService;
     private final KundeQueryService queryService;
     private final HistoryTypeQueryService historyTypeQueryService;
+    private final RememberedProjectService rememberedProjectService;
+    private final ProjectQueryService projectQueryService;
     private final ObjectMapper objectMapper;
 
     public KundeController(KundeCommandService commandService,
                            KundeQueryService queryService,
                            HistoryTypeQueryService historyTypeQueryService,
+                           RememberedProjectService rememberedProjectService,
+                           ProjectQueryService projectQueryService,
                            ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.historyTypeQueryService = historyTypeQueryService;
+        this.rememberedProjectService = rememberedProjectService;
+        this.projectQueryService = projectQueryService;
         this.objectMapper = objectMapper;
     }
 
@@ -102,27 +112,27 @@ public class KundeController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/{id}")
-    public String show(@PathVariable long id, HttpServletResponse response, Model model) {
+    public String show(@PathVariable long id, HttpServletResponse response, Model model, Principal principal) {
         var kunde = commandService.findById(id).orElseThrow();
         var cookie = new Cookie(COOKIE_LAST_KUNDE_ID, String.valueOf(id));
         cookie.setPath("/kunde");
         cookie.setMaxAge(COOKIE_MAX_AGE);
         response.addCookie(cookie);
-        populateModel(model, kunde, id);
+        populateModel(model, kunde, id, principal);
         return "kunde/form";
     }
 
     @GetMapping("/new")
-    public String newForm(HttpServletResponse response, Model model) {
+    public String newForm(HttpServletResponse response, Model model, Principal principal) {
         var cookie = new Cookie(COOKIE_LAST_KUNDE_ID, "");
         cookie.setPath("/kunde");
         cookie.setMaxAge(0); // löschen
         response.addCookie(cookie);
-        populateModel(model, new Kunde(), null);
+        populateModel(model, new Kunde(), null, principal);
         return "kunde/form";
     }
 
-    private void populateModel(Model model, Kunde kunde, Long kundeId) {
+    private void populateModel(Model model, Kunde kunde, Long kundeId, Principal principal) {
         model.addAttribute("kunde", kunde);
         if (kundeId != null) {
             model.addAttribute("contacts", queryService.findContactsByKundeId(kundeId));
@@ -134,7 +144,16 @@ public class KundeController {
             model.addAttribute("projects", List.of());
         }
         model.addAttribute("historyTypes", historyTypeQueryService.findAll());
+        model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
         model.addAttribute("activePage", "kunde");
+    }
+
+    private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
+        if (principal == null) return null;
+        return rememberedProjectService.get(principal.getName())
+                .flatMap(projectQueryService::findById)
+                .map(p -> new RememberedProjectInfo(p.projectNumber(), p.descriptionShort()))
+                .orElse(null);
     }
 
     // -------------------------------------------------------------------------

@@ -14,7 +14,7 @@
       @{/freelancer/new},
       'freelancer-form',
       ${freelancer.id != null} ? 'modal-delete' : null,
-      null,
+      ${rememberedProject},
       ${freelancer.id != null}
         ? 'Erfasst: ' + ${#temporals.format(freelancer.creationDate,'dd.MM.yyyy')} + ' ' + ${freelancer.creationUser} + ' · Geändert: ' + ${#temporals.format(freelancer.changedDate,'dd.MM.yyyy')} + ' ' + ${freelancer.changedUser}
         : 'Neu, noch nicht gespeichert',
@@ -332,20 +332,6 @@
           <textarea name="skills" rows="5" th:text="${freelancer.skills}"
                     placeholder="Java, Spring Boot, Docker..."></textarea>
         </div>
-        </div>
-      </div>
-
-      <!-- Audit-Info -->
-      <div class="fcard col-wide" th:if="${freelancer.id != null}">
-        <div class="fcard-hd" onclick="toggleCard('fcard-audit')">
-          <span class="fcard-title">Audit-Info</span>
-          <span class="fcard-chv open">▾</span>
-        </div>
-        <div class="fcard-body" id="fcard-audit">
-        <p class="subsection-label">Erfasst: <span th:text="${#temporals.format(freelancer.creationDate,'dd.MM.yyyy HH:mm')}"></span>
-          von <span th:text="${freelancer.creationUser}"></span></p>
-        <p class="subsection-label">Geändert: <span th:text="${#temporals.format(freelancer.changedDate,'dd.MM.yyyy HH:mm')}"></span>
-          von <span th:text="${freelancer.changedUser}"></span></p>
         </div>
       </div>
 

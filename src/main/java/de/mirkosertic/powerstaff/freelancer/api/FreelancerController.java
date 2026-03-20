@@ -14,6 +14,9 @@ import de.mirkosertic.powerstaff.freelancer.command.FreelancerTagEntry;
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerQueryService;
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerSearchCriteria;
 import de.mirkosertic.powerstaff.freelancer.query.TagInfo;
+import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
+import de.mirkosertic.powerstaff.project.query.ProjectQueryService;
+import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.shared.TagType;
 import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService;
 import jakarta.servlet.http.Cookie;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -49,17 +53,23 @@ public class FreelancerController {
     private final FreelancerQueryService queryService;
     private final FreelancerTagCommandService tagCommandService;
     private final HistoryTypeQueryService historyTypeQueryService;
+    private final RememberedProjectService rememberedProjectService;
+    private final ProjectQueryService projectQueryService;
     private final ObjectMapper objectMapper;
 
     public FreelancerController(FreelancerCommandService commandService,
                                 FreelancerQueryService queryService,
                                 FreelancerTagCommandService tagCommandService,
                                 HistoryTypeQueryService historyTypeQueryService,
+                                RememberedProjectService rememberedProjectService,
+                                ProjectQueryService projectQueryService,
                                 ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.tagCommandService = tagCommandService;
         this.historyTypeQueryService = historyTypeQueryService;
+        this.rememberedProjectService = rememberedProjectService;
+        this.projectQueryService = projectQueryService;
         this.objectMapper = objectMapper;
     }
 
@@ -110,27 +120,27 @@ public class FreelancerController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/{id}")
-    public String show(@PathVariable long id, HttpServletResponse response, Model model) {
+    public String show(@PathVariable long id, HttpServletResponse response, Model model, Principal principal) {
         var freelancer = commandService.findById(id).orElseThrow();
         var cookie = new Cookie(COOKIE_LAST_FREELANCER_ID, String.valueOf(id));
         cookie.setPath("/freelancer");
         cookie.setMaxAge(COOKIE_MAX_AGE);
         response.addCookie(cookie);
-        populateModel(model, freelancer, id);
+        populateModel(model, freelancer, id, principal);
         return "freelancer/form";
     }
 
     @GetMapping("/new")
-    public String newForm(HttpServletResponse response, Model model) {
+    public String newForm(HttpServletResponse response, Model model, Principal principal) {
         var cookie = new Cookie(COOKIE_LAST_FREELANCER_ID, "");
         cookie.setPath("/freelancer");
         cookie.setMaxAge(0); // löschen
         response.addCookie(cookie);
-        populateModel(model, new Freelancer(), null);
+        populateModel(model, new Freelancer(), null, principal);
         return "freelancer/form";
     }
 
-    private void populateModel(Model model, Freelancer freelancer, Long freelancerId) {
+    private void populateModel(Model model, Freelancer freelancer, Long freelancerId, Principal principal) {
         model.addAttribute("freelancer", freelancer);
         if (freelancerId != null) {
             model.addAttribute("contacts", queryService.findContactsByFreelancerId(freelancerId));
@@ -143,7 +153,16 @@ public class FreelancerController {
         }
         model.addAttribute("historyTypes", historyTypeQueryService.findAll());
         model.addAttribute("tagTypes", TagType.values());
+        model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
         model.addAttribute("activePage", "freelancer");
+    }
+
+    private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
+        if (principal == null) return null;
+        return rememberedProjectService.get(principal.getName())
+                .flatMap(projectQueryService::findById)
+                .map(p -> new RememberedProjectInfo(p.projectNumber(), p.descriptionShort()))
+                .orElse(null);
     }
 
     // -------------------------------------------------------------------------
