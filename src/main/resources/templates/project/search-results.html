@@ -3,7 +3,7 @@
 <body>
 <div th:fragment="results">
   <p th:if="${#lists.isEmpty(results)}"
-     style="font-size:.82rem;color:var(--text-3);font-style:italic">Keine Treffer.</p>
+     class="text-muted">Keine Treffer.</p>
   <table th:unless="${#lists.isEmpty(results)}" class="data-table">
     <thead>
       <tr>
@@ -18,7 +18,7 @@
     <tbody>
       <tr th:each="r : ${results}"
           th:onclick="|window.location='/project/${r.id()}'|"
-          style="cursor:pointer">
+          class="clickable">
         <td th:text="${r.projectNumber()}"></td>
         <td th:text="${r.descriptionShort()}"></td>
         <td th:text="${r.workplace()}"></td>

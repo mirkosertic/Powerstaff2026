@@ -42,7 +42,7 @@
             <div class="fg"><label>Max. Stundensatz (€)</label><input type="number" name="salaryLongMax"/></div>
             <div class="fg"><label>Max. Tagessatz (€)</label><input type="number" name="salaryPerDayLongMax"/></div>
           </div>
-          <div style="margin-top:12px;display:flex;gap:8px">
+          <div class="btn-row">
             <button type="submit" class="btn btn-pri">🔍 Suchen</button>
             <button type="button" class="btn btn-ghost" onclick="toggleSearchPanel('search-panel')">Abbrechen</button>
           </div>
@@ -115,7 +115,7 @@
           </div>
           <div class="fg">
             <label>PLZ</label>
-            <input type="text" name="plz" th:value="${freelancer.plz}" style="max-width:7rem"/>
+            <input type="text" name="plz" th:value="${freelancer.plz}" class="input-narrow"/>
           </div>
           <div class="fg">
             <label>Ort</label>
@@ -139,8 +139,7 @@
               <a th:href="@{/partner/{id}(id=${freelancer.partnerId})}"
                  th:text="${freelancer.partnerId}">–</a>
             </span>
-            <span th:if="${freelancer.partnerId == null}" class="subsection-label"
-                  style="color:var(--text-3);font-style:italic">Kein Partner</span>
+            <span th:if="${freelancer.partnerId == null}" class="subsection-label text-muted">Kein Partner</span>
           </div>
         </div>
         </div>
@@ -243,7 +242,7 @@
             <input type="date" name="availabilityAsDate"
                    th:value="${freelancer.availabilityAsDate != null} ? ${#temporals.format(freelancer.availabilityAsDate, 'yyyy-MM-dd')} : ''"/>
           </div>
-          <div class="fg" style="padding-top:18px">
+          <div class="fg pt-label">
             <label class="cbfield"
                    id="cb-datenschutz"
                    th:classappend="${freelancer.datenschutz} ? ' on' : ''"
@@ -327,7 +326,7 @@
           </div>
         </div>
 
-        <div class="fg" style="margin-top:1rem">
+        <div class="fg mt-md">
           <label>Skills</label>
           <textarea name="skills" rows="5" th:text="${freelancer.skills}"
                     placeholder="Java, Spring Boot, Docker..."></textarea>
@@ -364,7 +363,7 @@
         <span class="fcard-chv open">▾</span>
       </div>
       <div class="fcard-body" id="fcard-contacts">
-      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
+      <div class="list-hd">
         <button class="btn btn-sm btn-ghost"
                 type="button"
                 th:onclick="'openModal(\'modal-contact\')'">+ Hinzufügen</button>
@@ -389,7 +388,7 @@
           </div>
         </div>
         <p th:if="${contacts.isEmpty()}"
-           style="font-size:.82rem;color:var(--text-3);font-style:italic;margin:4px 6px">
+           class="text-muted-block">
           Noch keine Kontaktmöglichkeiten vorhanden.
         </p>
       </div>
@@ -405,7 +404,7 @@
         <span class="fcard-chv open">▾</span>
       </div>
       <div class="fcard-body" id="fcard-history">
-      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
+      <div class="list-hd">
         <button type="button" class="btn btn-sm btn-ghost"
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
@@ -434,7 +433,7 @@
           <div class="hbody" th:text="${entry.description()}"></div>
         </div>
         <p th:if="${history.isEmpty()}"
-           style="font-size:.82rem;color:var(--text-3);font-style:italic;margin:4px 6px">
+           class="text-muted-block">
           Noch keine Historieneinträge vorhanden.
         </p>
       </div>
@@ -456,7 +455,7 @@
       ~{::div#modal-delete-body},
       ~{::div#modal-delete-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-delete-body">
       <p>Soll dieser Freiberufler wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
     </div>
@@ -473,7 +472,7 @@
       ~{::div#modal-delete-blocked-body},
       ~{::div#modal-delete-blocked-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-delete-blocked-body">
       <p>Der Freiberufler kann nicht gelöscht werden, da noch Projektpositionen zugeordnet sind:</p>
       <ul id="blocked-project-ids"></ul>
@@ -490,7 +489,7 @@
       ~{::div#modal-contact-body},
       ~{::div#modal-contact-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-contact-body">
       <div class="field-grid col-1">
         <label>Typ
@@ -521,7 +520,7 @@
       ~{::div#modal-history-body},
       ~{::div#modal-history-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-history-body">
       <input type="hidden" id="history-edit-id"/>
       <div class="field-grid col-1">
@@ -549,7 +548,7 @@
       ~{::div#modal-conflict-body},
       ~{::div#modal-conflict-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-conflict-body">
       <p>Der Datensatz wurde zwischenzeitlich von einem anderen Benutzer geändert.
          Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>

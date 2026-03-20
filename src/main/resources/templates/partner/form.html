@@ -36,7 +36,7 @@
             <div class="fg"><label>PLZ</label><input type="text" name="plz"/></div>
             <div class="fg"><label>Kommentar</label><input type="text" name="comments"/></div>
           </div>
-          <div style="margin-top:12px;display:flex;gap:8px">
+          <div class="btn-row">
             <button type="submit" class="btn btn-pri">🔍 Suchen</button>
             <button type="button" class="btn btn-ghost" onclick="toggleSearchPanel('search-panel')">Abbrechen</button>
           </div>
@@ -99,7 +99,7 @@
           </div>
           <div class="fg">
             <label>PLZ</label>
-            <input type="text" name="plz" th:value="${partner.plz}" style="max-width:7rem"/>
+            <input type="text" name="plz" th:value="${partner.plz}" class="input-narrow"/>
           </div>
           <div class="fg">
             <label>Ort</label>
@@ -186,7 +186,7 @@
         <span class="fcard-chv open">▾</span>
       </div>
       <div class="fcard-body" id="fcard-contacts">
-      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
+      <div class="list-hd">
         <button class="btn btn-sm btn-ghost"
                 type="button"
                 th:onclick="'openModal(\'modal-contact\')'">+ Hinzufügen</button>
@@ -212,7 +212,7 @@
           </div>
         </div>
         <p th:if="${contacts.isEmpty()}"
-           style="font-size:.82rem;color:var(--text-3);font-style:italic;margin:4px 6px">
+           class="text-muted-block">
           Noch keine Kontaktmöglichkeiten vorhanden.
         </p>
       </div>
@@ -228,9 +228,9 @@
         <span class="fcard-chv open">▾</span>
       </div>
       <div class="fcard-body" id="fcard-freelancers">
-      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem;gap:.5rem">
-        <div style="display:flex;gap:.5rem">
-          <input type="text" id="fl-code-input" placeholder="Code eingeben" style="width:10rem"/>
+      <div class="list-hd">
+        <div class="btn-row-inline">
+          <input type="text" id="fl-code-input" placeholder="Code eingeben" class="input-narrow"/>
           <button type="button" class="btn btn-sm btn-ghost" onclick="assignFreelancer()">Zuordnen</button>
           <a class="btn btn-sm btn-ghost" th:href="@{/freelancer/new}">Neu anlegen</a>
         </div>
@@ -260,7 +260,7 @@
         </tbody>
       </table>
       <p th:if="${freelancers.isEmpty()}"
-         style="font-size:.82rem;color:var(--text-3);font-style:italic">
+         class="text-muted">
         Keine Freiberufler zugeordnet.
       </p>
       </div>
@@ -275,7 +275,7 @@
         <span class="fcard-chv open">▾</span>
       </div>
       <div class="fcard-body" id="fcard-projekte">
-      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
+      <div class="list-hd">
         <a class="btn btn-sm btn-ghost"
            th:if="${partner.id != null}"
            th:href="@{/project/new-from-partner/{id}(id=${partner.id})}">Neues Projekt</a>
@@ -299,7 +299,7 @@
         </tbody>
       </table>
       <p th:if="${projects.isEmpty()}"
-         style="font-size:.82rem;color:var(--text-3);font-style:italic">
+         class="text-muted">
         Keine Projekte vorhanden.
       </p>
       </div>
@@ -314,7 +314,7 @@
         <span class="fcard-chv open">▾</span>
       </div>
       <div class="fcard-body" id="fcard-history">
-      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
+      <div class="list-hd">
         <button type="button" class="btn btn-sm btn-ghost"
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
@@ -343,7 +343,7 @@
           <div class="hbody" th:text="${entry.description}"></div>
         </div>
         <p th:if="${history.isEmpty()}"
-           style="font-size:.82rem;color:var(--text-3);font-style:italic">
+           class="text-muted">
           Keine Historieneinträge vorhanden.
         </p>
       </div>
@@ -365,7 +365,7 @@
       ~{::div#modal-delete-body},
       ~{::div#modal-delete-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-delete-body">
       <p>Soll dieser Partner wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
     </div>
@@ -382,7 +382,7 @@
       ~{::div#modal-contact-body},
       ~{::div#modal-contact-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-contact-body">
       <div class="field-grid col-1">
         <label>Typ
@@ -413,7 +413,7 @@
       ~{::div#modal-history-body},
       ~{::div#modal-history-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-history-body">
       <input type="hidden" id="history-edit-id"/>
       <div class="field-grid col-1">
@@ -441,7 +441,7 @@
       ~{::div#modal-delete-blocked-body},
       ~{::div#modal-delete-blocked-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-delete-blocked-body">
       <p>Der Partner kann nicht gelöscht werden, da noch Projekte zugeordnet sind:</p>
       <ul id="blocked-project-ids"></ul>
@@ -458,7 +458,7 @@
       ~{::div#modal-fl-conflict-body},
       ~{::div#modal-fl-conflict-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-fl-conflict-body">
       <p>Dieser Freiberufler ist bereits dem Partner <strong id="conflict-partner-name"></strong> zugeordnet.
          Soll die Zuordnung überschrieben werden?</p>
@@ -477,7 +477,7 @@
       ~{::div#modal-conflict-body},
       ~{::div#modal-conflict-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-conflict-body">
       <p>Der Datensatz wurde zwischenzeitlich von einem anderen Benutzer geändert.
          Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>

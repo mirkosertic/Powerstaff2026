@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr th:each="r : ${results}" th:onclick="|window.location='/kunde/${r.id}'|" style="cursor:pointer">
+      <tr th:each="r : ${results}" th:onclick="|window.location='/kunde/${r.id}'|" class="clickable">
         <td th:text="${r.company}"></td>
         <td th:text="${r.name1}"></td>
         <td th:text="${r.name2}"></td>

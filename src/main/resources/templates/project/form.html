@@ -36,7 +36,7 @@
             <div class="fg"><label>Laufzeit</label><input type="text" name="duration"/></div>
             <div class="fg"><label>Debitor-Nr.</label><input type="text" name="debitorNr"/></div>
           </div>
-          <div style="margin-top:12px;display:flex;gap:8px">
+          <div class="btn-row">
             <button type="submit" class="btn btn-pri">🔍 Suchen</button>
             <button type="button" class="btn btn-ghost" onclick="toggleSearchPanel('search-panel')">Abbrechen</button>
           </div>
@@ -107,7 +107,7 @@
           </div>
         </div>
         <div class="cbrow">
-          <label class="cbfield" style="margin-top:1.5rem">
+          <label class="cbfield mt-lg">
             <input type="checkbox" name="visibleOnWebSite" value="true"
                    th:checked="${project.visibleOnWebSite}"/>
             Auf Website
@@ -279,7 +279,7 @@
         </tbody>
       </table>
       <p th:if="${positions.isEmpty()}"
-         style="font-size:.82rem;color:var(--text-3);font-style:italic">
+         class="text-muted">
         Keine Freiberufler zugeordnet.
       </p>
       </div>
@@ -294,7 +294,7 @@
         <span class="fcard-chv open">▾</span>
       </div>
       <div class="fcard-body" id="fcard-history">
-      <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.5rem">
+      <div class="list-hd">
         <button type="button" class="btn btn-sm btn-ghost"
                 onclick="openModal('modal-history')">+ Neuer Eintrag</button>
       </div>
@@ -322,7 +322,7 @@
           <div class="hbody" th:text="${entry.description()}"></div>
         </div>
         <p th:if="${history.isEmpty()}"
-           style="font-size:.82rem;color:var(--text-3);font-style:italic">
+           class="text-muted">
           Keine Historieneinträge vorhanden.
         </p>
       </div>
@@ -344,7 +344,7 @@
       ~{::div#modal-delete-body},
       ~{::div#modal-delete-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-delete-body">
       <p>Soll dieses Projekt wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
     </div>
@@ -361,7 +361,7 @@
       ~{::div#modal-conflict-body},
       ~{::div#modal-conflict-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-conflict-body">
       <p>Das Projekt wurde zwischenzeitlich von einem anderen Sachbearbeiter geändert.
          Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>
@@ -379,7 +379,7 @@
       ~{::div#modal-edit-position-body},
       ~{::div#modal-edit-position-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-edit-position-body">
       <input type="hidden" id="edit-pos-id"/>
       <input type="hidden" id="edit-pos-dbversion"/>
@@ -412,7 +412,7 @@
       ~{::div#modal-pos-conflict-body},
       ~{::div#modal-pos-conflict-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-pos-conflict-body">
       <p>Die Zuordnung wurde zwischenzeitlich von einem anderen Sachbearbeiter geändert.</p>
     </div>
@@ -429,7 +429,7 @@
       ~{::div#modal-delete-pos-body},
       ~{::div#modal-delete-pos-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-delete-pos-body">
       <p id="modal-delete-pos-text">Die Zuordnung wird aufgehoben. Sind Sie sicher?</p>
     </div>
@@ -446,7 +446,7 @@
       ~{::div#modal-history-body},
       ~{::div#modal-history-footer})}">
   </div>
-  <div style="display:none">
+  <div class="hidden">
     <div id="modal-history-body">
       <input type="hidden" id="history-entry-id"/>
       <div class="field-grid col-1">

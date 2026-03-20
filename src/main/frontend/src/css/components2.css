@@ -628,3 +628,78 @@
   padding: 9px 13px;
   vertical-align: top;
 }
+
+/* clickable table rows */
+.data-table tbody tr.clickable {
+  cursor: pointer;
+}
+
+/* Empty-State Tabellenzelle */
+.td-empty {
+  text-align: center;
+  padding: 16px;
+  color: var(--text-3);
+}
+
+/* =============================================================================
+   §29 Utility-Klassen – Inline-CSS ablösen
+   ============================================================================= */
+
+/* Schmales Eingabefeld (z.B. PLZ) */
+.input-narrow { max-width: 7rem; }
+
+/* Button-Zeile mit horizontalem Abstand (Formular-Aktionsbereich) */
+.btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Button-Zeile ohne margin-top (z.B. inline in list-hd) */
+.btn-row-inline {
+  display: flex;
+  gap: 8px;
+}
+
+/* List-Section-Header: Label links, Aktion rechts */
+.list-hd {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: .5rem;
+}
+
+/* Muted / Leerstate-Text */
+.text-muted {
+  font-size: .82rem;
+  color: var(--text-3);
+  font-style: italic;
+}
+
+/* Muted inline (margin für Listen-Leerstate) */
+.text-muted-block {
+  font-size: .82rem;
+  color: var(--text-3);
+  font-style: italic;
+  margin: 4px 6px;
+}
+
+/* Flex-Spacer (flexbox: push following items to the right) */
+.flex-spacer { flex: 1; }
+
+/* Padding-top Ausrichtungshilfe (z.B. Checkbox neben Datumfeld) */
+.pt-label { padding-top: 18px; }
+
+/* Margin-top Abstände */
+.mt-md  { margin-top: 1rem; }
+.mt-lg  { margin-top: 1.5rem; }
+
+/* Inline-Form (z.B. Logout-Formular in Navigation) */
+form.inline { display: inline; }
+
+/* Logout-Button (unstyled, inherits nav styling) */
+.btn-logout {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
