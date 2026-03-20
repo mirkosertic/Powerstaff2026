@@ -25,8 +25,8 @@
   <!-- Modul-Label -->
   <div id="tb-module" th:text="${moduleLabel}">Modul</div>
 
-  <!-- Datensatz-Navigation -->
-  <div id="tb-nav">
+  <!-- Datensatz-Navigation (nur wenn Navigation vorhanden) -->
+  <div id="tb-nav" th:if="${firstUrl != null}">
     <a class="tb-nav-btn"
        th:href="${firstUrl}"
        title="Erster">⏮</a>

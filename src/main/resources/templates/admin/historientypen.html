@@ -13,38 +13,43 @@
   <!-- Page Content -->
   <div id="page">
 
-    <div class="fcard">
-      <h2>Historientypen</h2>
+    <div class="fcard col-wide">
+      <div class="fcard-hd">
+        <span class="fcard-title">Historientypen</span>
+      </div>
+      <div class="fcard-body">
+        <div class="tbl-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Bezeichnung</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="type : ${types}">
+                <td th:text="${type.id}"></td>
+                <td th:text="${type.description}"></td>
+                <td>
+                  <button class="ibtn" type="button"
+                          th:attr="data-id=${type.id}, data-description=${type.description}"
+                          data-action="edit-ht">&#9998;</button>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(types)}">
+                <td colspan="3" style="text-align:center;padding:16px;color:var(--text-3)">Keine Einträge vorhanden.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Bezeichnung</th>
-            <th>Aktionen</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="type : ${types}">
-            <td th:text="${type.id}"></td>
-            <td th:text="${type.description}"></td>
-            <td>
-              <button class="ibtn" type="button"
-                      th:attr="data-id=${type.id}, data-description=${type.description}"
-                      data-action="edit-ht">&#9998;</button>
-            </td>
-          </tr>
-          <tr th:if="${#lists.isEmpty(types)}">
-            <td colspan="3" style="text-align:center">Keine Einträge vorhanden.</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div style="margin-top:1rem">
-        <button class="btn btn-add" type="button"
-                onclick="document.getElementById('modal-new-ht').classList.remove('hidden')">
-          &#xFF0B; Neuer Historientyp
-        </button>
+        <div style="margin-top:12px">
+          <button class="btn btn-ghost" type="button"
+                  onclick="openModal('modal-new-ht')">
+            ＋ Neuer Historientyp
+          </button>
+        </div>
       </div>
     </div>
 
@@ -104,12 +109,8 @@
       if (!btn) return;
       document.getElementById('edit-ht-form').action = '/admin/historientypen/' + btn.dataset.id;
       document.getElementById('edit-ht-description').value = btn.dataset.description;
-      document.getElementById('modal-edit-ht').classList.remove('hidden');
+      openModal('modal-edit-ht');
     });
-
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
   </script>
 
 </body>

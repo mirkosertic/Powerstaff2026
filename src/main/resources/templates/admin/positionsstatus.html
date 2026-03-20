@@ -13,51 +13,56 @@
   <!-- Page Content -->
   <div id="page">
 
-    <div class="fcard">
-      <h2>Projektpositions-Status</h2>
+    <div class="fcard col-wide">
+      <div class="fcard-hd">
+        <span class="fcard-title">Projektpositions-Status</span>
+      </div>
+      <div class="fcard-body">
+        <div class="tbl-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Vorschau</th>
+                <th>Bezeichnung</th>
+                <th>Hintergr.-Farbe</th>
+                <th>Textfarbe</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="status : ${statusList}">
+                <td th:text="${status.id}"></td>
+                <td>
+                  <span class="badge-dyn"
+                        th:style="'background:' + ${status.color} + ';color:' + ${status.colorText}"
+                        th:text="${status.description}"></span>
+                </td>
+                <td th:text="${status.description}"></td>
+                <td><code th:text="${status.color}"></code></td>
+                <td><code th:text="${status.colorText}"></code></td>
+                <td>
+                  <button class="ibtn" type="button"
+                          th:attr="data-id=${status.id},
+                                   data-description=${status.description},
+                                   data-color=${status.color},
+                                   data-colortext=${status.colorText}"
+                          data-action="edit-status">&#9998;</button>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(statusList)}">
+                <td colspan="6" style="text-align:center;padding:16px;color:var(--text-3)">Keine Einträge vorhanden.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Vorschau</th>
-            <th>Bezeichnung</th>
-            <th>Hintergr.-Farbe</th>
-            <th>Textfarbe</th>
-            <th>Aktionen</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="status : ${statusList}">
-            <td th:text="${status.id}"></td>
-            <td>
-              <span class="badge-dyn"
-                    th:style="'background:' + ${status.color} + ';color:' + ${status.colorText}"
-                    th:text="${status.description}"></span>
-            </td>
-            <td th:text="${status.description}"></td>
-            <td><code th:text="${status.color}"></code></td>
-            <td><code th:text="${status.colorText}"></code></td>
-            <td>
-              <button class="ibtn" type="button"
-                      th:attr="data-id=${status.id},
-                               data-description=${status.description},
-                               data-color=${status.color},
-                               data-colortext=${status.colorText}"
-                      data-action="edit-status">&#9998;</button>
-            </td>
-          </tr>
-          <tr th:if="${#lists.isEmpty(statusList)}">
-            <td colspan="6" style="text-align:center">Keine Einträge vorhanden.</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div style="margin-top:1rem">
-        <button class="btn btn-add" type="button"
-                onclick="document.getElementById('modal-new-status').classList.remove('hidden')">
-          &#xFF0B; Neuer Status
-        </button>
+        <div style="margin-top:12px">
+          <button class="btn btn-ghost" type="button"
+                  onclick="openModal('modal-new-status')">
+            ＋ Neuer Status
+          </button>
+        </div>
       </div>
     </div>
 
@@ -68,7 +73,7 @@
     <div class="mbox">
       <div class="mhd">
         <h3>Neuen Positionsstatus anlegen</h3>
-        <button class="mx" type="button" onclick="closeModal('modal-new-status')">&#x2715;</button>
+        <button class="mx" type="button" onclick="closeModal('modal-new-status')">✕</button>
       </div>
       <div class="mbody">
         <form id="new-status-form" method="post" th:action="@{/admin/positionsstatus}">
@@ -143,12 +148,8 @@
       document.getElementById('edit-status-description').value = btn.dataset.description;
       document.getElementById('edit-status-color').value = btn.dataset.color;
       document.getElementById('edit-status-colortext').value = btn.dataset.colortext;
-      document.getElementById('modal-edit-status').classList.remove('hidden');
+      openModal('modal-edit-status');
     });
-
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
   </script>
 
 </body>

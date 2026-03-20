@@ -25,8 +25,8 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
 - [x] Das Hamburger-Menu in der Profilsuche soll linksbündig angezeigt werden, im Moment ist es zentriert
 - [x] Das Textfeld für die Prompt-Eingabe in der Profilsuche soll über die komplette Breite der Seite gehen, und es könnte auch höher sein, da u.U. auch größere Texte eingegeben werden. Der Senden-Button soll inline im Prompt-Feld analog Claude angezeigt werden, ebenfalls soll ein "Abbrechen" bzw. Stop-Button vorgesehen sein.
 - [x] Das Layout vom "Chat Löschen" Overlay-Dialog ist schräg, der Schlißen-Button wird zentriert angezeigt, und insgesamt ist die Darstellung sehr gedrungen.
-- [ ] Die Paginierung links oben im Administrationsbereich ist falsch.
-- [ ] Die Darstellung im Adninistrationsbereich bzw. die Tabelle der Historientypen könnte mehr Abstand zu sen Seiten gebrauchen. Auch kann die Tabelle gerne etwas breiter sein, und natürlich auch gemäß dem Designsystem formatiert.
+- [x] Die Paginierung links oben im Administrationsbereich ist falsch.
+- [x] Die Darstellung im Adninistrationsbereich bzw. die Tabelle der Historientypen könnte mehr Abstand zu sen Seiten gebrauchen. Auch kann die Tabelle gerne etwas breiter sein, und natürlich auch gemäß dem Designsystem formatiert.
 - [ ] Es fehlt die Bestätigung beim Speichern eines Freiberuflers, und vermutlich aich der anderen Aggregate, in Form des grünen Banners. Dies ist im Prototypen umgesetzt, und soll auch so für alle Formulare der Anwendung implementiert sein.
 - [ ] Freelancer Kodierung ist optional, allerdings soll die Kodierung auf Dubletten geprüft werden, wenn der Code schon vorhanden ist. In diesem Fall soll beim Speichern eine Warnung ausgegeben werden. Im Moment wird ein leere Code als '' in der Datenbank gespeichert, das UniqueConstraintViolations erzeugt. Das Datenmodell bzw. der Index muss vermutlich angepasst werden, genau wie die Spezifikationen.
 - [ ] Die Zuordnung  bzw. das Entfernen von Tags soll auch erst gespeichert werden, wenn der Speichern - Button gedrückt wird. Bis dahin soll bei Änderungen an den Tags der Hinweis zu den nicht gespeicherten Änderungen angezeigt werden

@@ -15,59 +15,66 @@
 
     <!-- Neuanlage -->
     <div class="fcard">
-      <h2>Neuen Tag anlegen</h2>
-      <form method="post" th:action="@{/admin/tags}">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <div class="form-grid">
-          <div>
-            <label for="new-tag-type">Tag-Typ</label>
-            <select id="new-tag-type" name="tagType" required>
-              <option value="">– Typ wählen –</option>
-              <option th:each="tt : ${tagTypes}"
-                      th:value="${tt.name()}"
-                      th:text="${tt.label}"></option>
-            </select>
+      <div class="fcard-hd">
+        <span class="fcard-title">Neuen Tag anlegen</span>
+      </div>
+      <div class="fcard-body">
+        <form method="post" th:action="@{/admin/tags}">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <div class="fg2 mb">
+            <div class="fg">
+              <label for="new-tag-type">Tag-Typ</label>
+              <select id="new-tag-type" name="tagType" required>
+                <option value="">– Typ wählen –</option>
+                <option th:each="tt : ${tagTypes}"
+                        th:value="${tt.name()}"
+                        th:text="${tt.label}"></option>
+              </select>
+            </div>
+            <div class="fg">
+              <label for="new-tag-name">Name</label>
+              <input type="text" id="new-tag-name" name="tagname"
+                     required maxlength="255" autocomplete="off">
+            </div>
           </div>
-          <div>
-            <label for="new-tag-name">Name</label>
-            <input type="text" id="new-tag-name" name="tagname"
-                   required maxlength="255" autocomplete="off">
-          </div>
-        </div>
-        <div style="margin-top:0.75rem">
-          <button class="btn btn-pri" type="submit">&#xFF0B; Tag anlegen</button>
-        </div>
-      </form>
+          <button class="btn btn-pri" type="submit">＋ Tag anlegen</button>
+        </form>
+      </div>
     </div>
 
     <!-- Eine Karte pro TagType -->
-    <div th:each="entry : ${tagsByType}" class="fcard">
-      <h2 th:text="${entry.key.label}">Tag-Typ</h2>
-
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Aktionen</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="tag : ${entry.value}" th:id="'tag-row-' + ${tag.id}">
-            <td th:text="${tag.tagname}"></td>
-            <td>
-              <button class="ibtn" type="button"
-                      th:attr="data-id=${tag.id}, data-tagname=${tag.tagname}"
-                      data-action="edit-tag">&#9998;</button>
-              <button class="ibtn del" type="button"
-                      th:attr="data-id=${tag.id}"
-                      data-action="delete-tag">&#x1F5D1;</button>
-            </td>
-          </tr>
-          <tr th:if="${#lists.isEmpty(entry.value)}">
-            <td colspan="2" style="text-align:center">Keine Tags vorhanden.</td>
-          </tr>
-        </tbody>
-      </table>
+    <div th:each="entry : ${tagsByType}" class="fcard col-wide">
+      <div class="fcard-hd">
+        <span class="fcard-title" th:text="${entry.key.label}">Tag-Typ</span>
+      </div>
+      <div class="fcard-body">
+        <div class="tbl-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="tag : ${entry.value}" th:id="'tag-row-' + ${tag.id}">
+                <td th:text="${tag.tagname}"></td>
+                <td>
+                  <button class="ibtn" type="button"
+                          th:attr="data-id=${tag.id}, data-tagname=${tag.tagname}"
+                          data-action="edit-tag">&#9998;</button>
+                  <button class="ibtn del" type="button"
+                          th:attr="data-id=${tag.id}"
+                          data-action="delete-tag">&#x1F5D1;</button>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(entry.value)}">
+                <td colspan="2" style="text-align:center;padding:16px;color:var(--text-3)">Keine Tags vorhanden.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -102,7 +109,7 @@
       if (editBtn) {
         document.getElementById('edit-tag-form').action = '/admin/tags/' + editBtn.dataset.id;
         document.getElementById('edit-tag-name').value = editBtn.dataset.tagname;
-        document.getElementById('modal-edit-tag').classList.remove('hidden');
+        openModal('modal-edit-tag');
         return;
       }
 
@@ -111,10 +118,6 @@
         deleteTag(delBtn.dataset.id, delBtn);
       }
     });
-
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
 
     async function deleteTag(id, el) {
       if (!confirm('Tag wirklich löschen?')) return;

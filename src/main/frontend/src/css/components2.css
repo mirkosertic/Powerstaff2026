@@ -578,3 +578,53 @@
   width: 180px;
   flex-shrink: 0;
 }
+
+/* -----------------------------------------------------------------------------
+   §28 Datentabellen (Admin-Bereich, Suchergebnisse)
+   ----------------------------------------------------------------------------- */
+
+.tbl-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border-l);
+  border-radius: var(--r-l);
+  box-shadow: var(--shadow-xs);
+  overflow: auto;
+  width: 100%;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .85rem;
+}
+
+.data-table thead th {
+  background: var(--surface-2);
+  padding: 9px 13px;
+  text-align: left;
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table tbody tr {
+  border-bottom: 1px solid var(--border-l);
+  transition: background .08s;
+}
+
+.data-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.data-table tbody tr:hover {
+  background: var(--pri-l);
+}
+
+.data-table tbody td {
+  padding: 9px 13px;
+  vertical-align: top;
+}
