@@ -39,9 +39,23 @@ public class FreelancerCommandService {
     /**
      * Speichert Freiberufler-Stammdaten und Kontakte. Neue History-Einträge (id==null)
      * werden appended; bestehende History-Einträge bleiben unberührt.
+     * Leerer Code wird als NULL gespeichert. Wirft {@link DuplicateCodeException}
+     * wenn der Code bereits von einem anderen Freiberufler verwendet wird.
      */
     public Freelancer save(Freelancer freelancer, List<FreelancerContactEntry> contacts,
                            List<FreelancerHistoryEntry> newHistoryEntries) {
+        // Leeren Code → NULL normalisieren (verhindert UNIQUE-Constraint-Verletzung)
+        if (freelancer.getCode() != null && freelancer.getCode().isBlank()) {
+            freelancer.setCode(null);
+        }
+        // Dubletten-Prüfung nur wenn Code gesetzt
+        if (freelancer.getCode() != null) {
+            freelancerRepository.findByCode(freelancer.getCode()).ifPresent(existing -> {
+                if (!existing.getId().equals(freelancer.getId())) {
+                    throw new DuplicateCodeException(freelancer.getCode());
+                }
+            });
+        }
         Freelancer saved = freelancerRepository.save(freelancer);
         long freelancerId = saved.getId();
         replaceContacts(freelancerId, contacts);

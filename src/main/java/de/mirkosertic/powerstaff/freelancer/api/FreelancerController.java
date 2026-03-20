@@ -3,6 +3,7 @@ package de.mirkosertic.powerstaff.freelancer.api;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
+import de.mirkosertic.powerstaff.freelancer.command.DuplicateCodeException;
 import de.mirkosertic.powerstaff.freelancer.command.DuplicateTagException;
 import de.mirkosertic.powerstaff.freelancer.command.Freelancer;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService;
@@ -165,6 +166,9 @@ public class FreelancerController {
             var saved = commandService.save(freelancer, contacts, newHistory);
             response.sendRedirect("/freelancer/" + saved.getId() + "?saved=true");
             return null;
+        } catch (DuplicateCodeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("duplicateCode", true));
         } catch (OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("conflict", true));

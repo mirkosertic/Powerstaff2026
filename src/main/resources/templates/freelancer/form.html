@@ -66,6 +66,11 @@
       ✓ &nbsp;Datensatz wurde gespeichert.
     </div>
 
+    <!-- Dubletten-Code-Warnung (wird via JS bei 409 duplicateCode eingeblendet) -->
+    <div class="banner banner-unsaved hidden" id="banner-duplicate-code">
+      ⚠ &nbsp;Dieser Code wird bereits von einem anderen Freiberufler verwendet. Bitte einen anderen Code wählen.
+    </div>
+
     <!-- Hauptformular -->
     <form id="freelancer-form" th:action="@{/freelancer/save}" method="post">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -571,9 +576,24 @@
         headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
         .then(function(r) {
           if (r.ok && r.redirected) { location.href = r.url; return; }
-          if (r.status === 409) { openModal('modal-conflict'); return; }
+          if (r.status === 409) {
+            return r.json().then(function(body) {
+              if (body && body.duplicateCode) {
+                var banner = document.getElementById('banner-duplicate-code');
+                if (banner) { banner.classList.remove('hidden'); banner.scrollIntoView({behavior:'smooth',block:'start'}); }
+              } else {
+                openModal('modal-conflict');
+              }
+            });
+          }
           if (r.ok) { location.reload(); }
         });
+    });
+
+    // Dubletten-Banner ausblenden, sobald das Code-Feld geändert wird
+    document.querySelector('input[name="code"]')?.addEventListener('input', function() {
+      var banner = document.getElementById('banner-duplicate-code');
+      if (banner) banner.classList.add('hidden');
     });
 
     // ---- Delete ----
