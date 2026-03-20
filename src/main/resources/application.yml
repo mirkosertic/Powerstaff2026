@@ -15,6 +15,9 @@ spring:
     init:
       mode: never
 
+  # Zeichenkodierung – UTF-8 für alle HTTP-Responses erzwingen
+  mandatory-file-encoding: UTF-8
+
   # Thymeleaf
   thymeleaf:
     cache: true

@@ -38,6 +38,7 @@
   /* Status */
   --danger:      #b91c1c;
   --danger-l:    #fef2f2;
+  --danger-ring: rgba(185, 28, 28, .15);
   --warn-bg:     #fffbeb;
   --warn-border: #d97706;
   --warn-text:   #7c4a03;
@@ -67,6 +68,7 @@ html {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   color: var(--text);
   background: var(--bg);
+  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 
