@@ -176,7 +176,7 @@ public class ProjectController {
         try {
             var saved = commandService.save(project);
             rememberedProjectService.set(principal.getName(), saved.getId());
-            response.sendRedirect("/project/" + saved.getId());
+            response.sendRedirect("/project/" + saved.getId() + "?saved=true");
             return null;
         } catch (OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

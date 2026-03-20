@@ -54,6 +54,11 @@
       Kontaktsperre aktiv – keine Kontaktaufnahme erlaubt.
     </div>
 
+    <!-- Gespeichert-Banner -->
+    <div class="banner banner-success hidden" id="banner-success">
+      ✓ &nbsp;Datensatz wurde gespeichert.
+    </div>
+
     <!-- Hauptformular -->
     <form id="kunde-form" th:action="@{/kunde/save}" method="post">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -572,6 +577,16 @@
     window.addEventListener('pageshow', function(e) {
       if (e.persisted) { location.reload(); }
     });
+
+    // Gespeichert-Banner
+    if (new URLSearchParams(window.location.search).get('saved') === 'true') {
+      var bannerSuccess = document.getElementById('banner-success');
+      if (bannerSuccess) {
+        bannerSuccess.classList.remove('hidden');
+        setTimeout(function() { bannerSuccess.classList.add('hidden'); }, 2500);
+      }
+      history.replaceState(null, '', window.location.pathname);
+    }
   </script>
 
 </body>

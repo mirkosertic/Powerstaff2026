@@ -153,7 +153,7 @@ public class KundeController {
             List<KundeHistoryEntry> newHistory = objectMapper.readValue(
                     historyJson, new TypeReference<>() {});
             var saved = commandService.save(kunde, contacts, newHistory);
-            response.sendRedirect("/kunde/" + saved.getId());
+            response.sendRedirect("/kunde/" + saved.getId() + "?saved=true");
             return null;
         } catch (OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

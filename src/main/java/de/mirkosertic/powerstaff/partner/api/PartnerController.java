@@ -157,7 +157,7 @@ public class PartnerController {
             List<PartnerHistoryEntry> newHistory = objectMapper.readValue(
                     historyJson, new TypeReference<>() {});
             var saved = commandService.save(partner, contacts, newHistory);
-            response.sendRedirect("/partner/" + saved.getId());
+            response.sendRedirect("/partner/" + saved.getId() + "?saved=true");
             return null;
         } catch (OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

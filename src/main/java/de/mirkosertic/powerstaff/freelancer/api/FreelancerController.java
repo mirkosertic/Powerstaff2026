@@ -163,7 +163,7 @@ public class FreelancerController {
             List<FreelancerHistoryEntry> newHistory = objectMapper.readValue(
                     historyJson, new TypeReference<>() {});
             var saved = commandService.save(freelancer, contacts, newHistory);
-            response.sendRedirect("/freelancer/" + saved.getId());
+            response.sendRedirect("/freelancer/" + saved.getId() + "?saved=true");
             return null;
         } catch (OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

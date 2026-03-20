@@ -49,6 +49,11 @@
   <!-- Page Content -->
   <div id="page">
 
+    <!-- Gespeichert-Banner -->
+    <div class="banner banner-success hidden" id="banner-success">
+      ✓ &nbsp;Datensatz wurde gespeichert.
+    </div>
+
     <!-- Hauptformular -->
     <form id="project-form" th:action="@{/project/save}" method="post">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -587,6 +592,18 @@
   window.addEventListener('pageshow', (e) => {
     if (e.persisted) location.reload();
   });
+  </script>
+
+  <!-- Gespeichert-Banner JS -->
+  <script>
+  if (new URLSearchParams(window.location.search).get('saved') === 'true') {
+    var bannerSuccess = document.getElementById('banner-success');
+    if (bannerSuccess) {
+      bannerSuccess.classList.remove('hidden');
+      setTimeout(function() { bannerSuccess.classList.add('hidden'); }, 2500);
+    }
+    history.replaceState(null, '', window.location.pathname);
+  }
   </script>
 
   <!-- QBE-Suche AJAX -->
