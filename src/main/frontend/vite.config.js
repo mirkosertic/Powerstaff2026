@@ -9,7 +9,7 @@ export default defineConfig({
         assetFileNames: 'app[extname]',
       },
     },
-    outDir: '../resources/static/generated',
+    outDir: '../../../target/classes/static/generated',
     emptyOutDir: true,
   },
 });
