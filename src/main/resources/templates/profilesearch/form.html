@@ -20,7 +20,7 @@
 
       <button type="button" class="btn btn-danger"
               th:attr="data-chat-id=${chatId}"
-              onclick="document.getElementById('modal-delete').showModal()">
+              onclick="openModal('modal-delete')">
         🗑 Chat löschen
       </button>
     </div>
@@ -112,25 +112,23 @@
   <div id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
   <!-- Modal: Chat löschen -->
-  <dialog id="modal-delete">
-    <div class="modal-overlay">
-      <div class="modal-dialog">
-        <div class="modal-header">
-          <span>Chat löschen</span>
-          <button type="button" class="modal-close" onclick="document.getElementById('modal-delete').close()">✕</button>
-        </div>
-        <div class="modal-body">
-          <p>Soll dieser Chat wirklich gelöscht werden?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-ghost"
-                  onclick="document.getElementById('modal-delete').close()">Abbrechen</button>
-          <button type="button" class="btn btn-danger"
-                  id="btn-confirm-delete">Löschen</button>
-        </div>
+  <div class="mbk hidden" id="modal-delete">
+    <div class="mbox">
+      <div class="mhd">
+        <h3>Chat löschen</h3>
+        <button type="button" class="mx" onclick="closeModal('modal-delete')">✕</button>
+      </div>
+      <div class="mbody">
+        <p>Soll dieser Chat wirklich gelöscht werden?</p>
+      </div>
+      <div class="mft">
+        <button type="button" class="btn btn-ghost"
+                onclick="closeModal('modal-delete')">Abbrechen</button>
+        <button type="button" class="btn btn-danger"
+                id="btn-confirm-delete">Löschen</button>
       </div>
     </div>
-  </dialog>
+  </div>
 
   <!-- Inline JS -->
   <script th:inline="javascript">
@@ -154,13 +152,14 @@
     function confirmDeleteChat(event, chatId) {
       event.stopPropagation();
       document.getElementById('btn-confirm-delete').dataset.targetChatId = chatId;
-      document.getElementById('modal-delete').showModal();
+      openModal('modal-delete');
     }
 
     document.getElementById('btn-confirm-delete').addEventListener('click', function() {
       const targetId = this.dataset.targetChatId || CHAT_ID;
       apiFetch('/profilesearch/chat/' + targetId, { method: 'DELETE' })
         .then(resp => {
+          closeModal('modal-delete');
           if (resp.redirected) { location.href = resp.url; }
           else { location.reload(); }
         });
