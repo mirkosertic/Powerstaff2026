@@ -43,13 +43,25 @@ public class KundeCommandService {
         return saved;
     }
 
+    /**
+     * Speichert Stammdaten, Kontakte und hängt neue Historieneinträge an.
+     * Bestehende History-Einträge (via AJAX verwaltet) bleiben unberührt.
+     */
     public Kunde save(Kunde kunde,
                       List<KundeContactEntry> contacts,
-                      List<KundeHistoryEntry> history) {
+                      List<KundeHistoryEntry> newHistoryEntries) {
         Kunde saved = kundeRepository.save(kunde);
         long kundeId = saved.getId();
         replaceContacts(kundeId, contacts);
-        replaceHistory(kundeId, history);
+        for (KundeHistoryEntry entry : newHistoryEntries) {
+            if (entry.id() == null) {
+                KundeHistory history = new KundeHistory();
+                history.setDescription(entry.description());
+                history.setTypeId(entry.typeId());
+                history.setKundeId(kundeId);
+                historyRepository.save(history);
+            }
+        }
         return saved;
     }
 

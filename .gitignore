@@ -50,3 +50,5 @@ logs/
 ### Claude Code ###
 .claude/*
 !.claude/skills/
+
+powerstaff_mysql_data

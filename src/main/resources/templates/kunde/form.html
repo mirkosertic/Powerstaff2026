@@ -34,8 +34,9 @@
       <input type="hidden" name="id" th:value="${kunde.id}"/>
       <input type="hidden" name="dbVersion" th:value="${kunde.dbVersion}"/>
 
-      <!-- Hidden-Field für Kontakte (JS befüllt, History wird per AJAX verwaltet) -->
+      <!-- Hidden-Fields für Kontakte und neue History-Einträge (JS befüllt) -->
       <input type="hidden" name="contactsJson" id="contacts-json" value="[]"/>
+      <input type="hidden" name="historyJson" id="history-json" value="[]"/>
 
       <ps-dirty-banner>⚠ Ungespeicherte Änderungen vorhanden.</ps-dirty-banner>
 
@@ -300,12 +301,14 @@
       ~{::div#modal-delete-body},
       ~{::div#modal-delete-footer})}">
   </div>
-  <div id="modal-delete-body" style="display:none">
-    <p>Soll dieser Kunde wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
-  </div>
-  <div id="modal-delete-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete')">Abbrechen</button>
-    <button type="button" class="btn btn-danger" id="btn-delete-confirm">Löschen</button>
+  <div style="display:none">
+    <div id="modal-delete-body">
+      <p>Soll dieser Kunde wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
+    </div>
+    <div id="modal-delete-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete')">Abbrechen</button>
+      <button type="button" class="btn btn-danger" id="btn-delete-confirm">Löschen</button>
+    </div>
   </div>
 
   <!-- Löschen verhindert (Projekte vorhanden) -->
@@ -315,12 +318,14 @@
       ~{::div#modal-delete-blocked-body},
       ~{::div#modal-delete-blocked-footer})}">
   </div>
-  <div id="modal-delete-blocked-body" style="display:none">
-    <p>Der Kunde kann nicht gelöscht werden, da noch Projekte zugeordnet sind:</p>
-    <ul id="blocked-project-ids"></ul>
-  </div>
-  <div id="modal-delete-blocked-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete-blocked')">Schließen</button>
+  <div style="display:none">
+    <div id="modal-delete-blocked-body">
+      <p>Der Kunde kann nicht gelöscht werden, da noch Projekte zugeordnet sind:</p>
+      <ul id="blocked-project-ids"></ul>
+    </div>
+    <div id="modal-delete-blocked-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete-blocked')">Schließen</button>
+    </div>
   </div>
 
   <!-- Kontaktmöglichkeit -->
@@ -330,25 +335,27 @@
       ~{::div#modal-contact-body},
       ~{::div#modal-contact-footer})}">
   </div>
-  <div id="modal-contact-body" style="display:none">
-    <div class="field-grid col-1">
-      <label>Typ
-        <select id="contact-type">
-          <option value="EMAIL">E-Mail</option>
-          <option value="TELEFON">Telefon</option>
-          <option value="FAX">Fax</option>
-          <option value="WEB">Website</option>
-          <option value="XING">XING</option>
-        </select>
-      </label>
-      <label>Wert
-        <input type="text" id="contact-value" placeholder="z. B. info@example.com"/>
-      </label>
+  <div style="display:none">
+    <div id="modal-contact-body">
+      <div class="field-grid col-1">
+        <label>Typ
+          <select id="contact-type">
+            <option value="EMAIL">E-Mail</option>
+            <option value="TELEFON">Telefon</option>
+            <option value="FAX">Fax</option>
+            <option value="WEB">Website</option>
+            <option value="XING">XING</option>
+          </select>
+        </label>
+        <label>Wert
+          <input type="text" id="contact-value" placeholder="z. B. info@example.com"/>
+        </label>
+      </div>
     </div>
-  </div>
-  <div id="modal-contact-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-contact')">Abbrechen</button>
-    <button type="button" class="btn btn-primary" id="btn-contact-save">Speichern</button>
+    <div id="modal-contact-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-contact')">Abbrechen</button>
+      <button type="button" class="btn btn-primary" id="btn-contact-save">Speichern</button>
+    </div>
   </div>
 
   <!-- Kontakthistorie – Neuer Eintrag -->
@@ -358,23 +365,25 @@
       ~{::div#modal-history-body},
       ~{::div#modal-history-footer})}">
   </div>
-  <div id="modal-history-body" style="display:none">
-    <input type="hidden" id="history-edit-id"/>
-    <div class="field-grid col-1">
-      <label>Typ
-        <select id="history-type-id">
-          <option th:each="ht : ${historyTypes}" th:value="${ht.id()}"
-                  th:text="${ht.description()}">Typ</option>
-        </select>
-      </label>
-      <label>Beschreibung
-        <textarea id="history-description" rows="4" placeholder="Gesprächsnotiz..."></textarea>
-      </label>
+  <div style="display:none">
+    <div id="modal-history-body">
+      <input type="hidden" id="history-edit-id"/>
+      <div class="field-grid col-1">
+        <label>Typ
+          <select id="history-type-id">
+            <option th:each="ht : ${historyTypes}" th:value="${ht.id()}"
+                    th:text="${ht.description()}">Typ</option>
+          </select>
+        </label>
+        <label>Beschreibung
+          <textarea id="history-description" rows="4" placeholder="Gesprächsnotiz..."></textarea>
+        </label>
+      </div>
     </div>
-  </div>
-  <div id="modal-history-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-history')">Abbrechen</button>
-    <button type="button" class="btn btn-primary" id="btn-history-save">Speichern</button>
+    <div id="modal-history-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-history')">Abbrechen</button>
+      <button type="button" class="btn btn-primary" id="btn-history-save">Speichern</button>
+    </div>
   </div>
 
   <!-- Optimistic-Locking-Konflikt -->
@@ -384,12 +393,14 @@
       ~{::div#modal-conflict-body},
       ~{::div#modal-conflict-footer})}">
   </div>
-  <div id="modal-conflict-body" style="display:none">
-    <p>Der Datensatz wurde zwischenzeitlich von einem anderen Benutzer geändert.
-       Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>
-  </div>
-  <div id="modal-conflict-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="location.reload()">Seite neu laden</button>
+  <div style="display:none">
+    <div id="modal-conflict-body">
+      <p>Der Datensatz wurde zwischenzeitlich von einem anderen Benutzer geändert.
+         Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>
+    </div>
+    <div id="modal-conflict-footer">
+      <button type="button" class="btn btn-ghost" onclick="location.reload()">Seite neu laden</button>
+    </div>
   </div>
 
   <!-- ================================================================== -->
@@ -454,25 +465,44 @@
       renderContacts();
       closeModal('modal-contact');
       document.getElementById('contact-value').value = '';
-      location.reload();
     });
 
     function deleteContact(btn) {
       var contactId = parseInt(btn.dataset.contactId);
-      if (kundeId && contactId) {
-        contacts = contacts.filter(function(c) { return c.id !== contactId; });
-        renderContacts();
-        location.reload();
-      }
+      contacts = contacts.filter(function(c) { return c.id !== contactId; });
+      renderContacts();
     }
 
-    // ---- History (AJAX) ----
+    // ---- History: AJAX für bestehende, lokale Queue für neue Datensätze ----
+    var historyQueue = [];
+    function renderHistoryQueue() {
+      document.getElementById('history-json').value = JSON.stringify(
+        historyQueue.map(function(h) { return {id: null, typeId: h.typeId, description: h.description}; })
+      );
+      var list = document.getElementById('history-list');
+      var queued = list.querySelectorAll('.hitem-queued');
+      queued.forEach(function(el) { el.remove(); });
+      historyQueue.forEach(function(h) {
+        var div = document.createElement('div');
+        div.className = 'hitem hitem-queued';
+        div.innerHTML = '<div class="hitem-hd"><span class="hbadge">Typ ' + h.typeId + '</span><span class="hmeta">Neu – noch nicht gespeichert</span></div><div class="hbody">' + h.description + '</div>';
+        list.appendChild(div);
+      });
+    }
+
     document.getElementById('btn-history-save')?.addEventListener('click', function() {
-      if (!kundeId) return;
       var editId = document.getElementById('history-edit-id').value;
       var typeId = parseInt(document.getElementById('history-type-id').value);
       var desc = document.getElementById('history-description').value;
       if (!desc.trim()) return;
+      if (!kundeId) {
+        historyQueue.push({typeId: typeId, description: desc});
+        renderHistoryQueue();
+        closeModal('modal-history');
+        document.getElementById('history-description').value = '';
+        document.getElementById('history-edit-id').value = '';
+        return;
+      }
       var url = editId
           ? '/kunde/' + kundeId + '/history/' + editId
           : '/kunde/' + kundeId + '/history';

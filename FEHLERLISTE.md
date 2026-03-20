@@ -10,10 +10,10 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
 - [x] Zu geringer vertikaler Abstand auf der Freiberufler Seite zwischen  "Letzter Kontwxt" und den Checkboxen für "Wiedervorlage", "Kontaktsperre" und "Datenschutz"
 - [x] Bei gesetzter Kontaktsperre soll das Warnings-Banner, analog dem Prototyl im "specs" angezeigt werden
 - [x] Audit-Info eines Freiberuflers (und allen anderen Formularen) soll in der Top-Navigation angezeigt werden, analog dem Prototypen. Bei neuen Datensätzen soll als Audit-Info "Neu, noch nicht gespeichert" angezeigt werden
-- [ ] Beim Hinzufügen einer Kontaktmöglichkeit zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
-- [ ] Beim Hinzufügen einer Kontakthistorie zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
-- [ ] Kontaktmöglichkeiten können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert
-- [ ] Kontakthistorien-Einträge können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert
+- [x] Beim Hinzufügen einer Kontaktmöglichkeit zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
+- [x] Beim Hinzufügen einer Kontakthistorie zu einem Freiberufler(und den anderen Aggregaten) erscheint ein leeres Overlay
+- [x] Kontaktmöglichkeiten können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert
+- [x] Kontakthistorien-Einträge können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert
 - [ ] Freelancer.availabilityAsDate ist nur ein Datumsfeld, z.B. der Datepicker sollte keine Zeitangabe erlauben
 - [ ] Der Suche Button für die QBE Suche fehlt für Freiberufler und vermutlich auch den anderen Aggregaten. Er ist im Prototyp vorhanden, und die QBE Suche ist spezifiziert, jedoch die Implementierung fehlt.
 - [ ] Der Prototyp und die Implementierung der Forms im Projekt verwenden unterschiedliche Zeichensätze.
@@ -29,3 +29,5 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
 - [ ] Die Darstellung im Adninistrationsbereich bzw. die Tabelle der Historientypen könnte mehr Abstand zu sen Seiten gebrauchen. Auch kann die Tabelle gerne etwas breiter sein, und natürlich auch gemäß dem Designsystem formatiert.
 - [ ] Es fehlt die Bestätigung beim Speichern eines Freiberuflers, und vermutlich aich der anderen Aggregate, in Form des grünen Banners. Dies ist im Prototypen umgesetzt, und soll auch so für alle Formulare der Anwendung implementiert sein.
 - [ ] Freelancer Kodierung ist optional, allerdings soll die Kodierung auf Dubletten geprüft werden, wenn der Code schon vorhanden ist. In diesem Fall soll beim Speichern eine Warnung ausgegeben werden. Im Moment wird ein leere Code als '' in der Datenbank gespeichert, das UniqueConstraintViolations erzeugt. Das Datenmodell bzw. der Index muss vermutlich angepasst werden, genau wie die Spezifikationen.
+- [ ] Die Zuordnung  bzw. das Entfernen von Tags soll auch erst gespeichert werden, wenn der Speichern - Button gedrückt wird. Bis dahin soll bei Änderungen an den Tags der Hinweis zu den nicht gespeicherten Änderungen angezeigt werden
+- [ ] Es wird inline-Css in den Formularen verwendet, z.B. für PLZ. Die Styles sollten aber ausschließlich aus dem Designsystem kommen! Bitte prüfe alle Stellen im Frontend auf inline-CSS und korrigiere das.

@@ -20,6 +20,20 @@ spring:
     cache: true
     encoding: UTF-8
 
+  ai:
+    mcp:
+      client:
+        streamable-http:
+          connections:
+            lucene-search:
+              url: http://localhost:9000
+              endpoint: /mcp/message
+    openai:
+      api-key: "lm-studio"
+      base-url: http://localhost:1234
+      chat:
+        options:
+          model: qwen2.5-14b-instruct
 
 # Server – Bind-Adresse und Session-Cookie-Flags
 server:

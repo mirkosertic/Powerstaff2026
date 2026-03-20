@@ -6,6 +6,7 @@ import tools.jackson.databind.ObjectMapper;
 import de.mirkosertic.powerstaff.customer.command.Kunde;
 import de.mirkosertic.powerstaff.customer.command.KundeCommandService;
 import de.mirkosertic.powerstaff.customer.command.KundeContactEntry;
+import de.mirkosertic.powerstaff.customer.command.KundeHistoryEntry;
 import de.mirkosertic.powerstaff.customer.command.KundeHasProjectsException;
 import de.mirkosertic.powerstaff.customer.query.KundeQueryService;
 import de.mirkosertic.powerstaff.customer.query.KundeSearchCriteria;
@@ -144,11 +145,14 @@ public class KundeController {
     @ResponseBody
     public ResponseEntity<?> save(@ModelAttribute Kunde kunde,
                                   @RequestParam(required = false, defaultValue = "[]") String contactsJson,
+                                  @RequestParam(required = false, defaultValue = "[]") String historyJson,
                                   HttpServletResponse response) throws IOException {
         try {
             List<KundeContactEntry> contacts = objectMapper.readValue(
                     contactsJson, new TypeReference<>() {});
-            var saved = commandService.save(kunde, contacts);
+            List<KundeHistoryEntry> newHistory = objectMapper.readValue(
+                    historyJson, new TypeReference<>() {});
+            var saved = commandService.save(kunde, contacts, newHistory);
             response.sendRedirect("/kunde/" + saved.getId());
             return null;
         } catch (OptimisticLockingFailureException e) {

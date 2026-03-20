@@ -313,12 +313,14 @@
       ~{::div#modal-delete-body},
       ~{::div#modal-delete-footer})}">
   </div>
-  <div id="modal-delete-body" style="display:none">
-    <p>Soll dieses Projekt wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
-  </div>
-  <div id="modal-delete-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete')">Abbrechen</button>
-    <button type="button" class="btn btn-danger" id="btn-delete-confirm">Löschen</button>
+  <div style="display:none">
+    <div id="modal-delete-body">
+      <p>Soll dieses Projekt wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</p>
+    </div>
+    <div id="modal-delete-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete')">Abbrechen</button>
+      <button type="button" class="btn btn-danger" id="btn-delete-confirm">Löschen</button>
+    </div>
   </div>
 
   <!-- Optimistic-Locking-Konflikt (Projekt-Stammdaten) -->
@@ -328,13 +330,15 @@
       ~{::div#modal-conflict-body},
       ~{::div#modal-conflict-footer})}">
   </div>
-  <div id="modal-conflict-body" style="display:none">
-    <p>Das Projekt wurde zwischenzeitlich von einem anderen Sachbearbeiter geändert.
-       Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>
-  </div>
-  <div id="modal-conflict-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-conflict')">Schließen</button>
-    <button type="button" class="btn btn-primary" onclick="location.reload()">Neu laden</button>
+  <div style="display:none">
+    <div id="modal-conflict-body">
+      <p>Das Projekt wurde zwischenzeitlich von einem anderen Sachbearbeiter geändert.
+         Bitte laden Sie die Seite neu und wiederholen Sie Ihre Änderungen.</p>
+    </div>
+    <div id="modal-conflict-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-conflict')">Schließen</button>
+      <button type="button" class="btn btn-primary" onclick="location.reload()">Neu laden</button>
+    </div>
   </div>
 
   <!-- Positions-Bearbeiten-Modal -->
@@ -344,28 +348,30 @@
       ~{::div#modal-edit-position-body},
       ~{::div#modal-edit-position-footer})}">
   </div>
-  <div id="modal-edit-position-body" style="display:none">
-    <input type="hidden" id="edit-pos-id"/>
-    <input type="hidden" id="edit-pos-dbversion"/>
-    <div class="field-grid col-1">
-      <label>Status
-        <select id="edit-pos-status">
-          <option th:each="s : ${positionStatuses}"
-                  th:value="${s.id()}"
-                  th:text="${s.description()}"></option>
-        </select>
-      </label>
-      <label>Konditionen
-        <input type="text" id="edit-pos-konditionen"/>
-      </label>
-      <label>Kommentar
-        <textarea id="edit-pos-kommentar" rows="3"></textarea>
-      </label>
+  <div style="display:none">
+    <div id="modal-edit-position-body">
+      <input type="hidden" id="edit-pos-id"/>
+      <input type="hidden" id="edit-pos-dbversion"/>
+      <div class="field-grid col-1">
+        <label>Status
+          <select id="edit-pos-status">
+            <option th:each="s : ${positionStatuses}"
+                    th:value="${s.id()}"
+                    th:text="${s.description()}"></option>
+          </select>
+        </label>
+        <label>Konditionen
+          <input type="text" id="edit-pos-konditionen"/>
+        </label>
+        <label>Kommentar
+          <textarea id="edit-pos-kommentar" rows="3"></textarea>
+        </label>
+      </div>
     </div>
-  </div>
-  <div id="modal-edit-position-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-edit-position')">Abbrechen</button>
-    <button type="button" class="btn btn-primary" id="btn-save-position">Speichern</button>
+    <div id="modal-edit-position-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-edit-position')">Abbrechen</button>
+      <button type="button" class="btn btn-primary" id="btn-save-position">Speichern</button>
+    </div>
   </div>
 
   <!-- Positions-Optimistic-Locking-Konflikt -->
@@ -375,12 +381,14 @@
       ~{::div#modal-pos-conflict-body},
       ~{::div#modal-pos-conflict-footer})}">
   </div>
-  <div id="modal-pos-conflict-body" style="display:none">
-    <p>Die Zuordnung wurde zwischenzeitlich von einem anderen Sachbearbeiter geändert.</p>
-  </div>
-  <div id="modal-pos-conflict-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-pos-conflict')">Abbrechen</button>
-    <button type="button" class="btn btn-primary" onclick="reloadPosition()">Neu laden</button>
+  <div style="display:none">
+    <div id="modal-pos-conflict-body">
+      <p>Die Zuordnung wurde zwischenzeitlich von einem anderen Sachbearbeiter geändert.</p>
+    </div>
+    <div id="modal-pos-conflict-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-pos-conflict')">Abbrechen</button>
+      <button type="button" class="btn btn-primary" onclick="reloadPosition()">Neu laden</button>
+    </div>
   </div>
 
   <!-- Positions-Löschen-Bestätigung -->
@@ -390,12 +398,14 @@
       ~{::div#modal-delete-pos-body},
       ~{::div#modal-delete-pos-footer})}">
   </div>
-  <div id="modal-delete-pos-body" style="display:none">
-    <p id="modal-delete-pos-text">Die Zuordnung wird aufgehoben. Sind Sie sicher?</p>
-  </div>
-  <div id="modal-delete-pos-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete-position')">Abbrechen</button>
-    <button type="button" class="btn btn-danger" id="btn-confirm-delete-position">Löschen</button>
+  <div style="display:none">
+    <div id="modal-delete-pos-body">
+      <p id="modal-delete-pos-text">Die Zuordnung wird aufgehoben. Sind Sie sicher?</p>
+    </div>
+    <div id="modal-delete-pos-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-delete-position')">Abbrechen</button>
+      <button type="button" class="btn btn-danger" id="btn-confirm-delete-position">Löschen</button>
+    </div>
   </div>
 
   <!-- Kontakthistorie-Modal (Neuanlage + Bearbeitung) -->
@@ -405,17 +415,19 @@
       ~{::div#modal-history-body},
       ~{::div#modal-history-footer})}">
   </div>
-  <div id="modal-history-body" style="display:none">
-    <input type="hidden" id="history-entry-id"/>
-    <div class="field-grid col-1">
-      <label>Beschreibung
-        <textarea id="history-entry-description" rows="4" placeholder="Beschreibung eingeben..."></textarea>
-      </label>
+  <div style="display:none">
+    <div id="modal-history-body">
+      <input type="hidden" id="history-entry-id"/>
+      <div class="field-grid col-1">
+        <label>Beschreibung
+          <textarea id="history-entry-description" rows="4" placeholder="Beschreibung eingeben..."></textarea>
+        </label>
+      </div>
     </div>
-  </div>
-  <div id="modal-history-footer" style="display:none">
-    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-history')">Abbrechen</button>
-    <button type="button" class="btn btn-primary" id="btn-save-history">Speichern</button>
+    <div id="modal-history-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-history')">Abbrechen</button>
+      <button type="button" class="btn btn-primary" id="btn-save-history">Speichern</button>
+    </div>
   </div>
 
   <!-- ================================================================== -->

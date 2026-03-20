@@ -37,17 +37,34 @@ public class PartnerCommandService {
     }
 
     /**
-     * Speichert Partner-Stammdaten, Kontaktmöglichkeiten und Historieneinträge
-     * in einer einzigen Transaktion (Unified Save).
-     * Replace-Logik: DELETE für fehlende IDs, UPDATE für vorhandene, INSERT für id == null.
+     * Speichert Partner-Stammdaten und Kontaktmöglichkeiten ohne History-Verarbeitung.
+     * History wird über PartnerHistoryController (AJAX) verwaltet.
+     */
+    public Partner save(Partner partner, List<PartnerContactEntry> contacts) {
+        Partner saved = partnerRepository.save(partner);
+        replaceContacts(saved.getId(), contacts);
+        return saved;
+    }
+
+    /**
+     * Speichert Partner-Stammdaten, Kontaktmöglichkeiten und hängt neue Historieneinträge an.
+     * Bestehende History-Einträge (via AJAX verwaltet) bleiben unberührt.
      */
     public Partner save(Partner partner,
                         List<PartnerContactEntry> contacts,
-                        List<PartnerHistoryEntry> history) {
+                        List<PartnerHistoryEntry> newHistoryEntries) {
         Partner saved = partnerRepository.save(partner);
         long partnerId = saved.getId();
         replaceContacts(partnerId, contacts);
-        replaceHistory(partnerId, history);
+        for (PartnerHistoryEntry entry : newHistoryEntries) {
+            if (entry.id() == null) {
+                PartnerHistory history = new PartnerHistory();
+                history.setDescription(entry.description());
+                history.setTypeId(entry.typeId());
+                history.setPartnerId(partnerId);
+                historyRepository.save(history);
+            }
+        }
         return saved;
     }
 

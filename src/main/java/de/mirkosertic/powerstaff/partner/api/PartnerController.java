@@ -1,9 +1,14 @@
 package de.mirkosertic.powerstaff.partner.api;
 
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerLookupResult;
 import de.mirkosertic.powerstaff.partner.command.Partner;
 import de.mirkosertic.powerstaff.partner.command.PartnerCommandService;
+import de.mirkosertic.powerstaff.partner.command.PartnerContactEntry;
+import de.mirkosertic.powerstaff.partner.command.PartnerHistoryEntry;
 import de.mirkosertic.powerstaff.partner.command.PartnerHasProjectsException;
 import de.mirkosertic.powerstaff.partner.query.PartnerFreelancerView;
 import de.mirkosertic.powerstaff.partner.query.PartnerQueryService;
@@ -43,15 +48,18 @@ public class PartnerController {
     private final PartnerQueryService queryService;
     private final FreelancerCommandService freelancerCommandService;
     private final HistoryTypeQueryService historyTypeQueryService;
+    private final ObjectMapper objectMapper;
 
     public PartnerController(PartnerCommandService commandService,
                              PartnerQueryService queryService,
                              FreelancerCommandService freelancerCommandService,
-                             HistoryTypeQueryService historyTypeQueryService) {
+                             HistoryTypeQueryService historyTypeQueryService,
+                             ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.freelancerCommandService = freelancerCommandService;
         this.historyTypeQueryService = historyTypeQueryService;
+        this.objectMapper = objectMapper;
     }
 
     // -------------------------------------------------------------------------
@@ -140,14 +148,22 @@ public class PartnerController {
     @PostMapping("/save")
     @ResponseBody
     public ResponseEntity<?> save(@ModelAttribute Partner partner,
+                                  @RequestParam(required = false, defaultValue = "[]") String contactsJson,
+                                  @RequestParam(required = false, defaultValue = "[]") String historyJson,
                                   HttpServletResponse response) throws IOException {
         try {
-            var saved = commandService.save(partner);
+            List<PartnerContactEntry> contacts = objectMapper.readValue(
+                    contactsJson, new TypeReference<>() {});
+            List<PartnerHistoryEntry> newHistory = objectMapper.readValue(
+                    historyJson, new TypeReference<>() {});
+            var saved = commandService.save(partner, contacts, newHistory);
             response.sendRedirect("/partner/" + saved.getId());
             return null;
         } catch (OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("conflict", true));
+        } catch (JacksonException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "invalid json"));
         }
     }
 

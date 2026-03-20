@@ -37,27 +37,23 @@ public class FreelancerCommandService {
     }
 
     /**
-     * Speichert Freiberufler-Stammdaten und Kontakte ohne History-Verarbeitung.
-     * History wird über FreelancerHistoryController (AJAX) verwaltet.
+     * Speichert Freiberufler-Stammdaten und Kontakte. Neue History-Einträge (id==null)
+     * werden appended; bestehende History-Einträge bleiben unberührt.
      */
-    public Freelancer save(Freelancer freelancer, List<FreelancerContactEntry> contacts) {
-        Freelancer saved = freelancerRepository.save(freelancer);
-        replaceContacts(saved.getId(), contacts);
-        return saved;
-    }
-
-    /**
-     * Unified Save: speichert Stammdaten, Kontakte und Historie in einer Transaktion.
-     * Replace-Logik: DELETE für fehlende IDs, UPDATE nur bei geänderten Werten (Audit Trail!),
-     * INSERT für id == null.
-     */
-    public Freelancer save(Freelancer freelancer,
-                           List<FreelancerContactEntry> contacts,
-                           List<FreelancerHistoryEntry> history) {
+    public Freelancer save(Freelancer freelancer, List<FreelancerContactEntry> contacts,
+                           List<FreelancerHistoryEntry> newHistoryEntries) {
         Freelancer saved = freelancerRepository.save(freelancer);
         long freelancerId = saved.getId();
         replaceContacts(freelancerId, contacts);
-        replaceHistory(freelancerId, history);
+        for (FreelancerHistoryEntry entry : newHistoryEntries) {
+            if (entry.id() == null) {
+                FreelancerHistory history = new FreelancerHistory();
+                history.setDescription(entry.description());
+                history.setTypeId(entry.typeId());
+                history.setFreelancerId(freelancerId);
+                historyRepository.save(history);
+            }
+        }
         return saved;
     }
 

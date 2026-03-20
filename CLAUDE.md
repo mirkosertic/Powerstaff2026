@@ -56,33 +56,33 @@ Repositories sind immer `package-private`. Kein direkter Repository-Zugriff zwis
 
 ## Technologie-Entscheidungen (Kurzreferenz)
 
-| Bereich | Entscheidung |
-|---|---|
-| Persistenz Command-Seite | Spring Data JDBC – kein JPA/Hibernate |
-| Persistenz Query-Seite | `JdbcClient` + handgeschriebenes SQL – kein QueryDSL |
-| SQL-Werte | Immer als gebundene Parameter (`:param`) – niemals String-Konkatenation |
-| Datenbank-Tests | Testcontainers (echte MySQL) – kein H2, keine gemockte DB |
-| Templates | Thymeleaf – kein React, kein Vue |
-| JavaScript | Vanilla JS / Custom Elements (Light DOM) – kein Framework |
-| Schema-Migration | Flyway – kein `ddl-auto`, kein `spring.sql.init.mode` |
-| Caching | Keines – `@EnableCaching` nicht verwenden |
-| Logging | Plain Text – kein JSON-Logging |
+| Bereich                  | Entscheidung                                                            |
+|--------------------------|-------------------------------------------------------------------------|
+| Persistenz Command-Seite | Spring Data JDBC – kein JPA/Hibernate                                   |
+| Persistenz Query-Seite   | `JdbcClient` + handgeschriebenes SQL – kein QueryDSL                    |
+| SQL-Werte                | Immer als gebundene Parameter (`:param`) – niemals String-Konkatenation |
+| Datenbank-Tests          | Testcontainers (echte MySQL) – kein H2, keine gemockte DB               |
+| Templates                | Thymeleaf – kein React, kein Vue                                        |
+| JavaScript               | Vanilla JS / Custom Elements (Light DOM) – kein Framework               |
+| Schema-Migration         | Flyway – kein `ddl-auto`, kein `spring.sql.init.mode`                   |
+| Caching                  | Keines – `@EnableCaching` nicht verwenden                               |
+| Logging                  | Plain Text – kein JSON-Logging                                          |
 
 ---
 
 ## Namenskonventionen
 
-| Artefakt | Muster | Beispiel |
-|---|---|---|
-| Aggregate Root | `{Modul}Aggregate` | `FreelancerAggregate` |
-| Repository | `{Modul}Repository` | `FreelancerRepository` (package-private) |
-| Command Service | `{Modul}CommandService` | `FreelancerCommandService` |
-| Query Service | `{Modul}QueryService` | `FreelancerQueryService` |
-| Controller | `{Modul}Controller` | `FreelancerController` |
-| Query Record | `{Modul}{Zweck}` | `FreelancerListView`, `FreelancerSearchResult` |
-| Unit-Test | `{Klasse}Spec` | `FreelancerCommandServiceSpec` |
-| Integrationstest | `{Klasse}IT` | `FreelancerQueryServiceIT` |
-| Flyway-Migration | `V{n}__{beschreibung}.sql` | `V1__init_schema.sql` |
+| Artefakt         | Muster                     | Beispiel                                       |
+|------------------|----------------------------|------------------------------------------------|
+| Aggregate Root   | `{Modul}Aggregate`         | `FreelancerAggregate`                          |
+| Repository       | `{Modul}Repository`        | `FreelancerRepository` (package-private)       |
+| Command Service  | `{Modul}CommandService`    | `FreelancerCommandService`                     |
+| Query Service    | `{Modul}QueryService`      | `FreelancerQueryService`                       |
+| Controller       | `{Modul}Controller`        | `FreelancerController`                         |
+| Query Record     | `{Modul}{Zweck}`           | `FreelancerListView`, `FreelancerSearchResult` |
+| Unit-Test        | `{Klasse}Spec`             | `FreelancerCommandServiceSpec`                 |
+| Integrationstest | `{Klasse}IT`               | `FreelancerQueryServiceIT`                     |
+| Flyway-Migration | `V{n}__{beschreibung}.sql` | `V1__init_schema.sql`                          |
 
 ---
 

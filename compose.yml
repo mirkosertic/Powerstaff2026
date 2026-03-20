@@ -10,13 +10,10 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - powerstaff_mysql_data:/var/lib/mysql
+      - ./powerstaff_mysql_data:/var/lib/mysql:rw
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "powerstaff", "-ppowerstaff"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-
-volumes:
-  powerstaff_mysql_data:
