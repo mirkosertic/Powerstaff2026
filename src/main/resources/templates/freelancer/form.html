@@ -221,18 +221,30 @@
       </div>
 
       <!-- Verfügbarkeit & Konditionen -->
-      <div class="fcard col-wide">
+      <div class="fcard">
         <div class="fcard-hd" onclick="toggleCard('fcard-verfuegbarkeit')">
           <span class="fcard-title">Verfügbarkeit &amp; Konditionen</span>
           <span class="fcard-chv open">▾</span>
         </div>
         <div class="fcard-body" id="fcard-verfuegbarkeit">
-        <div class="fg2">
+        <div class="fg2 mb">
           <div class="fg">
             <label>Verfügbar ab</label>
             <input type="date" name="availabilityAsDate"
                    th:value="${freelancer.availabilityAsDate != null} ? ${#temporals.format(freelancer.availabilityAsDate, 'yyyy-MM-dd')} : ''"/>
           </div>
+          <div class="fg" style="padding-top:18px">
+            <label class="cbfield"
+                   id="cb-datenschutz"
+                   th:classappend="${freelancer.datenschutz} ? ' on' : ''"
+                   onclick="toggleCbField(this)">
+              <input type="checkbox" name="datenschutz" value="true"
+                     th:checked="${freelancer.datenschutz}"/>
+              🛡 DSGVO Einwilligung
+            </label>
+          </div>
+        </div>
+        <div class="fg3 mb">
           <div class="fg">
             <label>Gehalt (€/Monat)</label>
             <input type="number" name="salaryLong" th:value="${freelancer.salaryLong}" min="0"/>
@@ -245,6 +257,8 @@
             <label>Remote-Satz (€)</label>
             <input type="number" name="salaryRemote" th:value="${freelancer.salaryRemote}" min="0"/>
           </div>
+        </div>
+        <div class="fg3 mb">
           <div class="fg">
             <label>Partner-Gehalt (€/Monat)</label>
             <input type="number" name="salaryPartnerLong" th:value="${freelancer.salaryPartnerLong}" min="0"/>
@@ -253,6 +267,8 @@
             <label>Partner-Tagessatz (€)</label>
             <input type="number" name="salaryPartnerPerDayLong" th:value="${freelancer.salaryPartnerPerDayLong}" min="0"/>
           </div>
+        </div>
+        <div class="fg3">
           <div class="fg">
             <label>Debitor-Nr</label>
             <input type="text" name="debitorNr" th:value="${freelancer.debitorNr}"/>
@@ -261,16 +277,6 @@
             <label>GULP-ID</label>
             <input type="text" name="gulpId" th:value="${freelancer.gulpId}"/>
           </div>
-        </div>
-        <div class="cbrow">
-          <label class="cbfield"
-                 id="cb-datenschutz"
-                 th:classappend="${freelancer.datenschutz} ? ' on' : ''"
-                 onclick="toggleCbField(this)">
-            <input type="checkbox" name="datenschutz" value="true"
-                   th:checked="${freelancer.datenschutz}"/>
-            🛡 DSGVO Einwilligung
-          </label>
         </div>
         </div>
       </div>
