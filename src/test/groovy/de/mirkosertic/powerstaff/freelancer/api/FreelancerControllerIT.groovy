@@ -8,6 +8,12 @@ import de.mirkosertic.powerstaff.freelancer.command.FreelancerTagCommandService
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerDetailView
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerQueryService
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerSearchResult
+import de.mirkosertic.powerstaff.project.command.FreelancerAlreadyAssignedException
+import de.mirkosertic.powerstaff.project.command.ProjectPositionCommandService
+import de.mirkosertic.powerstaff.project.command.RememberedProjectService
+import de.mirkosertic.powerstaff.project.query.ProjectDetailView
+import de.mirkosertic.powerstaff.project.query.ProjectQueryService
+import de.mirkosertic.powerstaff.project.query.RememberedProjectInfo
 import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -23,6 +29,8 @@ import java.time.LocalDateTime
 import static org.mockito.ArgumentMatchers.any
 import static org.mockito.ArgumentMatchers.anyInt
 import static org.mockito.ArgumentMatchers.anyLong
+import static org.mockito.ArgumentMatchers.anyString
+import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.doThrow
 import static org.mockito.Mockito.when
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -55,6 +63,15 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
 
     @MockitoBean
     HistoryTypeQueryService historyTypeQueryService
+
+    @MockitoBean
+    RememberedProjectService rememberedProjectService
+
+    @MockitoBean
+    ProjectQueryService projectQueryService
+
+    @MockitoBean
+    ProjectPositionCommandService positionCommandService
 
     def setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
@@ -103,6 +120,10 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
         when(queryService.countSearch(any())).thenReturn(1L)
 
         when(historyTypeQueryService.findAll()).thenReturn([])
+
+        when(rememberedProjectService.get(anyString())).thenReturn(Optional.empty())
+        when(projectQueryService.findById(anyLong())).thenReturn(Optional.empty())
+        doNothing().when(positionCommandService).assignFreelancerToProject(anyLong(), anyLong(), any(), any(), any())
     }
 
     // -------------------------------------------------------------------------
@@ -296,5 +317,56 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
 
         then:
         result.andExpect(status().isOk())
+    }
+
+    // -------------------------------------------------------------------------
+    // Zum gemerkten Projekt zuordnen
+    // -------------------------------------------------------------------------
+
+    def "POST /freelancer/{id}/assign-to-remembered-project ohne gemerktes Projekt gibt 404 zurueck"() {
+        given:
+        when(rememberedProjectService.get("testuser")).thenReturn(Optional.empty())
+
+        when:
+        def result = mockMvc.perform(
+                post("/freelancer/42/assign-to-remembered-project")
+                        .with(csrf())
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isNotFound())
+              .andExpect(jsonPath('$.noProject').value(true))
+    }
+
+    def "POST /freelancer/{id}/assign-to-remembered-project mit gemerktem Projekt gibt projectId zurueck (200)"() {
+        given:
+        when(rememberedProjectService.get("testuser")).thenReturn(Optional.of(99L))
+
+        when:
+        def result = mockMvc.perform(
+                post("/freelancer/42/assign-to-remembered-project")
+                        .with(csrf())
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(jsonPath('$.projectId').value(99))
+    }
+
+    def "POST /freelancer/{id}/assign-to-remembered-project bei bereits zugeordnetem Freiberufler gibt 409 zurueck"() {
+        given:
+        when(rememberedProjectService.get("testuser")).thenReturn(Optional.of(99L))
+        doThrow(new FreelancerAlreadyAssignedException(42L, 99L))
+                .when(positionCommandService).assignFreelancerToProject(anyLong(), anyLong(), any(), any(), any())
+
+        when:
+        def result = mockMvc.perform(
+                post("/freelancer/42/assign-to-remembered-project")
+                        .with(csrf())
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isConflict())
+              .andExpect(jsonPath('$.alreadyAssigned').value(true))
     }
 }

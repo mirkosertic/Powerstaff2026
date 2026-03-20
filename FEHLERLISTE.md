@@ -39,7 +39,7 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
   org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/admin/historientypen.html]")
   at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parse(AbstractMarkupTemplateParser.java:241)
   at org.thymeleaf.templateparser.markup.AbstractMarkupTemplateParser.parseStandalone(AbstractMarkupTemplateParser.java:100)
-- [ ] Es wurden MVC / API Endpunkte geändert oder hinzugefügt, ohne einen UNit oder IT Test dafür zu schreiben.
+- [x] Es wurden MVC / API Endpunkte geändert oder hinzugefügt, ohne einen UNit oder IT Test dafür zu schreiben.
   Die Skills bzw. die Claude Instruktionen sagen aber, dass das sein muss. Damit könnten auch Thymeleaf-Fehler besser und
   sofort erkannt werden.
 - [ ] Die QBE Suche bzw. das Drücken des Suche-Buttons in allen Formularen öffnet
