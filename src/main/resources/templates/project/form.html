@@ -17,7 +17,33 @@
       ${rememberedProject},
       ${project.id != null}
         ? 'Erfasst: ' + ${#temporals.format(project.creationDate,'dd.MM.yyyy')} + ' ' + ${project.creationUser} + ' · Geändert: ' + ${#temporals.format(project.changedDate,'dd.MM.yyyy')} + ' ' + ${project.changedUser}
-        : 'Neu, noch nicht gespeichert')}">
+        : 'Neu, noch nicht gespeichert',
+      'search-panel')}">
+  </div>
+
+  <!-- QBE-Suchpanel -->
+  <div id="search-panel" class="hidden">
+    <form th:action="@{/project/search}" method="post" id="search-form">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <div class="fcard">
+        <div class="fcard-hd"><span class="fcard-title">Projekte suchen</span></div>
+        <div class="fcard-body">
+          <div class="fg2">
+            <div class="fg"><label>Projektnummer</label><input type="text" name="projectNumber"/></div>
+            <div class="fg"><label>Kurzbeschreibung</label><input type="text" name="descriptionShort"/></div>
+            <div class="fg"><label>Skills</label><input type="text" name="skills"/></div>
+            <div class="fg"><label>Einsatzort</label><input type="text" name="workplace"/></div>
+            <div class="fg"><label>Laufzeit</label><input type="text" name="duration"/></div>
+            <div class="fg"><label>Debitor-Nr.</label><input type="text" name="debitorNr"/></div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button type="submit" class="btn btn-pri">🔍 Suchen</button>
+            <button type="button" class="btn btn-ghost" onclick="toggleSearchPanel('search-panel')">Abbrechen</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div id="search-results"></div>
   </div>
 
   <!-- Page Content -->
@@ -560,6 +586,18 @@
   // ---- bfcache pageshow-Handler ----
   window.addEventListener('pageshow', (e) => {
     if (e.persisted) location.reload();
+  });
+  </script>
+
+  <!-- QBE-Suche AJAX -->
+  <script>
+  document.getElementById('search-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var data = new URLSearchParams(new FormData(this));
+    apiFetch('/project/search', { method: 'POST', body: data,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
+      .then(function(r) { return r.text(); })
+      .then(function(html) { document.getElementById('search-results').innerHTML = html; });
   });
   </script>
 

@@ -17,7 +17,33 @@
       null,
       ${partner.id != null}
         ? 'Erfasst: ' + ${#temporals.format(partner.creationDate,'dd.MM.yyyy')} + ' ' + ${partner.creationUser} + ' · Geändert: ' + ${#temporals.format(partner.changedDate,'dd.MM.yyyy')} + ' ' + ${partner.changedUser}
-        : 'Neu, noch nicht gespeichert')}">
+        : 'Neu, noch nicht gespeichert',
+      'search-panel')}">
+  </div>
+
+  <!-- QBE-Suchpanel -->
+  <div id="search-panel" class="hidden">
+    <form th:action="@{/partner/search}" method="post" id="search-form">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <div class="fcard">
+        <div class="fcard-hd"><span class="fcard-title">Partner suchen</span></div>
+        <div class="fcard-body">
+          <div class="fg2">
+            <div class="fg"><label>Firma</label><input type="text" name="company"/></div>
+            <div class="fg"><label>Name</label><input type="text" name="name1"/></div>
+            <div class="fg"><label>Vorname</label><input type="text" name="name2"/></div>
+            <div class="fg"><label>Ort</label><input type="text" name="city"/></div>
+            <div class="fg"><label>PLZ</label><input type="text" name="plz"/></div>
+            <div class="fg"><label>Kommentar</label><input type="text" name="comments"/></div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button type="submit" class="btn btn-pri">🔍 Suchen</button>
+            <button type="button" class="btn btn-ghost" onclick="toggleSearchPanel('search-panel')">Abbrechen</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div id="search-results"></div>
   </div>
 
   <!-- Page Content -->
@@ -627,6 +653,16 @@
       apiFetch('/partner/' + pid + '/history/' + hId, { method: 'DELETE' })
         .then(function() { location.reload(); });
     }
+
+    // ---- QBE-Suche ----
+    document.getElementById('search-form')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var data = new URLSearchParams(new FormData(this));
+      apiFetch('/partner/search', { method: 'POST', body: data,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
+        .then(function(r) { return r.text(); })
+        .then(function(html) { document.getElementById('search-results').innerHTML = html; });
+    });
 
     // bfcache handler
     window.addEventListener('pageshow', function(e) {

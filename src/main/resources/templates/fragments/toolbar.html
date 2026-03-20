@@ -18,8 +18,9 @@
     rememberedProject – Objekt mit Feldern projectNumber + shortDescription (oder null)
     auditInfo         – Audit-Infotext (z. B. "Erfasst: 01.01.2026 admin · Geändert: ...")
                         oder "Neu, noch nicht gespeichert" bei Neuanlage
+    searchPanelId     – ID des Such-Panels das per Button ein-/ausgeblendet wird (oder null)
 -->
-<div id="toolbar" th:fragment="toolbar(moduleLabel, firstUrl, prevUrl, entityId, nextUrl, lastUrl, newUrl, saveFormId, deleteModalId, rememberedProject, auditInfo)">
+<div id="toolbar" th:fragment="toolbar(moduleLabel, firstUrl, prevUrl, entityId, nextUrl, lastUrl, newUrl, saveFormId, deleteModalId, rememberedProject, auditInfo, searchPanelId)">
 
   <!-- Modul-Label -->
   <div id="tb-module" th:text="${moduleLabel}">Modul</div>
@@ -56,6 +57,10 @@
 
   <!-- Aktionen -->
   <div id="tb-actions">
+    <button type="button" class="btn btn-ghost"
+            th:if="${searchPanelId != null}"
+            th:attr="onclick='toggleSearchPanel(\'' + ${searchPanelId} + '\')'">🔍 Suche</button>
+
     <a class="btn btn-ghost"
        th:href="${newUrl}"
        th:if="${newUrl != null}">＋ Neu</a>

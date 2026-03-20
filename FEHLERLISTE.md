@@ -15,7 +15,7 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
 - [x] Kontaktmöglichkeiten können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert
 - [x] Kontakthistorien-Einträge können nicht initial einem neuen Freiberufler hinzugefügt werden. Ich muss vorher auf Speichern klicken. Das war anders(auch für die anderen Aggregate) spezifiziert
 - [x] Freelancer.availabilityAsDate ist nur ein Datumsfeld, z.B. der Datepicker sollte keine Zeitangabe erlauben
-- [ ] Der Suche Button für die QBE Suche fehlt für Freiberufler und vermutlich auch den anderen Aggregaten. Er ist im Prototyp vorhanden, und die QBE Suche ist spezifiziert, jedoch die Implementierung fehlt.
+- [x] Der Suche Button für die QBE Suche fehlt für Freiberufler und vermutlich auch den anderen Aggregaten. Er ist im Prototyp vorhanden, und die QBE Suche ist spezifiziert, jedoch die Implementierung fehlt.
 - [ ] Der Prototyp und die Implementierung der Forms im Projekt verwenden unterschiedliche Zeichensätze.
 - [ ] Die Checkbox "Datenschutz" ist im Prototypen als "DSGVO EInwilligung" hinterlegt und befindet sich im Bereich "Verfügbarkeit und Konditionen". Das ist auch korrekt so. Die Implementierung und eventuell auch die Spezifikation muss angepasst werden.
 - [ ] Die Breite von "Verfügbarkeit und Konditionen" ist im Prototyp anders als in der Implementierung des Freiberufler-Formulars.

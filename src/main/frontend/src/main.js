@@ -63,3 +63,14 @@ function toggleCard(id) {
   chv?.classList.toggle('open', !isOpen);
 }
 window.toggleCard = toggleCard;
+
+/**
+ * toggleSearchPanel – zeigt/verbirgt das QBE-Suchpanel.
+ * @param {string} id – ID des Such-Panel-Elements
+ */
+function toggleSearchPanel(id) {
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  panel.classList.toggle('hidden');
+}
+window.toggleSearchPanel = toggleSearchPanel;
