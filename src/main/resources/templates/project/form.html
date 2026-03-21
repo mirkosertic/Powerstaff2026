@@ -474,7 +474,7 @@
 
   // ---- Projekt löschen ----
   document.getElementById('btn-delete-confirm').addEventListener('click', () => {
-    fetch(`/project/delete/${PROJECT_ID}?_csrf=${getCsrfToken()}`, { method: 'POST' })
+    fetch(`/project/delete/${PROJECT_ID}`, { method: 'POST' })
       .then(() => { window.location = '/project'; });
   });
 
@@ -517,7 +517,7 @@
       kommentar: document.getElementById('edit-pos-kommentar').value,
       dbVersion: Number(document.getElementById('edit-pos-dbversion').value)
     };
-    const resp = await fetch(`/project/${PROJECT_ID}/positions/${posId}?_csrf=${getCsrfToken()}`, {
+    const resp = await fetch(`/project/${PROJECT_ID}/positions/${posId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
@@ -545,7 +545,7 @@
   }
 
   document.getElementById('btn-confirm-delete-position').addEventListener('click', async () => {
-    await fetch(`/project/${PROJECT_ID}/positions/${deletePosId}/delete?_csrf=${getCsrfToken()}`, { method: 'POST' });
+    await fetch(`/project/${PROJECT_ID}/positions/${deletePosId}/delete`, { method: 'POST' });
     closeModal('modal-delete-position');
     location.reload();
   });
@@ -565,7 +565,7 @@
     if (!lookupResp.ok) return;
     const freelancer = await lookupResp.json();
     // Schritt 2: Freiberufler dem Projekt zuordnen
-    const assignResp = await fetch(`/project/${PROJECT_ID}/positions/assign?_csrf=${getCsrfToken()}`, {
+    const assignResp = await fetch(`/project/${PROJECT_ID}/positions/assign`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ freelancerId: freelancer.id })
@@ -601,13 +601,13 @@
     const description = document.getElementById('history-entry-description').value;
     const hId = document.getElementById('history-entry-id').value;
     if (hId) {
-      await fetch(`/project/${PROJECT_ID}/history/${hId}?_csrf=${getCsrfToken()}`, {
+      await fetch(`/project/${PROJECT_ID}/history/${hId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description })
       });
     } else {
-      await fetch(`/project/${PROJECT_ID}/history?_csrf=${getCsrfToken()}`, {
+      await fetch(`/project/${PROJECT_ID}/history`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description })
@@ -619,7 +619,7 @@
 
   async function deleteHistoryEntry(btn) {
     const hId = btn.dataset.historyId;
-    await fetch(`/project/${PROJECT_ID}/history/${hId}?_csrf=${getCsrfToken()}`, { method: 'DELETE' });
+    await fetch(`/project/${PROJECT_ID}/history/${hId}`, { method: 'DELETE' });
     location.reload();
   }
 

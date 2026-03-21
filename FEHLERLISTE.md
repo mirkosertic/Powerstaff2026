@@ -28,3 +28,5 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
 - [x] Das Land-Feld links nebem der PLZ muss nor einem 3LC-ISO-Code aufnehmen; es kann schmaler gemacht werden. Das PLZ Feld soll weiter nach links rücken, und den frei gewordenen Patz aufnehmen. Das Ort-Feld rechts neben der PLZ soll die restliche Breite des Blockes auffüllen.
 - [x] In der Profilsuche ist das Layout kaputt. Links oben in der Navbar werden mehrere Buttons übereinander angezeigt. Die Navbar / Toolbar soll analog der anderen Formulare über die komplette Seitenbreite gehen.
 - [ ] Das Anhängen des extra _csrf Parameters bei fetch() Methoden aus dem vorherigen Bug-Fix war falsch. Es darf kein Extra Parameter übergeben werden.
+- [ ] Das Profilsuche Chatformular hat eine andere Beeite als z.B. dasd Freiberufler formular. Ich möchte, dass die Breite an das Freiberufler-Formular angepasst wird, sodass
+  überall die gleichen Fluchtlinien verwendet werden.

@@ -490,21 +490,9 @@ Spring Security schützt alle zustandsverändernden Requests (`POST`, `PUT`, `PA
 **Strategie:** Spring Security wird mit `CookieCsrfTokenRepository` konfiguriert. Der CSRF-Token wird als JavaScript-lesbares Cookie (`XSRF-TOKEN`, kein `HttpOnly`) gesetzt.
 
 - **Formular-basierte Requests** (`FormData` / `URLSearchParams`): Thymeleaf bettet `_csrf` automatisch als Hidden-Field ein – kein manueller Aufwand.
-- **Bodylose POSTs und DELETE-Requests** (kein Formular-Body): Der Token wird als URL-Query-Parameter `?_csrf=<token>` angehängt. Der Token wird aus dem Cookie via `getCsrfToken()` gelesen.
-- **JSON-POSTs** (kein Formular-Body): Ebenso `?_csrf=<token>` als Query-Parameter.
+- **Bodylose POSTs, DELETE-Requests und JSON-POSTs**: Kein manuelles Anfügen des CSRF-Tokens notwendig. Spring Security akzeptiert diese Requests ohne expliziten Token (der `X-XSRF-TOKEN`-Header wird bewusst **nicht** gesetzt, da er mit dem Formular-`_csrf`-Parameter konfligiert).
 
-Die Hilfsfunktion `getCsrfToken()` ist global über `window.getCsrfToken` zugänglich:
-
-```js
-// main.js – globale CSRF-Hilfsfunktion
-function getCsrfToken() {
-    const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]*)/);
-    return match ? decodeURIComponent(match[1]) : null;
-}
-window.getCsrfToken = getCsrfToken;
-```
-
-**Regel:** Formular-Submits verwenden `fetch()` direkt (CSRF im Body). Bodylose POST- und DELETE-Requests hängen `?_csrf=${getCsrfToken()}` an die URL. Der `X-XSRF-TOKEN`-Header wird **nicht** gesetzt, da er mit dem Formular-`_csrf`-Parameter konfligiert.
+**Regel:** Alle AJAX-Aufrufe nutzen `fetch()` direkt. Formular-Submits übergeben CSRF über das Hidden-Field. Für alle anderen Requests wird kein Token manuell übergeben.
 
 ### Infinite Scrolling
 
@@ -860,7 +848,7 @@ Spring Security schützt alle zustandsverändernden Requests mit CSRF-Tokens. Th
 
 **Spring Security Konfiguration:** `CookieCsrfTokenRepository.withHttpOnlyFalse()` – damit ist der Token als JavaScript-lesbares Cookie (`XSRF-TOKEN`) verfügbar.
 
-**Frontend:** Formular-Submits nutzen `fetch()` direkt (CSRF im Body via Hidden-Field). Bodylose POST- und DELETE-Requests hängen `?_csrf=${getCsrfToken()}` an die URL. Der `X-XSRF-TOKEN`-Header wird nicht verwendet. Details: Abschnitt 5 (CSRF-Schutz für AJAX-Requests).
+**Frontend:** Formular-Submits nutzen `fetch()` direkt (CSRF im Body via Hidden-Field). Für bodylose POST-, DELETE- und JSON-POST-Requests wird kein CSRF-Token manuell übergeben. Details: Abschnitt 5 (CSRF-Schutz für AJAX-Requests).
 
 ### Passwort-Änderung beim ersten Login
 

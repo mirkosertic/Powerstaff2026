@@ -5,16 +5,6 @@ import './ps-infinite-scroll.js';
 import './ps-chat-input.js';
 
 /**
- * Reads the XSRF-TOKEN cookie value.
- */
-function getCsrfToken() {
-  const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]*)/);
-  return match ? decodeURIComponent(match[1]) : null;
-}
-
-window.getCsrfToken = getCsrfToken;
-
-/**
  * guardedNavigate – navigiert zu einer URL, warnt aber vorher bei ungespeicherten Änderungen.
  * Rückgabe false verhindert Standard-Navigation, Weiterleitung erfolgt ggf. programmatisch.
  * @param {HTMLAnchorElement} link

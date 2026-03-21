@@ -53,8 +53,8 @@
     </div>
   </nav>
 
-  <!-- app.js muss VOR dem Content-Block geladen werden, damit getCsrfToken und
-       andere globale Funktionen in den Inline-Scripts der Templates verfügbar sind. -->
+  <!-- app.js muss VOR dem Content-Block geladen werden, damit globale Funktionen
+       (guardedNavigate, openModal, etc.) in den Inline-Scripts der Templates verfügbar sind. -->
   <script th:src="@{/generated/app.js}"></script>
 
   <!-- Content-Slot -->

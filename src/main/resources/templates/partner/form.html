@@ -631,7 +631,7 @@
     // ---- Löschen ----
     document.getElementById('btn-delete-confirm')?.addEventListener('click', function() {
       if (!partnerId) return;
-      fetch('/partner/delete/' + partnerId + '?_csrf=' + getCsrfToken(), { method: 'POST' })
+      fetch('/partner/delete/' + partnerId, { method: 'POST' })
         .then(function(r) {
           if (r.ok) { location.href = '/partner/new'; return; }
           return r.json();
@@ -656,7 +656,7 @@
       if (!partnerId) return;
       var code = document.getElementById('fl-code-input').value.trim();
       if (!code) return;
-      fetch('/partner/' + partnerId + '/assign-freelancer?_csrf=' + getCsrfToken(), {
+      fetch('/partner/' + partnerId + '/assign-freelancer', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({code: code})
@@ -676,7 +676,7 @@
     document.getElementById('btn-conflict-reassign')?.addEventListener('click', function() {
       if (!partnerId) return;
       var flId = parseInt(document.getElementById('conflict-freelancer-id').value);
-      fetch('/partner/' + partnerId + '/confirm-reassign-freelancer?_csrf=' + getCsrfToken(), {
+      fetch('/partner/' + partnerId + '/confirm-reassign-freelancer', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({freelancerId: flId})
@@ -689,7 +689,7 @@
     function removeFreelancer(btn) {
       var flId = btn.dataset.freelancerId;
       var pid = btn.dataset.partnerId;
-      fetch('/partner/' + pid + '/remove-freelancer/' + flId + '?_csrf=' + getCsrfToken(), { method: 'POST' })
+      fetch('/partner/' + pid + '/remove-freelancer/' + flId, { method: 'POST' })
         .then(function() { location.reload(); });
     }
 

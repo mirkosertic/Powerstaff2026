@@ -576,7 +576,7 @@
     // ---- Löschen ----
     document.getElementById('btn-delete-confirm')?.addEventListener('click', function() {
       if (!kundeId) return;
-      fetch('/kunde/delete/' + kundeId + '?_csrf=' + getCsrfToken(), { method: 'POST' })
+      fetch('/kunde/delete/' + kundeId, { method: 'POST' })
         .then(function(r) {
           if (r.ok) { location.href = '/kunde/new'; return; }
           return r.json();
