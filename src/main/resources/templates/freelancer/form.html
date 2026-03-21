@@ -693,7 +693,7 @@
     function loadAvailableTags(typeEl) {
       if (!freelancerId) return;
       var type = typeEl.dataset.tagType;
-      apiFetch('/freelancer/' + freelancerId + '/available-tags/' + type, { method: 'GET' })
+      fetch('/freelancer/' + freelancerId + '/available-tags/' + type)
         .then(function(r) { return r.json(); })
         .then(function(tags) {
           typeEl.innerHTML = '<option value="">+ Tag hinzufügen</option>';
@@ -797,7 +797,7 @@
       form.classList.add('was-validated');
       if (!form.checkValidity()) return;
       var data = new URLSearchParams(new FormData(form));
-      var r = await apiFetch('/freelancer/save', { method: 'POST', body: data,
+      var r = await fetch('/freelancer/save', { method: 'POST', body: data,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'} });
       if (r.ok && r.redirected) { location.href = r.url; return; }
       if (r.status === 409) {
@@ -825,7 +825,7 @@
     // ---- Löschen ----
     document.getElementById('btn-delete-confirm')?.addEventListener('click', function() {
       if (!freelancerId) return;
-      apiFetch('/freelancer/delete/' + freelancerId, { method: 'POST' })
+      fetch('/freelancer/delete/' + freelancerId + '?_csrf=' + getCsrfToken(), { method: 'POST' })
         .then(function(r) {
           if (r.ok) { location.href = '/freelancer/new'; return; }
           return r.json();
@@ -865,7 +865,7 @@
     var _lastSearchParams = null;
 
     function executeSearch(params) {
-      apiFetch('/freelancer/search', { method: 'POST', body: params,
+      fetch('/freelancer/search', { method: 'POST', body: params,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
         .then(function(r) { return r.text(); })
         .then(function(html) {
@@ -902,7 +902,7 @@
     // ---- Zum gemerkten Projekt zuordnen ----
     function assignToRememberedProject() {
       if (!freelancerId) return;
-      apiFetch('/freelancer/' + freelancerId + '/assign-to-remembered-project', { method: 'POST' })
+      fetch('/freelancer/' + freelancerId + '/assign-to-remembered-project?_csrf=' + getCsrfToken(), { method: 'POST' })
         .then(function(r) {
           if (r.status === 409) {
             var msg = document.getElementById('assign-already-msg');

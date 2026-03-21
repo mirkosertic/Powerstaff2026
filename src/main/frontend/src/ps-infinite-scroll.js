@@ -35,7 +35,7 @@ class PsInfiniteScroll extends HTMLElement {
     this._loading = true;
 
     try {
-      const resp = await window.apiFetch(url);
+      const resp = await fetch(url);
       if (!resp.ok) return;
 
       const html = await resp.text();

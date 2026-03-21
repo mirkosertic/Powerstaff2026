@@ -12,29 +12,7 @@ function getCsrfToken() {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
-/**
- * apiFetch – thin wrapper around fetch that automatically adds the
- * X-XSRF-TOKEN header for non-GET requests.
- *
- * @param {string} url
- * @param {RequestInit} [options]
- * @returns {Promise<Response>}
- */
-export function apiFetch(url, options = {}) {
-  const method = (options.method || 'GET').toUpperCase();
-  const headers = new Headers(options.headers || {});
-
-  if (method !== 'GET' && method !== 'HEAD') {
-    const token = getCsrfToken();
-    if (token) {
-      headers.set('X-XSRF-TOKEN', token);
-    }
-  }
-
-  return fetch(url, { ...options, headers });
-}
-
-window.apiFetch = apiFetch;
+window.getCsrfToken = getCsrfToken;
 
 /**
  * openModal / closeModal – zeigt oder verbirgt ein Modal-Element (.mbk)

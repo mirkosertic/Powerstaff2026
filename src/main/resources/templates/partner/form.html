@@ -617,7 +617,7 @@
       form.classList.add('was-validated');
       if (!form.checkValidity()) return;
       var data = new URLSearchParams(new FormData(form));
-      apiFetch('/partner/save', { method: 'POST', body: data,
+      fetch('/partner/save', { method: 'POST', body: data,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
         .then(function(r) {
           if (r.ok && r.redirected) { location.href = r.url; return; }
@@ -631,7 +631,7 @@
     // ---- Löschen ----
     document.getElementById('btn-delete-confirm')?.addEventListener('click', function() {
       if (!partnerId) return;
-      apiFetch('/partner/delete/' + partnerId, { method: 'POST' })
+      fetch('/partner/delete/' + partnerId + '?_csrf=' + getCsrfToken(), { method: 'POST' })
         .then(function(r) {
           if (r.ok) { location.href = '/partner/new'; return; }
           return r.json();
@@ -656,7 +656,7 @@
       if (!partnerId) return;
       var code = document.getElementById('fl-code-input').value.trim();
       if (!code) return;
-      apiFetch('/partner/' + partnerId + '/assign-freelancer', {
+      fetch('/partner/' + partnerId + '/assign-freelancer?_csrf=' + getCsrfToken(), {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({code: code})
@@ -676,7 +676,7 @@
     document.getElementById('btn-conflict-reassign')?.addEventListener('click', function() {
       if (!partnerId) return;
       var flId = parseInt(document.getElementById('conflict-freelancer-id').value);
-      apiFetch('/partner/' + partnerId + '/confirm-reassign-freelancer', {
+      fetch('/partner/' + partnerId + '/confirm-reassign-freelancer?_csrf=' + getCsrfToken(), {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({freelancerId: flId})
@@ -689,7 +689,7 @@
     function removeFreelancer(btn) {
       var flId = btn.dataset.freelancerId;
       var pid = btn.dataset.partnerId;
-      apiFetch('/partner/' + pid + '/remove-freelancer/' + flId, { method: 'POST' })
+      fetch('/partner/' + pid + '/remove-freelancer/' + flId + '?_csrf=' + getCsrfToken(), { method: 'POST' })
         .then(function() { location.reload(); });
     }
 
@@ -697,7 +697,7 @@
     var _lastSearchParams = null;
 
     function executeSearch(params) {
-      apiFetch('/partner/search', { method: 'POST', body: params,
+      fetch('/partner/search', { method: 'POST', body: params,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
         .then(function(r) { return r.text(); })
         .then(function(html) {

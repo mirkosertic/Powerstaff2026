@@ -487,31 +487,24 @@ AJAX-Endpunkte liefern entweder:
 
 Spring Security schützt alle zustandsverändernden Requests (`POST`, `PUT`, `PATCH`, `DELETE`) mit CSRF-Tokens. Thymeleaf bettet diese automatisch in HTML-Formulare ein. Für AJAX-Requests muss der Token manuell mitgesendet werden.
 
-**Strategie:** Spring Security wird mit `CookieCsrfTokenRepository` konfiguriert. Der CSRF-Token wird als JavaScript-lesbares Cookie (`XSRF-TOKEN`, kein `HttpOnly`) gesetzt. Alle AJAX-Aufrufe im Frontend lesen den Token aus dem Cookie und senden ihn als `X-XSRF-TOKEN`-Header.
+**Strategie:** Spring Security wird mit `CookieCsrfTokenRepository` konfiguriert. Der CSRF-Token wird als JavaScript-lesbares Cookie (`XSRF-TOKEN`, kein `HttpOnly`) gesetzt.
 
-Ein zentraler `apiFetch`-Wrapper in `main.js` übernimmt das für alle Custom Elements und sonstigen AJAX-Code:
+- **Formular-basierte Requests** (`FormData` / `URLSearchParams`): Thymeleaf bettet `_csrf` automatisch als Hidden-Field ein – kein manueller Aufwand.
+- **Bodylose POSTs und DELETE-Requests** (kein Formular-Body): Der Token wird als URL-Query-Parameter `?_csrf=<token>` angehängt. Der Token wird aus dem Cookie via `getCsrfToken()` gelesen.
+- **JSON-POSTs** (kein Formular-Body): Ebenso `?_csrf=<token>` als Query-Parameter.
+
+Die Hilfsfunktion `getCsrfToken()` ist global über `window.getCsrfToken` zugänglich:
 
 ```js
-// main.js – globaler AJAX-Wrapper
+// main.js – globale CSRF-Hilfsfunktion
 function getCsrfToken() {
-    return document.cookie
-        .split('; ')
-        .find(c => c.startsWith('XSRF-TOKEN='))
-        ?.split('=')[1];
+    const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]*)/);
+    return match ? decodeURIComponent(match[1]) : null;
 }
-
-export async function apiFetch(url, options = {}) {
-    return fetch(url, {
-        ...options,
-        headers: {
-            ...options.headers,
-            'X-XSRF-TOKEN': getCsrfToken()
-        }
-    });
-}
+window.getCsrfToken = getCsrfToken;
 ```
 
-**Regel:** Alle Custom Elements und Vanilla-JS-Code verwenden ausschließlich `apiFetch` für zustandsverändernde Requests – niemals `fetch` direkt. Damit ist CSRF-Schutz systemweit ohne Mehraufwand pro Endpunkt sichergestellt.
+**Regel:** Formular-Submits verwenden `fetch()` direkt (CSRF im Body). Bodylose POST- und DELETE-Requests hängen `?_csrf=${getCsrfToken()}` an die URL. Der `X-XSRF-TOKEN`-Header wird **nicht** gesetzt, da er mit dem Formular-`_csrf`-Parameter konfligiert.
 
 ### Infinite Scrolling
 
@@ -867,7 +860,7 @@ Spring Security schützt alle zustandsverändernden Requests mit CSRF-Tokens. Th
 
 **Spring Security Konfiguration:** `CookieCsrfTokenRepository.withHttpOnlyFalse()` – damit ist der Token als JavaScript-lesbares Cookie (`XSRF-TOKEN`) verfügbar.
 
-**Frontend:** Alle AJAX-Aufrufe laufen über den zentralen `apiFetch`-Wrapper in `main.js`, der den Token automatisch als `X-XSRF-TOKEN`-Header setzt. Kein Custom Element ruft `fetch()` direkt auf. Details und Implementierung: Abschnitt 5 (CSRF-Schutz für AJAX-Requests).
+**Frontend:** Formular-Submits nutzen `fetch()` direkt (CSRF im Body via Hidden-Field). Bodylose POST- und DELETE-Requests hängen `?_csrf=${getCsrfToken()}` an die URL. Der `X-XSRF-TOKEN`-Header wird nicht verwendet. Details: Abschnitt 5 (CSRF-Schutz für AJAX-Requests).
 
 ### Passwort-Änderung beim ersten Login
 

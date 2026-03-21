@@ -3,7 +3,7 @@
  *
  * Attributes:
  *   open              – when present the modal is visible
- *   data-confirm-url  – when set, the form inside is submitted via apiFetch
+ *   data-confirm-url  – when set, the form inside is submitted via fetch
  *                       instead of the native browser submit
  *
  * Events emitted:
@@ -61,7 +61,7 @@ class PsModal extends HTMLElement {
     const body = new FormData(form);
 
     try {
-      const resp = await window.apiFetch(url, { method: 'POST', body });
+      const resp = await fetch(url, { method: 'POST', body });
       if (resp.ok) {
         this.close();
       }
