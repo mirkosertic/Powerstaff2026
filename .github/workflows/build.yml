@@ -18,10 +18,10 @@ jobs:
     - uses: actions/setup-node@v6
       with:
         node-version: 24
-    - name: Set up JDK 21
+    - name: Set up JDK 25
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '25'
         distribution: 'temurin'
         cache: maven
 
@@ -39,7 +39,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: luceneserver-${{ steps.get_version.outputs.version }}
-        path: target/luceneserver-*.jar
+        path: target/powerstaff-*.jar
         if-no-files-found: error
         retention-days: 90
 
@@ -53,7 +53,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v6
       with:
-        images: mirkosertic42/mcpluceneserver
+        images: mirkosertic42/powerstaff2026
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v4
@@ -73,6 +73,6 @@ jobs:
     - name: Generate artifact attestation
       uses: actions/attest@v4
       with:
-        subject-name: index.docker.io/mirkosertic42/mcpluceneserver
+        subject-name: index.docker.io/mirkosertic42/powerstaff2026
         subject-digest: ${{ steps.push.outputs.digest }}
         push-to-registry: true

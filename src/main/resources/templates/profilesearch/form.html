@@ -5,6 +5,7 @@
 
   <!-- Chat-Toolbar (§27 Toolbar-Variante Profilsuche) -->
   <div id="toolbar">
+  <div id="toolbar-inner">
     <div id="tb-module">Profilsuche</div>
 
     <!-- Sidebar-Toggle (nur auf kleinen Screens sichtbar, §24) -->
@@ -13,8 +14,11 @@
 
     <!-- Gemerktes Projekt -->
     <div id="tb-project" th:if="${rememberedProject != null}">
-      📌 <strong th:text="${rememberedProject.projectNumber}"></strong>
-      – <span th:text="${rememberedProject.shortDescription}"></span>
+      📌 <a th:href="@{/project/{id}(id=${rememberedProject.projectId})}"
+            onclick="return guardedNavigate(this)">
+        <strong th:text="${rememberedProject.projectNumber}"></strong>
+        – <span th:text="${rememberedProject.shortDescription}"></span>
+      </a>
     </div>
 
     <!-- Aktionen -->
@@ -30,6 +34,7 @@
         🗑 Chat löschen
       </button>
     </div>
+  </div><!-- /#toolbar-inner -->
   </div>
 
   <!-- Split-Panel (§24) -->
