@@ -25,6 +25,8 @@ import org.springframework.web.context.WebApplicationContext
 import jakarta.servlet.http.Cookie
 import java.time.LocalDateTime
 
+import static org.hamcrest.Matchers.containsString
+import static org.hamcrest.Matchers.not
 import static org.mockito.ArgumentMatchers.any
 import static org.mockito.ArgumentMatchers.anyInt
 import static org.mockito.ArgumentMatchers.anyLong
@@ -370,5 +372,43 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         then:
         result.andExpect(status().isOk())
               .andExpect(jsonPath('$.ok').value(true))
+    }
+
+    // -------------------------------------------------------------------------
+    // Thymeleaf-Rendering HTML-Inhalte pruefen
+    // -------------------------------------------------------------------------
+
+    def "GET /partner/{id} rendert HTML mit Formular ohne Exception"() {
+        when:
+        def result = mockMvc.perform(get("/partner/42").with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('<form')))
+              .andExpect(content().string(not(containsString('Exception'))))
+              .andExpect(content().string(not(containsString('Whitelabel Error'))))
+    }
+
+    def "GET /partner/new rendert HTML mit leerem Formular ohne Exception"() {
+        when:
+        def result = mockMvc.perform(get("/partner/new").with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('<form')))
+              .andExpect(content().string(not(containsString('Exception'))))
+    }
+
+    def "POST /partner/search rendert HTML-Fragment ohne Exception"() {
+        when:
+        def result = mockMvc.perform(
+                post("/partner/search")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("company", "Test"))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(not(containsString('Exception'))))
     }
 }

@@ -35,6 +35,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import static org.hamcrest.Matchers.containsString
+import static org.hamcrest.Matchers.not
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -297,6 +300,89 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
 
         then:
         result.andExpect(status().isOk())
+    }
+
+    def "GET /freelancer/search-more gibt Fragment zurueck (200)"() {
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/search-more?offset=20&name1=Mustermann")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+    }
+
+    // -------------------------------------------------------------------------
+    // Thymeleaf-Rendering HTML-Inhalte pruefen
+    // -------------------------------------------------------------------------
+
+    def "GET /freelancer/{id} rendert HTML mit Formular ohne Exception"() {
+        when:
+        def result = mockMvc.perform(get("/freelancer/42").with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('<form')))
+              .andExpect(content().string(not(containsString('Exception'))))
+              .andExpect(content().string(not(containsString('Whitelabel Error'))))
+    }
+
+    def "GET /freelancer/new rendert HTML mit leerem Formular ohne Exception"() {
+        when:
+        def result = mockMvc.perform(get("/freelancer/new").with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('<form')))
+              .andExpect(content().string(not(containsString('Exception'))))
+    }
+
+    def "POST /freelancer/search rendert HTML-Fragment ohne Exception"() {
+        when:
+        def result = mockMvc.perform(
+                post("/freelancer/search")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("name1", "Mustermann"))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(not(containsString('Exception'))))
+    }
+
+    // -------------------------------------------------------------------------
+    // Lookup per Code
+    // -------------------------------------------------------------------------
+
+    def "GET /freelancer/lookup?code=CODE-001 liefert JSON mit id-Feld (200)"() {
+        given:
+        def lookupResult = new de.mirkosertic.powerstaff.freelancer.command.FreelancerLookupResult(42L, null, "Muster GmbH")
+        when(commandService.findByCode("CODE-001")).thenReturn(Optional.of(lookupResult))
+
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/lookup")
+                        .with(user("testuser"))
+                        .param("code", "CODE-001"))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(jsonPath('$.id').value(42))
+    }
+
+    def "GET /freelancer/lookup?code=UNBEKANNT liefert 404 mit notFound:true"() {
+        given:
+        when(commandService.findByCode("UNBEKANNT")).thenReturn(Optional.empty())
+
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/lookup")
+                        .with(user("testuser"))
+                        .param("code", "UNBEKANNT"))
+
+        then:
+        result.andExpect(status().isNotFound())
+              .andExpect(jsonPath('$.notFound').value(true))
     }
 
     // -------------------------------------------------------------------------

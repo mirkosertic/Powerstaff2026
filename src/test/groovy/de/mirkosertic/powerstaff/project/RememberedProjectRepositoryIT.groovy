@@ -77,4 +77,34 @@ class RememberedProjectRepositoryIT extends AbstractContainerBaseIT {
         then:
         service.get("IT-REM-user3").isEmpty()
     }
+
+    // -------------------------------------------------------------------------
+    // getRememberedProjectInfo
+    // -------------------------------------------------------------------------
+
+    def "getRememberedProjectInfo ohne gemerktes Projekt liefert empty"() {
+        expect:
+        service.getRememberedProjectInfo("IT-REM-unbekannt").isEmpty()
+    }
+
+    def "getRememberedProjectInfo mit gemerktem Projekt liefert RememberedProjectInfo mit projectNumber"() {
+        given:
+        service.set("IT-REM-user-info", projectId1)
+
+        when:
+        def info = service.getRememberedProjectInfo("IT-REM-user-info")
+
+        then:
+        info.isPresent()
+        info.get().projectNumber() == "IT-REM-P001"
+    }
+
+    def "getRememberedProjectInfo nach clear liefert empty"() {
+        given:
+        service.set("IT-REM-user-clear", projectId1)
+        service.clear("IT-REM-user-clear")
+
+        expect:
+        service.getRememberedProjectInfo("IT-REM-user-clear").isEmpty()
+    }
 }

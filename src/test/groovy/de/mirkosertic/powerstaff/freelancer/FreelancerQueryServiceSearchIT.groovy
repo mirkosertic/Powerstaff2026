@@ -52,7 +52,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch-Alpha", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null)
+                null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -67,7 +67,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 null, null, "Beispiel", null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null)
+                null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -82,7 +82,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch-Gamma", null, null, null, null, null, "München",
                 null, null, null, null, null, null, null, null, null, null,
-                null, null)
+                null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -97,7 +97,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch-Alpha", null, null, null, null, null, "Hamburg",
                 null, null, null, null, null, null, null, null, null, null,
-                null, null)
+                null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -111,7 +111,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 null, null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, "Java",
-                null, null)
+                null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -125,7 +125,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                700L, null)
+                700L, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -140,7 +140,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, 600L)
+                null, 600L, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -154,7 +154,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null)
+                null, null, null, null)
 
         when:
         def page1 = queryService.search(criteria, 0, 2)
@@ -183,10 +183,59 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         f
     }
 
+    // ─── Sort-Tests ───────────────────────────────────────────────────────────
+
+    def "Suche mit sortField=name1 asc liefert korrekte Reihenfolge"() {
+        given:
+        def criteria = new FreelancerSearchCriteria(
+                "IT-Srch", null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null, null, null,
+                null, null, "name1", "asc")
+
+        when:
+        def results = queryService.search(criteria, 0, 100)
+
+        then:
+        def relevant = results.findAll { it.name1().startsWith("IT-Srch") }
+        relevant.size() == 3
+        relevant == relevant.sort(false) { it.name1() }
+    }
+
+    def "Suche mit sortField=name1 desc liefert absteigende Reihenfolge"() {
+        given:
+        def criteria = new FreelancerSearchCriteria(
+                "IT-Srch", null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null, null, null,
+                null, null, "name1", "desc")
+
+        when:
+        def results = queryService.search(criteria, 0, 100)
+
+        then:
+        def relevant = results.findAll { it.name1().startsWith("IT-Srch") }
+        relevant.size() == 3
+        relevant == relevant.sort(false) { a, b -> b.name1() <=> a.name1() }
+    }
+
+    def "Suche mit ungueltigem sortField faellt auf Default-Sortierung zurueck (keine Exception)"() {
+        given:
+        def criteria = new FreelancerSearchCriteria(
+                "IT-Srch", null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null, null, null,
+                null, null, 'INVALID_FIELD__$(rm -rf /)', "asc")
+
+        when:
+        def results = queryService.search(criteria, 0, 100)
+
+        then:
+        notThrown(Exception)
+        results.findAll { it.name1().startsWith("IT-Srch") }.size() == 3
+    }
+
     private static FreelancerSearchCriteria emptyCriteria() {
         new FreelancerSearchCriteria(
                 null, null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null)
+                null, null, null, null)
     }
 }

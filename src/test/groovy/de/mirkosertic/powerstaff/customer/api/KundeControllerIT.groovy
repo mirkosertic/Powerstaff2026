@@ -23,6 +23,8 @@ import org.springframework.web.context.WebApplicationContext
 import jakarta.servlet.http.Cookie
 import java.time.LocalDateTime
 
+import static org.hamcrest.Matchers.containsString
+import static org.hamcrest.Matchers.not
 import static org.mockito.ArgumentMatchers.any
 import static org.mockito.ArgumentMatchers.anyInt
 import static org.mockito.ArgumentMatchers.anyLong
@@ -33,6 +35,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -253,5 +256,43 @@ class KundeControllerIT extends AbstractContainerBaseIT {
 
         then:
         result.andExpect(status().isOk())
+    }
+
+    // -------------------------------------------------------------------------
+    // Thymeleaf-Rendering HTML-Inhalte pruefen
+    // -------------------------------------------------------------------------
+
+    def "GET /kunde/{id} rendert HTML mit Formular ohne Exception"() {
+        when:
+        def result = mockMvc.perform(get("/kunde/42").with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('<form')))
+              .andExpect(content().string(not(containsString('Exception'))))
+              .andExpect(content().string(not(containsString('Whitelabel Error'))))
+    }
+
+    def "GET /kunde/new rendert HTML mit leerem Formular ohne Exception"() {
+        when:
+        def result = mockMvc.perform(get("/kunde/new").with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('<form')))
+              .andExpect(content().string(not(containsString('Exception'))))
+    }
+
+    def "POST /kunde/search rendert HTML-Fragment ohne Exception"() {
+        when:
+        def result = mockMvc.perform(
+                post("/kunde/search")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("company", "Test"))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(not(containsString('Exception'))))
     }
 }

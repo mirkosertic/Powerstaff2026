@@ -37,7 +37,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria("Hamburg", null, null, null, null, null, null, null, null, null),
+            new PartnerSearchCriteria("Hamburg", null, null, null, null, null, null, null, null, null, null, null),
             0, 20
         )
 
@@ -52,7 +52,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria(null, null, null, null, null, null, "München", null, null, null),
+            new PartnerSearchCriteria(null, null, null, null, null, null, "München", null, null, null, null, null),
             0, 20
         )
 
@@ -68,7 +68,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria("IT-Qbe Multi", null, null, null, null, null, "Hamburg", null, null, null),
+            new PartnerSearchCriteria("IT-Qbe Multi", null, null, null, null, null, "Hamburg", null, null, null, null, null),
             0, 20
         )
 
@@ -97,7 +97,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
         when:
         def total = queryService.countSearch(
-            new PartnerSearchCriteria("IT-Qbe Count", null, null, null, null, null, null, null, null, null)
+            new PartnerSearchCriteria("IT-Qbe Count", null, null, null, null, null, null, null, null, null, null, null)
         )
 
         then:
@@ -107,7 +107,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
     def "search ohne Treffer liefert leere Liste"() {
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria("ZZZNOMATCH999", null, null, null, null, null, null, null, null, null),
+            new PartnerSearchCriteria("ZZZNOMATCH999", null, null, null, null, null, null, null, null, null, null, null),
             0, 20
         )
 
@@ -156,6 +156,58 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
         expect:
         queryService.findFreelancersByPartner(partner.id).isEmpty()
+    }
+
+    // ─── Sort-Tests ────────────────────────────────────────────────────────────
+
+    def "search mit sortField=company asc liefert aufsteigende Reihenfolge"() {
+        given:
+        commandService.save(newPartner("IT-Qbe Sort C"))
+        commandService.save(newPartner("IT-Qbe Sort A"))
+        commandService.save(newPartner("IT-Qbe Sort B"))
+
+        when:
+        def results = queryService.search(
+            new PartnerSearchCriteria("IT-Qbe Sort", null, null, null, null, null, null, null, null, null, "company", "asc"),
+            0, 20
+        )
+
+        then:
+        results.size() == 3
+        results[0].company() == "IT-Qbe Sort A"
+        results[1].company() == "IT-Qbe Sort B"
+        results[2].company() == "IT-Qbe Sort C"
+    }
+
+    def "search mit sortField=company desc liefert absteigende Reihenfolge"() {
+        given:
+        commandService.save(newPartner("IT-Qbe Desc C"))
+        commandService.save(newPartner("IT-Qbe Desc A"))
+        commandService.save(newPartner("IT-Qbe Desc B"))
+
+        when:
+        def results = queryService.search(
+            new PartnerSearchCriteria("IT-Qbe Desc", null, null, null, null, null, null, null, null, null, "company", "desc"),
+            0, 20
+        )
+
+        then:
+        results.size() == 3
+        results[0].company() == "IT-Qbe Desc C"
+        results[1].company() == "IT-Qbe Desc B"
+        results[2].company() == "IT-Qbe Desc A"
+    }
+
+    def "search mit ungueltigem sortField faellt auf Default-Sortierung zurueck (keine Exception)"() {
+        when:
+        def results = queryService.search(
+            new PartnerSearchCriteria(null, null, null, null, null, null, null, null, null, null, 'DROP TABLE partner; --', "asc"),
+            0, 20
+        )
+
+        then:
+        notThrown(Exception)
+        results != null
     }
 
     private static Partner newPartner(String company, String city = null) {

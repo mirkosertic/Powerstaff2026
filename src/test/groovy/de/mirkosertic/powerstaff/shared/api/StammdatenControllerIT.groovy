@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
+import static org.hamcrest.Matchers.containsString
+import static org.hamcrest.Matchers.not
 import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.when
@@ -290,5 +292,41 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().isOk())
               .andExpect(content().contentTypeCompatibleWith("application/json"))
               .andExpect(jsonPath('$.ok').value(true))
+    }
+
+    // -------------------------------------------------------------------------
+    // Thymeleaf-Rendering HTML-Inhalte pruefen (kein Thymeleaf-Parsing-Fehler)
+    // -------------------------------------------------------------------------
+
+    def "GET /admin/historientypen rendert HTML ohne Exception"() {
+        when:
+        def result = mockMvc.perform(get("/admin/historientypen").with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('<form')))
+              .andExpect(content().string(not(containsString('Exception'))))
+              .andExpect(content().string(not(containsString('Whitelabel Error'))))
+    }
+
+    def "GET /admin/positionsstatus rendert HTML ohne Exception"() {
+        when:
+        def result = mockMvc.perform(get("/admin/positionsstatus").with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('<form')))
+              .andExpect(content().string(not(containsString('Exception'))))
+              .andExpect(content().string(not(containsString('Whitelabel Error'))))
+    }
+
+    def "GET /admin/tags rendert HTML ohne Exception"() {
+        when:
+        def result = mockMvc.perform(get("/admin/tags").with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(not(containsString('Exception'))))
+              .andExpect(content().string(not(containsString('Whitelabel Error'))))
     }
 }
