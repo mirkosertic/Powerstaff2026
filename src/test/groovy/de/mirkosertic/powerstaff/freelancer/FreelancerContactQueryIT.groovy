@@ -40,10 +40,10 @@ class FreelancerContactQueryIT extends AbstractContainerBaseIT {
     def "findContactsByFreelancerId liefert gespeicherte Kontakte"() {
         given:
         def contacts = [
-                new FreelancerContactEntry(null, "EMAIL", "it-cq@example.com"),
-                new FreelancerContactEntry(null, "PHONE", "+49 000 1234")
+                new FreelancerContactEntry("ADD", null, "EMAIL", "it-cq@example.com"),
+                new FreelancerContactEntry("ADD", null, "PHONE", "+49 000 1234")
         ]
-        commandService.save(commandService.findById(freelancerId).get(), contacts, [])
+        commandService.save(commandService.findById(freelancerId).get(), contacts, [], [])
 
         when:
         def result = queryService.findContactsByFreelancerId(freelancerId)
@@ -62,11 +62,11 @@ class FreelancerContactQueryIT extends AbstractContainerBaseIT {
     def "findContactsByFreelancerId sortiert nach type ASC dann value ASC"() {
         given:
         def contacts = [
-                new FreelancerContactEntry(null, "PHONE", "222"),
-                new FreelancerContactEntry(null, "EMAIL", "bbb@example.com"),
-                new FreelancerContactEntry(null, "EMAIL", "aaa@example.com")
+                new FreelancerContactEntry("ADD", null, "PHONE", "222"),
+                new FreelancerContactEntry("ADD", null, "EMAIL", "bbb@example.com"),
+                new FreelancerContactEntry("ADD", null, "EMAIL", "aaa@example.com")
         ]
-        commandService.save(commandService.findById(freelancerId).get(), contacts, [])
+        commandService.save(commandService.findById(freelancerId).get(), contacts, [], [])
 
         when:
         def result = queryService.findContactsByFreelancerId(freelancerId)

@@ -98,8 +98,6 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
 
         when(commandService.findById(42L)).thenReturn(Optional.of(testFreelancer))
         when(commandService.findById(-999L)).thenReturn(Optional.empty())
-        when(commandService.save(any())).thenReturn(testFreelancer)
-        // Unified Save mit 4 Parametern: freelancer, contactChanges, historyChanges, tagChanges
         when(commandService.save(any(), any(), any(), any())).thenReturn(testFreelancer)
 
         when(queryService.findFirst()).thenReturn(Optional.of(detailView))

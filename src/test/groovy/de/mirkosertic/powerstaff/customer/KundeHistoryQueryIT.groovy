@@ -39,7 +39,7 @@ class KundeHistoryQueryIT extends AbstractContainerBaseIT {
         given:
         def kunde = commandService.save(newKunde("IT-KHQ History GmbH"),
                 [],
-                [new KundeHistoryEntry(null, historyTypeId, "Erstanlage")])
+                [new KundeHistoryEntry("ADD", null, historyTypeId, "Erstanlage")])
 
         when:
         def history = queryService.findHistoryByKundeId(kunde.id)

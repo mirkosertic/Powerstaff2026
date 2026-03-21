@@ -36,6 +36,11 @@ public class FreelancerCommandService {
      * Leerer Code wird als NULL gespeichert. Wirft {@link DuplicateCodeException}
      * wenn der Code bereits von einem anderen Freiberufler verwendet wird.
      */
+    /** Convenience-Methode für Tests und interne Aufrufe ohne Delta-Listen. */
+    public Freelancer save(Freelancer freelancer) {
+        return save(freelancer, List.of(), List.of(), List.of());
+    }
+
     public Freelancer save(Freelancer freelancer,
                            List<FreelancerContactEntry> contactChanges,
                            List<FreelancerHistoryEntry> historyChanges,

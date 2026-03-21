@@ -45,8 +45,8 @@ class FreelancerHistoryQueryIT extends AbstractContainerBaseIT {
 
     def "findHistoryByFreelancerId liefert gespeicherte Historieneintraege"() {
         given:
-        def history = [new FreelancerHistoryEntry(null, historyTypeId, "IT-HQ Ersteintrag")]
-        commandService.save(commandService.findById(freelancerId).get(), [], history)
+        def history = [new FreelancerHistoryEntry("ADD", null, historyTypeId, "IT-HQ Ersteintrag")]
+        commandService.save(commandService.findById(freelancerId).get(), [], history, [])
 
         when:
         def result = queryService.findHistoryByFreelancerId(freelancerId)

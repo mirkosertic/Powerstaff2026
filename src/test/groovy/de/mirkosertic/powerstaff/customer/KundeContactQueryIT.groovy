@@ -29,7 +29,7 @@ class KundeContactQueryIT extends AbstractContainerBaseIT {
     def "Kontakt anlegen und per findContactsByKundeId lesen"() {
         given:
         def kunde = commandService.save(newKunde("IT-KCQ Contact GmbH"),
-                [new KundeContactEntry(null, "EMAIL", "test@example.com")],
+                [new KundeContactEntry("ADD", null, "EMAIL", "test@example.com")],
                 [])
 
         when:
@@ -54,9 +54,9 @@ class KundeContactQueryIT extends AbstractContainerBaseIT {
         given:
         def kunde = commandService.save(newKunde("IT-KCQ Sort GmbH"),
                 [
-                    new KundeContactEntry(null, "TEL",   "+49 89 999"),
-                    new KundeContactEntry(null, "EMAIL", "z@example.com"),
-                    new KundeContactEntry(null, "EMAIL", "a@example.com"),
+                    new KundeContactEntry("ADD", null, "TEL",   "+49 89 999"),
+                    new KundeContactEntry("ADD", null, "EMAIL", "z@example.com"),
+                    new KundeContactEntry("ADD", null, "EMAIL", "a@example.com"),
                 ],
                 [])
 
