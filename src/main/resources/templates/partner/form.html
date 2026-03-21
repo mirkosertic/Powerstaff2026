@@ -631,7 +631,7 @@
     // ---- Löschen ----
     document.getElementById('btn-delete-confirm')?.addEventListener('click', function() {
       if (!partnerId) return;
-      fetch('/partner/delete/' + partnerId, { method: 'POST' })
+      fetch('/partner/delete/' + partnerId, { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } })
         .then(function(r) {
           if (r.ok) { location.href = '/partner/new'; return; }
           return r.json();
@@ -658,7 +658,7 @@
       if (!code) return;
       fetch('/partner/' + partnerId + '/assign-freelancer', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': getCsrfToken()},
         body: JSON.stringify({code: code})
       }).then(function(r) {
         if (r.status === 404) { alert('Freiberufler mit diesem Code nicht gefunden.'); return; }
@@ -678,7 +678,7 @@
       var flId = parseInt(document.getElementById('conflict-freelancer-id').value);
       fetch('/partner/' + partnerId + '/confirm-reassign-freelancer', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': getCsrfToken()},
         body: JSON.stringify({freelancerId: flId})
       }).then(function() {
         closeModal('modal-freelancer-conflict');
@@ -689,7 +689,7 @@
     function removeFreelancer(btn) {
       var flId = btn.dataset.freelancerId;
       var pid = btn.dataset.partnerId;
-      fetch('/partner/' + pid + '/remove-freelancer/' + flId, { method: 'POST' })
+      fetch('/partner/' + pid + '/remove-freelancer/' + flId, { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } })
         .then(function() { location.reload(); });
     }
 

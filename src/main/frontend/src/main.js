@@ -5,6 +5,18 @@ import './ps-infinite-scroll.js';
 import './ps-chat-input.js';
 
 /**
+ * getCsrfToken – liest das XOR-maskierte CSRF-Token aus dem Meta-Tag, das
+ * von Thymeleaf via ${_csrf.token} gerendert wird.
+ * Diesen Wert erwartet Spring Security im X-XSRF-TOKEN-Header für
+ * fetch()-Requests ohne _csrf-Formularparameter (DELETE, bodyloser POST, JSON-POST).
+ * @returns {string|null}
+ */
+function getCsrfToken() {
+  return document.querySelector('meta[name="csrf-token"]')?.content ?? null;
+}
+window.getCsrfToken = getCsrfToken;
+
+/**
  * guardedNavigate – navigiert zu einer URL, warnt aber vorher bei ungespeicherten Änderungen.
  * Rückgabe false verhindert Standard-Navigation, Weiterleitung erfolgt ggf. programmatisch.
  * @param {HTMLAnchorElement} link

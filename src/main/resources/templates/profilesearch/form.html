@@ -168,7 +168,7 @@
 
     document.getElementById('btn-confirm-delete').addEventListener('click', function() {
       const targetId = this.dataset.targetChatId || CHAT_ID;
-      fetch('/profilesearch/chat/' + targetId, { method: 'DELETE' })
+      fetch('/profilesearch/chat/' + targetId, { method: 'DELETE', headers: { 'X-XSRF-TOKEN': getCsrfToken() } })
         .then(resp => {
           closeModal('modal-delete');
           if (resp.redirected) { location.href = resp.url; }
@@ -243,7 +243,7 @@
 
         fetch('/profilesearch/chat/' + CHAT_ID + '/send', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getCsrfToken() },
           body: JSON.stringify({ message: text }),
           signal: currentAbortCtrl.signal
         })

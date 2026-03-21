@@ -487,12 +487,30 @@ AJAX-Endpunkte liefern entweder:
 
 Spring Security schützt alle zustandsverändernden Requests (`POST`, `PUT`, `PATCH`, `DELETE`) mit CSRF-Tokens. Thymeleaf bettet diese automatisch in HTML-Formulare ein. Für AJAX-Requests muss der Token manuell mitgesendet werden.
 
-**Strategie:** Spring Security wird mit `CookieCsrfTokenRepository` konfiguriert. Der CSRF-Token wird als JavaScript-lesbares Cookie (`XSRF-TOKEN`, kein `HttpOnly`) gesetzt.
+**Strategie:** Spring Security wird mit `CookieCsrfTokenRepository.withHttpOnlyFalse()` und `XorCsrfTokenRequestAttributeHandler` konfiguriert. Der Token im Attribut `${_csrf.token}` ist der XOR-maskierte Token, den Spring Security erwartet.
 
-- **Formular-basierte Requests** (`FormData` / `URLSearchParams`): Thymeleaf bettet `_csrf` automatisch als Hidden-Field ein – kein manueller Aufwand.
-- **Bodylose POSTs, DELETE-Requests und JSON-POSTs**: Kein manuelles Anfügen des CSRF-Tokens notwendig. Spring Security akzeptiert diese Requests ohne expliziten Token (der `X-XSRF-TOKEN`-Header wird bewusst **nicht** gesetzt, da er mit dem Formular-`_csrf`-Parameter konfligiert).
+**Token-Bereitstellung im Frontend:** Das Layout-Fragment (`layout.html`) rendert den maskierten Token in einem Meta-Tag:
+```html
+<meta name="csrf-token" th:content="${_csrf.token}">
+```
+Die globale Funktion `getCsrfToken()` in `main.js` liest diesen Wert aus:
+```javascript
+function getCsrfToken() {
+  return document.querySelector('meta[name="csrf-token"]')?.content ?? null;
+}
+```
+**Wichtig:** Nicht den rohen Cookie-Wert (`XSRF-TOKEN`) lesen – dieser ist der unmaskierte Token und wird vom Backend mit `XorCsrfTokenRequestAttributeHandler` abgelehnt. Nicht als URL-Query-Parameter übergeben – das würde den Token in Server-Logs kompromittieren.
 
-**Regel:** Alle AJAX-Aufrufe nutzen `fetch()` direkt. Formular-Submits übergeben CSRF über das Hidden-Field. Für alle anderen Requests wird kein Token manuell übergeben.
+- **Formular-basierte Requests** (`FormData` / `URLSearchParams`): Thymeleaf bettet `_csrf` automatisch als Hidden-Field ein – kein manueller Aufwand. Das Hidden-Field enthält `${_csrf.token}` (den maskierten Token).
+- **Bodylose POSTs, DELETE-Requests und JSON-POSTs**: Den `X-XSRF-TOKEN`-Header mit dem maskierten Token setzen:
+  ```javascript
+  fetch('/resource/delete/' + id, {
+    method: 'POST',
+    headers: { 'X-XSRF-TOKEN': getCsrfToken() }
+  });
+  ```
+
+**Regel:** Alle AJAX-Aufrufe nutzen `fetch()` direkt (kein `apiFetch()`). Formular-Submits übergeben CSRF über das Hidden-Field. Bodylose POSTs, DELETE-Requests und JSON-POSTs setzen `'X-XSRF-TOKEN': getCsrfToken()` im Header.
 
 ### Infinite Scrolling
 
@@ -846,9 +864,9 @@ public class PsUserDetailsService implements UserDetailsService {
 
 Spring Security schützt alle zustandsverändernden Requests mit CSRF-Tokens. Thymeleaf bettet diese automatisch in Formulare ein.
 
-**Spring Security Konfiguration:** `CookieCsrfTokenRepository.withHttpOnlyFalse()` – damit ist der Token als JavaScript-lesbares Cookie (`XSRF-TOKEN`) verfügbar.
+**Spring Security Konfiguration:** `CookieCsrfTokenRepository.withHttpOnlyFalse()` mit `XorCsrfTokenRequestAttributeHandler`. `${_csrf.token}` liefert den XOR-maskierten Token, den Spring Security für Header und Hidden-Fields erwartet.
 
-**Frontend:** Formular-Submits nutzen `fetch()` direkt (CSRF im Body via Hidden-Field). Für bodylose POST-, DELETE- und JSON-POST-Requests wird kein CSRF-Token manuell übergeben. Details: Abschnitt 5 (CSRF-Schutz für AJAX-Requests).
+**Frontend:** Formular-Submits nutzen `fetch()` direkt (CSRF im Body via Hidden-Field). Bodylose POST-, DELETE- und JSON-POST-Requests setzen `X-XSRF-TOKEN: getCsrfToken()` im Header. Token kommt aus `<meta name="csrf-token">` (nie aus dem rohen Cookie). Details: Abschnitt 5 (CSRF-Schutz für AJAX-Requests).
 
 ### Passwort-Änderung beim ersten Login
 

@@ -825,7 +825,7 @@
     // ---- Löschen ----
     document.getElementById('btn-delete-confirm')?.addEventListener('click', function() {
       if (!freelancerId) return;
-      fetch('/freelancer/delete/' + freelancerId, { method: 'POST' })
+      fetch('/freelancer/delete/' + freelancerId, { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } })
         .then(function(r) {
           if (r.ok) { location.href = '/freelancer/new'; return; }
           return r.json();
@@ -902,7 +902,7 @@
     // ---- Zum gemerkten Projekt zuordnen ----
     function assignToRememberedProject() {
       if (!freelancerId) return;
-      fetch('/freelancer/' + freelancerId + '/assign-to-remembered-project', { method: 'POST' })
+      fetch('/freelancer/' + freelancerId + '/assign-to-remembered-project', { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } })
         .then(function(r) {
           if (r.status === 409) {
             var msg = document.getElementById('assign-already-msg');

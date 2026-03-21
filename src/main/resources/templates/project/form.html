@@ -474,7 +474,7 @@
 
   // ---- Projekt löschen ----
   document.getElementById('btn-delete-confirm').addEventListener('click', () => {
-    fetch(`/project/delete/${PROJECT_ID}`, { method: 'POST' })
+    fetch(`/project/delete/${PROJECT_ID}`, { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } })
       .then(() => { window.location = '/project'; });
   });
 
@@ -519,7 +519,7 @@
     };
     const resp = await fetch(`/project/${PROJECT_ID}/positions/${posId}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getCsrfToken() },
       body: JSON.stringify(body)
     });
     if (resp.status === 409) {
@@ -545,7 +545,7 @@
   }
 
   document.getElementById('btn-confirm-delete-position').addEventListener('click', async () => {
-    await fetch(`/project/${PROJECT_ID}/positions/${deletePosId}/delete`, { method: 'POST' });
+    await fetch(`/project/${PROJECT_ID}/positions/${deletePosId}/delete`, { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } });
     closeModal('modal-delete-position');
     location.reload();
   });
@@ -567,7 +567,7 @@
     // Schritt 2: Freiberufler dem Projekt zuordnen
     const assignResp = await fetch(`/project/${PROJECT_ID}/positions/assign`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getCsrfToken() },
       body: JSON.stringify({ freelancerId: freelancer.id })
     });
     if (assignResp.ok) {
@@ -603,13 +603,13 @@
     if (hId) {
       await fetch(`/project/${PROJECT_ID}/history/${hId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getCsrfToken() },
         body: JSON.stringify({ description })
       });
     } else {
       await fetch(`/project/${PROJECT_ID}/history`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getCsrfToken() },
         body: JSON.stringify({ description })
       });
     }
@@ -619,7 +619,7 @@
 
   async function deleteHistoryEntry(btn) {
     const hId = btn.dataset.historyId;
-    await fetch(`/project/${PROJECT_ID}/history/${hId}`, { method: 'DELETE' });
+    await fetch(`/project/${PROJECT_ID}/history/${hId}`, { method: 'DELETE', headers: { 'X-XSRF-TOKEN': getCsrfToken() } });
     location.reload();
   }
 
