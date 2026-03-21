@@ -1,6 +1,7 @@
 package de.mirkosertic.powerstaff.shared.command;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -32,12 +33,25 @@ public class StammdatenCommandService {
         return historyTypeRepository.findById(id);
     }
 
+    @Transactional
     public ProjectPositionStatus saveProjectPositionStatus(ProjectPositionStatus pps) {
+        if (pps.isDefaultStatus()) {
+            projectPositionStatusRepository.findByDefaultStatusTrue().ifPresent(existing -> {
+                if (!existing.getId().equals(pps.getId())) {
+                    existing.setDefaultStatus(false);
+                    projectPositionStatusRepository.save(existing);
+                }
+            });
+        }
         return projectPositionStatusRepository.save(pps);
     }
 
     public Optional<ProjectPositionStatus> findProjectPositionStatusById(Long id) {
         return projectPositionStatusRepository.findById(id);
+    }
+
+    public Optional<ProjectPositionStatus> findDefaultProjectPositionStatus() {
+        return projectPositionStatusRepository.findByDefaultStatusTrue();
     }
 
     public Tag saveTag(Tag tag) {

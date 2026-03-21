@@ -17,6 +17,9 @@ public class ProjectPositionStatus {
     @Column("color_text")
     private String colorText;
 
+    @Column("is_default")
+    private boolean defaultStatus;
+
     public ProjectPositionStatus() {
     }
 
@@ -52,5 +55,13 @@ public class ProjectPositionStatus {
 
     public void setColorText(String colorText) {
         this.colorText = colorText;
+    }
+
+    public boolean isDefaultStatus() {
+        return defaultStatus;
+    }
+
+    public void setDefaultStatus(boolean defaultStatus) {
+        this.defaultStatus = defaultStatus;
     }
 }

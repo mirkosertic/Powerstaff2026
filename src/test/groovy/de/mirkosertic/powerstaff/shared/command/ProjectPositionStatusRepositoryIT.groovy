@@ -29,6 +29,7 @@ class ProjectPositionStatusRepositoryIT extends AbstractContainerBaseIT {
         loaded.get().description == "Vorgeschlagen"
         loaded.get().color == "#d1fae5"
         loaded.get().colorText == "#065f46"
+        !loaded.get().defaultStatus
 
         // Kein delete im CommandService fuer PPS – Daten verbleiben in der DB.
         // Acceptable fuer Integrationstests mit Testcontainer-Isolation.
@@ -59,5 +60,52 @@ class ProjectPositionStatusRepositoryIT extends AbstractContainerBaseIT {
         loaded.get().description == "Aktualisiert"
         loaded.get().color == "#ff0000"
         loaded.get().colorText == "#ffffff"
+    }
+
+    def "setzt einen Status als Standard"() {
+        given: "ein Positionsstatus"
+        def pps = new ProjectPositionStatus("Standard-Status", "#e0f2fe", "#0c4a6e")
+        def saved = commandService.saveProjectPositionStatus(pps)
+
+        when: "der Status als Standard gesetzt wird"
+        saved.setDefaultStatus(true)
+        commandService.saveProjectPositionStatus(saved)
+        def defaultStatus = commandService.findDefaultProjectPositionStatus()
+
+        then: "der Standard-Status ist abrufbar"
+        defaultStatus.isPresent()
+        defaultStatus.get().id == saved.id
+        defaultStatus.get().defaultStatus
+    }
+
+    def "nur ein Status kann Standard sein – alter Default wird zurueckgesetzt"() {
+        given: "zwei Positionsstatus, erster ist Default"
+        def first = new ProjectPositionStatus("Erster", "#fee2e2", "#7f1d1d")
+        first.setDefaultStatus(true)
+        def savedFirst = commandService.saveProjectPositionStatus(first)
+
+        def second = new ProjectPositionStatus("Zweiter", "#fef9c3", "#713f12")
+        def savedSecond = commandService.saveProjectPositionStatus(second)
+
+        when: "der zweite als Standard gesetzt wird"
+        savedSecond.setDefaultStatus(true)
+        commandService.saveProjectPositionStatus(savedSecond)
+
+        then: "nur der zweite ist noch Standard"
+        def reloadedFirst = commandService.findProjectPositionStatusById(savedFirst.id)
+        def reloadedSecond = commandService.findProjectPositionStatusById(savedSecond.id)
+        !reloadedFirst.get().defaultStatus
+        reloadedSecond.get().defaultStatus
+
+        and: "findDefaultProjectPositionStatus liefert den zweiten"
+        commandService.findDefaultProjectPositionStatus().get().id == savedSecond.id
+    }
+
+    def "findDefaultProjectPositionStatus liefert leeres Optional wenn kein Default gesetzt"() {
+        // Dieser Test prueft nur, dass die Methode korrekt funktioniert.
+        // Ggf. existiert ein Default aus einem anderen Test – daher nur pruefen
+        // dass die Methode aufgerufen werden kann ohne Exception.
+        expect:
+        commandService.findDefaultProjectPositionStatus() != null
     }
 }

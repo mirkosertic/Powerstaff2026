@@ -245,6 +245,7 @@ Die Persistenz erfolgt über **Spring Data JDBC** (nicht JPA/Hibernate). Reposit
 - **Tags** (`freelancer_tags` etc.) speichern ausschließlich eine `tag_id`-Referenz als primitiven Wert (`Long`) – keine eigene Entitätsklasse. Die Tag-Definition liegt im `shared`-Modul und wird über den `SharedQueryService` abgerufen.
 - **Historien** (`freelancer_history`, `partner_history` etc.) sind eigene Aggregate Roots mit eigenem Repository. Löschkaskaden werden auf Datenbankebene per `ON DELETE CASCADE` sichergestellt.
 - **Projektpositionen** (`project_position`) sind ein eigener Aggregate Root im `project`-Modul. Der Status einer Position kann unabhängig vom Projekt geändert werden; ein gemeinsames Aggregat würde jeden Statuswechsel mit einem vollständigen Projekt-Lock belasten.
+- **Positionsstatus-Default** (`project_position_status.is_default`): Genau ein Positionsstatus kann als Standard markiert werden. `StammdatenCommandService.saveProjectPositionStatus()` erzwingt diese Invariante transaktional (bestehender Default wird beim Setzen eines neuen Defaults zurückgesetzt). Wird beim Anlegen einer neuen Projektposition kein `statusId` übergeben, verwendet `ProjectPositionCommandService.assignFreelancerToProject()` automatisch den konfigurierten Default. Ist kein Default konfiguriert, wird eine `IllegalStateException` ausgelöst.
 - Die konkreten Aggregate-Grenzen pro Modul sind im nächsten Abschnitt tabellarisch dokumentiert.
 
 ### Aggregate-Grenzen pro Modul
@@ -564,7 +565,7 @@ GET /freiberufler/results?page=1&size=20&name=Müller&skill=Java
 |--------------------------|----------------------------------------------|
 | `/admin/historientypen`  | Kontakthistorie-Typen verwalten              |
 | `/admin/tag-kategorien`  | Tag-Kategorien verwalten                     |
-| `/admin/positionsstatus` | Projektpositions-Status und Farben verwalten |
+| `/admin/positionsstatus` | Projektpositions-Status, Farben und Standard-Status verwalten |
 
 ### Browser Back Button – Strategie
 

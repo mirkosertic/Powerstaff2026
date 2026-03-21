@@ -68,7 +68,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
                 new HistoryTypeView(2L, "E-Mail")
         ])
         when(projectPositionStatusQueryService.findAll()).thenReturn([
-                new ProjectPositionStatusView(1L, "Vorgeschlagen", "#d1fae5", "#065f46")
+                new ProjectPositionStatusView(1L, "Vorgeschlagen", "#d1fae5", "#065f46", false)
         ])
         TagType.values().each { tagType ->
             when(tagQueryService.findByType(tagType)).thenReturn([])

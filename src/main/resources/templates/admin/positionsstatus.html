@@ -35,6 +35,7 @@
                 <th>Bezeichnung</th>
                 <th>Hintergr.-Farbe</th>
                 <th>Textfarbe</th>
+                <th>Standard</th>
                 <th>Aktionen</th>
               </tr>
             </thead>
@@ -50,16 +51,20 @@
                 <td><code th:text="${status.color}"></code></td>
                 <td><code th:text="${status.colorText}"></code></td>
                 <td>
+                  <span th:if="${status.isDefault}" class="badge-default">Standard</span>
+                </td>
+                <td>
                   <button class="ibtn" type="button"
                           th:attr="data-id=${status.id},
                                    data-description=${status.description},
                                    data-color=${status.color},
-                                   data-colortext=${status.colorText}"
+                                   data-colortext=${status.colorText},
+                                   data-defaultstatus=${status.isDefault}"
                           data-action="edit-status">&#9998;</button>
                 </td>
               </tr>
               <tr th:if="${#lists.isEmpty(statusList)}">
-                <td colspan="6" class="td-empty">Keine Einträge vorhanden.</td>
+                <td colspan="7" class="td-empty">Keine Einträge vorhanden.</td>
               </tr>
             </tbody>
           </table>
@@ -103,6 +108,10 @@
                      placeholder="#065f46" required maxlength="50">
             </div>
           </div>
+          <div class="cbfield mt-sm">
+            <input type="checkbox" id="new-status-default" name="defaultStatus" value="true">
+            <label for="new-status-default">Als Standard-Status verwenden</label>
+          </div>
         </form>
       </div>
       <div class="mft">
@@ -139,6 +148,10 @@
                      required maxlength="50">
             </div>
           </div>
+          <div class="cbfield mt-sm">
+            <input type="checkbox" id="edit-status-default" name="defaultStatus" value="true">
+            <label for="edit-status-default">Als Standard-Status verwenden</label>
+          </div>
         </form>
       </div>
       <div class="mft">
@@ -156,6 +169,7 @@
       document.getElementById('edit-status-description').value = btn.dataset.description;
       document.getElementById('edit-status-color').value = btn.dataset.color;
       document.getElementById('edit-status-colortext').value = btn.dataset.colortext;
+      document.getElementById('edit-status-default').checked = btn.dataset.defaultstatus === 'true';
       openModal('modal-edit-status');
     });
   </script>

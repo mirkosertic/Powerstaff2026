@@ -38,7 +38,7 @@ class ProjectPositionStatusQueryServiceIT extends AbstractContainerBaseIT {
         descriptions == descriptions.sort()
     }
 
-    def "findAll liefert Eintraege mit allen Feldern inklusive colorText"() {
+    def "findAll liefert Eintraege mit allen Feldern inklusive colorText und isDefault"() {
         given: "ein Positionsstatus mit Farbwerten"
         commandService.saveProjectPositionStatus(
                 new ProjectPositionStatus("Farbtest", "#d1fae5", "#065f46"))
@@ -51,5 +51,21 @@ class ProjectPositionStatusQueryServiceIT extends AbstractContainerBaseIT {
         farbtest != null
         farbtest.color == "#d1fae5"
         farbtest.colorText == "#065f46"
+        !farbtest.isDefault()
+    }
+
+    def "findAll liefert isDefault=true fuer den gesetzten Standard-Status"() {
+        given: "ein Positionsstatus als Standard"
+        def pps = new ProjectPositionStatus("Query-Standard", "#e0f2fe", "#0c4a6e")
+        pps.setDefaultStatus(true)
+        commandService.saveProjectPositionStatus(pps)
+
+        when: "alle Status abgerufen werden"
+        def results = queryService.findAll()
+        def standard = results.find { it.description == "Query-Standard" }
+
+        then: "der Standard-Eintrag hat isDefault = true"
+        standard != null
+        standard.isDefault()
     }
 }

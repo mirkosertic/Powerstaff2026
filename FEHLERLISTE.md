@@ -30,3 +30,11 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
 - [x] Das Anhängen des extra _csrf Parameters bei fetch() Methoden aus dem vorherigen Bug-Fix war falsch. Es darf kein Extra Parameter übergeben werden.
 - [x] Das Profilsuche Chatformular hat eine andere Beeite als z.B. dasd Freiberufler formular. Ich möchte, dass die Breite an das Freiberufler-Formular angepasst wird, sodass
   überall die gleichen Fluchtlinien verwendet werden.
+- [x] Bein Zuordnen eines neuen Freiberuflers zu einem Projekt kommt es zu einem Fehker,
+  weil der Positionsstatus null ist, und die Datenbank einen Fehler meldet. Das eigentliche
+  Problem ist, dass die Menge der Positionsstatus via Admin UI konfigurierbar ist, das Feld
+  aber ein Pflichtfeld ist. Ich möchte deshalb, dass der Positionsstatus um ein Feld "default" werweitert wird.
+  Dieses Feld ist ein boolean, und kann nur bei einem der Positionsstatus in der Admin-UI gesetzt werden.
+  Wenn eine neue Position für ein Projekt angelegt wird, und kein Status bekannt ist, soll der Status
+  aus den konfigurierten Positionstatus-Datensätzen genommen werden, der mit Default markiert ist.
+  Schreibe bitte auch entsprechende IT-Tests, und passe die Spezifikation entsprechend an.

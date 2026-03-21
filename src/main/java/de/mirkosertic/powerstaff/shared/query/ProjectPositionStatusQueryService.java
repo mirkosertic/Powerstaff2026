@@ -16,8 +16,15 @@ public class ProjectPositionStatusQueryService {
 
     public List<ProjectPositionStatusView> findAll() {
         return jdbcClient
-                .sql("SELECT id, description, color, color_text FROM project_position_status ORDER BY description ASC")
+                .sql("SELECT id, description, color, color_text, is_default FROM project_position_status ORDER BY description ASC")
                 .query(ProjectPositionStatusView.class)
                 .list();
+    }
+
+    public java.util.Optional<ProjectPositionStatusView> findDefault() {
+        return jdbcClient
+                .sql("SELECT id, description, color, color_text, is_default FROM project_position_status WHERE is_default = TRUE LIMIT 1")
+                .query(ProjectPositionStatusView.class)
+                .optional();
     }
 }

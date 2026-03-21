@@ -565,7 +565,8 @@
 
 /* Farben via CSS Custom Properties --badge-bg / --badge-fg (gesetzt per th:style) */
 .badge-dyn,
-.status-badge {
+.status-badge,
+.badge-default {
   display: inline-flex;
   align-items: center;
   padding: 2px 9px;
@@ -577,6 +578,11 @@
   white-space: nowrap;
   background: var(--badge-bg, var(--surface-2));
   color: var(--badge-fg, var(--text-1));
+}
+
+.badge-default {
+  --badge-bg: #d1fae5;
+  --badge-fg: #065f46;
 }
 
 /* -----------------------------------------------------------------------------

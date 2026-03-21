@@ -110,4 +110,36 @@ class ProjectPositionCommandServiceIT extends AbstractContainerBaseIT {
                 .param("pid", projectId).param("fid", freelancerId).query(Long).single()
         count == 1
     }
+
+    def "assignFreelancerToProject mit statusId=null verwendet Default-Status"() {
+        given: "alle anderen Defaults zuruecksetzen und den Test-Status als Default markieren"
+        jdbcClient.sql("UPDATE project_position_status SET is_default = FALSE").update()
+        jdbcClient.sql("UPDATE project_position_status SET is_default = TRUE WHERE id = :id")
+                .param("id", statusId).update()
+
+        when: "ein Freiberufler ohne expliziten Status zugeordnet wird"
+        commandService.assignFreelancerToProject(freelancerId, projectId, null, null, null)
+
+        then: "die Position wurde mit dem Default-Status angelegt"
+        def assignedStatusId = jdbcClient
+                .sql("SELECT status_id FROM project_position WHERE project_id = :pid AND freelancer_id = :fid")
+                .param("pid", projectId).param("fid", freelancerId)
+                .query(Long).single()
+        assignedStatusId == statusId
+
+        cleanup:
+        jdbcClient.sql("UPDATE project_position_status SET is_default = FALSE WHERE id = :id")
+                .param("id", statusId).update()
+    }
+
+    def "assignFreelancerToProject mit statusId=null und ohne Default wirft IllegalStateException"() {
+        given: "kein Default-Status konfiguriert"
+        jdbcClient.sql("UPDATE project_position_status SET is_default = FALSE").update()
+
+        when:
+        commandService.assignFreelancerToProject(freelancerId, projectId, null, null, null)
+
+        then:
+        thrown(IllegalStateException)
+    }
 }

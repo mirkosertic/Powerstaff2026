@@ -110,11 +110,13 @@ public class StammdatenController {
     public String updatePositionsStatus(@PathVariable long id,
                                         @RequestParam String description,
                                         @RequestParam String color,
-                                        @RequestParam String colorText) {
+                                        @RequestParam String colorText,
+                                        @RequestParam(defaultValue = "false") boolean defaultStatus) {
         stammdatenCommandService.findProjectPositionStatusById(id).ifPresent(pps -> {
             pps.setDescription(description);
             pps.setColor(color);
             pps.setColorText(colorText);
+            pps.setDefaultStatus(defaultStatus);
             stammdatenCommandService.saveProjectPositionStatus(pps);
         });
         return "redirect:/admin/positionsstatus";
