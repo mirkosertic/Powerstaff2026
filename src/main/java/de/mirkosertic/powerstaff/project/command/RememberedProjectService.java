@@ -45,6 +45,6 @@ public class RememberedProjectService {
     public Optional<RememberedProjectInfo> getRememberedProjectInfo(String userId) {
         return get(userId)
                 .flatMap(projectQueryService::findById)
-                .map(p -> new RememberedProjectInfo(p.projectNumber(), p.descriptionShort()));
+                .map(p -> new RememberedProjectInfo(p.id(), p.projectNumber(), p.descriptionShort()));
     }
 }

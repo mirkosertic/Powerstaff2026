@@ -53,8 +53,11 @@
 
   <!-- Gemerktes Projekt (§21) – nur anzeigen wenn vorhanden -->
   <div id="tb-project" th:if="${rememberedProject != null}">
-    📌 <strong th:text="${rememberedProject.projectNumber}">2026-042</strong>
-    – <span th:text="${rememberedProject.shortDescription}">Projektbeschreibung</span>
+    📌 <a th:href="@{/project/{id}(id=${rememberedProject.projectId})}"
+          onclick="return guardedNavigate(this)">
+      <strong th:text="${rememberedProject.projectNumber}">2026-042</strong>
+      – <span th:text="${rememberedProject.shortDescription}">Projektbeschreibung</span>
+    </a>
   </div>
 
   <!-- Zuordnen-Button (nur bei Freelancer, wenn Projekt gemerkt) -->

@@ -87,7 +87,7 @@ class RememberedProjectRepositoryIT extends AbstractContainerBaseIT {
         service.getRememberedProjectInfo("IT-REM-unbekannt").isEmpty()
     }
 
-    def "getRememberedProjectInfo mit gemerktem Projekt liefert RememberedProjectInfo mit projectNumber"() {
+    def "getRememberedProjectInfo mit gemerktem Projekt liefert RememberedProjectInfo mit projectNumber und projectId"() {
         given:
         service.set("IT-REM-user-info", projectId1)
 
@@ -96,6 +96,7 @@ class RememberedProjectRepositoryIT extends AbstractContainerBaseIT {
 
         then:
         info.isPresent()
+        info.get().projectId() == projectId1
         info.get().projectNumber() == "IT-REM-P001"
     }
 

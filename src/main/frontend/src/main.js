@@ -15,6 +15,21 @@ function getCsrfToken() {
 window.getCsrfToken = getCsrfToken;
 
 /**
+ * guardedNavigate – navigiert zu einer URL, warnt aber vorher bei ungespeicherten Änderungen.
+ * Rückgabe false verhindert Standard-Navigation, Weiterleitung erfolgt ggf. programmatisch.
+ * @param {HTMLAnchorElement} link
+ * @returns {boolean}
+ */
+function guardedNavigate(link) {
+  const dirty = document.querySelector('ps-dirty-banner')?.classList.contains('visible');
+  if (!dirty || confirm('Es gibt ungespeicherte Änderungen. Trotzdem navigieren?')) {
+    location.href = link.href;
+  }
+  return false;
+}
+window.guardedNavigate = guardedNavigate;
+
+/**
  * openModal / closeModal – zeigt oder verbirgt ein Modal-Element (.mbk)
  * durch Toggeln der CSS-Klasse `hidden`.
  * @param {string} id – ID des Modals (ohne `#`)

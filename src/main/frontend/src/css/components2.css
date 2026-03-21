@@ -535,6 +535,19 @@
   max-width: 460px;
 }
 
+#tb-project a {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+#tb-project a:hover {
+  text-decoration: underline;
+}
+
 #tb-project strong {
   color: var(--pri);
   font-weight: 600;
