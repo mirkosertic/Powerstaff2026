@@ -6,21 +6,23 @@
   Form-Toolbar (§6 + §21)
 
   Parameter:
-    moduleLabel       – Bezeichnung des Moduls (z. B. "Freiberufler")
-    firstUrl          – URL für den "Erster"-Button
-    prevUrl           – URL für den "Vorheriger"-Button
-    entityId          – Aktuell angezeigte ID (oder null bei Neuanlage)
-    nextUrl           – URL für den "Nächster"-Button
-    lastUrl           – URL für den "Letzter"-Button
-    newUrl            – URL für den Neu-Button
-    saveFormId        – ID des Formulars, das beim Speichern abgeschickt wird
-    deleteModalId     – ID des Löschen-Bestätigungs-Modals (ohne #), öffnet openModal(id)
-    rememberedProject – Objekt mit Feldern projectNumber + shortDescription (oder null)
-    auditInfo         – Audit-Infotext (z. B. "Erfasst: 01.01.2026 admin · Geändert: ...")
-                        oder "Neu, noch nicht gespeichert" bei Neuanlage
-    searchPanelId     – ID des Such-Panels das per Button ein-/ausgeblendet wird (oder null)
+    moduleLabel          – Bezeichnung des Moduls (z. B. "Freiberufler")
+    firstUrl             – URL für den "Erster"-Button
+    prevUrl              – URL für den "Vorheriger"-Button
+    entityId             – Aktuell angezeigte ID (oder null bei Neuanlage)
+    nextUrl              – URL für den "Nächster"-Button
+    lastUrl              – URL für den "Letzter"-Button
+    newUrl               – URL für den Neu-Button
+    saveFormId           – ID des Formulars, das beim Speichern abgeschickt wird
+    deleteModalId        – ID des Löschen-Bestätigungs-Modals (ohne #), öffnet openModal(id)
+    rememberedProject    – Objekt mit Feldern projectNumber + shortDescription (oder null)
+    auditInfo            – Audit-Infotext (z. B. "Erfasst: 01.01.2026 admin · Geändert: ...")
+                           oder "Neu, noch nicht gespeichert" bei Neuanlage
+    searchPanelId        – ID des Such-Panels das per Button ein-/ausgeblendet wird (oder null)
+    assignProjectLabel   – Beschriftung des "Zuordnen"-Buttons neben dem gemerkten Projekt (oder null)
 -->
-<div id="toolbar" th:fragment="toolbar(moduleLabel, firstUrl, prevUrl, entityId, nextUrl, lastUrl, newUrl, saveFormId, deleteModalId, rememberedProject, auditInfo, searchPanelId)">
+<div id="toolbar" th:fragment="toolbar(moduleLabel, firstUrl, prevUrl, entityId, nextUrl, lastUrl, newUrl, saveFormId, deleteModalId, rememberedProject, auditInfo, searchPanelId, assignProjectLabel)">
+<div id="toolbar-inner">
 
   <!-- Modul-Label -->
   <div id="tb-module" th:text="${moduleLabel}">Modul</div>
@@ -55,6 +57,12 @@
     – <span th:text="${rememberedProject.shortDescription}">Projektbeschreibung</span>
   </div>
 
+  <!-- Zuordnen-Button (nur bei Freelancer, wenn Projekt gemerkt) -->
+  <button th:if="${assignProjectLabel != null and rememberedProject != null}"
+          type="button" class="btn btn-sm btn-ghost" id="tb-assign-btn"
+          th:text="${assignProjectLabel}"
+          onclick="assignToRememberedProject()"></button>
+
   <!-- Aktionen -->
   <div id="tb-actions">
     <a class="btn btn-ghost"
@@ -75,6 +83,7 @@
             th:attr="onclick='openModal(\'' + ${deleteModalId} + '\')'">🗑 Löschen</button>
   </div>
 
+</div><!-- /#toolbar-inner -->
 </div>
 
 </body>

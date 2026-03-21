@@ -27,7 +27,7 @@ export function apiFetch(url, options = {}) {
   if (method !== 'GET' && method !== 'HEAD') {
     const token = getCsrfToken();
     if (token) {
-      //headers.set('X-XSRF-TOKEN', token);
+      headers.set('X-XSRF-TOKEN', token);
     }
   }
 

@@ -8,11 +8,18 @@
       'ADMINISTRATION',
       null, null, null, null, null,
       null, null, null, null,
-      'Administration', null)}">
+      'Administration', null, null)}">
   </div>
 
   <!-- Page Content -->
   <div id="page">
+
+    <!-- Admin-Navigation -->
+    <div class="btn-row mb-md">
+      <a class="btn btn-pri" th:href="@{/admin/historientypen}">Historientypen</a>
+      <a class="btn btn-ghost" th:href="@{/admin/positionsstatus}">Positionsstatus</a>
+      <a class="btn btn-ghost" th:href="@{/admin/tags}">Tags</a>
+    </div>
 
     <div class="fcard col-wide">
       <div class="fcard-hd">

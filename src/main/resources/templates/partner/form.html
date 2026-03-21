@@ -18,7 +18,8 @@
       ${partner.id != null}
         ? 'Erfasst: ' + ${#temporals.format(partner.creationDate,'dd.MM.yyyy')} + ' ' + ${partner.creationUser} + ' · Geändert: ' + ${#temporals.format(partner.changedDate,'dd.MM.yyyy')} + ' ' + ${partner.changedUser}
         : 'Neu, noch nicht gespeichert',
-      'search-panel')}">
+      'search-panel',
+      null)}">
   </div>
 
   <!-- Page Content -->
@@ -89,7 +90,7 @@
             </div>
             <div class="fg">
               <label>PLZ</label>
-              <input type="text" name="plz" th:value="${partner.plz}" maxlength="5"/>
+              <input type="text" name="plz" th:value="${partner.plz}" maxlength="5" class="input-narrow"/>
             </div>
             <div class="fg s2">
               <label>Ort</label>
@@ -529,15 +530,44 @@
     // ---- Delta-Tracking: History ----
     var historyChanges = [];
     var _localHistoryId = 0;
+    var _editHistoryId = null; // DB-ID des Eintrags beim Bearbeiten
 
     function renderHistoryJson() {
       document.getElementById('history-json').value = JSON.stringify(historyChanges);
+    }
+
+    function editHistory(btn) {
+      _editHistoryId = btn.dataset.historyId ? parseInt(btn.dataset.historyId) : null;
+      document.getElementById('history-edit-id').value = _editHistoryId || '';
+      var typeId = btn.dataset.typeId ? parseInt(btn.dataset.typeId) : null;
+      var typeSel = document.getElementById('history-type-id');
+      if (typeId && typeSel) {
+        for (var i = 0; i < typeSel.options.length; i++) {
+          if (parseInt(typeSel.options[i].value) === typeId) {
+            typeSel.selectedIndex = i;
+            break;
+          }
+        }
+      }
+      document.getElementById('history-description').value = btn.dataset.desc || '';
+      openModal('modal-history');
     }
 
     document.getElementById('btn-history-save')?.addEventListener('click', function() {
       var typeId = parseInt(document.getElementById('history-type-id').value);
       var desc = document.getElementById('history-description').value;
       if (!desc.trim()) return;
+      var typeSel = document.getElementById('history-type-id');
+      var typeLabel = typeSel && typeSel.options[typeSel.selectedIndex]
+        ? typeSel.options[typeSel.selectedIndex].text : 'Typ ' + typeId;
+      // Bearbeitung: alten Eintrag löschen, neuen hinzufügen
+      if (_editHistoryId) {
+        historyChanges.push({op: 'DELETE', id: _editHistoryId});
+        document.querySelector('.hitem [data-history-id="' + _editHistoryId + '"]')
+          ?.closest('.hitem')?.remove();
+        _editHistoryId = null;
+        document.getElementById('history-edit-id').value = '';
+      }
       var localId = --_localHistoryId;
       historyChanges.push({op: 'ADD', id: null, _localId: localId, typeId: typeId, description: desc});
       renderHistoryJson();
@@ -546,9 +576,6 @@
       if (emptyMsg) emptyMsg.remove();
       var list = document.getElementById('history-list');
       if (list) {
-        var typeSel = document.getElementById('history-type-id');
-        var typeLabel = typeSel && typeSel.options[typeSel.selectedIndex]
-          ? typeSel.options[typeSel.selectedIndex].text : 'Typ ' + typeId;
         var div = document.createElement('div');
         div.className = 'hitem';
         div.innerHTML =

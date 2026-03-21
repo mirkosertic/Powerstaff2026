@@ -28,10 +28,17 @@
   background: var(--surface-3);
   border-bottom: 1px solid var(--border-l);
   box-shadow: var(--shadow-xs);
+}
+
+/* Toolbar-Inner: Inhalt auf max-width des #page beschränken */
+#toolbar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 100%;
   display: flex;
   align-items: center;
   gap: 0;
-  padding: 0;
   overflow: hidden;
 }
 
@@ -208,6 +215,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Zuordnen-Button neben gemerktem Projekt */
+#tb-assign-btn {
+  flex-shrink: 0;
+  margin: 0 8px;
 }
 
 /* Aktionen – rechter Rand */

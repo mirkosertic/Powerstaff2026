@@ -18,6 +18,7 @@
       ${project.id != null}
         ? 'Erfasst: ' + ${#temporals.format(project.creationDate,'dd.MM.yyyy')} + ' ' + ${project.creationUser} + ' · Geändert: ' + ${#temporals.format(project.changedDate,'dd.MM.yyyy')} + ' ' + ${project.changedUser}
         : 'Neu, noch nicht gespeichert',
+      null,
       null)}">
   </div>
 
@@ -234,7 +235,7 @@
             <td th:text="${pos.name2()}"></td>
             <td>
               <span class="status-badge"
-                    th:style="|background:${pos.statusColor()};color:${pos.statusColorText()}|"
+                    th:style="|--badge-bg:${pos.statusColor()};--badge-fg:${pos.statusColorText()}|"
                     th:text="${pos.statusDescription()}"></span>
             </td>
             <td th:text="${pos.konditionen()}"></td>
@@ -264,9 +265,9 @@
     </div>
 
     <!-- ------------------------------------------------------------------ -->
-    <!-- Kontakthistorie -->
+    <!-- Kontakthistorie (nur für gespeicherte Projekte) -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard col-wide" id="history-card">
+    <div class="fcard col-wide" id="history-card" th:if="${project.id != null}">
       <div class="fcard-hd" onclick="toggleCard('fcard-history')">
         <span class="fcard-title">Projekthistorie</span>
         <span class="fcard-chv open">▾</span>
@@ -274,7 +275,7 @@
       <div class="fcard-body" id="fcard-history">
       <div class="list-hd">
         <button type="button" class="btn btn-sm btn-ghost"
-                onclick="openModal('modal-history')">+ Neuer Eintrag</button>
+                onclick="openAddHistoryModal()">+ Neuer Eintrag</button>
       </div>
       <div class="hlist" id="history-list">
         <div class="hitem" th:each="entry : ${history}">

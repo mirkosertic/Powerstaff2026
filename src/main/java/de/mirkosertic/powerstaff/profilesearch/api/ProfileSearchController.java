@@ -90,7 +90,7 @@ public class ProfileSearchController {
         String userId = principal.getName();
         commandService.deleteChat(chatId);
 
-        // Navigate to next available chat, or create a new one
+        // Navigate to most recently modified remaining chat, or create a new one
         var nextChatId = queryService.findLatestChatByUser(userId);
         if (nextChatId.isPresent()) {
             response.sendRedirect("/profilesearch/chat/" + nextChatId.get());

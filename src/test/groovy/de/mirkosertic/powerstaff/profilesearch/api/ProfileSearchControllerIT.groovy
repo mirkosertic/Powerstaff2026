@@ -117,7 +117,7 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
                 .andExpect(redirectedUrl("/profilesearch/chat/77"))
     }
 
-    def "DELETE /profilesearch/chat/{chatId} loescht Chat und redirectet"() {
+    def "DELETE /profilesearch/chat/{chatId} loescht Chat und redirectet zum juengsten Chat"() {
         given:
         when(queryService.findLatestChatByUser("testuser")).thenReturn(Optional.of(55L))
 

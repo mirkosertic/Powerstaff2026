@@ -532,7 +532,7 @@
   white-space: nowrap;
   flex-shrink: 0;
   overflow: hidden;
-  max-width: 260px;
+  max-width: 460px;
 }
 
 #tb-project strong {
@@ -550,8 +550,9 @@
    §22 Dynamisch gefärbte Status-Badges
    ----------------------------------------------------------------------------- */
 
-/* Liefert nur Form und Typografie; Farben kommen via inline-style */
-.badge-dyn {
+/* Farben via CSS Custom Properties --badge-bg / --badge-fg (gesetzt per th:style) */
+.badge-dyn,
+.status-badge {
   display: inline-flex;
   align-items: center;
   padding: 2px 9px;
@@ -561,6 +562,8 @@
   letter-spacing: .04em;
   border-radius: 20px;
   white-space: nowrap;
+  background: var(--badge-bg, var(--surface-2));
+  color: var(--badge-fg, var(--text-1));
 }
 
 /* -----------------------------------------------------------------------------
@@ -693,6 +696,10 @@
 /* Margin-top Abstände */
 .mt-md  { margin-top: 1rem; }
 .mt-lg  { margin-top: 1.5rem; }
+
+/* Margin-bottom Abstände */
+.mb-md  { margin-bottom: 1rem; }
+.mb-lg  { margin-bottom: 1.5rem; }
 
 /* Inline-Form (z.B. Logout-Formular in Navigation) */
 form.inline { display: inline; }

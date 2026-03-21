@@ -68,6 +68,7 @@ public class ProfileSearchQueryService {
                 .optional();
     }
 
+
     public Optional<LlmProjectContext> buildLlmContext(String userId) {
         // Step 1: find remembered project for user
         var projectIdOpt = jdbcClient.sql(
