@@ -55,6 +55,20 @@ public class ProjectPositionCommandService {
         }
     }
 
+    /**
+     * Aktualisiert die editierbaren Felder einer bestehenden Projektposition (Status, Konditionen, Kommentar).
+     * Lädt den bestehenden Datensatz, um Audit-Informationen und die Freiberufler-Zuordnung zu erhalten.
+     */
+    public ProjectPosition updateEditable(long positionId, Long statusId, String konditionen, String kommentar, Long dbVersion) {
+        var position = repository.findById(positionId)
+                .orElseThrow(() -> new IllegalArgumentException("Projektposition nicht gefunden: " + positionId));
+        position.setStatusId(statusId);
+        position.setKonditionen(konditionen);
+        position.setKommentar(kommentar);
+        position.setDbVersion(dbVersion);
+        return repository.save(position);
+    }
+
     public void delete(Long positionId) {
         repository.deleteById(positionId);
     }

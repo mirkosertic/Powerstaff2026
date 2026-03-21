@@ -4,6 +4,7 @@ import de.mirkosertic.powerstaff.project.command.ProjectHistory;
 import de.mirkosertic.powerstaff.project.command.ProjectHistoryCommandService;
 import de.mirkosertic.powerstaff.project.query.ProjectHistoryQueryService;
 import de.mirkosertic.powerstaff.project.query.ProjectHistoryView;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -45,9 +47,8 @@ public class ProjectHistoryController {
     public ResponseEntity<Map<String, Boolean>> update(@PathVariable Long projectId,
                                                        @PathVariable Long historyId,
                                                        @RequestBody HistoryRequest request) {
-        var history = new ProjectHistory();
-        history.setId(historyId);
-        history.setProjectId(projectId);
+        var history = commandService.findById(historyId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         history.setDescription(request.description());
         commandService.save(history);
         return ResponseEntity.ok(Map.of("ok", true));

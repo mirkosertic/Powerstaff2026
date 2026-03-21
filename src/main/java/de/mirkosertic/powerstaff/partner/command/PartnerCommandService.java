@@ -65,6 +65,12 @@ public class PartnerCommandService {
                 history.setTypeId(cmd.typeId());
                 history.setPartnerId(partnerId);
                 historyRepository.save(history);
+            } else if ("UPDATE".equals(cmd.op()) && cmd.id() != null) {
+                historyRepository.findById(cmd.id()).ifPresent(history -> {
+                    history.setDescription(cmd.description());
+                    history.setTypeId(cmd.typeId());
+                    historyRepository.save(history);
+                });
             } else if ("DELETE".equals(cmd.op()) && cmd.id() != null) {
                 historyRepository.deleteById(cmd.id());
             }

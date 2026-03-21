@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
 import java.time.LocalDateTime
+import java.util.Optional
 
 import static org.mockito.ArgumentMatchers.any
 import static org.mockito.ArgumentMatchers.anyLong
@@ -70,7 +71,9 @@ class ProjectHistoryControllerIT extends AbstractContainerBaseIT {
 
     def "PUT /project/{id}/history/{hId} aktualisiert Eintrag"() {
         given:
-        when(commandService.save(any(ProjectHistory))).thenReturn(new ProjectHistory())
+        def existing = new ProjectHistory()
+        when(commandService.findById(5L)).thenReturn(Optional.of(existing))
+        when(commandService.save(any(ProjectHistory))).thenReturn(existing)
 
         when:
         def result = mockMvc.perform(

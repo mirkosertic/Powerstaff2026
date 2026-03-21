@@ -30,6 +30,11 @@
       ✓ &nbsp;Datensatz wurde gespeichert.
     </div>
 
+    <!-- Zuordnung erfolgreich -->
+    <div class="banner banner-success hidden" id="banner-assigned">
+      ✓ &nbsp;Freiberufler wurde dem Projekt zugeordnet.
+    </div>
+
     <!-- Technischer Fehler beim Speichern -->
     <div class="banner banner-error hidden" id="banner-save-error">
       ✕ &nbsp;Beim Speichern ist ein technischer Fehler aufgetreten. Bitte erneut versuchen.
@@ -347,7 +352,7 @@
     </div>
     <div id="modal-conflict-footer">
       <button type="button" class="btn btn-ghost" onclick="closeModal('modal-conflict')">Schließen</button>
-      <button type="button" class="btn btn-primary" onclick="location.reload()">Neu laden</button>
+      <button type="button" class="btn btn-pri" onclick="location.reload()">Neu laden</button>
     </div>
   </div>
 
@@ -362,25 +367,26 @@
     <div id="modal-edit-position-body">
       <input type="hidden" id="edit-pos-id"/>
       <input type="hidden" id="edit-pos-dbversion"/>
-      <div class="field-grid col-1">
-        <label>Status
-          <select id="edit-pos-status">
-            <option th:each="s : ${positionStatuses}"
-                    th:value="${s.id()}"
-                    th:text="${s.description()}"></option>
-          </select>
-        </label>
-        <label>Konditionen
-          <input type="text" id="edit-pos-konditionen"/>
-        </label>
-        <label>Kommentar
-          <textarea id="edit-pos-kommentar" rows="3"></textarea>
-        </label>
+      <div class="fg">
+        <label>Status</label>
+        <select id="edit-pos-status">
+          <option th:each="s : ${positionStatuses}"
+                  th:value="${s.id()}"
+                  th:text="${s.description()}"></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Konditionen</label>
+        <input type="text" id="edit-pos-konditionen"/>
+      </div>
+      <div class="fg">
+        <label>Kommentar</label>
+        <textarea id="edit-pos-kommentar" rows="3"></textarea>
       </div>
     </div>
     <div id="modal-edit-position-footer">
       <button type="button" class="btn btn-ghost" onclick="closeModal('modal-edit-position')">Abbrechen</button>
-      <button type="button" class="btn btn-primary" id="btn-save-position">Speichern</button>
+      <button type="button" class="btn btn-pri" id="btn-save-position">Speichern</button>
     </div>
   </div>
 
@@ -397,7 +403,7 @@
     </div>
     <div id="modal-pos-conflict-footer">
       <button type="button" class="btn btn-ghost" onclick="closeModal('modal-pos-conflict')">Abbrechen</button>
-      <button type="button" class="btn btn-primary" onclick="reloadPosition()">Neu laden</button>
+      <button type="button" class="btn btn-pri" onclick="reloadPosition()">Neu laden</button>
     </div>
   </div>
 
@@ -437,6 +443,9 @@
       <p class="text-muted hidden" id="assign-code-already-assigned">
         ✕ Dieser Freiberufler ist dem Projekt bereits zugeordnet.
       </p>
+      <p class="text-muted hidden" id="assign-code-error">
+        ✕ Beim Zuordnen ist ein Fehler aufgetreten. Bitte erneut versuchen.
+      </p>
     </div>
     <div id="modal-assign-by-code-footer">
       <button type="button" class="btn btn-ghost" onclick="closeModal('modal-assign-by-code')">Abbrechen</button>
@@ -454,15 +463,14 @@
   <div class="hidden">
     <div id="modal-history-body">
       <input type="hidden" id="history-entry-id"/>
-      <div class="field-grid col-1">
-        <label>Beschreibung
-          <textarea id="history-entry-description" rows="4" placeholder="Beschreibung eingeben..."></textarea>
-        </label>
+      <div class="fg">
+        <label>Beschreibung</label>
+        <textarea id="history-entry-description" rows="4" placeholder="Beschreibung eingeben..."></textarea>
       </div>
     </div>
     <div id="modal-history-footer">
       <button type="button" class="btn btn-ghost" onclick="closeModal('modal-history')">Abbrechen</button>
-      <button type="button" class="btn btn-primary" id="btn-save-history">Speichern</button>
+      <button type="button" class="btn btn-pri" id="btn-save-history">Speichern</button>
     </div>
   </div>
 
@@ -525,9 +533,15 @@
     if (resp.status === 409) {
       closeModal('modal-edit-position');
       openModal('modal-pos-conflict');
+    } else if (resp.ok) {
+      closeModal('modal-edit-position');
+      const banner = document.getElementById('banner-success');
+      if (banner) { banner.classList.remove('hidden'); banner.scrollIntoView({behavior:'smooth',block:'start'}); }
+      setTimeout(() => location.reload(), 1500);
     } else {
       closeModal('modal-edit-position');
-      location.reload();
+      const errBanner = document.getElementById('banner-save-error');
+      if (errBanner) { errBanner.classList.remove('hidden'); errBanner.scrollIntoView({behavior:'smooth',block:'start'}); }
     }
   });
 
@@ -555,6 +569,7 @@
     const code = document.getElementById('assign-code-input').value.trim();
     document.getElementById('assign-code-not-found').classList.add('hidden');
     document.getElementById('assign-code-already-assigned').classList.add('hidden');
+    document.getElementById('assign-code-error').classList.add('hidden');
     if (!code) return;
     // Schritt 1: Freiberufler per Code nachschlagen
     const lookupResp = await fetch('/freelancer/lookup?code=' + encodeURIComponent(code));
@@ -562,7 +577,10 @@
       document.getElementById('assign-code-not-found').classList.remove('hidden');
       return;
     }
-    if (!lookupResp.ok) return;
+    if (!lookupResp.ok) {
+      document.getElementById('assign-code-error').classList.remove('hidden');
+      return;
+    }
     const freelancer = await lookupResp.json();
     // Schritt 2: Freiberufler dem Projekt zuordnen
     const assignResp = await fetch(`/project/${PROJECT_ID}/positions/assign`, {
@@ -573,9 +591,13 @@
     if (assignResp.ok) {
       closeModal('modal-assign-by-code');
       document.getElementById('assign-code-input').value = '';
-      location.reload();
+      const banner = document.getElementById('banner-assigned');
+      if (banner) { banner.classList.remove('hidden'); banner.scrollIntoView({behavior:'smooth',block:'start'}); }
+      setTimeout(() => location.reload(), 1500);
     } else if (assignResp.status === 409) {
       document.getElementById('assign-code-already-assigned').classList.remove('hidden');
+    } else {
+      document.getElementById('assign-code-error').classList.remove('hidden');
     }
   });
 
@@ -631,14 +653,17 @@
 
   <!-- Gespeichert-Banner JS -->
   <script>
-  if (new URLSearchParams(window.location.search).get('saved') === 'true') {
-    var bannerSuccess = document.getElementById('banner-success');
-    if (bannerSuccess) {
-      bannerSuccess.classList.remove('hidden');
-      setTimeout(function() { bannerSuccess.classList.add('hidden'); }, 2500);
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('saved') === 'true') {
+      var bannerSuccess = document.getElementById('banner-success');
+      if (bannerSuccess) {
+        bannerSuccess.classList.remove('hidden');
+        setTimeout(function() { bannerSuccess.classList.add('hidden'); }, 2500);
+      }
     }
     history.replaceState(null, '', window.location.pathname);
-  }
+  })();
   </script>
 
   <!-- QBE-Suche AJAX -->

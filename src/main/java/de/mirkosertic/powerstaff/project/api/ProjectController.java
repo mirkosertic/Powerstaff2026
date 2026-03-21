@@ -4,7 +4,6 @@ import de.mirkosertic.powerstaff.project.command.FreelancerAlreadyAssignedExcept
 import de.mirkosertic.powerstaff.project.command.BothFKsException;
 import de.mirkosertic.powerstaff.project.command.Project;
 import de.mirkosertic.powerstaff.project.command.ProjectCommandService;
-import de.mirkosertic.powerstaff.project.command.ProjectPosition;
 import de.mirkosertic.powerstaff.project.command.ProjectPositionCommandService;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
 import de.mirkosertic.powerstaff.project.query.ProjectHistoryQueryService;
@@ -250,14 +249,7 @@ public class ProjectController {
                                           @PathVariable long posId,
                                           @RequestBody PositionRequest request) {
         try {
-            var position = new ProjectPosition();
-            position.setId(posId);
-            position.setProjectId(projectId);
-            position.setStatusId(request.statusId());
-            position.setKonditionen(request.konditionen());
-            position.setKommentar(request.kommentar());
-            position.setDbVersion(request.dbVersion());
-            positionCommandService.save(position);
+            positionCommandService.updateEditable(posId, request.statusId(), request.konditionen(), request.kommentar(), request.dbVersion());
             return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));
         } catch (OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("conflict", true));

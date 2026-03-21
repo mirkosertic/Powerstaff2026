@@ -560,13 +560,24 @@
       var typeSel = document.getElementById('history-type-id');
       var typeLabel = typeSel && typeSel.options[typeSel.selectedIndex]
         ? typeSel.options[typeSel.selectedIndex].text : 'Typ ' + typeId;
-      // Bearbeitung: alten Eintrag löschen, neuen hinzufügen
+      // Bearbeitung: UPDATE-Op für bestehenden Eintrag
       if (_editHistoryId) {
-        historyChanges.push({op: 'DELETE', id: _editHistoryId});
-        document.querySelector('.hitem [data-history-id="' + _editHistoryId + '"]')
-          ?.closest('.hitem')?.remove();
+        historyChanges.push({op: 'UPDATE', id: _editHistoryId, typeId: typeId, description: desc});
+        var existingItem = document.querySelector('[data-history-id="' + _editHistoryId + '"]')?.closest('.hitem');
+        if (existingItem) {
+          var badge = existingItem.querySelector('.hbadge');
+          if (badge) badge.textContent = typeLabel;
+          var body = existingItem.querySelector('.hbody');
+          if (body) body.textContent = desc;
+        }
         _editHistoryId = null;
         document.getElementById('history-edit-id').value = '';
+        renderHistoryJson();
+        closeModal('modal-history');
+        document.getElementById('history-description').value = '';
+        var dirty = document.querySelector('ps-dirty-banner');
+        if (dirty) dirty.classList.add('visible');
+        return;
       }
       var localId = --_localHistoryId;
       historyChanges.push({op: 'ADD', id: null, _localId: localId, typeId: typeId, description: desc});

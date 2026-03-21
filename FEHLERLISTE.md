@@ -38,3 +38,11 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
   Wenn eine neue Position für ein Projekt angelegt wird, und kein Status bekannt ist, soll der Status
   aus den konfigurierten Positionstatus-Datensätzen genommen werden, der mit Default markiert ist.
   Schreibe bitte auch entsprechende IT-Tests, und passe die Spezifikation entsprechend an.
+- [x] Beim Zuordnen eines Freiberuflers zu einem Projekt soll ein Hinweis angezeigt werden, wenn die Zuordnung erfolgreich war. Im Fall einer doppeklten Zuordnung soll ein Warnhinweis angezeigt werden (HTTO Status Code Conflice = 209?)
+- [x] Der Status-Badge für den Projekpositionsstatus soll auch den Text des Status-Labels anzeigen, im Moment wird nur die Farbe verwendet.
+- [x] Beim Bearbeiten einer Projektposition passiert nichts. Es sollen aber Daten gespeichert werden und ein Hinweis angezeigt werden, dass die Daten gespeichert wurden. Im Fehlerfall soll ein Warnhinweis angezeigt werden.
+- [x] Beim Bearbeiten eines Projektkontakthistorieneintrages wird dieser gelöscht im Sinne von der Text geht verloren, und es werden keine Audit-Informationen angezeigt.
+- [x] Beim Bearbeiten eines Freelancerhistorieneintrages wird dieser komplett neu erzeugt; es sollte aber der bestehende Eintrag editiert werden, also die ID bleibt gleich, Werte ändern sich und die Audit-Informationen für die Änderung werden aktualisiert; die Audit-Informationen für die Anlage bleiben unverändert.
+  Prüfe bitte durch entsprechende Tests, ob diese Problematik auch bei den anderen Formularen existiert, und ob dies auch die Kontaktmöglichkeiten betrifft. Implementiere bitte entsprechende Fixes und Tests.
+- [x] Der Button "Freiberufler über Code zuordnen" auf der Projektseite macht nichts. Eigentlich sollte dieser einen Dialog öffnen, in dem der Sachbearbeiter den Code(Kodierung) eines Freiberuflers eingibt, und bei Bestätigung wird dieser Freiberufler dem Projekt zugeordnet, und ein Hinweis angezeigt.
+  Im Fehlerfall soll ein Warnhinweis angezeigt werden.
