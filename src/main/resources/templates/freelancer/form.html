@@ -94,16 +94,16 @@
             <input type="text" name="street" th:value="${freelancer.street}"/>
           </div>
           <!-- Zeile 4: Land | PLZ | Ort -->
-          <div class="fg4 mt-md">
+          <div class="fg-addr mt-md">
             <div class="fg">
               <label>Land</label>
-              <input type="text" name="country" th:value="${freelancer.country}"/>
+              <input type="text" name="country" th:value="${freelancer.country}" maxlength="3"/>
             </div>
             <div class="fg">
               <label>PLZ</label>
-              <input type="text" name="plz" th:value="${freelancer.plz}" maxlength="5" class="input-narrow"/>
+              <input type="text" name="plz" th:value="${freelancer.plz}" maxlength="5"/>
             </div>
-            <div class="fg s2">
+            <div class="fg">
               <label>Ort</label>
               <input type="text" name="city" th:value="${freelancer.city}"/>
             </div>

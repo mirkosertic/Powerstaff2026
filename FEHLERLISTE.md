@@ -24,6 +24,6 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
   Methode so gar nicht benötigt. Bitte überprüfe dass, und falls das so stimmt, soll überall nur fetch() verwendet werden, und die SWARCHITEKTUR.md Beschreibung angepasst werden. Ich habe zu Testzwecken das Setzen des Headers in apiFetch() auskommentiert, und damit
   funktioniert der CQRS-Schutz wie gewünscht.
 - [x] Die Projektnummer bzw. das Projekt in dem "Gemerkten Projekt" Fragment soll ein Link auf das Projekt sein. Falls das aktuelle Formular ungespeicherte Änderungen hat, soll ein Warnhinweis vor der Navigation angezeigt werden. Diese Änderung soll für alle Formulare angepasst werden.
-- [ ] Das PLZ Feld ist jetzt überall schmaler, das Ort-Feld rechts daneben nimmt allerdings nicht den neu freigewordenen Platz sein.
-- [ ] Das Land-Feld links nebem der PLZ muss nor einem 3LC-ISO-Code aufnehmen; es kann schmaler gemacht werden. Das PLZ Feld soll weiter nach links rücken, und den frei gewordenen Patz aufnehmen. Das Ort-Feld rechts neben der PLZ soll die restliche Breite des Blockes auffüllen.
+- [x] Das PLZ Feld ist jetzt überall schmaler, das Ort-Feld rechts daneben nimmt allerdings nicht den neu freigewordenen Platz sein.
+- [x] Das Land-Feld links nebem der PLZ muss nor einem 3LC-ISO-Code aufnehmen; es kann schmaler gemacht werden. Das PLZ Feld soll weiter nach links rücken, und den frei gewordenen Patz aufnehmen. Das Ort-Feld rechts neben der PLZ soll die restliche Breite des Blockes auffüllen.
 - [ ] In der Profilsuche ist das Layout kaputt. Links oben in der Navbar werden mehrere Buttons übereinander angezeigt. Die Navbar / Toolbar soll analog der anderen Formulare über die komplette Seitenbreite gehen.
