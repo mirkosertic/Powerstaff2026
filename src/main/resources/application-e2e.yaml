@@ -1,8 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3316/powerstaff_e2e
-    username: powerstaff
-    password: powerstaff
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  flyway:
-    locations: classpath:db/migration,classpath:db/testdata
