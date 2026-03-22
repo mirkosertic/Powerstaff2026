@@ -25,6 +25,10 @@
         <pitest.version>1.23.0</pitest.version>
         <pitest-junit5.version>1.2.3</pitest-junit5.version>
         <pitest-spock.version>0.0.8</pitest-spock.version>
+        <jacoco.version>0.8.13</jacoco.version>
+        <!-- Standardmäßig leer; JaCoCo überschreibt diese Properties zur Laufzeit -->
+        <jacocoArgLine></jacocoArgLine>
+        <jacocoItArgLine></jacocoItArgLine>
     </properties>
 
     <dependencyManagement>
@@ -225,6 +229,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <!-- @{...} = late binding: JaCoCo setzt jacocoArgLine erst in initialize -->
+                    <argLine>@{jacocoArgLine}</argLine>
                     <includes>
                         <include>**/*Spec.class</include>
                     </includes>
@@ -236,6 +242,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
+                    <argLine>@{jacocoItArgLine}</argLine>
                     <includes>
                         <include>**/*IT.class</include>
                     </includes>
@@ -247,6 +254,103 @@
                             <goal>verify</goal>
                         </goals>
                     </execution>
+                </executions>
+            </plugin>
+
+            <!-- ===== JaCoCo Coverage ===== -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+
+                    <!-- 1) Agent für Unit-Tests (initialize → setzt jacocoArgLine) -->
+                    <execution>
+                        <id>jacoco-prepare-unit</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-unit.exec</destFile>
+                            <propertyName>jacocoArgLine</propertyName>
+                        </configuration>
+                    </execution>
+
+                    <!-- 2) Unit-Test-Report (nach surefire, Phase: test) -->
+                    <execution>
+                        <id>jacoco-report-unit</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-unit.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit</outputDirectory>
+                            <title>Unit-Test Coverage</title>
+                        </configuration>
+                    </execution>
+
+                    <!-- 3) Agent für Integrationstests (pre-integration-test → setzt jacocoItArgLine) -->
+                    <execution>
+                        <id>jacoco-prepare-it</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-it.exec</destFile>
+                            <propertyName>jacocoItArgLine</propertyName>
+                        </configuration>
+                    </execution>
+
+                    <!-- 4) IT-Report (nach failsafe, Phase: post-integration-test) -->
+                    <execution>
+                        <id>jacoco-report-it</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-it.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                            <title>Integrationstest Coverage</title>
+                        </configuration>
+                    </execution>
+
+                    <!-- 5) Exec-Dateien zusammenführen (verify, vor Gesamtreport) -->
+                    <execution>
+                        <id>jacoco-merge</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>jacoco-unit.exec</include>
+                                        <include>jacoco-it.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                            <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
+                        </configuration>
+                    </execution>
+
+                    <!-- 6) Gesamtreport Unit + IT (verify, nach merge) -->
+                    <execution>
+                        <id>jacoco-report-merged</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-merged</outputDirectory>
+                            <title>Gesamte Test Coverage (Unit + Integration)</title>
+                        </configuration>
+                    </execution>
+
                 </executions>
             </plugin>
 
