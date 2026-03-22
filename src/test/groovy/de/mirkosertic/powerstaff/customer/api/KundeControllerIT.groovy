@@ -233,18 +233,16 @@ class KundeControllerIT extends AbstractContainerBaseIT {
               .andExpect(jsonPath('$.blocked').value(true))
     }
 
-    def "POST /kunde/search liefert Fragment mit Treffern"() {
+    def "GET /kunde/search mit company-Parameter liefert search-page (200)"() {
         when:
         def result = mockMvc.perform(
-                post("/kunde/search")
-                        .with(csrf())
+                get("/kunde/search")
                         .with(user("testuser"))
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("company", "Test"))
 
         then:
         result.andExpect(status().isOk())
-              .andExpect(view().name("kunde/search-results :: results"))
+              .andExpect(view().name("kunde/search-page"))
     }
 
     def "GET /kunde/search-more liefert Fragment (200)"() {
@@ -344,11 +342,10 @@ class KundeControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('Exception'))))
     }
 
-    def "POST /kunde/search rendert HTML-Fragment ohne Exception"() {
+    def "GET /kunde/search rendert HTML-Seite mit Treffern ohne Exception"() {
         when:
         def result = mockMvc.perform(
-                post("/kunde/search")
-                        .with(csrf())
+                get("/kunde/search")
                         .with(user("testuser"))
                         .param("company", "Test"))
 

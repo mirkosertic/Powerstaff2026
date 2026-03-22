@@ -268,18 +268,17 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().is3xxRedirection())
     }
 
-    def "POST /project/search liefert Suchergebnis-Fragment"() {
+    def "GET /project/search mit projectNumber-Parameter liefert search-page (200)"() {
         when:
         def result = mockMvc.perform(
-                post('/project/search')
+                get('/project/search')
                         .with(user('testuser'))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param('projectNumber', '2026')
         )
 
         then:
         result.andExpect(status().isOk())
-              .andExpect(view().name('project/search-results :: results'))
+              .andExpect(view().name('project/search-page'))
     }
 
     def "GET /project/search ohne Parameter liefert 200 und search-page Template"() {
@@ -415,13 +414,12 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('Exception'))))
     }
 
-    def "POST /project/search rendert HTML-Fragment ohne Exception"() {
+    def "GET /project/search rendert HTML-Seite mit Treffern ohne Exception"() {
         when:
         def result = mockMvc.perform(
-                post('/project/search')
+                get('/project/search')
                         .with(user('testuser'))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                        .param('projectNumber', '2026'))
 
         then:
         result.andExpect(status().isOk())
