@@ -11,13 +11,16 @@
 
 #chat-page {
   display: flex;
-  height: calc(100vh - var(--nav-h, 44px) - var(--toolbar-h, 52px));
+  height: calc(100vh - var(--nav-h, 44px) - var(--toolbar-h, 52px) - 18px);
   overflow: hidden;
-  background: var(--bg);
   max-width: 1400px;
   width: 100%;
-  margin: 0 auto;
+  margin: 18px auto 0;
   padding: 0 20px;
+  background: var(--surface);
+  border: 1px solid var(--border-l);
+  border-radius: var(--r-l);
+  box-shadow: var(--shadow-sm);
 }
 
 /* -----------------------------------------------------------------------------

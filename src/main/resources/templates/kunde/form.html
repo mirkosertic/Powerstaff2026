@@ -169,12 +169,12 @@
       <div id="search-results-inner"></div>
     </div>
 
-    <div class="form-grid" th:if="${kunde.id != null}">
+    <div class="form-grid">
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Projekte -->
     <!-- ------------------------------------------------------------------ -->
-    <div class="fcard col-wide">
+    <div class="fcard col-wide" th:if="${kunde.id != null}">
       <div class="fcard-hd" onclick="toggleCard('fcard-projekte')">
         <span class="fcard-title">Projekte</span>
         <span class="fcard-chv open">▾</span>
