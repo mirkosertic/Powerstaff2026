@@ -19,7 +19,6 @@ export default defineConfig({
         baseURL: `http://localhost:${PORT}`,
         locale: 'de-DE',
         timezoneId: 'Europe/Berlin',
-        viewport: { width: 1440, height: 900 },
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
         trace: 'on-first-retry',
@@ -33,10 +32,13 @@ export default defineConfig({
             testMatch: /auth\.setup\.ts/,
             use: { storageState: undefined },
         },
-        // Alle anderen Tests verwenden den gespeicherten Auth-State
+        // Alle anderen Tests: Chromium mit fester Auflösung 1280×1024
         {
             name: 'chromium',
-            use: { ...devices['Desktop Chrome'] },
+            use: {
+                ...devices['Desktop Chrome'],
+                viewport: { width: 1280, height: 1024 },
+            },
             dependencies: ['setup'],
         },
     ],

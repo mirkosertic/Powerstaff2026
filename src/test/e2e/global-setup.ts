@@ -1,9 +1,4 @@
-import { execSync } from 'child_process';
-import * as path from 'path';
-
-export default async function globalSetup() {
-    const composeFile = path.resolve(__dirname, 'docker-compose-e2e.yml');
-    console.log('[global-setup] Starte MySQL via Docker Compose…');
-    execSync(`docker compose -f ${composeFile} up -d --wait`, { stdio: 'inherit' });
-    console.log('[global-setup] MySQL bereit.');
-}
+// MySQL wird im Maven-Lifecycle (pre-integration-test) via docker compose up gestartet,
+// damit die DB bereit ist bevor Playwright seinen webServer (Spring Boot) hochfährt.
+// globalSetup bleibt als leerer Hook für künftige Playwright-spezifische Initialisierung.
+export default async function globalSetup() {}

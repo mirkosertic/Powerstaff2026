@@ -340,6 +340,26 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <executions>
+                            <!-- MySQL via Docker Compose starten (MUSS vor npm ci laufen, damit
+                                 MySQL bereit ist bevor Playwright seinen webServer startet) -->
+                            <execution>
+                                <id>e2e-docker-up</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>docker</executable>
+                                    <arguments>
+                                        <argument>compose</argument>
+                                        <argument>-f</argument>
+                                        <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
+                                        <argument>up</argument>
+                                        <argument>-d</argument>
+                                        <argument>--wait</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
                             <!-- npm ci in src/test/e2e -->
                             <execution>
                                 <id>e2e-npm-ci</id>
@@ -389,6 +409,23 @@
                                     <successCodes>
                                         <successCode>0</successCode>
                                     </successCodes>
+                                </configuration>
+                            </execution>
+                            <!-- MySQL Container nach den Tests herunterfahren -->
+                            <execution>
+                                <id>e2e-docker-down</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>docker</executable>
+                                    <arguments>
+                                        <argument>compose</argument>
+                                        <argument>-f</argument>
+                                        <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
+                                        <argument>down</argument>
+                                    </arguments>
                                 </configuration>
                             </execution>
                         </executions>
