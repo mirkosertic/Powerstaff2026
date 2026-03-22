@@ -455,7 +455,7 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('In Datenbank suchen'))))
     }
 
-    def "GET /project/{id} rendert Positions-Buttons mit data-action statt onclick"() {
+    def "GET /project/{id} rendert Positions-Buttons mit onclick"() {
         given:
         def pos = new ProjectPositionView(1L, 0L, 10L, 'MK-01', 'Mustermann', 'Max',
                 1L, 'Offen', '#00aa00', '#ffffff', '500 EUR', 'Kommentar')
@@ -466,9 +466,7 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
 
         then:
         result.andExpect(status().isOk())
-              .andExpect(content().string(containsString('data-action="edit-position"')))
-              .andExpect(content().string(containsString('data-action="delete-position"')))
-              .andExpect(content().string(not(containsString('onclick="openEditPositionModal'))))
-              .andExpect(content().string(not(containsString('onclick="openDeletePositionModal'))))
+              .andExpect(content().string(containsString('onclick="openEditPositionModal(this)"')))
+              .andExpect(content().string(containsString('onclick="openDeletePositionModal(this)"')))
     }
 }
