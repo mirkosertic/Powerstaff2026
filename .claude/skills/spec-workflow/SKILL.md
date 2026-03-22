@@ -373,16 +373,17 @@ Ergebnis: [ALLE PROBLEME BEHOBEN / MAX. ITERATIONEN ERREICHT / KEINE PROBLEME GE
 
 ## Zusammenspiel mit anderen Skills
 
-| Situation | Empfohlener Skill |
-|---|---|
-| Vollautomatische Prüfung + Korrektur (dieser Skill) | `/spec-workflow` |
-| Schnelle manuelle Prüfung mit interaktiver Korrektur | `/spec-review` |
-| Vollständige Feature-Implementierung (alle Domains) | `/implement` |
-| Nur Backend-Implementierung | `/implement-backend` |
-| Nur Thymeleaf-Templates / Custom Elements | `/implement-frontend` |
-| Nur Flyway-Migration / DB-Schema | `/implement-db` |
-| Nur Tests | `/implement-tests` |
-| HTML-Prototyp für Design-System-Validierung | `/implement-form` |
+| Situation                                            | Empfohlener Skill     |
+|------------------------------------------------------|-----------------------|
+| Vollautomatische Prüfung + Korrektur (dieser Skill)  | `/spec-workflow`      |
+| Schnelle manuelle Prüfung mit interaktiver Korrektur | `/spec-review`        |
+| Vollständige Feature-Implementierung (alle Domains)  | `/implement`          |
+| Nur Backend-Implementierung                          | `/implement-backend`  |
+| Nur Thymeleaf-Templates / Custom Elements            | `/implement-frontend` |
+| Nur Flyway-Migration / DB-Schema                     | `/implement-db`       |
+| Nur Tests                                            | `/implement-tests`    |
+| E2E-Tests                                            | `/implement-e2e`      |
+| HTML-Prototyp für Design-System-Validierung          | `/implement-form`     |
 
 **Reihenfolge für neue Features:**
 1. Modul-Spec schreiben/erweitern

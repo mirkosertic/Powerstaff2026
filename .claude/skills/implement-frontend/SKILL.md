@@ -25,34 +25,34 @@ Erstelle dir intern eine Liste aller verfügbaren CSS-Klassen. Du darfst **aussc
 
 **Zusätzliche Pflichtlektüre:**
 
-| Dokument                                  | Relevante Abschnitte                                  |
-|-------------------------------------------|-------------------------------------------------------|
-| `specs/SWARCHITEKTUR.md`                  | 5 (Frontend-Strategie), 6 (Validierungsstrategie)     |
-| `specs/UI-DESIGNSYSTEM.md`                | Vollständig — Komponentenkatalog, Layout, CSS-Klassen |
+| Dokument                                  | Relevante Abschnitte                                                     |
+|-------------------------------------------|--------------------------------------------------------------------------|
+| `specs/SWARCHITEKTUR.md`                  | 5 (Frontend-Strategie), 6 (Validierungsstrategie)                        |
+| `specs/UI-DESIGNSYSTEM.md`                | Vollständig — Komponentenkatalog, Layout, CSS-Klassen                    |
 | `prototype/freiberufler.html`             | Vollständig — **einzige visuelle Wahrheit** für Layout und HTML-Struktur |
-| Modul-Spec (`specs/FREIBERUFLER.md` etc.) | Vollständig — Felder, Workflows, UX-Anforderungen     |
+| Modul-Spec (`specs/FREIBERUFLER.md` etc.) | Vollständig — Felder, Workflows, UX-Anforderungen                        |
 
 **Wichtige CSS-Klassen-Kurzreferenz** (häufige Fehlerquellen):
 
-| Bereich | Richtig | Falsch (nicht verwenden) |
-|---------|---------|--------------------------|
-| Akkordeon-Karte Header | `.fcard-hd` + `.fcard-title` + `.fcard-chv` | `<h2>` direkt in `.fcard` |
-| Akkordeon-Karte Inhalt | `.fcard-body` | Content direkt in `.fcard` |
-| Seiten-Grid | `.form-grid` + `.col-wide` | kein Grid / eigene Grid-Klassen |
-| Feld-Container | `.fg` | – |
-| 2-spaltig | `.fg2` | `.field-grid`, `.field-grid.col-2` |
-| 3-spaltig | `.fg3` | `.field-grid.col-3` |
-| Checkbox | `.cbfield` in `.cbrow` | `.checkbox-pill` |
-| Button sekundär | `.btn-ghost` | `.btn-secondary` |
-| Button primär | `.btn-pri` | `.btn-primary` |
-| Kontaktsperre-Banner | `.banner-forbidden` | `.banner-error` |
-| History-Liste | `.hlist` > `.hitem` > `.hitem-hd` + `.hbody` | `.chist`, `.chist-entry` |
-| History-Badge | `.hbadge` + `.hmeta` + `.hacts` | `.chist-meta`, `.chist-text` |
-| Tag-Grid | `.tag-grid` | `.tag-group` |
-| Tag-Kategorie | `.tg-label` | `.subsection-label` (in Tag-Kontext) |
-| Chip-Reihe | `.chip-row` | `.chip-list` |
-| Chip-Entfernen | `.chip-x` | `.chip-remove` |
-| Chip-Hinzufügen | `.chip-add` | `.tag-add-select` |
+| Bereich                | Richtig                                      | Falsch (nicht verwenden)             |
+|------------------------|----------------------------------------------|--------------------------------------|
+| Akkordeon-Karte Header | `.fcard-hd` + `.fcard-title` + `.fcard-chv`  | `<h2>` direkt in `.fcard`            |
+| Akkordeon-Karte Inhalt | `.fcard-body`                                | Content direkt in `.fcard`           |
+| Seiten-Grid            | `.form-grid` + `.col-wide`                   | kein Grid / eigene Grid-Klassen      |
+| Feld-Container         | `.fg`                                        | –                                    |
+| 2-spaltig              | `.fg2`                                       | `.field-grid`, `.field-grid.col-2`   |
+| 3-spaltig              | `.fg3`                                       | `.field-grid.col-3`                  |
+| Checkbox               | `.cbfield` in `.cbrow`                       | `.checkbox-pill`                     |
+| Button sekundär        | `.btn-ghost`                                 | `.btn-secondary`                     |
+| Button primär          | `.btn-pri`                                   | `.btn-primary`                       |
+| Kontaktsperre-Banner   | `.banner-forbidden`                          | `.banner-error`                      |
+| History-Liste          | `.hlist` > `.hitem` > `.hitem-hd` + `.hbody` | `.chist`, `.chist-entry`             |
+| History-Badge          | `.hbadge` + `.hmeta` + `.hacts`              | `.chist-meta`, `.chist-text`         |
+| Tag-Grid               | `.tag-grid`                                  | `.tag-group`                         |
+| Tag-Kategorie          | `.tg-label`                                  | `.subsection-label` (in Tag-Kontext) |
+| Chip-Reihe             | `.chip-row`                                  | `.chip-list`                         |
+| Chip-Entfernen         | `.chip-x`                                    | `.chip-remove`                       |
+| Chip-Hinzufügen        | `.chip-add`                                  | `.tag-add-select`                    |
 
 ---
 

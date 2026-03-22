@@ -38,12 +38,13 @@ Lies zuerst:
 
 Bestimme welche Domains betroffen sind:
 
-| Domain       | Betroffen wenn …                                                            |
-|--------------|-----------------------------------------------------------------------------|
-| **DB**       | Neue oder geänderte Tabellen, neue Flyway-Migration nötig                   |
-| **Backend**  | Neue/geänderte CommandService-, QueryService-, Controller- oder Event-Logik |
-| **Frontend** | Neue/geänderte Thymeleaf-Templates, Custom Elements oder AJAX-Endpunkte     |
-| **Tests**    | **Immer** — Tests sind in jedem Implementierungs-Task obligatorisch         |
+| Domain       | Betroffen wenn …                                                             |
+|--------------|------------------------------------------------------------------------------|
+| **DB**       | Neue oder geänderte Tabellen, neue Flyway-Migration nötig                    |
+| **Backend**  | Neue/geänderte CommandService-, QueryService-, Controller- oder Event-Logik  |
+| **Frontend** | Neue/geänderte Thymeleaf-Templates, Custom Elements oder AJAX-Endpunkte      |
+| **Tests**    | **Immer** — Spock/Testcontainers-Tests sind in jedem Task obligatorisch      |
+| **E2E**      | **Immer wenn Frontend betroffen** — neue Seiten, Modals, URLs oder Formulare |
 
 Falls Scope aus der Task-Beschreibung nicht eindeutig: **einmalig** beim Anwender nachfragen, dann starten.
 
@@ -138,6 +139,32 @@ Prompt:
 > Schreib Groovy-Tests nach `src/test/groovy/`.
 > Ausgabe: Liste erstellter Dateien + Übersicht was getestet wird (Klassen/Methoden/Szenarien).
 
+### E2E-Agent (`subagent_type: general-purpose`) — **wenn Frontend betroffen**
+
+Prompt:
+> Du bist der Playwright-E2E-Test-Experte für Powerstaff 2026.
+>
+> Lies vollständig:
+> - `.claude/skills/implement-e2e/SKILL.md` — alle Regeln, Fallstricke und Muster
+> - `src/test/e2e/playwright.config.ts` — Projektkonfiguration
+> - `src/main/resources/db/testdata/V100__e2e_seed.sql` — verfügbare Testdaten und IDs
+> - Die betroffenen Thymeleaf-Templates: [TEMPLATE-PFADE einfügen] — für data-testid-Attribute
+> - Bestehende Spec-Dateien in `src/test/e2e/tests/` — für Muster und Konventionen
+>
+> Implementiere oder aktualisiere Playwright-E2E-Tests für: [TASK-BESCHREIBUNG]
+>
+> Verbindliche Regeln (vollständig in SKILL.md — hier nur Kurzreferenz):
+> - Nur `data-testid`-Selektoren (keine CSS-Klassen, kein Text)
+> - Modal-Selektoren immer mit Parent-ID qualifizieren (Thymeleaf Doppel-DOM)
+> - Nach Navigations-Clicks: `page.waitForURL(...)` statt URL-Assertion
+> - Kein `toHaveURL(/saved=true/)` — stattdessen `#banner-success` sichtbar
+> - Neue Datensätze: alle Pflichtfelder (z.B. `kontaktart`) befüllen
+> - Seed-Daten nur aus `V100__e2e_seed.sql` referenzieren
+>
+> Schreib TypeScript-Tests nach `src/test/e2e/tests/`.
+> Melde fehlende `data-testid`-Attribute als Befundliste für den Frontend-Agent.
+> Ausgabe: Liste geänderter Spec-Dateien + Szenario-Übersicht + ggf. Seed-Erweiterungen.
+
 ---
 
 ## Schritt 3: Review-Loop (max. 2 Iterationen)
@@ -204,6 +231,27 @@ Prompt:
 >
 > Ausgabe: `QR1..QRn | Datei | Problem | Korrekturvorschlag` (oder: `Keine Befunde`)
 
+### E2E-Reviewer (`subagent_type: Explore`) — wenn E2E-Agent gelaufen ist
+
+Prompt:
+> Du bist ein Playwright-E2E-Reviewer für Powerstaff 2026.
+>
+> Lies `.claude/skills/implement-e2e/SKILL.md` vollständig (Selektionsregeln, Fallstricke, Qualitätscheckliste).
+> Reviewe den E2E-Agent-Output:
+> [E2E-Agent-Output einfügen]
+> [Frontend-Agent-Output einfügen — für data-testid-Abdeckungsprüfung]
+>
+> Prüfe:
+> - Alle Selektoren nutzen `data-testid` (keine CSS-Klassen, kein Text-Inhalt)?
+> - Modal-Selektoren mit Parent-ID qualifiziert (Thymeleaf-Doppel-DOM)?
+> - Nach Navigations-Clicks: `waitForURL` statt URL-Assertion mit Queryparameter?
+> - Kein `toHaveURL(/saved=true/)` o.ä. flaky Assertions?
+> - Alle referenzierten Entity-IDs/Codes existieren in `V100__e2e_seed.sql`?
+> - Pflichtfelder beim Anlegen neuer Datensätze befüllt?
+> - Alle neuen `data-testid`-Attribute aus den Templates durch Tests abgedeckt?
+>
+> Ausgabe: `ER1..ERn | Datei | Problem | Korrekturvorschlag` (oder: `Keine Befunde`)
+
 ### Fix-Runde
 
 Warte bis alle Reviewer fertig sind. Wenn Befunde vorhanden:
@@ -245,9 +293,13 @@ DB:       [Dateien]
 Backend:  [Dateien]
 Frontend: [Dateien]
 Tests:    [Dateien]
+E2E:      [Dateien]
 
 ━━ Testabdeckung ━━
 [Übersicht: welche Klassen/Szenarien getestet]
+
+━━ E2E-Szenarien ━━
+[Übersicht: welche Playwright-Tests neu/geändert]
 
 ━━ Behobene Review-Befunde ━━
 [Liste aller Fixes FX1..FXn]
@@ -273,7 +325,8 @@ Tests:    [Dateien]
 | Fokussiert: nur Backend                     | `/implement-backend`        |
 | Fokussiert: nur Templates/Custom Elements   | `/implement-frontend`       |
 | Fokussiert: nur Flyway-Migration            | `/implement-db`             |
-| Fokussiert: nur Tests                       | `/implement-tests`          |
+| Fokussiert: nur Spock/Testcontainers-Tests  | `/implement-tests`          |
+| Fokussiert: nur Playwright-E2E-Tests        | `/implement-e2e`            |
 | HTML-Prototyp für Design-System-Validierung | `/implement-form`           |
 
 **Empfohlene Reihenfolge für neue Features:**
