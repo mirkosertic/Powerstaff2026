@@ -159,40 +159,40 @@ Listenelemente ohne DB-ID (JS-generiert, noch nicht gespeichert) erhalten `data-
 Für jeden Test gilt: Playwright Codegen (`npx playwright codegen http://localhost:8090`) für Interaktionen verwenden, Assertions manuell ergänzen.
 
 ### `tests/auth.setup.ts`
-- [ ] Login-Flow, speichert `auth-state.json`
+- [x] Login-Flow, speichert `auth-state.json`
 
 ### `tests/freelancer.spec.ts`
-- [ ] Neuen Freiberufler anlegen und speichern (Pflichtfelder)
-- [ ] Freiberufler per Code suchen, in Ergebnisliste anklicken
-- [ ] Kontakthistorie-Eintrag hinzufügen und speichern
-- [ ] Kontaktmöglichkeit hinzufügen (E-Mail) und speichern
-- [ ] Freiberufler einem gemerkten Projekt zuordnen (Erfolgsfall)
-- [ ] Freiberufler einem Projekt zuordnen, der bereits zugeordnet ist (409-Banner prüfen)
+- [x] Neuen Freiberufler anlegen und speichern (Pflichtfelder)
+- [x] Freiberufler per Code suchen, in Ergebnisliste anklicken
+- [x] Kontakthistorie-Eintrag hinzufügen und speichern
+- [x] Kontaktmöglichkeit hinzufügen (E-Mail) und speichern
+- [x] Freiberufler einem gemerkten Projekt zuordnen (Erfolgsfall)
+- [x] Freiberufler einem Projekt zuordnen, der bereits zugeordnet ist (409-Banner prüfen)
 
 ### `tests/partner.spec.ts`
-- [ ] Partner anlegen und speichern
-- [ ] Partner suchen, Ergebnisliste prüfen
-- [ ] Kontakthistorie hinzufügen
+- [x] Partner anlegen und speichern
+- [x] Partner suchen, Ergebnisliste prüfen
+- [x] Kontakthistorie hinzufügen
 
 ### `tests/kunde.spec.ts`
-- [ ] Kunden anlegen und speichern
-- [ ] Kunden suchen, Ergebnisliste prüfen
+- [x] Kunden anlegen und speichern
+- [x] Kunden suchen, Ergebnisliste prüfen
 
 ### `tests/project.spec.ts`
-- [ ] Projekt suchen (QBE leer → alle Ergebnisse)
-- [ ] Projekt öffnen, Projekthistorie hinzufügen
-- [ ] Freiberufler per Code einem Projekt zuordnen
-- [ ] Projektposition bearbeiten und speichern
+- [x] Projekt suchen (QBE leer → alle Ergebnisse)
+- [x] Projekt öffnen, Projekthistorie hinzufügen
+- [x] Freiberufler per Code einem Projekt zuordnen
+- [x] Projektposition bearbeiten und speichern
 
 ### `tests/profilesearch.spec.ts`
-- [ ] Chat anlegen, Nachricht senden, Stub-Antwort prüfen
-- [ ] Chat löschen, Redirect auf verbleibenden oder neuen Chat prüfen
-- [ ] Neuen Chat über Toolbar anlegen
+- [x] Chat anlegen, Nachricht senden, Stub-Antwort prüfen
+- [x] Chat löschen, Redirect auf verbleibenden oder neuen Chat prüfen
+- [x] Neuen Chat über Toolbar anlegen
 
 ### `tests/admin.spec.ts`
-- [ ] Historientyp anlegen und in Liste prüfen
-- [ ] Positionsstatus anlegen, als Default markieren
-- [ ] Tag anlegen und in Liste prüfen
+- [x] Historientyp anlegen und in Liste prüfen
+- [x] Positionsstatus anlegen, als Default markieren
+- [x] Tag anlegen und in Liste prüfen
 
 ---
 
