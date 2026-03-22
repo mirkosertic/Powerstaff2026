@@ -9,5 +9,6 @@ export default async function globalSetup() {
     // Datenbank keine veraltete Session wiederverwendet wird.
     // auth.setup.ts überschreibt sie anschließend mit der echten Session.
     const authState = path.resolve(__dirname, 'fixtures/auth-state.json');
+    fs.mkdirSync(path.dirname(authState), { recursive: true });
     fs.writeFileSync(authState, JSON.stringify({ cookies: [], origins: [] }));
 }
