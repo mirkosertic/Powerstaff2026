@@ -1,11 +1,7 @@
 name: E2E Tests
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
+  branches: [ main, master ]
 
 jobs:
   e2e:
@@ -35,12 +31,6 @@ jobs:
 
       - name: Build JAR
         run: ./mvnw clean package -DskipTests -q
-
-      - name: Install Playwright browsers
-        working-directory: src/test/e2e
-        run: |
-          npm ci
-          npx playwright install --with-deps chromium
 
       - name: Run E2E Tests
         run: ./mvnw verify -Pe2e -DskipTests

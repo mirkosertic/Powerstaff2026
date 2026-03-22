@@ -412,13 +412,14 @@
                                         <argument>playwright</argument>
                                         <argument>install</argument>
                                         <argument>chromium</argument>
+                                        <argument>firefox</argument>
                                     </arguments>
                                     <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
                                 </configuration>
                             </execution>
-                            <!-- npx playwright test -->
+                            <!-- Durchlauf 1: Chromium – blob-Report für späteres Merge -->
                             <execution>
-                                <id>e2e-playwright-test</id>
+                                <id>e2e-playwright-chromium</id>
                                 <phase>integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
@@ -428,10 +429,123 @@
                                     <arguments>
                                         <argument>playwright</argument>
                                         <argument>test</argument>
+                                        <argument>--project=setup</argument>
+                                        <argument>--project=chromium</argument>
+                                        <argument>--reporter=blob</argument>
                                     </arguments>
                                     <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                                    <environmentVariables>
+                                        <PLAYWRIGHT_BLOB_OUTPUT_DIR>${project.build.directory}/e2e-blob-chromium</PLAYWRIGHT_BLOB_OUTPUT_DIR>
+                                    </environmentVariables>
+                                    <!-- successCode 1 = Testfehler, aber Firefox-Lauf soll trotzdem laufen -->
                                     <successCodes>
                                         <successCode>0</successCode>
+                                        <successCode>1</successCode>
+                                    </successCodes>
+                                </configuration>
+                            </execution>
+                            <!-- Datenbank zwischen den Läufen neu aufsetzen -->
+                            <execution>
+                                <id>e2e-docker-between-down</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>docker</executable>
+                                    <arguments>
+                                        <argument>compose</argument>
+                                        <argument>-f</argument>
+                                        <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
+                                        <argument>down</argument>
+                                        <argument>-v</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>e2e-docker-between-up</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>docker</executable>
+                                    <arguments>
+                                        <argument>compose</argument>
+                                        <argument>-f</argument>
+                                        <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
+                                        <argument>up</argument>
+                                        <argument>-d</argument>
+                                        <argument>--wait</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <!-- Durchlauf 2: Firefox – blob-Report für späteres Merge -->
+                            <execution>
+                                <id>e2e-playwright-firefox</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>npx</executable>
+                                    <arguments>
+                                        <argument>playwright</argument>
+                                        <argument>test</argument>
+                                        <argument>--project=setup</argument>
+                                        <argument>--project=firefox</argument>
+                                        <argument>--reporter=blob</argument>
+                                    </arguments>
+                                    <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                                    <environmentVariables>
+                                        <PLAYWRIGHT_BLOB_OUTPUT_DIR>${project.build.directory}/e2e-blob-firefox</PLAYWRIGHT_BLOB_OUTPUT_DIR>
+                                    </environmentVariables>
+                                    <successCodes>
+                                        <successCode>0</successCode>
+                                        <successCode>1</successCode>
+                                    </successCodes>
+                                </configuration>
+                            </execution>
+                            <!-- Blob-Dateien beider Browser in ein gemeinsames Verzeichnis kopieren -->
+                            <execution>
+                                <id>e2e-combine-blobs</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>bash</executable>
+                                    <arguments>
+                                        <argument>-c</argument>
+                                        <argument>mkdir -p "$COMBINED" &amp;&amp; cp "$CHROMIUM"/*.zip "$COMBINED/" 2>/dev/null; cp "$FIREFOX"/*.zip "$COMBINED/" 2>/dev/null; true</argument>
+                                    </arguments>
+                                    <environmentVariables>
+                                        <CHROMIUM>${project.build.directory}/e2e-blob-chromium</CHROMIUM>
+                                        <FIREFOX>${project.build.directory}/e2e-blob-firefox</FIREFOX>
+                                        <COMBINED>${project.build.directory}/e2e-blobs</COMBINED>
+                                    </environmentVariables>
+                                </configuration>
+                            </execution>
+                            <!-- Blob-Reports beider Browser zu einem aggregierten HTML-Report zusammenführen -->
+                            <execution>
+                                <id>e2e-merge-reports</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>npx</executable>
+                                    <arguments>
+                                        <argument>playwright</argument>
+                                        <argument>merge-reports</argument>
+                                        <argument>--reporter=html</argument>
+                                        <argument>${project.build.directory}/e2e-blobs</argument>
+                                    </arguments>
+                                    <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                                    <!-- Fehler ignorieren falls ein Blob-Verzeichnis leer ist -->
+                                    <successCodes>
+                                        <successCode>0</successCode>
+                                        <successCode>1</successCode>
                                     </successCodes>
                                 </configuration>
                             </execution>

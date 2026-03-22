@@ -41,6 +41,15 @@ export default defineConfig({
             },
             dependencies: ['setup'],
         },
+        // Firefox mit gleicher Auflösung
+        {
+            name: 'firefox',
+            use: {
+                ...devices['Desktop Firefox'],
+                viewport: { width: 1280, height: 1024 },
+            },
+            dependencies: ['setup'],
+        },
     ],
 
     reporter: [['html', { outputFolder: 'playwright-report' }]],
