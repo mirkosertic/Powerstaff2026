@@ -9,10 +9,10 @@ Vollständiges Konzept: `specs/E2ETESTS.md`
 
 ## Phase 1 – Infrastruktur aufbauen
 
-- [ ] **E2E-Verzeichnis anlegen**
+- [x] **E2E-Verzeichnis anlegen**
   `src/test/e2e/` mit `.gitignore` (enthält `node_modules/`, `playwright-report/`, `test-results/`, `fixtures/auth-state.json`)
 
-- [ ] **`package.json` und `playwright.config.ts` anlegen**
+- [x] **`package.json` und `playwright.config.ts` anlegen**
   - Playwright-Abhängigkeit (`@playwright/test`)
   - Browser: Chromium, Viewport 1440×900, Locale `de-DE`, Timezone `Europe/Berlin`
   - `screenshot: 'only-on-failure'`, `video: 'retain-on-failure'`, `trace: 'on-first-retry'`
@@ -20,20 +20,20 @@ Vollständiges Konzept: `specs/E2ETESTS.md`
   - `webServer` zeigt auf `target/powerstaff-1.0-SNAPSHOT.jar` mit `--server.port=8090 --spring.profiles.active=e2e`
   - Reporter: HTML nach `playwright-report/`
 
-- [ ] **`docker-compose-e2e.yml` anlegen**
+- [x] **`docker-compose-e2e.yml` anlegen**
   MySQL 8.0 auf Port 3316, Datenbank `powerstaff_e2e`, Healthcheck
 
-- [ ] **`global-setup.ts` und `global-teardown.ts` anlegen**
+- [x] **`global-setup.ts` und `global-teardown.ts` anlegen**
   `docker compose up -d --wait` / `docker compose down`
 
-- [ ] **`src/main/resources/application-e2e.properties` anlegen**
+- [x] **`src/main/resources/application-e2e.properties` anlegen**
   Datasource zeigt auf MySQL:3316
 
-- [ ] **`StubLlmService` für `@Profile("e2e")` implementieren**
+- [x] **`StubLlmService` für `@Profile("e2e")` implementieren**
   Gibt deterministisch eine feste Antwort zurück, ohne echten LLM-Aufruf.
   Liegt in `src/main/java/.../profilesearch/` (Produktionscode, aber profilgebunden).
 
-- [ ] **`fixtures/test-data.sql` anlegen**
+- [x] **`fixtures/test-data.sql` anlegen**
   Enthält:
   - Admin-User `testuser` mit BCrypt-Passwort `testpass`
   - Mindestens 2 Historientypen
@@ -44,15 +44,15 @@ Vollständiges Konzept: `specs/E2ETESTS.md`
   - 1 Kunde
   - 1 Projekt (mit mindestens einer Position)
 
-- [ ] **`auth.setup.ts` anlegen**
+- [x] **`auth.setup.ts` anlegen**
   Login mit `testuser`/`testpass`, speichert `fixtures/auth-state.json`
 
-- [ ] **Maven-Profil `e2e` in `pom.xml` einbauen**
+- [x] **Maven-Profil `e2e` in `pom.xml` einbauen**
   - `npm ci` in `pre-integration-test` (Verzeichnis `src/test/e2e`)
   - `npx playwright test` via exec-maven-plugin in `integration-test`-Phase
   - Exit-Code-Prüfung via failOnError
 
-- [ ] **GitHub Actions Workflow `.github/workflows/e2e.yml` anlegen**
+- [x] **GitHub Actions Workflow `.github/workflows/e2e.yml` anlegen**
   - Java 25, Node 22
   - Playwright-Browser-Cache auf `~/.cache/ms-playwright`
   - `npx playwright install --with-deps chromium`

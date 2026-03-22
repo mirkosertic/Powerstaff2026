@@ -1,0 +1,15 @@
+services:
+  mysql-e2e:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: powerstaff_e2e
+      MYSQL_USER: powerstaff
+      MYSQL_PASSWORD: powerstaff
+    ports:
+      - "3316:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 2s
+      timeout: 5s
+      retries: 15

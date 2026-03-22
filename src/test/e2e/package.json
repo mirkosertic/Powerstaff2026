@@ -1,0 +1,15 @@
+{
+  "name": "powerstaff-e2e",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "codegen": "playwright codegen http://localhost:8090"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.51.0",
+    "bcryptjs": "^2.4.3",
+    "@types/bcryptjs": "^2.4.6"
+  }
+}

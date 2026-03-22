@@ -328,4 +328,74 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <!-- ===== E2E-Profil: Playwright-Tests ===== -->
+        <!-- Aktivierung: mvn clean verify -Pe2e -->
+        <profile>
+            <id>e2e</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <!-- npm ci in src/test/e2e -->
+                            <execution>
+                                <id>e2e-npm-ci</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>npm</executable>
+                                    <arguments>
+                                        <argument>ci</argument>
+                                    </arguments>
+                                    <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                                </configuration>
+                            </execution>
+                            <!-- npx playwright install chromium -->
+                            <execution>
+                                <id>e2e-playwright-install</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>npx</executable>
+                                    <arguments>
+                                        <argument>playwright</argument>
+                                        <argument>install</argument>
+                                        <argument>chromium</argument>
+                                    </arguments>
+                                    <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                                </configuration>
+                            </execution>
+                            <!-- npx playwright test -->
+                            <execution>
+                                <id>e2e-playwright-test</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>npx</executable>
+                                    <arguments>
+                                        <argument>playwright</argument>
+                                        <argument>test</argument>
+                                    </arguments>
+                                    <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                                    <successCodes>
+                                        <successCode>0</successCode>
+                                    </successCodes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
