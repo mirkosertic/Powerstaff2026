@@ -12,7 +12,7 @@
       ${project.id != null} ? @{/project/next/{id}(id=${project.id})} : null,
       @{/project/last},
       null,
-      'project-form',
+      ${project.id != null} ? 'project-form' : null,
       ${project.id != null} ? 'modal-delete' : null,
       null,
       ${project.id != null}
@@ -197,10 +197,8 @@
         </div>
       </div>
 
-      <!-- QBE-Suche starten -->
-      <div class="btn-row mt-md">
-        <button type="button" class="btn-pri" id="btn-qbe-search">&#128269; In Datenbank suchen</button>
-      </div>
+      <!-- QBE-Suche: wird von Toolbar-Button ausgelöst -->
+      <button type="button" class="hidden" id="btn-qbe-search"></button>
 
       </div><!-- /.form-grid -->
 
@@ -245,11 +243,9 @@
               <button type="button" class="btn btn-sm btn-ghost"
                       th:attr="data-pos-id=${pos.id()},data-db-version=${pos.dbVersion()},
                                data-status-id=${pos.statusId()},data-konditionen=${pos.konditionen()},
-                               data-kommentar=${pos.kommentar()}"
-                      onclick="openEditPositionModal(this)">Bearbeiten</button>
+                               data-kommentar=${pos.kommentar()},data-action='edit-position'">Bearbeiten</button>
               <button type="button" class="btn btn-sm btn-danger"
-                      th:attr="data-pos-id=${pos.id()},data-code=${pos.code()},data-name=${pos.name1()}"
-                      onclick="openDeletePositionModal(this)">Löschen</button>
+                      th:attr="data-pos-id=${pos.id()},data-code=${pos.code()},data-name=${pos.name1()},data-action='delete-position'">Löschen</button>
             </td>
           </tr>
         </tbody>
@@ -644,6 +640,14 @@
   // ---- bfcache pageshow-Handler ----
   window.addEventListener('pageshow', (e) => {
     if (e.persisted) location.reload();
+  });
+
+  // ---- Event-Delegation für Positions-Buttons (data-action statt onclick) ----
+  document.addEventListener('click', function(e) {
+    const editBtn = e.target.closest('[data-action="edit-position"]');
+    if (editBtn) { openEditPositionModal(editBtn); return; }
+    const delBtn = e.target.closest('[data-action="delete-position"]');
+    if (delBtn) { openDeletePositionModal(delBtn); return; }
   });
   </script>
 

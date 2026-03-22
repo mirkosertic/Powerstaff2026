@@ -63,3 +63,8 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
 - [x] Der Unified-Search Ansatz für Freiberufler, Partner und Kunden ist nicht ganz korrekt. Es ist nicht möglich, einem neuen Freiberufler, Partner oder Kunden direkt Kontaktmöglichkeiten oder Historieneinträge zuzuordnen, und diesen dann zu speichern. Ich muss zuerst
   z.B. einen neuen Freiberufler anlegen und speichern, und erst dann kann ich Kontaktmöglichkeiten oder Historieneinträge erfassen. Das ist ineffizient im Ablauf. Auch für neue Datensätze möchte ich direkt Kontaktmöglichkeiten und Historieneinträge erfassen können.
 - [x] Beim Löschen eines Chats sehe ich nur die JavaScript-Fehlermeldung "Uncaught (in promise) TypeError: NetworkError when attempting to fetch resource. " in der Console. Es scheint, als wurde der Chat in der DB gelöscht, aber die UI nicht aktualisiert.
+- [x] Der "In Datenbank suchen" Button ist redundant auf der Projektseite; Die Suche wird über die Toolbar gestartet.
+- [x] Projektpositionen können noch immer nicht auf der Projektseite edidiert werden. Beim Klick auf den Bearbeiten Button erscheint eine JavaScript-Fehlermeldung in der Browserkonsole: Uncaught ReferenceError: openEditPositionModal is not defined
+  onclick http://localhost:8080/project/1:1
+- [x] Projektpositionen können nicht gelöscht werden; der Button auf dem Formular hat keine Funktion.
+- [x] Ein leeres Projektformular kann nicht gespeichert werden, der Button "Speichern" soll nur sichtbar sein, wenn ein bestehendes Projekt bearbeitet wird. Ein leeres Projekt-Formular dient zur Eingabe der QBE Suchparameter. Neue Projekte werden über das Kunden bzw. Partner Formular angelegt.

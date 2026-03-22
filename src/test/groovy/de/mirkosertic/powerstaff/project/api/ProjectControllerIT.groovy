@@ -10,6 +10,7 @@ import de.mirkosertic.powerstaff.project.command.RememberedProjectService
 import de.mirkosertic.powerstaff.project.query.ProjectDetailView
 import de.mirkosertic.powerstaff.project.query.ProjectHistoryQueryService
 import de.mirkosertic.powerstaff.project.query.ProjectPositionQueryService
+import de.mirkosertic.powerstaff.project.query.ProjectPositionView
 import de.mirkosertic.powerstaff.project.query.ProjectQueryService
 import de.mirkosertic.powerstaff.project.query.ProjectSearchResult
 import de.mirkosertic.powerstaff.shared.query.ProjectPositionStatusQueryService
@@ -424,5 +425,50 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
         then:
         result.andExpect(status().isOk())
               .andExpect(content().string(not(containsString('Exception'))))
+    }
+
+    def "GET /project/new zeigt keinen Speichern-Button (QBE-Formular)"() {
+        when:
+        def result = mockMvc.perform(get('/project/new').with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(not(containsString('form="project-form"'))))
+    }
+
+    def "GET /project/{id} zeigt Speichern-Button fuer bestehendes Projekt"() {
+        when:
+        def result = mockMvc.perform(get('/project/42').with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('form="project-form"')))
+    }
+
+    def "GET /project/new btn-qbe-search ist vorhanden aber versteckt"() {
+        when:
+        def result = mockMvc.perform(get('/project/new').with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('id="btn-qbe-search"')))
+              .andExpect(content().string(not(containsString('In Datenbank suchen'))))
+    }
+
+    def "GET /project/{id} rendert Positions-Buttons mit data-action statt onclick"() {
+        given:
+        def pos = new ProjectPositionView(1L, 0L, 10L, 'MK-01', 'Mustermann', 'Max',
+                1L, 'Offen', '#00aa00', '#ffffff', '500 EUR', 'Kommentar')
+        when(positionQueryService.findByProjectId(42L, null, null)).thenReturn([pos])
+
+        when:
+        def result = mockMvc.perform(get('/project/42').with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('data-action="edit-position"')))
+              .andExpect(content().string(containsString('data-action="delete-position"')))
+              .andExpect(content().string(not(containsString('onclick="openEditPositionModal'))))
+              .andExpect(content().string(not(containsString('onclick="openDeletePositionModal'))))
     }
 }
