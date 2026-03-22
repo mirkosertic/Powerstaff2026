@@ -66,7 +66,7 @@
         <div class="fg2">
           <div class="fg">
             <label>Projektnummer</label>
-            <input type="text" name="projectNumber" th:value="${project.projectNumber}" required/>
+            <input type="text" name="projectNumber" data-testid="field-project-number" th:value="${project.projectNumber}" required/>
           </div>
           <div class="fg">
             <label>Eingangsdatum</label>
@@ -114,11 +114,11 @@
         <div class="fcard-body" id="fcard-beschreibung">
         <div class="fg">
           <label>Kurzbeschreibung</label>
-          <input type="text" name="descriptionShort" th:value="${project.descriptionShort}" required/>
+          <input type="text" name="descriptionShort" data-testid="field-short-description" th:value="${project.descriptionShort}" required/>
         </div>
         <div class="fg">
           <label>Beschreibung</label>
-          <textarea name="descriptionLong" rows="5"
+          <textarea name="descriptionLong" data-testid="field-description" rows="5"
                     th:text="${project.descriptionLong}"></textarea>
         </div>
         <div class="fg">
@@ -225,7 +225,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr th:each="pos : ${positions}">
+          <tr th:each="pos : ${positions}" th:attr="data-testid='position-item-' + ${pos.id()}">
             <td><a th:href="@{/freelancer/{id}(id=${pos.freelancerId()})}" th:text="${pos.code()}"></a></td>
             <td th:text="${pos.name1()}"></td>
             <td th:text="${pos.name2()}"></td>
@@ -240,10 +240,10 @@
               <button type="button" class="btn btn-sm btn-ghost"
                       th:attr="data-pos-id=${pos.id()},data-db-version=${pos.dbVersion()},
                                data-status-id=${pos.statusId()},data-konditionen=${pos.konditionen()},
-                               data-kommentar=${pos.kommentar()}"
+                               data-kommentar=${pos.kommentar()},data-testid='position-edit-' + ${pos.id()}"
                       onclick="openEditPositionModal(this)">Bearbeiten</button>
               <button type="button" class="btn btn-sm btn-danger"
-                      th:attr="data-pos-id=${pos.id()},data-code=${pos.code()},data-name=${pos.name1()}"
+                      th:attr="data-pos-id=${pos.id()},data-code=${pos.code()},data-name=${pos.name1()},data-testid='position-delete-' + ${pos.id()}"
                       onclick="openDeletePositionModal(this)">Löschen</button>
             </td>
           </tr>
@@ -274,7 +274,8 @@
                 onclick="openAddHistoryModal()">+ Neuer Eintrag</button>
       </div>
       <div class="hlist" id="history-list">
-        <div class="hitem" th:each="entry : ${history}">
+        <div class="hitem" th:each="entry : ${history}"
+             th:attr="data-testid='history-item-' + ${entry.id()}">
           <div class="hitem-hd">
             <span class="hmeta">
               <span th:text="${#temporals.format(entry.creationDate(),'dd.MM.yyyy HH:mm')}"></span>

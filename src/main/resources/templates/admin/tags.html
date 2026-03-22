@@ -65,7 +65,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr th:each="tag : ${entry.value}" th:id="'tag-row-' + ${tag.id}">
+              <tr th:each="tag : ${entry.value}" th:id="'tag-row-' + ${tag.id}" th:attr="data-testid='tag-row-' + ${tag.id}">
                 <td th:text="${tag.tagname}"></td>
                 <td>
                   <button class="ibtn" type="button"

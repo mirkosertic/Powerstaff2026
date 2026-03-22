@@ -36,7 +36,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr th:each="type : ${types}">
+              <tr th:each="type : ${types}" th:attr="data-testid='histtype-row-' + ${type.id}">
                 <td th:text="${type.id}"></td>
                 <td th:text="${type.description}"></td>
                 <td>

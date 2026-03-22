@@ -186,6 +186,7 @@
         </thead>
         <tbody>
           <tr th:each="p : ${projects}"
+              th:attr="data-testid='kunde-project-row-' + ${p.id()}"
               th:onclick="|window.location='/project/${p.id()}'|"
               class="clickable">
             <td th:text="${p.projectNumber()}"></td>
@@ -258,7 +259,8 @@
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
       <div class="hlist" id="history-list">
-        <div class="hitem" th:each="entry : ${history}">
+        <div class="hitem" th:each="entry : ${history}"
+             th:attr="data-testid='history-item-' + ${entry.id()}">
           <div class="hitem-hd">
             <span class="hbadge" th:text="${entry.typeDescription()}">Typ</span>
             <span class="hmeta">

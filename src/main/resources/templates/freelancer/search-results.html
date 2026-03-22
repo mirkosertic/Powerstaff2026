@@ -8,6 +8,7 @@
 -->
 <div th:fragment="results" th:remove="tag">
   <tr th:each="r : ${results}"
+      th:attr="data-testid='freelancer-row-' + ${r.id()}"
       th:onclick="|window.location='/freelancer/${r.id()}'|"
       style="cursor:pointer">
     <td class="td-name" th:text="${r.name1()}"></td>

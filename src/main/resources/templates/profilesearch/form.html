@@ -50,6 +50,7 @@
         <th:block th:each="chat : ${sidebar}">
           <div class="chat-session-item"
                th:classappend="${chat.id() == chatId} ? ' active' : ''"
+               th:attr="data-testid='chat-session-' + ${chat.id()}"
                th:onclick="${chat.id() == chatId} ? '' : 'location.href=\'/profilesearch/chat/' + ${chat.id()} + '\''">
             <div class="session-info">
               <div class="session-title"
@@ -80,7 +81,7 @@
     <div id="chat-main">
 
       <!-- Nachrichten (§26) -->
-      <div id="chat-messages">
+      <div id="chat-messages" data-testid="chat-messages">
 
         <!-- Leerer Zustand -->
         <div class="empty-chat" th:if="${#lists.isEmpty(messages)}">
@@ -107,11 +108,11 @@
       <!-- Eingabebereich (§27) -->
       <div id="chat-input-area">
         <ps-chat-input id="ps-chat-input-el">
-          <textarea id="chat-input" rows="3"
+          <textarea id="chat-input" data-testid="chat-input" rows="3"
                     placeholder="Nachricht eingeben… (Enter = Senden, Shift+Enter = Zeilenumbruch)"></textarea>
           <div class="chat-input-btns">
             <button type="button" id="chat-stop" class="btn btn-ghost btn-sm" hidden>⏹ Stop</button>
-            <button type="button" id="chat-send" class="btn btn-pri btn-sm">↑ Senden</button>
+            <button type="button" id="chat-send" data-testid="btn-chat-send" class="btn btn-pri btn-sm">↑ Senden</button>
           </div>
         </ps-chat-input>
       </div>

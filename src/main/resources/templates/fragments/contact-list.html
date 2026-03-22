@@ -12,7 +12,8 @@
 -->
 <div class="clist" th:fragment="contactList(contacts, editBaseUrl, deleteBaseUrl)">
 
-  <div class="citem" th:each="contact : ${contacts}">
+  <div class="citem" th:each="contact : ${contacts}"
+       th:attr="data-testid='contact-item-' + ${contact.id}">
 
     <!-- Typ-Badge -->
     <th:block th:switch="${contact.type.name()}">
@@ -58,9 +59,11 @@
     <div class="cacts">
       <a class="ibtn"
          th:href="${editBaseUrl} + '/' + ${contact.id}"
+         th:attr="data-testid='contact-edit-' + ${contact.id}"
          title="Bearbeiten">✎</a>
       <a class="ibtn del"
          th:href="${deleteBaseUrl} + '/' + ${contact.id}"
+         th:attr="data-testid='contact-delete-' + ${contact.id}"
          title="Löschen">🗑</a>
     </div>
 

@@ -87,36 +87,36 @@
             </div>
             <div class="fg">
               <label>Vorname</label>
-              <input type="text" name="name2" th:value="${freelancer.name2}"/>
+              <input type="text" name="name2" data-testid="field-firstname" th:value="${freelancer.name2}"/>
             </div>
             <div class="fg s2">
               <label>Name</label>
-              <input type="text" name="name1" th:value="${freelancer.name1}" required/>
+              <input type="text" name="name1" data-testid="field-lastname" th:value="${freelancer.name1}" required/>
             </div>
           </div>
           <!-- Zeile 2: Firma -->
           <div class="fg mt-md">
             <label>Firma</label>
-            <input type="text" name="company" th:value="${freelancer.company}"/>
+            <input type="text" name="company" data-testid="field-company" th:value="${freelancer.company}"/>
           </div>
           <!-- Zeile 3: Straße -->
           <div class="fg mt-md">
             <label>Straße</label>
-            <input type="text" name="street" th:value="${freelancer.street}"/>
+            <input type="text" name="street" data-testid="field-street" th:value="${freelancer.street}"/>
           </div>
           <!-- Zeile 4: Land | PLZ | Ort -->
           <div class="fg-addr mt-md">
             <div class="fg">
               <label>Land</label>
-              <input type="text" name="country" th:value="${freelancer.country}" maxlength="3"/>
+              <input type="text" name="country" data-testid="field-country" th:value="${freelancer.country}" maxlength="3"/>
             </div>
             <div class="fg">
               <label>PLZ</label>
-              <input type="text" name="plz" th:value="${freelancer.plz}" maxlength="5"/>
+              <input type="text" name="plz" data-testid="field-zip" th:value="${freelancer.plz}" maxlength="5"/>
             </div>
             <div class="fg">
               <label>Ort</label>
-              <input type="text" name="city" th:value="${freelancer.city}"/>
+              <input type="text" name="city" data-testid="field-city" th:value="${freelancer.city}"/>
             </div>
           </div>
           <!-- Zeile 5: Nationalität | Geburtsdatum | Partner -->
@@ -185,6 +185,7 @@
                  th:classappend="${freelancer.contactForbidden} ? ' on-danger' : ''"
                  onclick="toggleCbField(this)">
             <input type="checkbox" name="contactForbidden" value="true"
+                   data-testid="field-contact-forbidden"
                    th:checked="${freelancer.contactForbidden}"
                    onchange="syncBannerForbidden(this)"/>
             🚫 Kontaktsperre
@@ -235,7 +236,7 @@
         <div class="fg2 mb">
           <div class="fg">
             <label>Verfügbar ab</label>
-            <input type="date" name="availabilityAsDate"
+            <input type="date" name="availabilityAsDate" data-testid="field-availability"
                    th:value="${freelancer.availabilityAsDate != null} ? ${#temporals.format(freelancer.availabilityAsDate, 'yyyy-MM-dd')} : ''"/>
           </div>
           <div class="fg pt-label">
@@ -256,7 +257,7 @@
           </div>
           <div class="fg">
             <label>Tagessatz (€)</label>
-            <input type="number" name="salaryPerDayLong" th:value="${freelancer.salaryPerDayLong}" min="0"/>
+            <input type="number" name="salaryPerDayLong" data-testid="field-salary" th:value="${freelancer.salaryPerDayLong}" min="0"/>
           </div>
           <div class="fg">
             <label>Remote-Satz (€)</label>
@@ -296,7 +297,7 @@
         <div class="fg2">
           <div class="fg">
             <label>Code</label>
-            <input type="text" name="code" th:value="${freelancer.code}" placeholder="FL-XXXX"/>
+            <input type="text" name="code" data-testid="field-code" th:value="${freelancer.code}" placeholder="FL-XXXX"/>
           </div>
         </div>
 
@@ -306,7 +307,8 @@
             <div th:each="tagType : ${tagTypes}" th:attr="data-tag-type=${tagType.name()}">
               <div class="tg-label" th:text="${tagType.label}">Kategorie</div>
               <div class="chip-row" th:id="'chips-' + ${tagType.name()}">
-                <span class="chip" th:each="tag : ${tags}" th:if="${tag.type() == tagType}">
+                <span class="chip" th:each="tag : ${tags}" th:if="${tag.type() == tagType}"
+                      th:attr="data-testid='tag-chip-' + ${tag.id()}">
                   <span th:text="${tag.name()}">Tag</span>
                   <button type="button" class="chip-x"
                           th:attr="data-tag-id=${tag.id()},data-tag-type=${tag.type().name()}"
@@ -324,7 +326,7 @@
 
         <div class="fg mt-md">
           <label>Skills</label>
-          <textarea name="skills" rows="5" th:text="${freelancer.skills}"
+          <textarea name="skills" data-testid="field-skills" rows="5" th:text="${freelancer.skills}"
                     placeholder="Java, Spring Boot, Docker..."></textarea>
         </div>
         </div>
@@ -388,10 +390,12 @@
       <div class="fcard-body" id="fcard-history">
       <div class="list-hd">
         <button type="button" class="btn btn-sm btn-ghost"
+                data-testid="btn-add-history"
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
       <div class="hlist" id="history-list">
-        <div class="hitem" th:each="entry : ${history}">
+        <div class="hitem" th:each="entry : ${history}"
+             th:attr="data-testid='history-item-' + ${entry.id()}">
           <div class="hitem-hd">
             <span class="hbadge" th:text="${entry.typeDescription()}">Typ</span>
             <span class="hmeta">
@@ -405,10 +409,10 @@
             </span>
             <div class="hacts">
               <button type="button" class="ibtn"
-                      th:attr="data-history-id=${entry.id()},data-type-id=${entry.typeId()},data-desc=${entry.description()}"
+                      th:attr="data-history-id=${entry.id()},data-type-id=${entry.typeId()},data-desc=${entry.description()},data-testid='history-edit-' + ${entry.id()}"
                       onclick="editHistory(this)">✎</button>
               <button type="button" class="ibtn del"
-                      th:attr="data-history-id=${entry.id()}"
+                      th:attr="data-history-id=${entry.id()},data-testid='history-delete-' + ${entry.id()}"
                       onclick="deleteHistoryEntry(this)">🗑</button>
             </div>
           </div>

@@ -70,7 +70,7 @@ Listenelemente ohne DB-ID (JS-generiert, noch nicht gespeichert) erhalten `data-
 
 ### Fragment: `fragments/toolbar.html`
 
-- [ ] Toolbar-Buttons mit `data-testid` versehen:
+- [x] Toolbar-Buttons mit `data-testid` versehen:
   - `btn-save` (Speichern)
   - `btn-delete` (Löschen)
   - `btn-new` (Neu)
@@ -82,75 +82,75 @@ Listenelemente ohne DB-ID (JS-generiert, noch nicht gespeichert) erhalten `data-
 
 ### Fragment: `fragments/contact-list.html`
 
-- [ ] `<div class="citem">` erhält `th:attr="data-testid='contact-item-' + ${contact.id}"`
-- [ ] Bearbeiten-Link: `data-testid="contact-edit-{id}"` (via th:attr)
-- [ ] Löschen-Link: `data-testid="contact-delete-{id}"` (via th:attr)
+- [x] `<div class="citem">` erhält `th:attr="data-testid='contact-item-' + ${contact.id}"`
+- [x] Bearbeiten-Link: `data-testid="contact-edit-{id}"` (via th:attr)
+- [x] Löschen-Link: `data-testid="contact-delete-{id}"` (via th:attr)
 
 ### Template: `login.html`
 
-- [ ] `data-testid="field-username"` am Username-Input
-- [ ] `data-testid="field-password"` am Password-Input
-- [ ] `data-testid="btn-login"` am Submit-Button
+- [x] `data-testid="field-username"` am Username-Input
+- [x] `data-testid="field-password"` am Password-Input
+- [x] `data-testid="btn-login"` am Submit-Button
 
 ### Template: `freelancer/form.html`
 
-- [ ] Formularfelder Adresse: `field-firstname`, `field-lastname`, `field-company`, `field-street`, `field-country`, `field-zip`, `field-city`
-- [ ] Formularfelder Profil: `field-code`, `field-availability`, `field-salary`, `field-skills`
-- [ ] Checkbox `field-contact-forbidden`
+- [x] Formularfelder Adresse: `field-firstname`, `field-lastname`, `field-company`, `field-street`, `field-country`, `field-zip`, `field-city`
+- [x] Formularfelder Profil: `field-code`, `field-availability`, `field-salary`, `field-skills`
+- [x] Checkbox `field-contact-forbidden`
 - [ ] Historien-Einträge: `th:attr="data-testid='history-item-' + ${entry.id}"`
-- [ ] Historien-Bearbeiten-Button: `data-testid="history-edit-{id}"`
-- [ ] Historien-Löschen-Button: `data-testid="history-delete-{id}"`
-- [ ] "Kontakthistorie hinzufügen"-Button: `data-testid="btn-add-history"`
-- [ ] Tag-Chips: `th:attr="data-testid='tag-chip-' + ${tag.tagId}"`
+- [x] Historien-Bearbeiten-Button: `data-testid="history-edit-{id}"`
+- [x] Historien-Löschen-Button: `data-testid="history-delete-{id}"`
+- [x] "Kontakthistorie hinzufügen"-Button: `data-testid="btn-add-history"`
+- [x] Tag-Chips: `th:attr="data-testid='tag-chip-' + ${tag.tagId}"`
 
 ### Template: `freelancer/search-page.html` + `search-results.html`
 
-- [ ] Suchergebnis-Zeilen: `th:attr="data-testid='freelancer-row-' + ${r.id()}"`
-- [ ] QBE-Felder: `field-search-firstname`, `field-search-lastname`, `field-search-code` etc.
+- [x] Suchergebnis-Zeilen: `th:attr="data-testid='freelancer-row-' + ${r.id()}"`
+- [x] QBE-Felder: `field-search-firstname`, `field-search-lastname`, `field-search-code` etc.
 
 ### Template: `partner/form.html`
 
-- [ ] Analog zu `freelancer/form.html`: Adressfelder, Historieneinträge, Kontaktliste
-- [ ] Zugeordnete Freiberufler-Liste: `th:attr="data-testid='partner-freelancer-row-' + ${f.id()}"`
+- [x] Analog zu `freelancer/form.html`: Adressfelder, Historieneinträge, Kontaktliste
+- [x] Zugeordnete Freiberufler-Liste: `th:attr="data-testid='partner-freelancer-row-' + ${f.id()}"`
 
 ### Template: `partner/search-results.html`
 
-- [ ] Suchergebnis-Zeilen: `th:attr="data-testid='partner-row-' + ${r.id()}"`
+- [x] Suchergebnis-Zeilen: `th:attr="data-testid='partner-row-' + ${r.id()}"`
 
 ### Template: `kunde/form.html`
 
-- [ ] Analog zu `partner/form.html`
-- [ ] Zugeordnete Projekte-Liste: `th:attr="data-testid='kunde-project-row-' + ${p.id()}"`
+- [x] Analog zu `partner/form.html`
+- [x] Zugeordnete Projekte-Liste: `th:attr="data-testid='kunde-project-row-' + ${p.id()}"`
 
 ### Template: `kunde/search-results.html`
 
-- [ ] Suchergebnis-Zeilen: `th:attr="data-testid='kunde-row-' + ${r.id()}"`
+- [x] Suchergebnis-Zeilen: `th:attr="data-testid='kunde-row-' + ${r.id()}"`
 
 ### Template: `project/form.html`
 
-- [ ] Formularfelder: `field-project-number`, `field-short-description`, `field-description`
-- [ ] Projektpositionen: `th:attr="data-testid='position-item-' + ${pos.id}"`
-- [ ] Position-Bearbeiten-Button: `data-testid="position-edit-{id}"`
-- [ ] Position-Löschen-Button: `data-testid="position-delete-{id}"`
-- [ ] Historieneinträge analog Freiberufler
+- [x] Formularfelder: `field-project-number`, `field-short-description`, `field-description`
+- [x] Projektpositionen: `th:attr="data-testid='position-item-' + ${pos.id}"`
+- [x] Position-Bearbeiten-Button: `data-testid="position-edit-{id}"`
+- [x] Position-Löschen-Button: `data-testid="position-delete-{id}"`
+- [x] Historieneinträge analog Freiberufler
 
 ### Template: `project/search-results.html`
 
-- [ ] Suchergebnis-Zeilen: `th:attr="data-testid='project-row-' + ${r.id()}"`
+- [x] Suchergebnis-Zeilen: `th:attr="data-testid='project-row-' + ${r.id()}"`
 
 ### Template: `profilesearch/form.html`
 
-- [ ] Chat-Seitenleisten-Einträge: `th:attr="data-testid='chat-session-' + ${chat.id()}"`
-- [ ] Chat-Eingabefeld: `data-testid="chat-input"`
-- [ ] Senden-Button: `data-testid="btn-chat-send"`
-- [ ] Nachrichten-Container: `data-testid="chat-messages"`
-- [ ] Einzelne Nachrichten: JS-seitig `data-testid="chat-msg-{id}"` beim Anhängen setzen
+- [x] Chat-Seitenleisten-Einträge: `th:attr="data-testid='chat-session-' + ${chat.id()}"`
+- [x] Chat-Eingabefeld: `data-testid="chat-input"`
+- [x] Senden-Button: `data-testid="btn-chat-send"`
+- [x] Nachrichten-Container: `data-testid="chat-messages"`
+- [x] Einzelne Nachrichten: JS-seitig `data-testid="chat-msg-{id}"` beim Anhängen setzen
 
 ### Admin-Templates
 
-- [ ] `admin/historientypen.html`: Tabellenzeilen `data-testid="histtype-row-{id}"`
-- [ ] `admin/positionsstatus.html`: Tabellenzeilen `data-testid="posstatus-row-{id}"`
-- [ ] `admin/tags.html`: Tabellenzeilen `data-testid="tag-row-{id}"`
+- [x] `admin/historientypen.html`: Tabellenzeilen `data-testid="histtype-row-{id}"`
+- [x] `admin/positionsstatus.html`: Tabellenzeilen `data-testid="posstatus-row-{id}"`
+- [x] `admin/tags.html`: Tabellenzeilen `data-testid="tag-row-{id}"`
 
 ---
 

@@ -32,20 +32,25 @@
   <div id="tb-nav" th:if="${firstUrl != null}">
     <a class="tb-nav-btn"
        th:href="${firstUrl}"
+       data-testid="btn-nav-first"
        title="Erster">⏮</a>
     <a class="tb-nav-btn"
        th:href="${prevUrl}"
+       data-testid="btn-nav-prev"
        title="Vorheriger">◀</a>
     <input type="text"
            id="tb-id-input"
+           data-testid="input-nav-id"
            th:value="${entityId}"
            placeholder="ID"
            title="ID eingeben und Enter drücken">
     <a class="tb-nav-btn"
        th:href="${nextUrl}"
+       data-testid="btn-nav-next"
        title="Nächster">▶</a>
     <a class="tb-nav-btn"
        th:href="${lastUrl}"
+       data-testid="btn-nav-last"
        title="Letzter">⏭</a>
   </div>
 
@@ -64,6 +69,7 @@
   <!-- Zuordnen-Button (nur bei Freelancer, wenn Projekt gemerkt) -->
   <button th:if="${assignProjectLabel != null and rememberedProject != null}"
           type="button" class="btn btn-sm btn-ghost" id="tb-assign-btn"
+          data-testid="btn-assign-project"
           th:text="${assignProjectLabel}"
           onclick="assignToRememberedProject()"></button>
 
@@ -71,22 +77,27 @@
   <div id="tb-actions">
     <button type="button" class="btn btn-ghost"
             th:if="${searchPanelId != null}"
+            data-testid="btn-search"
             id="btn-qbe-search">🔍 Suchen</button>
 
     <a class="btn btn-ghost"
        th:if="${clearUrl != null}"
+       data-testid="btn-clear"
        th:href="${clearUrl}">↺ Leeren</a>
 
     <a class="btn btn-ghost"
        th:href="${newUrl}"
+       data-testid="btn-new"
        th:if="${newUrl != null}">＋ Neu</a>
 
     <button type="submit"
             class="btn btn-pri"
+            data-testid="btn-save"
             th:attr="form=${saveFormId}"
             th:if="${saveFormId != null}">💾 Speichern</button>
 
     <button type="button" class="btn btn-danger"
+            data-testid="btn-delete"
             th:if="${deleteModalId != null}"
             th:attr="onclick='openModal(\'' + ${deleteModalId} + '\')'">🗑 Löschen</button>
   </div>
