@@ -1,8 +1,8 @@
 package de.mirkosertic.powerstaff.project.command;
 
 import de.mirkosertic.powerstaff.shared.query.ProjectPositionStatusQueryService;
+import de.mirkosertic.powerstaff.shared.query.ProjectPositionStatusView;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +38,7 @@ public class ProjectPositionCommandService {
         Long resolvedStatusId = statusId;
         if (resolvedStatusId == null) {
             resolvedStatusId = positionStatusQueryService.findDefault()
-                    .map(s -> s.id())
+                    .map(ProjectPositionStatusView::id)
                     .orElseThrow(() -> new IllegalStateException(
                             "Kein Standard-Positionsstatus konfiguriert. Bitte im Administrationsbereich einen Standard-Status festlegen."));
         }

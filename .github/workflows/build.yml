@@ -38,7 +38,7 @@ jobs:
     - name: Upload JAR artifact
       uses: actions/upload-artifact@v4
       with:
-        name: luceneserver-${{ steps.get_version.outputs.version }}
+        name: powerstaff2026-${{ steps.get_version.outputs.version }}
         path: target/powerstaff-*.jar
         if-no-files-found: error
         retention-days: 90

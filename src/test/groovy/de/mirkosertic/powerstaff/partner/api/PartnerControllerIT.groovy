@@ -274,11 +274,10 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
     // Suche
     // -------------------------------------------------------------------------
 
-    def "POST /partner/search gibt HTML-Fragment mit Treffern zurueck"() {
+    def "GET /partner/search gibt search-page zurueck (200)"() {
         when:
         def result = mockMvc.perform(
-                post("/partner/search")
-                        .with(csrf())
+                get("/partner/search")
                         .with(user("testuser"))
                         .param("company", "Test"))
 
@@ -460,11 +459,10 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('Exception'))))
     }
 
-    def "POST /partner/search rendert HTML-Fragment ohne Exception"() {
+    def "GET /partner/search rendert HTML-Seite ohne Exception"() {
         when:
         def result = mockMvc.perform(
-                post("/partner/search")
-                        .with(csrf())
+                get("/partner/search")
                         .with(user("testuser"))
                         .param("company", "Test"))
 

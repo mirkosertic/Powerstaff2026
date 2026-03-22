@@ -68,3 +68,4 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
   onclick http://localhost:8080/project/1:1
 - [x] Projektpositionen können nicht gelöscht werden; der Button auf dem Formular hat keine Funktion.
 - [x] Ein leeres Projektformular kann nicht gespeichert werden, der Button "Speichern" soll nur sichtbar sein, wenn ein bestehendes Projekt bearbeitet wird. Ein leeres Projekt-Formular dient zur Eingabe der QBE Suchparameter. Neue Projekte werden über das Kunden bzw. Partner Formular angelegt.
+- [ ] Die Buttons "Bearbeiten", "Löschen" und "Freiberufler über Code hinzufügen" im Profil-Formular haben noch immer keine Funktion, werfen aber keinen JavaScript-Fehler mehr.

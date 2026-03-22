@@ -288,11 +288,10 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
     // QBE-Suche
     // -------------------------------------------------------------------------
 
-    def "POST /freelancer/search gibt search-results Fragment zurueck (200)"() {
+    def "GET /freelancer/search gibt search-page zurueck (200)"() {
         when:
         def result = mockMvc.perform(
-                post("/freelancer/search")
-                        .with(csrf())
+                get("/freelancer/search")
                         .with(user("testuser"))
                         .param("name1", "Mustermann"))
 
@@ -396,11 +395,10 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('Exception'))))
     }
 
-    def "POST /freelancer/search rendert HTML-Fragment ohne Exception"() {
+    def "GET /freelancer/search rendert HTML-Seite ohne Exception"() {
         when:
         def result = mockMvc.perform(
-                post("/freelancer/search")
-                        .with(csrf())
+                get("/freelancer/search")
                         .with(user("testuser"))
                         .param("name1", "Mustermann"))
 
