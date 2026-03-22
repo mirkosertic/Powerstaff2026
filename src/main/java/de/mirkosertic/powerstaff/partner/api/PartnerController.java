@@ -202,16 +202,25 @@ public class PartnerController {
     // QBE-Suche
     // -------------------------------------------------------------------------
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public String search(@ModelAttribute PartnerSearchCriteria criteria,
-                         Model model) {
+                         Model model,
+                         HttpServletResponse response) {
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+
         var results = queryService.search(criteria, 0, PAGE_SIZE);
         long total = queryService.countSearch(criteria);
         model.addAttribute("results", results);
         model.addAttribute("totalCount", total);
+        model.addAttribute("criteria", criteria);
+        model.addAttribute("sortField", criteria.sortField());
+        model.addAttribute("sortDir", criteria.sortDir());
         String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
         model.addAttribute("nextUrl", nextUrl);
-        return "partner/search-results :: results";
+        model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
+        return "partner/search-page";
     }
 
     @GetMapping("/search-more")
@@ -227,6 +236,23 @@ public class PartnerController {
         }
         model.addAttribute("results", results);
         return "partner/search-results :: results";
+    }
+
+    private String buildEditSearchUrl(PartnerSearchCriteria criteria) {
+        var b = UriComponentsBuilder.fromPath("/partner/new");
+        if (criteria.company()    != null) b.queryParam("company",    criteria.company());
+        if (criteria.name1()      != null) b.queryParam("name1",      criteria.name1());
+        if (criteria.name2()      != null) b.queryParam("name2",      criteria.name2());
+        if (criteria.street()     != null) b.queryParam("street",     criteria.street());
+        if (criteria.country()    != null) b.queryParam("country",    criteria.country());
+        if (criteria.plz()        != null) b.queryParam("plz",        criteria.plz());
+        if (criteria.city()       != null) b.queryParam("city",       criteria.city());
+        if (criteria.comments()   != null) b.queryParam("comments",   criteria.comments());
+        if (criteria.debitorNr()  != null) b.queryParam("debitorNr",  criteria.debitorNr());
+        if (criteria.kreditorNr() != null) b.queryParam("kreditorNr", criteria.kreditorNr());
+        if (criteria.sortField()  != null) b.queryParam("sortField",  criteria.sortField());
+        if (criteria.sortDir()    != null) b.queryParam("sortDir",    criteria.sortDir());
+        return b.build().toUriString();
     }
 
     private String buildSearchMoreUrl(PartnerSearchCriteria criteria, int offset) {

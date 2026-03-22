@@ -157,17 +157,12 @@
 
       <!-- QBE-Suche starten -->
       <div class="btn-row mt-md">
-        <button type="button" class="hidden" id="btn-qbe-search">🔍 In Datenbank suchen</button>
+        <button type="button" class="btn-pri" id="btn-qbe-search">&#128269; In Datenbank suchen</button>
       </div>
 
       </div><!-- /.form-grid -->
 
     </form>
-
-    <!-- Suchergebnisse (nur sichtbar nach Suche) -->
-    <div id="search-results" class="hidden">
-      <div id="search-results-inner"></div>
-    </div>
 
     <div class="form-grid">
 
@@ -608,43 +603,30 @@
         });
     });
 
-    // ---- QBE-Suche ----
-    var _lastSearchParams = null;
-
-    function executeSearch(params) {
-      fetch('/kunde/search', { method: 'POST', body: params,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'} })
-        .then(function(r) { return r.text(); })
-        .then(function(html) {
-          var inner = document.getElementById('search-results-inner');
-          var wrapper = document.getElementById('search-results');
-          inner.innerHTML = html;
-          wrapper.classList.remove('hidden');
-          wrapper.scrollIntoView({behavior: 'smooth', block: 'start'});
-          inner.querySelectorAll('.sort-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-              var p = new URLSearchParams(_lastSearchParams);
-              var field = this.dataset.sort;
-              var currentField = p.get('sortField') || '';
-              var currentDir = p.get('sortDir') || 'asc';
-              var newDir = (currentField === field && currentDir === 'asc') ? 'desc' : 'asc';
-              p.set('sortField', field);
-              p.set('sortDir', newDir);
-              _lastSearchParams = p;
-              executeSearch(p);
-            });
-          });
-        });
-    }
-
+    // ---- QBE-Suche: GET-Navigation zur Ergebnisseite ----
     document.getElementById('btn-qbe-search')?.addEventListener('click', function() {
       var form = document.getElementById('kunde-form');
-      var data = new URLSearchParams(new FormData(form));
-      data.set('sortField', '');
-      data.set('sortDir', '');
-      _lastSearchParams = data;
-      executeSearch(data);
+      var data = new URLSearchParams();
+      ['company','name1','name2','street','country','plz','city',
+       'comments','kreditorNr','debitorNr'].forEach(function(field) {
+        var el = form.querySelector('[name="' + field + '"]');
+        if (el && el.value) data.append(field, el.value);
+      });
+      window.location.href = '/kunde/search?' + data.toString();
     });
+
+    // ---- QBE-Felder aus URL-Parametern wiederherstellen (nach "Suche bearbeiten") ----
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      ['company','name1','name2','street','country','plz','city',
+       'comments','kreditorNr','debitorNr'].forEach(function(field) {
+        var val = params.get(field);
+        if (val) {
+          var el = document.querySelector('[name="' + field + '"]');
+          if (el) el.value = val;
+        }
+      });
+    })();
 
     // bfcache handler
     window.addEventListener('pageshow', function(e) {

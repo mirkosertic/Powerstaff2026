@@ -1,31 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="results">
-  <p th:if="${totalCount != null}">
-    <strong th:text="${totalCount}">0</strong> Treffer gefunden.
-  </p>
-  <p th:if="${#lists.isEmpty(results)}" class="hint">Keine Treffer.</p>
-  <table th:unless="${#lists.isEmpty(results)}" class="data-table">
-    <thead>
-      <tr>
-        <th><button type="button" class="sort-btn" data-sort="company">Firma</button></th>
-        <th><button type="button" class="sort-btn" data-sort="name1">Name 1</button></th>
-        <th><button type="button" class="sort-btn" data-sort="name2">Name 2</button></th>
-        <th><button type="button" class="sort-btn" data-sort="city">Ort</button></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="r : ${results}" th:onclick="|window.location='/kunde/${r.id}'|" class="clickable">
-        <td th:text="${r.company}"></td>
-        <td th:text="${r.name1}"></td>
-        <td th:text="${r.name2}"></td>
-        <td th:text="${r.city}"></td>
-      </tr>
-    </tbody>
-  </table>
-  <ps-infinite-scroll th:if="${nextUrl != null}"
-                      th:attr="data-next-url=${nextUrl}, data-target='#search-results'"></ps-infinite-scroll>
+
+<!--
+  Fragment: Tabellenzeilen für Kunden-Suche (Infinite Scroll).
+  Wird via GET /kunde/search-more eingebunden und liefert nur <tr>-Zeilen.
+-->
+<div th:fragment="results" th:remove="tag">
+  <tr th:each="r : ${results}"
+      th:onclick="|window.location='/kunde/${r.id()}'|"
+      style="cursor:pointer">
+    <td class="td-name" th:text="${r.company()}"></td>
+    <td th:text="${r.name1()}"></td>
+    <td th:text="${r.name2()}"></td>
+    <td th:text="${r.city()}"></td>
+  </tr>
 </div>
+
 </body>
 </html>

@@ -258,6 +258,67 @@ class KundeControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().isOk())
     }
 
+    def "GET /kunde/search ohne Parameter liefert 200 und search-page Template"() {
+        when:
+        def result = mockMvc.perform(
+                get("/kunde/search")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(view().name("kunde/search-page"))
+    }
+
+    def "GET /kunde/search setzt Cache-Control Header no-store"() {
+        when:
+        def result = mockMvc.perform(
+                get("/kunde/search")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().string("Cache-Control", containsString("no-store")))
+    }
+
+    def "GET /kunde/search mit company-Parameter liefert 200 und kein Exception"() {
+        when:
+        def result = mockMvc.perform(
+                get("/kunde/search")
+                        .param("company", "Test")
+                        .param("sortField", "company")
+                        .param("sortDir", "asc")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().string("Cache-Control", containsString("no-store")))
+              .andExpect(content().string(not(containsString('Exception'))))
+    }
+
+    def "GET /kunde/search rendert HTML-Seite ohne Exception"() {
+        when:
+        def result = mockMvc.perform(
+                get("/kunde/search")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(not(containsString('Exception'))))
+              .andExpect(content().string(not(containsString('Whitelabel Error'))))
+    }
+
+    def "GET /kunde/search-more mit offset-Parameter gibt Fragment zurueck (200)"() {
+        when:
+        def result = mockMvc.perform(
+                get("/kunde/search-more")
+                        .param("offset", "0")
+                        .param("company", "Test")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+    }
+
     // -------------------------------------------------------------------------
     // Thymeleaf-Rendering HTML-Inhalte pruefen
     // -------------------------------------------------------------------------

@@ -203,15 +203,25 @@ public class ProjectController {
     // QBE-Suche
     // -------------------------------------------------------------------------
 
-    @PostMapping("/search")
-    public String search(@ModelAttribute ProjectSearchCriteria criteria, Model model) {
+    @GetMapping("/search")
+    public String search(@ModelAttribute ProjectSearchCriteria criteria,
+                         Model model,
+                         HttpServletResponse response) {
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+
         var results = queryService.search(criteria, 0, PAGE_SIZE);
         long total = queryService.countSearch(criteria);
         model.addAttribute("results", results);
         model.addAttribute("totalCount", total);
+        model.addAttribute("criteria", criteria);
+        model.addAttribute("sortField", criteria.sortField());
+        model.addAttribute("sortDir", criteria.sortDir());
         String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
         model.addAttribute("nextUrl", nextUrl);
-        return "project/search-results :: results";
+        model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
+        return "project/search-page";
     }
 
     @GetMapping("/search-more")
@@ -281,6 +291,22 @@ public class ProjectController {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("alreadyAssigned", true));
         }
+    }
+
+    private String buildEditSearchUrl(ProjectSearchCriteria c) {
+        var b = UriComponentsBuilder.fromPath("/project/new");
+        if (c.projectNumber()    != null) b.queryParam("projectNumber",    c.projectNumber());
+        if (c.descriptionShort() != null) b.queryParam("descriptionShort", c.descriptionShort());
+        if (c.descriptionLong()  != null) b.queryParam("descriptionLong",  c.descriptionLong());
+        if (c.skills()           != null) b.queryParam("skills",           c.skills());
+        if (c.workplace()        != null) b.queryParam("workplace",        c.workplace());
+        if (c.duration()         != null) b.queryParam("duration",         c.duration());
+        if (c.status()           != null) b.queryParam("status",           c.status());
+        if (c.debitorNr()        != null) b.queryParam("debitorNr",        c.debitorNr());
+        if (c.kreditorNr()       != null) b.queryParam("kreditorNr",       c.kreditorNr());
+        if (c.sortField()        != null) b.queryParam("sortField",        c.sortField());
+        if (c.sortDir()          != null) b.queryParam("sortDir",          c.sortDir());
+        return b.build().toUriString();
     }
 
     private String buildSearchMoreUrl(ProjectSearchCriteria c, int offset) {

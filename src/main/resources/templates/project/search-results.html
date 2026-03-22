@@ -1,48 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="results">
-  <p th:if="${totalCount != null}">
-    <strong th:text="${totalCount}">0</strong> Treffer gefunden.
-  </p>
-  <p th:if="${#lists.isEmpty(results)}"
-     class="text-muted">Keine Treffer.</p>
-  <table th:unless="${#lists.isEmpty(results)}" class="data-table">
-    <thead>
-      <tr>
-        <th><button type="button" class="sort-btn" data-sort="project_number">Projektnummer</button></th>
-        <th><button type="button" class="sort-btn" data-sort="description_short">Kurzbeschreibung</button></th>
-        <th>Einsatzort</th>
-        <th>Start</th>
-        <th><button type="button" class="sort-btn" data-sort="status">Status</button></th>
-        <th>Stundensatz</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="r : ${results}"
-          th:onclick="|window.location='/project/${r.id()}'|"
-          class="clickable">
-        <td th:text="${r.projectNumber()}"></td>
-        <td th:text="${r.descriptionShort()}"></td>
-        <td th:text="${r.workplace()}"></td>
-        <td th:text="${r.startDate() != null} ? ${#temporals.format(r.startDate(),'dd.MM.yyyy')} : ''"></td>
-        <td>
-          <span th:switch="${r.status()}">
-            <span th:case="1">Offen</span>
-            <span th:case="2">Verloren</span>
-            <span th:case="3">Canceled</span>
-            <span th:case="4">Besetzt</span>
-            <span th:case="5">Search zu</span>
-            <span th:case="*" th:text="${r.status()}"></span>
-          </span>
-        </td>
-        <td th:text="${r.stundensatzVk() != null} ? ${r.stundensatzVk() + ' EUR/h'} : ''"></td>
-      </tr>
-    </tbody>
-  </table>
-  <ps-infinite-scroll th:if="${nextUrl != null}"
-                      th:attr="data-next-url=${nextUrl}"
-                      data-target="#search-results"></ps-infinite-scroll>
+
+<!--
+  Fragment: Tabellenzeilen für Projekt-Suche (Infinite Scroll).
+  Wird via GET /project/search-more eingebunden und liefert nur <tr>-Zeilen.
+-->
+<div th:fragment="results" th:remove="tag">
+  <tr th:each="r : ${results}"
+      th:onclick="|window.location='/project/${r.id()}'|"
+      style="cursor:pointer">
+    <td class="td-name" th:text="${r.projectNumber()}"></td>
+    <td th:text="${r.descriptionShort()}"></td>
+    <td th:text="${r.workplace()}"></td>
+    <td th:text="${r.startDate() != null} ? ${#temporals.format(r.startDate(), 'dd.MM.yyyy')} : ''"></td>
+    <td>
+      <span th:switch="${r.status()}">
+        <span th:case="1">Offen</span>
+        <span th:case="2">Verloren</span>
+        <span th:case="3">Canceled</span>
+        <span th:case="4">Besetzt</span>
+        <span th:case="5">Search zu</span>
+        <span th:case="*" th:text="${r.status()}"></span>
+      </span>
+    </td>
+    <td th:text="${r.stundensatzVk() != null} ? ${r.stundensatzVk()} + ' EUR/h' : ''"></td>
+  </tr>
 </div>
+
 </body>
 </html>

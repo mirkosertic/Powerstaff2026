@@ -561,6 +561,133 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 
 ---
 
+## Phase 9 – QBE-Suche: Dedizierte Suchergebnis-Seite
+
+**Ziel:** Nach einer QBE-Suche sieht der Sachbearbeiter nur noch die Ergebnisliste (eigene Seite).
+Browser-Back, Bookmarks, Sortierung und Infinite Scroll funktionieren vollständig über die URL.
+Das Muster ist für alle vier Module (Freiberufler, Partner, Kunden, Projekte) identisch.
+
+**Architektur-Entscheidungen:**
+- POST `/search` → GET `/search?<kriterien>` (bookmarkbar, kein Resubmit-Dialog)
+- Cache-Prävention auf dem Endpoint: `Cache-Control: no-store, no-cache, must-revalidate` + `Pragma: no-cache` + `Expires: 0` (Spring Security setzt bereits Basis-Header, aber explizit ist sicherer; verhindert Browser- und CDN-Caching)
+- Sortierung: Server rendert `.srt-asc`/`.srt-desc`-Klassen anhand `sortField`/`sortDir`-Parameter; Klick = neuer GET-Request
+- Tabellen: Design-System §16 korrekt umsetzen (`.tbl-wrap` + `.srt` auf `<th>`), aktuelle `.data-table` + `sort-btn`-Button-Mischung bereinigen
+- QBE-Formular: befüllt sich via `th:value="${param.xxx}"` aus URL-Parametern (kein JS-State, kein Cookie)
+- Toolbar der Suchergebnisseite: abgespeckt (Modulname + Trefferanzahl + „← Suche bearbeiten" als `.btn-ghost`)
+
+---
+
+### 9.1 Freiberufler – Suchergebnis-Seite
+
+**Controller (`FreelancerController`):**
+- [x] `@PostMapping("/search")` → `@GetMapping("/search")` umbenennen; `HttpServletResponse`-Parameter ergänzen und Cache-Control-Header setzen: `Cache-Control: no-store, no-cache, must-revalidate`, `Pragma: no-cache`, `Expires: 0`
+- [x] Rückgabe-Template von `freelancer/search-results :: results` (Fragment) auf `freelancer/search-page` (Vollseite) umstellen
+- [x] Model-Attribute ergänzen: `criteria` (für "Suche bearbeiten"-Link), `sortField`, `sortDir`
+- [x] `buildSearchMoreUrl()`-Methode prüfen: muss alle Criteria-Felder + `sortField` + `sortDir` als Query-Parameter kodieren (bereits vorhanden, ggf. anpassen)
+
+**Template `freelancer/search-page.html` (neu):**
+- [x] Layout-Fragment einbinden (`fragments/layout :: layout`)
+- [x] Toolbar: abgespeckt – Modulname „Freiberufler", Trefferanzahl (`${totalCount} Treffer`), rechts „← Suche bearbeiten" als `.btn-ghost` mit `th:href` auf `/freelancer/new` + alle Criteria-Felder als Query-Parameter
+- [x] Kein `#page`-Wrapper nötig, direkt `.tbl-wrap`-Container
+- [x] Tabelle gemäß Design-System §16: `.tbl-wrap` > `<table>` (kein `.data-table`); Spaltenheader als `<th class="srt">` mit `th:classappend` für `srt-asc`/`srt-desc` anhand `sortField`/`sortDir`; Headertext als normaler Text (kein `<button>`)
+- [x] Sortier-Links: jeder `<th class="srt">` ist ein `<a>`-Link auf `/freelancer/search?<kriterien>&sortField=xxx&sortDir=asc/desc` (Toggle-Logik: wenn aktuell `asc` → Link setzt `desc`, sonst `asc`)
+- [x] Tabellenzeilen: `onclick="location.href='/freelancer/{id}'"` auf `<tr>`; Name-Zelle mit `.td-name`; kein separater „Öffnen"-Button
+- [x] `<ps-infinite-scroll>` am Ende (wenn `nextUrl != null`)
+- [x] Kein Ergebnis: leere Tabelle mit Hinweistext
+
+**Template `freelancer/search-results.html` (Fragment, bleibt für Infinite Scroll):**
+- [x] Tabellen-Markup auf `.tbl-wrap`-Pattern umstellen (weg von `.data-table` und `sort-btn`-Buttons); Sortier-Header entfernen (Infinite Scroll lädt nur tbody-Zeilen nach); `th:remove="tag"` damit nur `<tr>`-Zeilen geliefert werden
+
+**Template `freelancer/form.html` (QBE-Formular):**
+- [x] Such-Button navigiert per GET zu `/freelancer/search` (JS baut URLSearchParams aus Formularfeldern)
+- [x] URL-Parameter-Restore: JS liest beim Laden URL-Params und befüllt QBE-Felder
+- [x] AJAX-Fetch-Block (`executeSearch`, `_lastSearchParams`, Inline-`#search-results`-Div) entfernt
+- [x] `#search-results`-Div entfernt
+
+- [x] Test: `FreelancerControllerIT` – GET `/freelancer/search` liefert 200, `Cache-Control: no-store`-Header gesetzt
+- [x] Test: GET `/freelancer/search-more` mit offset-Parameter gibt Fragment zurück
+- [x] Git-Commit
+
+---
+
+### 9.2 Partner – Suchergebnis-Seite
+
+Identisches Muster wie 9.1, angepasst auf Modul `partner`.
+
+**Controller (`PartnerController`):**
+- [x] `@PostMapping("/search")` → `@GetMapping("/search")`; Cache-Control-Header setzen (identisch 9.1)
+- [x] Rückgabe auf `partner/search-page` (Vollseite) umstellen
+- [x] Model-Attribute: `criteria`, `sortField`, `sortDir`, `totalCount`, `editSearchUrl`
+
+**Template `partner/search-page.html` (neu):**
+- [x] Layout, abgespeckte Toolbar, `.tbl-wrap`-Tabelle mit `.srt`-Headern als Links, `onclick`-Zeilen, `.td-name`, `<ps-infinite-scroll>` – analog 9.1
+
+**Template `partner/search-results.html`:**
+- [x] Tabellen-Markup auf `.tbl-wrap`-Pattern umstellen; `th:remove="tag"` für Fragment
+
+**Template `partner/form.html`:**
+- [x] AJAX-Block entfernt, GET-Navigation, URL-Parameter-Restore
+
+- [x] Test: `PartnerControllerIT` – GET `/partner/search` mit Parametern: 200, Cache-Control-Header korrekt
+- [x] Git-Commit
+
+---
+
+### 9.3 Kunden – Suchergebnis-Seite
+
+Identisches Muster wie 9.1, angepasst auf Modul `kunde`.
+
+**Controller (`KundeController`):**
+- [x] `@PostMapping("/search")` → `@GetMapping("/search")`; Cache-Control-Header setzen
+- [x] Rückgabe auf `kunde/search-page` (Vollseite) umstellen
+- [x] Model-Attribute: `criteria`, `sortField`, `sortDir`, `totalCount`, `editSearchUrl`
+
+**Template `kunde/search-page.html` (neu):**
+- [x] Analog 9.1
+
+**Template `kunde/search-results.html`:**
+- [x] Tabellen-Markup auf `.tbl-wrap`-Pattern umstellen; `th:remove="tag"` für Fragment
+
+**Template `kunde/form.html`:**
+- [x] AJAX-Block entfernt, GET-Navigation, URL-Parameter-Restore
+
+- [x] Test: `KundeControllerIT` – GET `/kunde/search` mit Parametern: 200, Cache-Control-Header korrekt
+- [x] Git-Commit
+
+---
+
+### 9.4 Projekte – Suchergebnis-Seite
+
+Identisches Muster wie 9.1, angepasst auf Modul `project`.
+
+**Controller (`ProjectController`):**
+- [x] `@PostMapping("/search")` → `@GetMapping("/search")`; Cache-Control-Header setzen
+- [x] Rückgabe auf `project/search-page` (Vollseite) umstellen
+- [x] Model-Attribute: `criteria`, `sortField`, `sortDir`, `totalCount`, `editSearchUrl`
+
+**Template `project/search-page.html` (neu):**
+- [x] Analog 9.1 (Spalten: Nummer, Titel, Einsatzort, Start, Status, Stundensatz)
+
+**Template `project/search-results.html`:**
+- [x] Tabellen-Markup auf `.tbl-wrap`-Pattern umstellen; `th:remove="tag"` für Fragment
+
+**Template `project/form.html`:**
+- [x] AJAX-Block entfernt, GET-Navigation, URL-Parameter-Restore
+
+- [x] Test: `ProjectControllerIT` – GET `/project/search` mit Parametern: 200, Cache-Control-Header korrekt
+- [x] Git-Commit
+
+---
+
+### 9.5 SWARCHITEKTUR.md – ADR nachführen
+
+- [x] Neuen ADR-019 „GET statt POST für QBE-Suche" in `specs/SWARCHITEKTUR.md` eingetragen
+- [x] URL-Schema-Tabelle in §5 aktualisiert: Suchergebnis-URL-Muster für alle vier Module
+- [x] Browser-Back-Button-Abschnitt aktualisiert (POST+replaceState → GET dedizierte Seite)
+- [x] Git-Commit
+
+---
+
 ## Phase 8 – Abschluss und Abnahme
 
 ### 8.1 Abnahmekriterien

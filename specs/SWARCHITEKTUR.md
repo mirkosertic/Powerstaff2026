@@ -550,14 +550,14 @@ GET /freiberufler/results?page=1&size=20&name=Müller&skill=Java
 
 **URL-Schema:**
 
-| Modul              | Leerformular / QBE-Maske | Datensatz                  | Suchergebnis (nach replaceState)   |
-|--------------------|--------------------------|----------------------------|------------------------------------|
-| Freiberufler       | `/freiberufler`          | `/freiberufler/{id}`       | `/freiberufler?name=...&skill=...` |
-| Partner            | `/partner`               | `/partner/{id}`            | `/partner?name=...`                |
-| Kunden             | `/kunden`                | `/kunden/{id}`             | `/kunden?name=...`                 |
-| Projekte           | `/projekte`              | `/projekte/{id}`           | `/projekte?nummer=...&status=...`  |
-| Profilsuche        | `/profilsuche`           | `/profilsuche/{sessionId}` | –                                  |
-| Admin / Stammdaten | `/admin`                 | `/admin/{bereich}`         | –                                  |
+| Modul              | QBE-Suchmaske (Leerformular)   | Datensatz                    | Suchergebnisseite (GET, bookmarkbar)              |
+|--------------------|--------------------------------|------------------------------|----------------------------------------------------|
+| Freiberufler       | `/freelancer/new`              | `/freelancer/{id}`           | `/freelancer/search?name1=...&sortField=...`        |
+| Partner            | `/partner/new`                 | `/partner/{id}`              | `/partner/search?company=...&sortField=...`         |
+| Kunden             | `/kunde/new`                   | `/kunde/{id}`                | `/kunde/search?company=...&sortField=...`           |
+| Projekte           | `/project/new`                 | `/project/{id}`              | `/project/search?projectNumber=...&sortField=...`   |
+| Profilsuche        | `/profilesearch`               | `/profilesearch/{sessionId}` | –                                                   |
+| Admin / Stammdaten | `/admin`                       | `/admin/{bereich}`           | –                                                   |
 
 **Admin-Bereiche** (`/admin/{bereich}`):
 
@@ -571,16 +571,12 @@ GET /freiberufler/results?page=1&size=20&name=Müller&skill=Java
 
 **Grundsatz:** Der Back Button navigiert in der URL-History. Er macht keine Datenbankoperationen rückgängig – das ist akzeptiertes und dem Sachbearbeiter bekanntes Browser-Verhalten.
 
-**QBE-Suche – POST + `history.replaceState`:**
-QBE-Formulare senden per `POST` (kein Browser-Caching, kein Resubmit-Dialog). Nach dem Rendern der Ergebnisse ersetzt ein JS-Snippet die aktuelle History-Entry mit der entsprechenden GET-URL inkl. Suchparametern – ohne Server-Request:
-
-```js
-// Wird nach dem Seitenrendering ausgeführt, z.B. via data-Attribut im Template
-const params = document.querySelector('[data-search-params]')?.dataset.searchParams;
-if (params) history.replaceState({}, '', location.pathname + '?' + params);
-```
-
-Der Server muss GET-Requests mit Suchparametern identisch zu POST-Requests auswerten. Back Button führt damit zur vorherigen Seite – kein Resubmit-Dialog, URL ist bookmarkbar.
+**QBE-Suche – GET mit dedizierter Ergebnisseite:**
+QBE-Formulare senden per GET-Navigation (`window.location.href = '/xxx/search?' + params`).
+Der Browser navigiert zur dedizierten Suchergebnisseite `/xxx/search?<kriterien>`.
+Diese Seite ist bookmarkbar und Back-Button-fähig – kein `history.replaceState`-Trick nötig.
+Cache-Control: Der `/xxx/search`-Endpoint setzt explizit `no-store, no-cache, must-revalidate` um Browser- und CDN-Caching zu verhindern.
+„Suche bearbeiten": Die Ergebnisseite enthält einen Link auf `/xxx/new?<kriterien>`. Das Formular liest beim Laden URL-Parameter via JS und befüllt die QBE-Felder wieder.
 
 **Modals – kein History-Eintrag:**
 Modals erzeugen keinen History-Eintrag. Der Back Button schließt ein geöffnetes Modal nicht, sondern navigiert zur vorherigen Seite. Modals werden ausschließlich über Escape oder Abbrechen-Button geschlossen. `<ps-modal>` implementiert kein `history.pushState`.
@@ -1768,4 +1764,43 @@ Service; der Freelancer-interne `JdbcClient` bleibt innerhalb des Freelancer-Mod
 - Lesende Cross-Modul-Abfragen (z. B. `findFreelancersByPartner` im `PartnerQueryService`)
   sind weiterhin erlaubt — die Query-Seite darf per CQRS (ADR-002) denormalisierte Abfragen
   über Modulgrenzen hinweg stellen
+
+### ADR-019: GET statt POST für QBE-Suche – Dedizierte Suchergebnisseite
+
+**Status:** Akzeptiert
+
+**Kontext:**
+Die QBE-Suche in allen vier Modulen (Freiberufler, Partner, Kunden, Projekte) zeigte Suchergebnisse
+inline unterhalb des Suchformulars via AJAX (POST /xxx/search → Fragment). Das war für Sachbearbeiter
+ungünstig: Nach einer Suche mussten sie scrollen, der Back-Button funktionierte nicht intuitiv,
+und Suchergebnisse waren nicht bookmarkbar. GET-Requests sind außerdem Kandidaten für unerwünschtes
+Browser- und CDN-Caching, was bei Suchergebnissen zu veralteten Daten führen kann.
+
+**Entscheidung:**
+- `@PostMapping("/search")` → `@GetMapping("/search")` für alle vier Module
+- Neue dedizierte Vollseiten-Templates `xxx/search-page.html` (kein AJAX-Fragment mehr)
+- Explizite Cache-Prevention-Header auf dem `/search`-Endpoint:
+  `Cache-Control: no-store, no-cache, must-revalidate` + `Pragma: no-cache` + `Expires: 0`
+  (Spring Security setzt bereits Basis-Header; explizite Setzung verhindert auch CDN-Caching)
+- Sortierung via URL-Parameter (`sortField`, `sortDir`) – Server rendert `.srt-asc`/`.srt-desc`-Klassen
+- QBE-Formular navigiert per `window.location.href = '/xxx/search?' + params` (kein fetch/POST)
+- „Suche bearbeiten"-Link: `/xxx/new?<kriterien>` – JS liest URL-Parameter beim Laden und befüllt Felder
+- Design-System-Korrektur: `.tbl-wrap` + `.srt` auf `<th>` (statt bisher `.data-table` + `sort-btn`)
+
+**Begründung:**
+- Bookmarkbarkeit: `/xxx/search?name1=Müller` ist teilbar und erneut aufrufbar
+- Back-Button funktioniert nativ: Browser verwaltet History ohne `replaceState`-Trick
+- Kein Resubmit-Dialog: GET hat kein Double-Submit-Problem
+- Kein JS-State: Alle Suchparameter stecken in der URL – Server kann Zustand allein aus URL rekonstruieren
+- Kein Session-Affinity: Stateless, skalierbar (ADR-017 konform)
+- Cache-Prevention explizit: `no-store` verhindert auch Proxy-/CDN-Caching von Suchergebnissen
+
+**Konsequenzen:**
+- `@PostMapping` für `/search` ist in allen vier Modulen verboten; nur `@GetMapping` zulässig
+- `/search`-Endpoint setzt explizit alle vier Cache-Header (keine Delegation an Spring Security allein)
+- `buildEditSearchUrl()`-Hilfsmethode pro Controller kodiert alle Criteria als Query-Parameter auf `/xxx/new`
+- `search-results.html` bleibt als Fragment für Infinite Scroll (nur `<tr>`-Zeilen via `th:remove="tag"`)
+- Neue `search-page.html` Templates (Vollseite) für alle vier Module
+- Thymeleaf-Sortier-Links in `<th class="srt">` statt JS-Klassen-Toggle
+- Tests: `GET /xxx/search` liefert 200 + `Cache-Control: no-store` + korrektes Tabellen-Markup
 

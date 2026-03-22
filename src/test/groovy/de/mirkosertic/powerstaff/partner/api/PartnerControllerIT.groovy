@@ -296,6 +296,67 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().isOk())
     }
 
+    def "GET /partner/search ohne Parameter liefert 200 und search-page Template"() {
+        when:
+        def result = mockMvc.perform(
+                get("/partner/search")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(view().name("partner/search-page"))
+    }
+
+    def "GET /partner/search setzt Cache-Control Header no-store"() {
+        when:
+        def result = mockMvc.perform(
+                get("/partner/search")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().string("Cache-Control", containsString("no-store")))
+    }
+
+    def "GET /partner/search mit company-Parameter liefert 200 und kein Exception"() {
+        when:
+        def result = mockMvc.perform(
+                get("/partner/search")
+                        .param("company", "Test")
+                        .param("sortField", "company")
+                        .param("sortDir", "asc")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().string("Cache-Control", containsString("no-store")))
+              .andExpect(content().string(not(containsString('Exception'))))
+    }
+
+    def "GET /partner/search rendert HTML-Seite ohne Exception"() {
+        when:
+        def result = mockMvc.perform(
+                get("/partner/search")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(not(containsString('Exception'))))
+              .andExpect(content().string(not(containsString('Whitelabel Error'))))
+    }
+
+    def "GET /partner/search-more mit offset-Parameter gibt Fragment zurueck (200)"() {
+        when:
+        def result = mockMvc.perform(
+                get("/partner/search-more")
+                        .param("offset", "0")
+                        .param("company", "Test")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+    }
+
     // -------------------------------------------------------------------------
     // Freelancer-Zuordnung
     // -------------------------------------------------------------------------

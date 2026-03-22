@@ -39,6 +39,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
@@ -279,6 +280,66 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
         then:
         result.andExpect(status().isOk())
               .andExpect(view().name('project/search-results :: results'))
+    }
+
+    def "GET /project/search ohne Parameter liefert 200 und search-page Template"() {
+        when:
+        def result = mockMvc.perform(
+                get('/project/search')
+                        .with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(view().name('project/search-page'))
+    }
+
+    def "GET /project/search setzt Cache-Control Header no-store"() {
+        when:
+        def result = mockMvc.perform(
+                get('/project/search')
+                        .with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().string('Cache-Control', containsString('no-store')))
+    }
+
+    def "GET /project/search mit projectTitle-Parameter liefert 200 und kein Exception"() {
+        when:
+        def result = mockMvc.perform(
+                get('/project/search')
+                        .param('projectTitle', 'Test')
+                        .param('sortField', 'projectTitle')
+                        .param('sortDir', 'asc')
+                        .with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().string('Cache-Control', containsString('no-store')))
+              .andExpect(content().string(not(containsString('Exception'))))
+    }
+
+    def "GET /project/search rendert HTML-Seite ohne Exception"() {
+        when:
+        def result = mockMvc.perform(
+                get('/project/search')
+                        .with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(not(containsString('Exception'))))
+              .andExpect(content().string(not(containsString('Whitelabel Error'))))
+    }
+
+    def "GET /project/search-more mit offset-Parameter gibt Fragment zurueck (200)"() {
+        when:
+        def result = mockMvc.perform(
+                get('/project/search-more')
+                        .param('offset', '0')
+                        .with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
     }
 
     // -------------------------------------------------------------------------

@@ -3,48 +3,18 @@
 <body>
 
 <!--
-  Fragment: Suchergebnis-Tabelle für Partner-QBE-Suche.
-  Eingebunden via th:replace in der Suche-Modal oder auf der Seite.
+  Fragment: Tabellenzeilen für Partner-Suche (Infinite Scroll).
+  Wird via GET /partner/search-more eingebunden und liefert nur <tr>-Zeilen.
 -->
-<div th:fragment="results">
-
-  <p th:if="${totalCount != null}">
-    <strong th:text="${totalCount}">0</strong> Treffer gefunden.
-  </p>
-
-  <table class="data-table" th:if="${results != null and !results.isEmpty()}">
-    <thead>
-      <tr>
-        <th><button type="button" class="sort-btn" data-sort="company">Firma</button></th>
-        <th><button type="button" class="sort-btn" data-sort="name1">Name 1</button></th>
-        <th><button type="button" class="sort-btn" data-sort="name2">Name 2</button></th>
-        <th><button type="button" class="sort-btn" data-sort="city">Ort</button></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="result : ${results}">
-        <td>
-          <a th:href="@{/partner/{id}(id=${result.id})}" th:text="${result.company}"></a>
-        </td>
-        <td th:text="${result.name1}"></td>
-        <td th:text="${result.name2}"></td>
-        <td th:text="${result.city}"></td>
-        <td>
-          <a class="btn btn-sm btn-secondary" th:href="@{/partner/{id}(id=${result.id})}">Öffnen</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <p th:if="${results == null or results.isEmpty()}">Keine Treffer gefunden.</p>
-
-  <!-- Infinite Scroll Sentinel -->
-  <ps-infinite-scroll
-      th:if="${nextUrl != null}"
-      th:attr="data-next-url=${nextUrl}, data-target='#search-results'">
-  </ps-infinite-scroll>
-
+<div th:fragment="results" th:remove="tag">
+  <tr th:each="r : ${results}"
+      th:onclick="|window.location='/partner/${r.id()}'|"
+      style="cursor:pointer">
+    <td class="td-name" th:text="${r.company()}"></td>
+    <td th:text="${r.name1()}"></td>
+    <td th:text="${r.name2()}"></td>
+    <td th:text="${r.city()}"></td>
+  </tr>
 </div>
 
 </body>

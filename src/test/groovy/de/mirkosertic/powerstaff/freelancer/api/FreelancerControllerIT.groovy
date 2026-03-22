@@ -310,6 +310,67 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().isOk())
     }
 
+    def "GET /freelancer/search ohne Parameter liefert 200 und search-page Template"() {
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/search")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(view().name("freelancer/search-page"))
+    }
+
+    def "GET /freelancer/search setzt Cache-Control Header no-store"() {
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/search")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().string("Cache-Control", containsString("no-store")))
+    }
+
+    def "GET /freelancer/search mit name1-Parameter liefert 200 und kein Exception"() {
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/search")
+                        .param("name1", "Müller")
+                        .param("sortField", "name1")
+                        .param("sortDir", "asc")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().string("Cache-Control", containsString("no-store")))
+              .andExpect(content().string(not(containsString('Exception'))))
+    }
+
+    def "GET /freelancer/search rendert HTML-Seite ohne Exception"() {
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/search")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(not(containsString('Exception'))))
+              .andExpect(content().string(not(containsString('Whitelabel Error'))))
+    }
+
+    def "GET /freelancer/search-more mit offset-Parameter gibt Fragment zurueck (200)"() {
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/search-more")
+                        .param("offset", "0")
+                        .param("name1", "Müller")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+    }
+
     // -------------------------------------------------------------------------
     // Thymeleaf-Rendering HTML-Inhalte pruefen
     // -------------------------------------------------------------------------

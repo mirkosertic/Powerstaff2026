@@ -197,15 +197,25 @@ public class KundeController {
     // QBE-Suche
     // -------------------------------------------------------------------------
 
-    @PostMapping("/search")
-    public String search(@ModelAttribute KundeSearchCriteria criteria, Model model) {
+    @GetMapping("/search")
+    public String search(@ModelAttribute KundeSearchCriteria criteria,
+                         Model model,
+                         HttpServletResponse response) {
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+
         var results = queryService.search(criteria, 0, PAGE_SIZE);
         long total = queryService.countSearch(criteria);
         model.addAttribute("results", results);
         model.addAttribute("totalCount", total);
+        model.addAttribute("criteria", criteria);
+        model.addAttribute("sortField", criteria.sortField());
+        model.addAttribute("sortDir", criteria.sortDir());
         String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
         model.addAttribute("nextUrl", nextUrl);
-        return "kunde/search-results :: results";
+        model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
+        return "kunde/search-page";
     }
 
     @GetMapping("/search-more")
@@ -221,6 +231,23 @@ public class KundeController {
         }
         model.addAttribute("results", results);
         return "kunde/search-results :: results";
+    }
+
+    private String buildEditSearchUrl(KundeSearchCriteria c) {
+        var b = UriComponentsBuilder.fromPath("/kunde/new");
+        if (c.company()    != null) b.queryParam("company",    c.company());
+        if (c.name1()      != null) b.queryParam("name1",      c.name1());
+        if (c.name2()      != null) b.queryParam("name2",      c.name2());
+        if (c.street()     != null) b.queryParam("street",     c.street());
+        if (c.country()    != null) b.queryParam("country",    c.country());
+        if (c.plz()        != null) b.queryParam("plz",        c.plz());
+        if (c.city()       != null) b.queryParam("city",       c.city());
+        if (c.comments()   != null) b.queryParam("comments",   c.comments());
+        if (c.kreditorNr() != null) b.queryParam("kreditorNr", c.kreditorNr());
+        if (c.debitorNr()  != null) b.queryParam("debitorNr",  c.debitorNr());
+        if (c.sortField()  != null) b.queryParam("sortField",  c.sortField());
+        if (c.sortDir()    != null) b.queryParam("sortDir",    c.sortDir());
+        return b.build().toUriString();
     }
 
     private String buildSearchMoreUrl(KundeSearchCriteria c, int offset) {

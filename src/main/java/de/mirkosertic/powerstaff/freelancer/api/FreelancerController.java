@@ -238,15 +238,25 @@ public class FreelancerController {
     // QBE-Suche
     // -------------------------------------------------------------------------
 
-    @PostMapping("/search")
-    public String search(@ModelAttribute FreelancerSearchCriteria criteria, Model model) {
+    @GetMapping("/search")
+    public String search(@ModelAttribute FreelancerSearchCriteria criteria,
+                         Model model,
+                         HttpServletResponse response) {
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+
         var results = queryService.search(criteria, 0, PAGE_SIZE);
         long total = queryService.countSearch(criteria);
         model.addAttribute("results", results);
         model.addAttribute("totalCount", total);
+        model.addAttribute("criteria", criteria);
+        model.addAttribute("sortField", criteria.sortField());
+        model.addAttribute("sortDir", criteria.sortDir());
         String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
         model.addAttribute("nextUrl", nextUrl);
-        return "freelancer/search-results :: results";
+        model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
+        return "freelancer/search-page";
     }
 
     @GetMapping("/search-more")
@@ -262,6 +272,32 @@ public class FreelancerController {
         }
         model.addAttribute("results", results);
         return "freelancer/search-results :: results";
+    }
+
+    private String buildEditSearchUrl(FreelancerSearchCriteria c) {
+        var b = UriComponentsBuilder.fromPath("/freelancer/new");
+        if (c.name1()           != null) b.queryParam("name1",           c.name1());
+        if (c.name2()           != null) b.queryParam("name2",           c.name2());
+        if (c.company()         != null) b.queryParam("company",         c.company());
+        if (c.street()          != null) b.queryParam("street",          c.street());
+        if (c.country()         != null) b.queryParam("country",         c.country());
+        if (c.plz()             != null) b.queryParam("plz",             c.plz());
+        if (c.city()            != null) b.queryParam("city",            c.city());
+        if (c.nationalitaet()   != null) b.queryParam("nationalitaet",   c.nationalitaet());
+        if (c.comments()        != null) b.queryParam("comments",        c.comments());
+        if (c.einsatzdetails()  != null) b.queryParam("einsatzdetails",  c.einsatzdetails());
+        if (c.contactPerson()   != null) b.queryParam("contactPerson",   c.contactPerson());
+        if (c.contactReason()   != null) b.queryParam("contactReason",   c.contactReason());
+        if (c.kontaktart()      != null) b.queryParam("kontaktart",      c.kontaktart());
+        if (c.debitorNr()       != null) b.queryParam("debitorNr",       c.debitorNr());
+        if (c.gulpId()          != null) b.queryParam("gulpId",          c.gulpId());
+        if (c.code()            != null) b.queryParam("code",            c.code());
+        if (c.skills()          != null) b.queryParam("skills",          c.skills());
+        if (c.salaryLongMax()   != null) b.queryParam("salaryLongMax",   c.salaryLongMax());
+        if (c.salaryPerDayLongMax() != null) b.queryParam("salaryPerDayLongMax", c.salaryPerDayLongMax());
+        if (c.sortField()       != null) b.queryParam("sortField",       c.sortField());
+        if (c.sortDir()         != null) b.queryParam("sortDir",         c.sortDir());
+        return b.build().toUriString();
     }
 
     private String buildSearchMoreUrl(FreelancerSearchCriteria c, int offset) {
