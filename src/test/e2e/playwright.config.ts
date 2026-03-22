@@ -9,7 +9,7 @@ export default defineConfig({
     globalTeardown: './global-teardown.ts',
 
     webServer: {
-        command: `java -jar "${JAR}" --server.port=${PORT} --spring.profiles.active=e2e`,
+        command: `java -Dspring.profiles.active=e2e -Dserver.port=${PORT} -jar "${JAR}" > log.txt 2>&1`,
         url: `http://localhost:${PORT}/actuator/health`,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
