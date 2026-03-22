@@ -46,3 +46,15 @@ Die folgende Liste beschreibt die gefundenen Fehler aus den manuellen Tests. Jed
   Prüfe bitte durch entsprechende Tests, ob diese Problematik auch bei den anderen Formularen existiert, und ob dies auch die Kontaktmöglichkeiten betrifft. Implementiere bitte entsprechende Fixes und Tests.
 - [x] Der Button "Freiberufler über Code zuordnen" auf der Projektseite macht nichts. Eigentlich sollte dieser einen Dialog öffnen, in dem der Sachbearbeiter den Code(Kodierung) eines Freiberuflers eingibt, und bei Bestätigung wird dieser Freiberufler dem Projekt zugeordnet, und ein Hinweis angezeigt.
   Im Fehlerfall soll ein Warnhinweis angezeigt werden.
+- [x] Im Formular "Projekte" funktioniert der Button "Projekthistorie hinzufügen" nicht bzw. nicht mehr. Ebenso funktioniert das Editieren eines Projekthistorie-Eintrages nicht. Löschen funktioniert auch nicht. Es werden folgende JavaScript-Fehler in der Browserkonsole angezeigt:
+  Hinzufügen: Uncaught ReferenceError: openAddHistoryModal is not defined
+  onclick http://localhost:8080/project/1:1
+  1:1:1
+  Bearbeiten: Uncaught ReferenceError: openEditHistoryModal is not defined
+  onclick http://localhost:8080/project/1:1
+  Löschen: ncaught ReferenceError: deleteHistoryEntry is not defined
+  onclick http://localhost:8080/project/1:1
+- [x] Wenn ein Freiberufler zu einem Projekt im Freiberufler-Formular zugeordnet wird, dieser aber dem Projekt schon zugeordnet ist (HTTP Return Code 409), so soll ein entsprechender Hinweis im Formular angezeigt werden.
+- [x] Im Projekte-Formular fehlt in der Navbar ein "Formular leeren" Button. Diese Funktion wird benötigt, um die QBE Suche für Projekte zu ermöglichen. Es ist im eigentlichen Sinne kein "Neu" Button, da neue Projekte nur über die Partner und Kunden Formulare angelegt werden können. Die Toolbar für Projekte
+  soll analog der anderen Formulare um den "Suchen" Button erweitert werden.
+- [x] Der Button "In Datenbank suchen" unten in den Formularen Freiberufler, Partner, Kunde und Projekt ist redundant zum "Suchen" Button in der Toolbar. Es soll nur ein Button "Suchen" in der Toolbar existieren, und dieser startet die Suche-Funktion in allen Formularen.

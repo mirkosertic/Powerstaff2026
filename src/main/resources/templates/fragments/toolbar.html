@@ -18,10 +18,11 @@
     rememberedProject    – Objekt mit Feldern projectNumber + shortDescription (oder null)
     auditInfo            – Audit-Infotext (z. B. "Erfasst: 01.01.2026 admin · Geändert: ...")
                            oder "Neu, noch nicht gespeichert" bei Neuanlage
-    searchPanelId        – ID des Such-Panels das per Button ein-/ausgeblendet wird (oder null)
+    searchPanelId        – wenn gesetzt, wird ein "Suchen"-Button angezeigt, der die QBE-Suche auslöst
     assignProjectLabel   – Beschriftung des "Zuordnen"-Buttons neben dem gemerkten Projekt (oder null)
+    clearUrl             – URL für den "Formular leeren"-Button (oder null); nur für Formulare ohne Neu-Button
 -->
-<div id="toolbar" th:fragment="toolbar(moduleLabel, firstUrl, prevUrl, entityId, nextUrl, lastUrl, newUrl, saveFormId, deleteModalId, rememberedProject, auditInfo, searchPanelId, assignProjectLabel)">
+<div id="toolbar" th:fragment="toolbar(moduleLabel, firstUrl, prevUrl, entityId, nextUrl, lastUrl, newUrl, saveFormId, deleteModalId, rememberedProject, auditInfo, searchPanelId, assignProjectLabel, clearUrl)">
 <div id="toolbar-inner">
 
   <!-- Modul-Label -->
@@ -68,9 +69,13 @@
 
   <!-- Aktionen -->
   <div id="tb-actions">
+    <button type="button" class="btn btn-ghost"
+            th:if="${searchPanelId != null}"
+            onclick="document.getElementById('btn-qbe-search')?.click()">🔍 Suchen</button>
+
     <a class="btn btn-ghost"
-       th:if="${searchPanelId != null}"
-       th:href="${newUrl}">🔍 Suche</a>
+       th:if="${clearUrl != null}"
+       th:href="${clearUrl}">↺ Leeren</a>
 
     <a class="btn btn-ghost"
        th:href="${newUrl}"

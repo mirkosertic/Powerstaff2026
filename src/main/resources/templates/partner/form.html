@@ -19,6 +19,7 @@
         ? 'Erfasst: ' + ${#temporals.format(partner.creationDate,'dd.MM.yyyy')} + ' ' + ${partner.creationUser} + ' · Geändert: ' + ${#temporals.format(partner.changedDate,'dd.MM.yyyy')} + ' ' + ${partner.changedUser}
         : 'Neu, noch nicht gespeichert',
       'search-panel',
+      null,
       null)}">
   </div>
 
@@ -146,7 +147,7 @@
 
       <!-- QBE-Suche starten -->
       <div class="btn-row mt-md">
-        <button type="button" class="btn btn-ghost" id="btn-qbe-search">🔍 In Datenbank suchen</button>
+        <button type="button" class="hidden" id="btn-qbe-search">🔍 In Datenbank suchen</button>
       </div>
 
       </div><!-- /.form-grid -->

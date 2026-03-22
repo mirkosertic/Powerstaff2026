@@ -19,7 +19,8 @@
         ? 'Erfasst: ' + ${#temporals.format(freelancer.creationDate,'dd.MM.yyyy')} + ' ' + ${freelancer.creationUser} + ' · Geändert: ' + ${#temporals.format(freelancer.changedDate,'dd.MM.yyyy')} + ' ' + ${freelancer.changedUser}
         : 'Neu, noch nicht gespeichert',
       'search-panel',
-      ${freelancer.id != null and rememberedProject != null} ? 'Freiberufler diesem Projekt zuordnen' : null)}">
+      ${freelancer.id != null and rememberedProject != null} ? 'Freiberufler diesem Projekt zuordnen' : null,
+      null)}">
   </div>
 
   <!-- Page Content -->
@@ -39,6 +40,16 @@
     <!-- Dubletten-Code-Warnung (wird via JS bei 409 duplicateCode eingeblendet) -->
     <div class="banner banner-unsaved hidden" id="banner-duplicate-code">
       ⚠ &nbsp;Dieser Code wird bereits von einem anderen Freiberufler verwendet. Bitte einen anderen Code wählen.
+    </div>
+
+    <!-- Bereits dem Projekt zugeordnet (wird via JS bei 409 assign eingeblendet) -->
+    <div class="banner banner-unsaved hidden" id="assign-already-msg">
+      ⚠ &nbsp;Dieser Freiberufler ist dem gemerkten Projekt bereits zugeordnet.
+    </div>
+
+    <!-- Zuordnung zum gemerkten Projekt erfolgreich (wird via JS eingeblendet) -->
+    <div class="banner banner-info hidden" id="banner-assign-project">
+      ✓ &nbsp;Freiberufler wurde dem gemerkten Projekt zugeordnet.
     </div>
 
     <!-- Technischer Fehler beim Speichern -->
@@ -321,7 +332,7 @@
 
       <!-- QBE-Suche starten -->
       <div class="btn-row mt-md">
-        <button type="button" class="btn btn-ghost" id="btn-qbe-search">🔍 In Datenbank suchen</button>
+        <button type="button" class="hidden" id="btn-qbe-search">🔍 In Datenbank suchen</button>
       </div>
 
       </div><!-- /.form-grid -->

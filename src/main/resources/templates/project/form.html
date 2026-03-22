@@ -18,8 +18,9 @@
       ${project.id != null}
         ? 'Erfasst: ' + ${#temporals.format(project.creationDate,'dd.MM.yyyy')} + ' ' + ${project.creationUser} + ' · Geändert: ' + ${#temporals.format(project.changedDate,'dd.MM.yyyy')} + ' ' + ${project.changedUser}
         : 'Neu, noch nicht gespeichert',
+      'search-panel',
       null,
-      null)}">
+      @{/project/new})}">
   </div>
 
   <!-- Page Content -->
@@ -198,7 +199,7 @@
 
       <!-- QBE-Suche starten -->
       <div class="btn-row mt-md">
-        <button type="button" class="btn btn-ghost" id="btn-qbe-search">🔍 In Datenbank suchen</button>
+        <button type="button" class="hidden" id="btn-qbe-search">🔍 In Datenbank suchen</button>
       </div>
 
       </div><!-- /.form-grid -->
@@ -477,11 +478,11 @@
   <!-- ================================================================== -->
   <!-- JavaScript -->
   <!-- ================================================================== -->
-  <script th:if="${project.id != null}" th:inline="javascript">
-  const PROJECT_ID = /*[[${project.id}]]*/ 0;
+  <script th:inline="javascript">
+  const PROJECT_ID = /*[[${project.id}]]*/ null;
 
   // ---- Projekt löschen ----
-  document.getElementById('btn-delete-confirm').addEventListener('click', () => {
+  document.getElementById('btn-delete-confirm')?.addEventListener('click', () => {
     fetch(`/project/delete/${PROJECT_ID}`, { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } })
       .then(() => { window.location = '/project'; });
   });
@@ -517,7 +518,7 @@
     openModal('modal-edit-position');
   }
 
-  document.getElementById('btn-save-position').addEventListener('click', async () => {
+  document.getElementById('btn-save-position')?.addEventListener('click', async () => {
     const posId = document.getElementById('edit-pos-id').value;
     const body = {
       statusId: Number(document.getElementById('edit-pos-status').value),
@@ -558,7 +559,7 @@
     openModal('modal-delete-position');
   }
 
-  document.getElementById('btn-confirm-delete-position').addEventListener('click', async () => {
+  document.getElementById('btn-confirm-delete-position')?.addEventListener('click', async () => {
     await fetch(`/project/${PROJECT_ID}/positions/${deletePosId}/delete`, { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } });
     closeModal('modal-delete-position');
     location.reload();
@@ -619,7 +620,7 @@
     openModal('modal-history');
   }
 
-  document.getElementById('btn-save-history').addEventListener('click', async () => {
+  document.getElementById('btn-save-history')?.addEventListener('click', async () => {
     const description = document.getElementById('history-entry-description').value;
     const hId = document.getElementById('history-entry-id').value;
     if (hId) {
