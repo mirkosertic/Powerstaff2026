@@ -72,6 +72,7 @@
 
         <div class="mt-md">
           <button class="btn btn-ghost" type="button"
+                  data-testid="btn-new-posstatus"
                   onclick="openModal('modal-new-status')">
             ＋ Neuer Status
           </button>
@@ -116,7 +117,7 @@
       </div>
       <div class="mft">
         <button class="btn btn-ghost" type="button" onclick="closeModal('modal-new-status')">Abbrechen</button>
-        <button class="btn btn-pri" type="submit" form="new-status-form">Speichern</button>
+        <button class="btn btn-pri" type="submit" form="new-status-form" data-testid="btn-submit-posstatus">Speichern</button>
       </div>
     </div>
   </div>

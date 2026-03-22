@@ -1,8 +1,13 @@
 -- =============================================================================
 -- E2E Testdaten für Powerstaff 2026
--- Wird von auth.setup.ts nach dem Start der Spring-Boot-Applikation eingespielt.
--- Idempotent: Jede INSERT-Anweisung nutzt INSERT IGNORE oder ON DUPLICATE KEY.
+-- Wird via Flyway nur im e2e-Profil eingespielt (spring.flyway.locations).
+-- Idempotent: jede INSERT nutzt INSERT IGNORE oder ON DUPLICATE KEY.
 -- =============================================================================
+
+-- Testbenutzer ({noop}testpass = Spring Security DelegatingPasswordEncoder-Format)
+INSERT INTO ps_user (username, password_hash, must_change_password, enabled)
+VALUES ('testuser', '{noop}testpass', FALSE, TRUE)
+ON DUPLICATE KEY UPDATE password_hash = '{noop}testpass', must_change_password = FALSE, enabled = TRUE;
 
 -- Historientypen
 INSERT IGNORE INTO historytype (description) VALUES
@@ -21,24 +26,24 @@ INSERT IGNORE INTO tags (tagname, type) VALUES
 
 -- Freiberufler (3 Stück)
 INSERT IGNORE INTO freelancer
-    (id, db_version, name1, name2, company, street, country, zip, city,
-     code, contact_forbidden,
+    (id, db_version, name1, name2, company, street, country, plz, city,
+     code, contactforbidden, kontaktart,
      creation_date, creation_user, changed_date, changed_user)
 VALUES
     (1001, 0, 'Mustermann', 'Max', NULL, 'Musterstr. 1', 'DEU', '80331', 'München',
-     'E2E-001', FALSE,
+     'E2E-001', FALSE, 'NL',
      NOW(), 'testuser', NOW(), 'testuser'),
     (1002, 0, 'Beispiel', 'Erika', NULL, 'Beispielweg 2', 'DEU', '10115', 'Berlin',
-     'E2E-002', FALSE,
+     'E2E-002', FALSE, 'NL',
      NOW(), 'testuser', NOW(), 'testuser'),
     (1003, 0, 'Test', 'Klaus', 'TestGmbH', 'Testgasse 3', 'DEU', '20095', 'Hamburg',
-     'E2E-003', FALSE,
+     'E2E-003', FALSE, 'NL',
      NOW(), 'testuser', NOW(), 'testuser')
 ON DUPLICATE KEY UPDATE db_version = db_version;
 
 -- Partner (1 Stück)
 INSERT IGNORE INTO partner
-    (id, db_version, name1, company, street, country, zip, city, contact_forbidden,
+    (id, db_version, name1, company, street, country, plz, city, contactforbidden,
      creation_date, creation_user, changed_date, changed_user)
 VALUES
     (2001, 0, 'Partner', 'Partner GmbH', 'Partnerstr. 10', 'DEU', '50667', 'Köln', FALSE,
@@ -47,7 +52,7 @@ ON DUPLICATE KEY UPDATE db_version = db_version;
 
 -- Kunde (1 Stück)
 INSERT IGNORE INTO kunde
-    (id, db_version, name1, company, street, country, zip, city, contact_forbidden,
+    (id, db_version, name1, company, street, country, plz, city, contactforbidden,
      creation_date, creation_user, changed_date, changed_user)
 VALUES
     (3001, 0, 'Kunde', 'Kunde AG', 'Kundenallee 5', 'DEU', '70173', 'Stuttgart', FALSE,
@@ -74,22 +79,20 @@ VALUES
      NOW(), 'testuser', NOW(), 'testuser')
 ON DUPLICATE KEY UPDATE db_version = db_version;
 
--- Kontakthistorie für Freiberufler 1001
+-- Kontakthistorie für Freiberufler 1001 (freelancer_history hat keine db_version-Spalte)
 INSERT IGNORE INTO freelancer_history
-    (id, db_version, freelancer_id, type_id, description,
+    (id, freelancer_id, type_id, description,
      creation_date, creation_user, changed_date, changed_user)
 VALUES
-    (6001, 0, 1001,
+    (6001, 1001,
      (SELECT id FROM historytype WHERE description = 'Telefonat' LIMIT 1),
      'Erstgespräch via Telefon.',
-     NOW(), 'testuser', NOW(), 'testuser')
-ON DUPLICATE KEY UPDATE db_version = db_version;
+     NOW(), 'testuser', NOW(), 'testuser');
 
--- Kontaktmöglichkeit für Freiberufler 1001
+-- Kontaktmöglichkeit für Freiberufler 1001 (freelancer_contact hat keine db_version-Spalte)
 INSERT IGNORE INTO freelancer_contact
-    (id, db_version, freelancer_id, type, value,
+    (id, freelancer_id, type, value,
      creation_date, creation_user, changed_date, changed_user)
 VALUES
-    (7001, 0, 1001, 'EMAIL', 'max.mustermann@e2e.test',
-     NOW(), 'testuser', NOW(), 'testuser')
-ON DUPLICATE KEY UPDATE db_version = db_version;
+    (7001, 1001, 'EMAIL', 'max.mustermann@e2e.test',
+     NOW(), 'testuser', NOW(), 'testuser');

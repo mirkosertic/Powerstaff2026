@@ -8,8 +8,6 @@
     "codegen": "playwright codegen http://localhost:8090"
   },
   "devDependencies": {
-    "@playwright/test": "^1.51.0",
-    "bcryptjs": "^2.4.3",
-    "@types/bcryptjs": "^2.4.6"
+    "@playwright/test": "^1.51.0"
   }
 }

@@ -2,14 +2,14 @@ import { defineConfig, devices } from '@playwright/test';
 import * as path from 'path';
 
 const JAR = path.resolve(__dirname, '../../../target/powerstaff-1.0-SNAPSHOT.jar');
-const PORT = 8090;
+const PORT = 8100;
 
 export default defineConfig({
     globalSetup: './global-setup.ts',
     globalTeardown: './global-teardown.ts',
 
     webServer: {
-        command: `java -Dspring.profiles.active=e2e -Dserver.port=${PORT} -jar "${JAR}" > log.txt 2>&1`,
+        command: `java -Dspring.profiles.active=e2e -Dserver.port=${PORT} -jar "${JAR}" > ../../../target/e2e-application.log 2>&1`,
         url: `http://localhost:${PORT}/actuator/health`,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,

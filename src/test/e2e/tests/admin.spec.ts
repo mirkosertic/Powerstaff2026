@@ -5,19 +5,18 @@ test.describe('Administration', () => {
     test('Historientypen-Seite lädt und zeigt Einträge', async ({ page }) => {
         await page.goto('/admin/historientypen');
 
-        // Vorhandene Historientypen aus Testdaten
         await expect(page.locator('[data-testid^="histtype-row-"]').first()).toBeVisible();
     });
 
     test('Neuen Historientyp anlegen', async ({ page }) => {
         await page.goto('/admin/historientypen');
 
-        await page.locator('button:has-text("Neuer Historientyp")').click();
+        await page.locator('[data-testid="btn-new-histtype"]').click();
         await page.locator('#new-ht-description').fill('E2E-Testtyp');
-        await page.locator('button[type="submit"][form="new-ht-form"]').click();
+        await page.locator('[data-testid="btn-submit-histtype"]').click();
+        await page.waitForURL(/\/admin\/historientypen/);
 
-        // Nach Anlage: neuer Typ in der Tabelle
-        await expect(page.locator('td:has-text("E2E-Testtyp")')).toBeVisible();
+        await expect(page.locator('td').filter({ hasText: /^E2E-Testtyp$/ }).first()).toBeVisible();
     });
 
     test('Positionsstatus-Seite lädt und zeigt Einträge', async ({ page }) => {
@@ -29,13 +28,14 @@ test.describe('Administration', () => {
     test('Neuen Positionsstatus anlegen', async ({ page }) => {
         await page.goto('/admin/positionsstatus');
 
-        await page.locator('button:has-text("Neuer Status")').click();
+        await page.locator('[data-testid="btn-new-posstatus"]').click();
         await page.locator('#new-status-description').fill('E2E-Status');
         await page.locator('#new-status-color').fill('#e0f2fe');
         await page.locator('#new-status-colortext').fill('#0369a1');
-        await page.locator('button[type="submit"][form="new-status-form"]').click();
+        await page.locator('[data-testid="btn-submit-posstatus"]').click();
+        await page.waitForURL(/\/admin\/positionsstatus/);
 
-        await expect(page.locator('td:has-text("E2E-Status")')).toBeVisible();
+        await expect(page.locator('td').filter({ hasText: /^E2E-Status$/ }).first()).toBeVisible();
     });
 
     test('Tags-Seite lädt und zeigt Einträge', async ({ page }) => {
@@ -49,9 +49,10 @@ test.describe('Administration', () => {
 
         await page.locator('#new-tag-type').selectOption('SCHWERPUNKT');
         await page.locator('#new-tag-name').fill('E2E-Tag-Playwright');
-        await page.locator('button[type="submit"]:has-text("Tag anlegen")').click();
+        await page.locator('[data-testid="btn-submit-tag"]').click();
+        await page.waitForURL(/\/admin\/tags/);
 
-        await expect(page.locator('td:has-text("E2E-Tag-Playwright")')).toBeVisible();
+        await expect(page.locator('td').filter({ hasText: /^E2E-Tag-Playwright$/ }).first()).toBeVisible();
     });
 
 });

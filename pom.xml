@@ -340,6 +340,30 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <executions>
+                            <!-- Vorherigen Container + Volumes aufräumen (idempotent, läuft auch wenn nichts läuft).
+                                 Stellt sicher: keine Altdaten aus fehlgeschlagenen Vorläufen. -->
+                            <execution>
+                                <id>e2e-docker-cleanup</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>docker</executable>
+                                    <arguments>
+                                        <argument>compose</argument>
+                                        <argument>-f</argument>
+                                        <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
+                                        <argument>down</argument>
+                                        <argument>-v</argument>
+                                    </arguments>
+                                    <!-- Fehler ignorieren (Container lief möglicherweise gar nicht) -->
+                                    <successCodes>
+                                        <successCode>0</successCode>
+                                        <successCode>1</successCode>
+                                    </successCodes>
+                                </configuration>
+                            </execution>
                             <!-- MySQL via Docker Compose starten (MUSS vor npm ci laufen, damit
                                  MySQL bereit ist bevor Playwright seinen webServer startet) -->
                             <execution>
@@ -411,7 +435,7 @@
                                     </successCodes>
                                 </configuration>
                             </execution>
-                            <!-- MySQL Container nach den Tests herunterfahren -->
+                            <!-- MySQL Container + Volumes nach den Tests bereinigen -->
                             <execution>
                                 <id>e2e-docker-down</id>
                                 <phase>post-integration-test</phase>
@@ -425,6 +449,7 @@
                                         <argument>-f</argument>
                                         <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
                                         <argument>down</argument>
+                                        <argument>-v</argument>
                                     </arguments>
                                 </configuration>
                             </execution>

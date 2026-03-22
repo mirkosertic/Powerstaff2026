@@ -82,6 +82,7 @@
         </thead>
         <tbody>
           <tr th:each="r : ${results}"
+              th:attr="data-testid='project-row-' + ${r.id()}"
               th:onclick="|window.location='/project/${r.id()}'|"
               style="cursor:pointer">
             <td class="td-name" th:text="${r.projectNumber()}"></td>

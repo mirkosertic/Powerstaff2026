@@ -255,6 +255,7 @@
       </p>
       <div class="list-hd" th:if="${project.id != null}">
         <button type="button" class="btn btn-sm btn-ghost"
+                data-testid="btn-assign-by-code-open"
                 onclick="openModal('modal-assign-by-code')">＋ Freiberufler über Code zuordnen</button>
       </div>
       </div>
@@ -271,6 +272,7 @@
       <div class="fcard-body" id="fcard-history">
       <div class="list-hd">
         <button type="button" class="btn btn-sm btn-ghost"
+                data-testid="btn-add-history"
                 onclick="openAddHistoryModal()">+ Neuer Eintrag</button>
       </div>
       <div class="hlist" id="history-list">

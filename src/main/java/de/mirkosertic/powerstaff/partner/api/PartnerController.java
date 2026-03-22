@@ -1,6 +1,5 @@
 package de.mirkosertic.powerstaff.partner.api;
 
-import de.mirkosertic.powerstaff.partner.query.PartnerDetailView;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
@@ -291,7 +290,7 @@ public class PartnerController {
 
         if (freelancer.partnerId() != null && freelancer.partnerId() != id) {
             String otherCompany = queryService.findById(freelancer.partnerId())
-                    .map(PartnerDetailView::company)
+                    .map(p -> p.company())
                     .orElse("Unbekannter Partner");
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("otherPartner", otherCompany,

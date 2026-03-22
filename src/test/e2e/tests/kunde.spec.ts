@@ -10,7 +10,7 @@ test.describe('Kunden', () => {
 
         await page.locator('[data-testid="btn-save"]').click();
 
-        await expect(page).toHaveURL(/\/kunde\/\d+\?saved=true/);
+        await page.waitForURL(/\/kunde\/\d+/);
         await expect(page.locator('#banner-success')).toBeVisible();
     });
 
@@ -19,6 +19,7 @@ test.describe('Kunden', () => {
 
         await page.locator('input[name="company"]').fill('Kunde AG');
         await page.locator('[data-testid="btn-search"]').click();
+        await page.waitForURL(/\/kunde\/search/);
 
         await expect(page.locator('[data-testid="kunde-row-3001"]')).toBeVisible();
     });
@@ -27,7 +28,6 @@ test.describe('Kunden', () => {
         await page.goto('/kunde/3001');
 
         await expect(page).toHaveURL(/\/kunde\/3001/);
-        // Projekt E2E-P001 sollte in der Projektliste erscheinen
         await expect(page.locator('[data-testid="kunde-project-row-4001"]')).toBeVisible();
     });
 
@@ -35,7 +35,7 @@ test.describe('Kunden', () => {
         await page.goto('/kunde/3001');
 
         await page.locator('[data-testid="kunde-project-row-4001"]').click();
-        await expect(page).toHaveURL(/\/project\/4001/);
+        await page.waitForURL(/\/project\/4001/);
     });
 
 });

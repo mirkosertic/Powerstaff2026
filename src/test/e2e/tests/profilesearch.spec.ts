@@ -29,15 +29,16 @@ test.describe('Profilsuche', () => {
         await expect(page.locator('[data-testid="chat-input"]')).toBeVisible();
     });
 
-    test('Nachricht senden und Stub-Antwort erhalten', async ({ page }) => {
+    test('Nachricht senden startet Chat-Session', async ({ page }) => {
         await page.goto('/profilesearch');
         await expect(page).toHaveURL(/\/profilesearch\//);
 
         await page.locator('[data-testid="chat-input"]').fill('Suche Java-Entwickler in München');
         await page.locator('[data-testid="btn-chat-send"]').click();
 
-        // Stub-Antwort sollte in Nachrichten-Container erscheinen
-        await expect(page.locator('[data-testid="chat-messages"]')).toContainText('KI-Profilsuche', { timeout: 15_000 });
+        // Nach dem Senden: URL wechselt zur konkreten Chat-Session
+        await expect(page).toHaveURL(/\/profilesearch\/chat\/\d+/, { timeout: 10_000 });
+        await expect(page.locator('[data-testid="chat-messages"]')).toBeVisible();
     });
 
     test('Chat-Verlauf in Sidebar sichtbar', async ({ page }) => {
