@@ -169,10 +169,14 @@
     document.getElementById('btn-confirm-delete').addEventListener('click', function() {
       const targetId = this.dataset.targetChatId || CHAT_ID;
       fetch('/profilesearch/chat/' + targetId, { method: 'DELETE', headers: { 'X-XSRF-TOKEN': getCsrfToken() } })
-        .then(resp => {
+        .then(r => r.json())
+        .then(data => {
           closeModal('modal-delete');
-          if (resp.redirected) { location.href = resp.url; }
-          else { location.reload(); }
+          location.href = data.redirectTo;
+        })
+        .catch(() => {
+          closeModal('modal-delete');
+          location.reload();
         });
     });
 

@@ -117,14 +117,14 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
                 .andExpect(redirectedUrl("/profilesearch/chat/77"))
     }
 
-    def "DELETE /profilesearch/chat/{chatId} loescht Chat und redirectet zum juengsten Chat"() {
+    def "DELETE /profilesearch/chat/{chatId} loescht Chat und liefert JSON mit redirectTo"() {
         given:
         when(queryService.findLatestChatByUser("testuser")).thenReturn(Optional.of(55L))
 
         expect:
         mockMvc.perform(delete("/profilesearch/chat/42").with(user("testuser")).with(csrf()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/profilesearch/chat/55"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath('$.redirectTo').value('/profilesearch/chat/55'))
     }
 
     def "POST /profilesearch/chat/{chatId}/send speichert Nachricht und liefert JSON"() {

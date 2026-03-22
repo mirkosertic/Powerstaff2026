@@ -85,20 +85,22 @@ public class ProfileSearchController {
     }
 
     @DeleteMapping("/chat/{chatId}")
-    public void deleteChat(@PathVariable Long chatId, Principal principal, HttpServletResponse response)
-            throws IOException {
+    @ResponseBody
+    public Map<String, String> deleteChat(@PathVariable Long chatId, Principal principal) {
         String userId = principal.getName();
         commandService.deleteChat(chatId);
 
         // Navigate to most recently modified remaining chat, or create a new one
         var nextChatId = queryService.findLatestChatByUser(userId);
+        String redirectTo;
         if (nextChatId.isPresent()) {
-            response.sendRedirect("/profilesearch/chat/" + nextChatId.get());
+            redirectTo = "/profilesearch/chat/" + nextChatId.get();
         } else {
             Long projectId = rememberedProjectService.get(userId).orElse(null);
             Long newId = commandService.createChat(userId, projectId);
-            response.sendRedirect("/profilesearch/chat/" + newId);
+            redirectTo = "/profilesearch/chat/" + newId;
         }
+        return Map.of("redirectTo", redirectTo);
     }
 
     record SendRequest(String message) {}
