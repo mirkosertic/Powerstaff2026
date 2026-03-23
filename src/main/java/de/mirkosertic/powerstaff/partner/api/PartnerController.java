@@ -36,6 +36,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +48,7 @@ public class PartnerController {
     private static final String COOKIE_LAST_PARTNER_ID = "lastPartnerId";
     private static final int COOKIE_MAX_AGE = 30 * 24 * 60 * 60; // 30 days
     private static final int PAGE_SIZE = 20;
+    private static final DateTimeFormatter AUDIT_DATE_FMT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private final PartnerCommandService commandService;
     private final PartnerQueryService queryService;
@@ -129,6 +132,10 @@ public class PartnerController {
         model.addAttribute("historyTypes", historyTypeQueryService.findAll());
         model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
         model.addAttribute("activePage", "partner");
+        model.addAttribute("auditInfo", buildAuditInfo(
+                partner.getId(),
+                partner.getCreationDate(), partner.getCreationUser(),
+                partner.getChangedDate(), partner.getChangedUser()));
         return "partner/form";
     }
 
@@ -138,7 +145,8 @@ public class PartnerController {
         cookie.setPath("/partner");
         cookie.setMaxAge(0); // delete
         response.addCookie(cookie);
-        model.addAttribute("partner", new Partner());
+        var partner = new Partner();
+        model.addAttribute("partner", partner);
         model.addAttribute("contacts", List.of());
         model.addAttribute("history", List.of());
         model.addAttribute("freelancers", List.of());
@@ -146,7 +154,25 @@ public class PartnerController {
         model.addAttribute("historyTypes", historyTypeQueryService.findAll());
         model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
         model.addAttribute("activePage", "partner");
+        model.addAttribute("auditInfo", buildAuditInfo(
+                partner.getId(),
+                partner.getCreationDate(), partner.getCreationUser(),
+                partner.getChangedDate(), partner.getChangedUser()));
         return "partner/form";
+    }
+
+    private String buildAuditInfo(Long id, LocalDateTime creationDate, String creationUser,
+                                   LocalDateTime changedDate, String changedUser) {
+        if (id == null) return "Neu, noch nicht gespeichert";
+        String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : "?")
+                       + " " + (creationUser != null ? creationUser : "?");
+        String result = "Erfasst: " + created;
+        if (changedDate != null && !changedDate.equals(creationDate)) {
+            result += "<br>Geändert: "
+                   + changedDate.format(AUDIT_DATE_FMT)
+                   + " " + (changedUser != null ? changedUser : "?");
+        }
+        return result;
     }
 
     private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {

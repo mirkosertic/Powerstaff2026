@@ -428,13 +428,13 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('Exception'))))
     }
 
-    def "GET /project/new zeigt keinen Speichern-Button (QBE-Formular)"() {
+    def "GET /project/new zeigt Speichern-Button fuer neues Projekt"() {
         when:
         def result = mockMvc.perform(get('/project/new').with(user('testuser')))
 
         then:
         result.andExpect(status().isOk())
-              .andExpect(content().string(not(containsString('form="project-form"'))))
+              .andExpect(content().string(containsString('form="project-form"')))
     }
 
     def "GET /project/{id} zeigt Speichern-Button fuer bestehendes Projekt"() {

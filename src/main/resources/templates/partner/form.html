@@ -15,9 +15,7 @@
       'partner-form',
       ${partner.id != null} ? 'modal-delete' : null,
       ${rememberedProject},
-      ${partner.id != null}
-        ? 'Erfasst: ' + ${#temporals.format(partner.creationDate,'dd.MM.yyyy')} + ' ' + ${partner.creationUser} + '<br>Geändert: ' + ${#temporals.format(partner.changedDate,'dd.MM.yyyy')} + ' ' + ${partner.changedUser}
-        : 'Neu, noch nicht gespeichert',
+      ${auditInfo},
       ${partner.id == null} ? 'search-panel' : null,
       null,
       null)}">
@@ -302,7 +300,7 @@
               <span th:text="${#temporals.format(entry.creationDate,'dd.MM.yyyy HH:mm')}"></span>
               von <strong th:text="${entry.creationUser}"></strong>
               <span th:if="${entry.changedDate != null and entry.changedUser != null
-                             and !entry.creationDate.equals(entry.changedDate)}">
+                             and entry.creationDate != null and !entry.creationDate.equals(entry.changedDate)}">
                 · geändert <span th:text="${#temporals.format(entry.changedDate,'dd.MM.yyyy HH:mm')}"></span>
                 von <strong th:text="${entry.changedUser}"></strong>
               </span>

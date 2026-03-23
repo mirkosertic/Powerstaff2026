@@ -32,6 +32,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,7 @@ public class KundeController {
     private static final String COOKIE_LAST_KUNDE_ID = "lastKundeId";
     private static final int COOKIE_MAX_AGE = 30 * 24 * 60 * 60; // 30 Tage
     private static final int PAGE_SIZE = 20;
+    private static final DateTimeFormatter AUDIT_DATE_FMT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private final KundeCommandService commandService;
     private final KundeQueryService queryService;
@@ -142,6 +145,24 @@ public class KundeController {
         model.addAttribute("historyTypes", historyTypeQueryService.findAll());
         model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
         model.addAttribute("activePage", "kunde");
+        model.addAttribute("auditInfo", buildAuditInfo(
+                kundeId,
+                kunde.getCreationDate(), kunde.getCreationUser(),
+                kunde.getChangedDate(), kunde.getChangedUser()));
+    }
+
+    private String buildAuditInfo(Long id, LocalDateTime creationDate, String creationUser,
+                                   LocalDateTime changedDate, String changedUser) {
+        if (id == null) return "Neu, noch nicht gespeichert";
+        String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : "?")
+                       + " " + (creationUser != null ? creationUser : "?");
+        String result = "Erfasst: " + created;
+        if (changedDate != null && !changedDate.equals(creationDate)) {
+            result += "<br>Geändert: "
+                   + changedDate.format(AUDIT_DATE_FMT)
+                   + " " + (changedUser != null ? changedUser : "?");
+        }
+        return result;
     }
 
     private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {

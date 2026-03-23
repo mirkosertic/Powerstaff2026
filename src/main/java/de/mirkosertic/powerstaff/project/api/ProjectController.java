@@ -30,6 +30,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +40,7 @@ import java.util.Map;
 public class ProjectController {
 
     private static final int PAGE_SIZE = 20;
+    private static final DateTimeFormatter AUDIT_DATE_FMT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private final ProjectCommandService commandService;
     private final ProjectQueryService queryService;
@@ -151,6 +154,24 @@ public class ProjectController {
         model.addAttribute("positionStatuses", statusQueryService.findAll());
         model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
         model.addAttribute("activePage", "project");
+        model.addAttribute("auditInfo", buildAuditInfo(
+                projectId,
+                project.getCreationDate(), project.getCreationUser(),
+                project.getChangedDate(), project.getChangedUser()));
+    }
+
+    private String buildAuditInfo(Long id, LocalDateTime creationDate, String creationUser,
+                                   LocalDateTime changedDate, String changedUser) {
+        if (id == null) return "Neu, noch nicht gespeichert";
+        String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : "?")
+                       + " " + (creationUser != null ? creationUser : "?");
+        String result = "Erfasst: " + created;
+        if (changedDate != null && !changedDate.equals(creationDate)) {
+            result += "<br>Geändert: "
+                   + changedDate.format(AUDIT_DATE_FMT)
+                   + " " + (changedUser != null ? changedUser : "?");
+        }
+        return result;
     }
 
     private void populateBlankModel(Model model, Project project, Principal principal) {

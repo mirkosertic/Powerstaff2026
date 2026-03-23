@@ -12,12 +12,10 @@
       ${project.id != null} ? @{/project/next/{id}(id=${project.id})} : null,
       @{/project/last},
       null,
-      ${project.id != null} ? 'project-form' : null,
+      'project-form',
       ${project.id != null} ? 'modal-delete' : null,
       null,
-      ${project.id != null}
-        ? 'Erfasst: ' + ${#temporals.format(project.creationDate,'dd.MM.yyyy')} + ' ' + ${project.creationUser} + '<br>Geändert: ' + ${#temporals.format(project.changedDate,'dd.MM.yyyy')} + ' ' + ${project.changedUser}
-        : 'Neu, noch nicht gespeichert',
+      ${auditInfo},
       'search-panel',
       null,
       @{/project/new})}">
@@ -201,7 +199,7 @@
 
     </form>
 
-    <div class="form-grid" th:if="${project.id != null}">
+    <div class="form-grid mt-lg" th:if="${project.id != null}">
 
     <!-- ------------------------------------------------------------------ -->
     <!-- Positionen (Freiberufler-Zuordnungen) -->
@@ -283,7 +281,7 @@
               <span th:text="${#temporals.format(entry.creationDate(),'dd.MM.yyyy HH:mm')}"></span>
               von <strong th:text="${entry.creationUser()}"></strong>
               <span th:if="${entry.changedDate() != null and entry.changedUser() != null
-                             and !entry.creationDate().equals(entry.changedDate())}">
+                             and entry.creationDate() != null and !entry.creationDate().equals(entry.changedDate())}">
                 · geändert <span th:text="${#temporals.format(entry.changedDate(),'dd.MM.yyyy HH:mm')}"></span>
                 von <strong th:text="${entry.changedUser()}"></strong>
               </span>
