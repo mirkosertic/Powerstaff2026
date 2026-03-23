@@ -5,9 +5,8 @@
 1. `specs/SWARCHITEKTUR.md` – verbindliche Architektur, alle ADRs
 2. `specs/UEBERSICHT.md` – fachliche Struktur und Modulübersicht
 3. `TASKS.md` – aktueller Implementierungsstand, Recovery-Punkte
-4. `UITASKS.md` – offene UI-Angleichungs-Tasks (parallel zu TASKS.md führen)
 
-Vor jedem neuen Task: `TASKS.md` und `UITASKS.md` lesen und prüfen, welche Tasks bereits abgehakt sind.
+Vor jedem neuen Task: `TASKS.md` lesen und prüfen, welche Tasks bereits abgehakt sind.
 
 ---
 
@@ -95,6 +94,10 @@ Repositories sind immer `package-private`. Kein direkter Repository-Zugriff zwis
 - **Keine gemockte Datenbank** – H2 ist verboten
 - Unit-Tests (`*Spec`) für isolierte Logik ohne DB-Zugriff
 - Integrationstests (`*IT`) laufen in der `integration-test`-Phase via maven-failsafe
+- Testabdeckung sollte mind. 80% sein.
+- E2E Tests ersetzen keine Unit-Tests, sondern ergänzen sie, um die Funktionalität im Frontend zu prüfen!
+- Wenn zur Entscheidung steht, wie ein Test implementiert wird (Unit- vs. IT-Test), so soll die Testart
+  genommen werden, die die beste Testabdeckung erzeugt und am schnellsten ausführbar ist.
 
 ---
 
