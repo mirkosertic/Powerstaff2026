@@ -245,10 +245,10 @@ class KundeControllerIT extends AbstractContainerBaseIT {
               .andExpect(view().name("kunde/search-page"))
     }
 
-    def "GET /kunde/search-more liefert Fragment (200)"() {
+    def "GET /kunde/search mit offset gibt Fragment zurueck (200)"() {
         when:
         def result = mockMvc.perform(
-                get("/kunde/search-more")
+                get("/kunde/search")
                         .with(user("testuser"))
                         .param("offset", "20"))
 
@@ -305,11 +305,11 @@ class KundeControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('Whitelabel Error'))))
     }
 
-    def "GET /kunde/search-more mit offset-Parameter gibt Fragment zurueck (200)"() {
+    def "GET /kunde/search mit offset-Parameter gibt Fragment zurueck (200)"() {
         when:
         def result = mockMvc.perform(
-                get("/kunde/search-more")
-                        .param("offset", "0")
+                get("/kunde/search")
+                        .param("offset", "20")
                         .param("company", "Test")
                         .with(user("testuser")))
 

@@ -17,7 +17,9 @@ public class FreelancerTagCommandService {
     /**
      * Ordnet einen Tag einem Freiberufler zu.
      * Wirft {@link DuplicateTagException} wenn der Tag bereits zugeordnet ist.
+     * noRollbackFor: Aufrufer kann DuplicateTagException abfangen ohne die Transaktion zu poisonen.
      */
+    @Transactional(noRollbackFor = DuplicateTagException.class)
     public FreelancerTag addTag(long freelancerId, long tagId) {
         if (tagRepository.existsByFreelancerIdAndTagId(freelancerId, tagId)) {
             throw new DuplicateTagException(freelancerId, tagId);

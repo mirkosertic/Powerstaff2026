@@ -299,10 +299,10 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().isOk())
     }
 
-    def "GET /freelancer/search-more gibt Fragment zurueck (200)"() {
+    def "GET /freelancer/search mit offset gibt Fragment zurueck (200)"() {
         when:
         def result = mockMvc.perform(
-                get("/freelancer/search-more?offset=20&name1=Mustermann")
+                get("/freelancer/search?offset=20&name1=Mustermann")
                         .with(user("testuser")))
 
         then:
@@ -358,16 +358,117 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('Whitelabel Error'))))
     }
 
-    def "GET /freelancer/search-more mit offset-Parameter gibt Fragment zurueck (200)"() {
+    def "GET /freelancer/search mit offset-Parameter gibt Fragment zurueck (200)"() {
         when:
         def result = mockMvc.perform(
-                get("/freelancer/search-more")
-                        .param("offset", "0")
+                get("/freelancer/search")
+                        .param("offset", "20")
                         .param("name1", "Müller")
                         .with(user("testuser")))
 
         then:
         result.andExpect(status().isOk())
+    }
+
+    // -------------------------------------------------------------------------
+    // buildSearchMoreUrl – URL wird als X-Next-Url Header (fragment-Modus) gesetzt
+    // -------------------------------------------------------------------------
+
+    def "buildSearchMoreUrl enthaelt alle Kriterien im X-Next-Url Header"() {
+        given: "genau PAGE_SIZE Treffer, damit nextUrl gesetzt wird"
+        def twentyResults = (1..20).collect { i ->
+            new FreelancerSearchResult(i as Long, "CODE-$i", "Mustermann$i", null, null, "Berlin", null, null, null, null)
+        }
+        when(queryService.search(any(), anyInt(), anyInt())).thenReturn(twentyResults)
+        when(queryService.countSearch(any())).thenReturn(100L)
+
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/search")
+                        .with(user("testuser"))
+                        .param("name1", "Muster")
+                        .param("city", "Berlin")
+                        .param("skills", "Java")
+                        .param("sortField", "name1")
+                        .param("sortDir", "asc"))
+
+        then: "Antwort ist 200 und die search-page"
+        result.andExpect(status().isOk())
+
+        and: "X-Next-Url fehlt bei offset=0 (gesetzt per nextUrl-Attribut, nicht direkt als Header)"
+        // nextUrl ist ein Model-Attribut; es erscheint in der HTML-Seite als data-next-url o.ä.
+        result.andExpect(content().string(containsString('/freelancer/search')))
+              .andExpect(content().string(containsString('offset=')))
+              .andExpect(content().string(containsString('name1=')))
+    }
+
+    def "buildSearchMoreUrl mit offset=20 setzt X-Next-Url Header wenn weitere Treffer vorhanden"() {
+        given: "weitere Treffer vorhanden"
+        when(queryService.search(any(), anyInt(), anyInt())).thenReturn(
+                (1..20).collect { i ->
+                    new FreelancerSearchResult(i as Long, "CODE-$i", "Mustermann$i", null, null, "Berlin", null, null, null, null)
+                }
+        )
+        when(queryService.countSearch(any())).thenReturn(100L)
+
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/search")
+                        .param("offset", "20")
+                        .param("name1", "Muster")
+                        .param("skills", "Java")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().string("X-Next-Url", containsString("/freelancer/search")))
+              .andExpect(header().string("X-Next-Url", containsString("offset=40")))
+              .andExpect(header().string("X-Next-Url", containsString("name1=")))
+              .andExpect(header().string("X-Next-Url", containsString("skills=")))
+    }
+
+    def "buildSearchMoreUrl kein X-Next-Url Header wenn keine weiteren Treffer"() {
+        given:
+        when(queryService.search(any(), anyInt(), anyInt())).thenReturn([
+                new FreelancerSearchResult(1L, "CODE-001", "Mustermann", null, null, "Berlin", null, null, null, null)
+        ])
+        when(queryService.countSearch(any())).thenReturn(1L)
+
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/search")
+                        .param("offset", "20")
+                        .param("name1", "Muster")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+        result.andExpect(header().doesNotExist("X-Next-Url"))
+    }
+
+    // -------------------------------------------------------------------------
+    // buildEditSearchUrl – URL enthaelt alle gesetzten Kriterien
+    // -------------------------------------------------------------------------
+
+    def "buildEditSearchUrl enthaelt alle gesetzten Kriterien in der Seite"() {
+        when:
+        def result = mockMvc.perform(
+                get("/freelancer/search")
+                        .with(user("testuser"))
+                        .param("name1", "Muster")
+                        .param("city", "Berlin")
+                        .param("skills", "Java")
+                        .param("code", "CODE-007")
+                        .param("sortField", "name1")
+                        .param("sortDir", "desc"))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('/freelancer/new')))
+              .andExpect(content().string(containsString('name1=')))
+              .andExpect(content().string(containsString('city=')))
+              .andExpect(content().string(containsString('skills=')))
+              .andExpect(content().string(containsString('code=')))
     }
 
     // -------------------------------------------------------------------------

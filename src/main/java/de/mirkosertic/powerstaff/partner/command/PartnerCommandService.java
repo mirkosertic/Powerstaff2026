@@ -52,7 +52,10 @@ public class PartnerCommandService {
                 contact.setValue(cmd.value());
                 contact.setPartnerId(partnerId);
                 contactRepository.save(contact);
-            } else if ("DELETE".equals(cmd.op()) && cmd.id() != null) {
+            } else if ("DELETE".equals(cmd.op())) {
+                if (cmd.id() == null) {
+                    throw new IllegalArgumentException("DELETE Kontakt erfordert eine ID");
+                }
                 contactRepository.deleteById(cmd.id());
             }
         }
@@ -65,13 +68,19 @@ public class PartnerCommandService {
                 history.setTypeId(cmd.typeId());
                 history.setPartnerId(partnerId);
                 historyRepository.save(history);
-            } else if ("UPDATE".equals(cmd.op()) && cmd.id() != null) {
+            } else if ("UPDATE".equals(cmd.op())) {
+                if (cmd.id() == null) {
+                    throw new IllegalArgumentException("UPDATE Kontakthistorie erfordert eine ID");
+                }
                 historyRepository.findById(cmd.id()).ifPresent(history -> {
                     history.setDescription(cmd.description());
                     history.setTypeId(cmd.typeId());
                     historyRepository.save(history);
                 });
-            } else if ("DELETE".equals(cmd.op()) && cmd.id() != null) {
+            } else if ("DELETE".equals(cmd.op())) {
+                if (cmd.id() == null) {
+                    throw new IllegalArgumentException("DELETE Kontakthistorie erfordert eine ID");
+                }
                 historyRepository.deleteById(cmd.id());
             }
         }

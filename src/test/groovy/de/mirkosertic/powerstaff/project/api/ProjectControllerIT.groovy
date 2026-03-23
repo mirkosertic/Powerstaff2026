@@ -11,6 +11,7 @@ import de.mirkosertic.powerstaff.project.query.ProjectDetailView
 import de.mirkosertic.powerstaff.project.query.ProjectHistoryQueryService
 import de.mirkosertic.powerstaff.project.query.ProjectPositionQueryService
 import de.mirkosertic.powerstaff.project.query.ProjectPositionView
+import de.mirkosertic.powerstaff.project.command.ProjectPosition
 import de.mirkosertic.powerstaff.project.query.ProjectQueryService
 import de.mirkosertic.powerstaff.project.query.ProjectSearchResult
 import de.mirkosertic.powerstaff.shared.query.ProjectPositionStatusQueryService
@@ -331,11 +332,11 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('Whitelabel Error'))))
     }
 
-    def "GET /project/search-more mit offset-Parameter gibt Fragment zurueck (200)"() {
+    def "GET /project/search mit offset-Parameter gibt Fragment zurueck (200)"() {
         when:
         def result = mockMvc.perform(
-                get('/project/search-more')
-                        .param('offset', '0')
+                get('/project/search')
+                        .param('offset', '20')
                         .with(user('testuser')))
 
         then:
@@ -454,6 +455,157 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(containsString('id="btn-qbe-search"')))
               .andExpect(content().string(not(containsString('In Datenbank suchen'))))
     }
+
+    // -------------------------------------------------------------------------
+    // Positionen – AJAX-Endpunkte
+    // -------------------------------------------------------------------------
+
+    def "GET /project/{id}/positions liefert Positions-Liste als JSON (200)"() {
+        given:
+        def pos = new ProjectPositionView(1L, 0L, 10L, 'MK-01', 'Mustermann', 'Max',
+                1L, 'Offen', '#00aa00', '#ffffff', '500 EUR', 'Kommentar')
+        when(positionQueryService.findByProjectId(42L, null, null)).thenReturn([pos])
+
+        when:
+        def result = mockMvc.perform(
+                get('/project/42/positions')
+                        .with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+    }
+
+    def "GET /project/{id}/positions mit sortField und sortDir gibt sortierte Liste (200)"() {
+        when:
+        def result = mockMvc.perform(
+                get('/project/42/positions')
+                        .param('sortField', 'name1')
+                        .param('sortDir', 'asc')
+                        .with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+    }
+
+    def "POST /project/{projectId}/positions/{posId} speichert Position und gibt Liste zurueck (200)"() {
+        given:
+        when(positionCommandService.updateEditable(anyLong(), any(), any(), any(), any()))
+                .thenReturn(new ProjectPosition())
+
+        when:
+        def result = mockMvc.perform(
+                post('/project/42/positions/1')
+                        .with(user('testuser'))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content('{"statusId":1,"konditionen":"600 EUR/Tag","kommentar":"Test","dbVersion":0}'))
+
+        then:
+        result.andExpect(status().isOk())
+    }
+
+    def "POST /project/{projectId}/positions/{posId} OptimisticLocking gibt 409 zurueck"() {
+        given:
+        doThrow(new OptimisticLockingFailureException('conflict'))
+                .when(positionCommandService).updateEditable(anyLong(), any(), any(), any(), any())
+
+        when:
+        def result = mockMvc.perform(
+                post('/project/42/positions/1')
+                        .with(user('testuser'))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content('{"statusId":1,"konditionen":"600 EUR/Tag","kommentar":"Test","dbVersion":0}'))
+
+        then:
+        result.andExpect(status().isConflict())
+              .andExpect(jsonPath('$.conflict').value(true))
+    }
+
+    def "POST /project/{projectId}/positions/{posId}/delete loescht Position und gibt Liste zurueck (200)"() {
+        given: "delete ist void – Default-Mock macht bereits nichts"
+        when:
+        def result = mockMvc.perform(
+                post('/project/42/positions/1/delete')
+                        .with(user('testuser'))
+                        .with(csrf()))
+
+        then:
+        result.andExpect(status().isOk())
+    }
+
+    // -------------------------------------------------------------------------
+    // buildSearchMoreUrl – X-Next-Url Header bei Fragment-Modus
+    // -------------------------------------------------------------------------
+
+    def "buildSearchMoreUrl mit offset=20 setzt X-Next-Url Header wenn weitere Treffer vorhanden"() {
+        given:
+        when(queryService.search(any(), anyInt(), anyInt())).thenReturn(
+                (1..20).collect { i ->
+                    new ProjectSearchResult(i as Long, "PRJ-$i", "Projekt $i", null, null, 1, null)
+                }
+        )
+        when(queryService.countSearch(any())).thenReturn(100L)
+
+        when:
+        def result = mockMvc.perform(
+                get('/project/search')
+                        .param('offset', '20')
+                        .param('projectNumber', '2026')
+                        .param('skills', 'Java')
+                        .with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().string('X-Next-Url', containsString('/project/search')))
+              .andExpect(header().string('X-Next-Url', containsString('offset=40')))
+              .andExpect(header().string('X-Next-Url', containsString('projectNumber=')))
+    }
+
+    def "buildSearchMoreUrl kein X-Next-Url Header wenn keine weiteren Treffer"() {
+        given:
+        when(queryService.search(any(), anyInt(), anyInt())).thenReturn([
+                new ProjectSearchResult(1L, 'PRJ-001', 'Projekt 1', null, null, 1, null)
+        ])
+        when(queryService.countSearch(any())).thenReturn(1L)
+
+        when:
+        def result = mockMvc.perform(
+                get('/project/search')
+                        .param('offset', '20')
+                        .with(user('testuser')))
+
+        then:
+        result.andExpect(status().isOk())
+        result.andExpect(header().doesNotExist('X-Next-Url'))
+    }
+
+    // -------------------------------------------------------------------------
+    // buildEditSearchUrl – URL enthaelt alle gesetzten Kriterien
+    // -------------------------------------------------------------------------
+
+    def "buildEditSearchUrl enthaelt alle gesetzten Kriterien in der Seite"() {
+        when:
+        def result = mockMvc.perform(
+                get('/project/search')
+                        .with(user('testuser'))
+                        .param('projectNumber', '2026')
+                        .param('skills', 'Java')
+                        .param('workplace', 'Berlin')
+                        .param('sortField', 'project_number')
+                        .param('sortDir', 'asc'))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(content().string(containsString('/project/new')))
+              .andExpect(content().string(containsString('projectNumber=')))
+              .andExpect(content().string(containsString('skills=')))
+              .andExpect(content().string(containsString('workplace=')))
+    }
+
+    // -------------------------------------------------------------------------
+    // Thymeleaf-Rendering HTML-Inhalte pruefen
+    // -------------------------------------------------------------------------
 
     def "GET /project/{id} rendert Positions-Buttons mit onclick"() {
         given:

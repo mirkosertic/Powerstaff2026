@@ -199,8 +199,20 @@ public class KundeController {
 
     @GetMapping("/search")
     public String search(@ModelAttribute KundeSearchCriteria criteria,
+                         @RequestParam(required = false, defaultValue = "0") int offset,
                          Model model,
                          HttpServletResponse response) {
+        if (offset > 0) {
+            var results = queryService.search(criteria, offset, PAGE_SIZE);
+            int nextOffset = offset + PAGE_SIZE;
+            long total = queryService.countSearch(criteria);
+            if (nextOffset < total) {
+                response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
+            }
+            model.addAttribute("results", results);
+            return "kunde/search-results :: results";
+        }
+
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
@@ -216,21 +228,6 @@ public class KundeController {
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
         return "kunde/search-page";
-    }
-
-    @GetMapping("/search-more")
-    public String searchMore(@ModelAttribute KundeSearchCriteria criteria,
-                             @RequestParam int offset,
-                             Model model,
-                             HttpServletResponse response) {
-        var results = queryService.search(criteria, offset, PAGE_SIZE);
-        int nextOffset = offset + PAGE_SIZE;
-        long total = queryService.countSearch(criteria);
-        if (nextOffset < total) {
-            response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
-        }
-        model.addAttribute("results", results);
-        return "kunde/search-results :: results";
     }
 
     private String buildEditSearchUrl(KundeSearchCriteria c) {
@@ -251,7 +248,7 @@ public class KundeController {
     }
 
     private String buildSearchMoreUrl(KundeSearchCriteria c, int offset) {
-        var b = UriComponentsBuilder.fromPath("/kunde/search-more").queryParam("offset", offset);
+        var b = UriComponentsBuilder.fromPath("/kunde/search").queryParam("offset", offset);
         if (c.company()    != null) b.queryParam("company",    c.company());
         if (c.name1()      != null) b.queryParam("name1",      c.name1());
         if (c.name2()      != null) b.queryParam("name2",      c.name2());

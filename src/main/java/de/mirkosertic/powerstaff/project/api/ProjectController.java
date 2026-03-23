@@ -205,8 +205,20 @@ public class ProjectController {
 
     @GetMapping("/search")
     public String search(@ModelAttribute ProjectSearchCriteria criteria,
+                         @RequestParam(required = false, defaultValue = "0") int offset,
                          Model model,
                          HttpServletResponse response) {
+        if (offset > 0) {
+            var results = queryService.search(criteria, offset, PAGE_SIZE);
+            int nextOffset = offset + PAGE_SIZE;
+            long total = queryService.countSearch(criteria);
+            if (nextOffset < total) {
+                response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
+            }
+            model.addAttribute("results", results);
+            return "project/search-results :: results";
+        }
+
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
@@ -222,21 +234,6 @@ public class ProjectController {
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
         return "project/search-page";
-    }
-
-    @GetMapping("/search-more")
-    public String searchMore(@ModelAttribute ProjectSearchCriteria criteria,
-                             @RequestParam int offset,
-                             Model model,
-                             HttpServletResponse response) {
-        var results = queryService.search(criteria, offset, PAGE_SIZE);
-        int nextOffset = offset + PAGE_SIZE;
-        long total = queryService.countSearch(criteria);
-        if (nextOffset < total) {
-            response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
-        }
-        model.addAttribute("results", results);
-        return "project/search-results :: results";
     }
 
     // -------------------------------------------------------------------------
@@ -310,7 +307,7 @@ public class ProjectController {
     }
 
     private String buildSearchMoreUrl(ProjectSearchCriteria c, int offset) {
-        var b = UriComponentsBuilder.fromPath("/project/search-more").queryParam("offset", offset);
+        var b = UriComponentsBuilder.fromPath("/project/search").queryParam("offset", offset);
         if (c.projectNumber()    != null) b.queryParam("projectNumber",    c.projectNumber());
         if (c.descriptionShort() != null) b.queryParam("descriptionShort", c.descriptionShort());
         if (c.descriptionLong()  != null) b.queryParam("descriptionLong",  c.descriptionLong());

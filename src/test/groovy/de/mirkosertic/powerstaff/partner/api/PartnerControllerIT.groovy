@@ -285,10 +285,10 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().isOk())
     }
 
-    def "GET /partner/search-more gibt HTML-Fragment zurueck"() {
+    def "GET /partner/search mit offset gibt HTML-Fragment zurueck"() {
         when:
         def result = mockMvc.perform(
-                get("/partner/search-more?offset=20")
+                get("/partner/search?offset=20")
                         .with(user("testuser")))
 
         then:
@@ -344,11 +344,11 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('Whitelabel Error'))))
     }
 
-    def "GET /partner/search-more mit offset-Parameter gibt Fragment zurueck (200)"() {
+    def "GET /partner/search mit offset-Parameter gibt Fragment zurueck (200)"() {
         when:
         def result = mockMvc.perform(
-                get("/partner/search-more")
-                        .param("offset", "0")
+                get("/partner/search")
+                        .param("offset", "20")
                         .param("company", "Test")
                         .with(user("testuser")))
 

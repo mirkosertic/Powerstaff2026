@@ -73,46 +73,7 @@ public class PartnerQueryService {
                 WHERE 1=1
                 """);
         var params = new ArrayList<>();
-        if (hasValue(criteria.company())) {
-            sql.append(" AND company LIKE ?");
-            params.add("%" + criteria.company() + "%");
-        }
-        if (hasValue(criteria.name1())) {
-            sql.append(" AND name1 LIKE ?");
-            params.add("%" + criteria.name1() + "%");
-        }
-        if (hasValue(criteria.name2())) {
-            sql.append(" AND name2 LIKE ?");
-            params.add("%" + criteria.name2() + "%");
-        }
-        if (hasValue(criteria.street())) {
-            sql.append(" AND street LIKE ?");
-            params.add("%" + criteria.street() + "%");
-        }
-        if (hasValue(criteria.country())) {
-            sql.append(" AND country LIKE ?");
-            params.add("%" + criteria.country() + "%");
-        }
-        if (hasValue(criteria.plz())) {
-            sql.append(" AND plz LIKE ?");
-            params.add("%" + criteria.plz() + "%");
-        }
-        if (hasValue(criteria.city())) {
-            sql.append(" AND city LIKE ?");
-            params.add("%" + criteria.city() + "%");
-        }
-        if (hasValue(criteria.comments())) {
-            sql.append(" AND comments LIKE ?");
-            params.add("%" + criteria.comments() + "%");
-        }
-        if (hasValue(criteria.debitorNr())) {
-            sql.append(" AND debitor_nr LIKE ?");
-            params.add("%" + criteria.debitorNr() + "%");
-        }
-        if (hasValue(criteria.kreditorNr())) {
-            sql.append(" AND kreditor_nr LIKE ?");
-            params.add("%" + criteria.kreditorNr() + "%");
-        }
+        appendCriteria(sql, params, criteria);
         String orderBy;
         if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
             String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
@@ -134,52 +95,33 @@ public class PartnerQueryService {
     public long countSearch(PartnerSearchCriteria criteria) {
         var sql = new StringBuilder("SELECT COUNT(*) FROM partner WHERE 1=1");
         var params = new ArrayList<>();
-        if (hasValue(criteria.company())) {
-            sql.append(" AND company LIKE ?");
-            params.add("%" + criteria.company() + "%");
-        }
-        if (hasValue(criteria.name1())) {
-            sql.append(" AND name1 LIKE ?");
-            params.add("%" + criteria.name1() + "%");
-        }
-        if (hasValue(criteria.name2())) {
-            sql.append(" AND name2 LIKE ?");
-            params.add("%" + criteria.name2() + "%");
-        }
-        if (hasValue(criteria.street())) {
-            sql.append(" AND street LIKE ?");
-            params.add("%" + criteria.street() + "%");
-        }
-        if (hasValue(criteria.country())) {
-            sql.append(" AND country LIKE ?");
-            params.add("%" + criteria.country() + "%");
-        }
-        if (hasValue(criteria.plz())) {
-            sql.append(" AND plz LIKE ?");
-            params.add("%" + criteria.plz() + "%");
-        }
-        if (hasValue(criteria.city())) {
-            sql.append(" AND city LIKE ?");
-            params.add("%" + criteria.city() + "%");
-        }
-        if (hasValue(criteria.comments())) {
-            sql.append(" AND comments LIKE ?");
-            params.add("%" + criteria.comments() + "%");
-        }
-        if (hasValue(criteria.debitorNr())) {
-            sql.append(" AND debitor_nr LIKE ?");
-            params.add("%" + criteria.debitorNr() + "%");
-        }
-        if (hasValue(criteria.kreditorNr())) {
-            sql.append(" AND kreditor_nr LIKE ?");
-            params.add("%" + criteria.kreditorNr() + "%");
-        }
+        appendCriteria(sql, params, criteria);
 
         var stmt = jdbcClient.sql(sql.toString());
         for (int i = 0; i < params.size(); i++) {
             stmt = stmt.param(i + 1, params.get(i));
         }
         return stmt.query(Long.class).single();
+    }
+
+    private static void appendCriteria(StringBuilder sql, List<Object> params, PartnerSearchCriteria criteria) {
+        appendLike(sql, params, "company", criteria.company());
+        appendLike(sql, params, "name1", criteria.name1());
+        appendLike(sql, params, "name2", criteria.name2());
+        appendLike(sql, params, "street", criteria.street());
+        appendLike(sql, params, "country", criteria.country());
+        appendLike(sql, params, "plz", criteria.plz());
+        appendLike(sql, params, "city", criteria.city());
+        appendLike(sql, params, "comments", criteria.comments());
+        appendLike(sql, params, "debitor_nr", criteria.debitorNr());
+        appendLike(sql, params, "kreditor_nr", criteria.kreditorNr());
+    }
+
+    private static void appendLike(StringBuilder sql, List<Object> params, String column, String value) {
+        if (value != null && !value.isBlank()) {
+            sql.append(" AND ").append(column).append(" LIKE ?");
+            params.add("%" + value + "%");
+        }
     }
 
     public List<PartnerFreelancerView> findFreelancersByPartner(Long partnerId) {
@@ -232,7 +174,4 @@ public class PartnerQueryService {
                 .list();
     }
 
-    private static boolean hasValue(String s) {
-        return s != null && !s.isBlank();
-    }
 }

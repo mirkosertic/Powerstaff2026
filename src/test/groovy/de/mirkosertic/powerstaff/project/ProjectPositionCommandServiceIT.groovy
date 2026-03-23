@@ -142,4 +142,65 @@ class ProjectPositionCommandServiceIT extends AbstractContainerBaseIT {
         then:
         thrown(IllegalStateException)
     }
+
+    def "updateEditable aktualisiert Status, Konditionen und Kommentar einer Position"() {
+        given:
+        def pos = new ProjectPosition()
+        pos.projectId = projectId
+        pos.freelancerId = freelancerId
+        pos.statusId = statusId
+        def saved = commandService.save(pos)
+
+        when:
+        def updated = commandService.updateEditable(saved.id, statusId, "800 EUR/Tag", "Neuer Kommentar", saved.dbVersion)
+
+        then:
+        updated.konditionen == "800 EUR/Tag"
+        updated.kommentar == "Neuer Kommentar"
+        updated.statusId == statusId
+    }
+
+    def "updateEditable mit nicht existierender Position wirft IllegalArgumentException"() {
+        when:
+        commandService.updateEditable(Long.MAX_VALUE, statusId, null, null, 0L)
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "updateEditable mit veraltetem dbVersion wirft OptimisticLockingFailureException"() {
+        given:
+        def pos = new ProjectPosition()
+        pos.projectId = projectId
+        pos.freelancerId = freelancerId
+        pos.statusId = statusId
+        def saved = commandService.save(pos)
+
+        and: "dbVersion auf Stand bringen (ersten Update)"
+        def firstUpdate = commandService.updateEditable(saved.id, statusId, "700 EUR/Tag", null, saved.dbVersion)
+
+        when: "zweites Update mit der alten dbVersion (Konflikt)"
+        commandService.updateEditable(saved.id, statusId, "900 EUR/Tag", null, saved.dbVersion)
+
+        then:
+        thrown(Exception) // OptimisticLockingFailureException oder DataOptimisticLockingFailureException
+    }
+
+    def "updateEditable setzt alle editierbaren Felder auf null wenn nicht angegeben"() {
+        given:
+        def pos = new ProjectPosition()
+        pos.projectId = projectId
+        pos.freelancerId = freelancerId
+        pos.statusId = statusId
+        pos.konditionen = "700 EUR/Tag"
+        pos.kommentar = "Alt"
+        def saved = commandService.save(pos)
+
+        when:
+        def updated = commandService.updateEditable(saved.id, statusId, null, null, saved.dbVersion)
+
+        then:
+        updated.konditionen == null
+        updated.kommentar == null
+    }
 }

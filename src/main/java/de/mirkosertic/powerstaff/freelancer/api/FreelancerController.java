@@ -240,8 +240,20 @@ public class FreelancerController {
 
     @GetMapping("/search")
     public String search(@ModelAttribute FreelancerSearchCriteria criteria,
+                         @RequestParam(required = false, defaultValue = "0") int offset,
                          Model model,
                          HttpServletResponse response) {
+        if (offset > 0) {
+            var results = queryService.search(criteria, offset, PAGE_SIZE);
+            int nextOffset = offset + PAGE_SIZE;
+            long total = queryService.countSearch(criteria);
+            if (nextOffset < total) {
+                response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
+            }
+            model.addAttribute("results", results);
+            return "freelancer/search-results :: results";
+        }
+
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
@@ -257,21 +269,6 @@ public class FreelancerController {
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
         return "freelancer/search-page";
-    }
-
-    @GetMapping("/search-more")
-    public String searchMore(@ModelAttribute FreelancerSearchCriteria criteria,
-                             @RequestParam int offset,
-                             Model model,
-                             HttpServletResponse response) {
-        var results = queryService.search(criteria, offset, PAGE_SIZE);
-        int nextOffset = offset + PAGE_SIZE;
-        long total = queryService.countSearch(criteria);
-        if (nextOffset < total) {
-            response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
-        }
-        model.addAttribute("results", results);
-        return "freelancer/search-results :: results";
     }
 
     private String buildEditSearchUrl(FreelancerSearchCriteria c) {
@@ -301,7 +298,7 @@ public class FreelancerController {
     }
 
     private String buildSearchMoreUrl(FreelancerSearchCriteria c, int offset) {
-        var b = UriComponentsBuilder.fromPath("/freelancer/search-more").queryParam("offset", offset);
+        var b = UriComponentsBuilder.fromPath("/freelancer/search").queryParam("offset", offset);
         if (c.name1()           != null) b.queryParam("name1",           c.name1());
         if (c.name2()           != null) b.queryParam("name2",           c.name2());
         if (c.company()         != null) b.queryParam("company",         c.company());

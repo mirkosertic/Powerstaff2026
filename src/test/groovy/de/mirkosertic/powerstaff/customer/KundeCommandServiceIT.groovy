@@ -102,6 +102,88 @@ class KundeCommandServiceIT extends AbstractContainerBaseIT {
         historyRows == 1
     }
 
+    def "save loescht Kontakt per DELETE-Delta-Command"() {
+        given:
+        def kunde = commandService.save(newKunde("IT-Cmd Delete-Contact"),
+                [new KundeContactEntry("ADD", null, "EMAIL", "alt@example.com")], [])
+        def contactId = jdbcClient.sql("SELECT id FROM kunde_contact WHERE kunde_id = :id")
+                .param("id", kunde.id).query(Long.class).single()
+
+        when:
+        commandService.save(kunde, [new KundeContactEntry("DELETE", contactId, null, null)], [])
+
+        then:
+        jdbcClient.sql("SELECT COUNT(*) FROM kunde_contact WHERE kunde_id = :id")
+                .param("id", kunde.id).query(Long.class).single() == 0
+    }
+
+    def "DELETE Kontakt ohne ID wirft IllegalArgumentException"() {
+        given:
+        def kunde = commandService.save(newKunde("IT-Cmd Delete-Contact-NoId"))
+
+        when:
+        commandService.save(kunde, [new KundeContactEntry("DELETE", null, null, null)], [])
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "save aktualisiert Kontakthistorieneintrag per UPDATE-Delta-Command"() {
+        given:
+        def kunde = commandService.save(newKunde("IT-Cmd Update-History"), [],
+                [new KundeHistoryEntry("ADD", null, historyTypeId, "Original")])
+        def historyId = jdbcClient.sql("SELECT id FROM kunde_history WHERE kunde_id = :id")
+                .param("id", kunde.id).query(Long.class).single()
+
+        when:
+        commandService.save(kunde, [],
+                [new KundeHistoryEntry("UPDATE", historyId, historyTypeId, "Geaendert")])
+
+        then:
+        jdbcClient.sql("SELECT description FROM kunde_history WHERE id = :id")
+                .param("id", historyId).query(String.class).single() == "Geaendert"
+    }
+
+    def "save loescht Kontakthistorieneintrag per DELETE-Delta-Command"() {
+        given:
+        def kunde = commandService.save(newKunde("IT-Cmd Delete-History"), [],
+                [new KundeHistoryEntry("ADD", null, historyTypeId, "Zu loeschen")])
+        def historyId = jdbcClient.sql("SELECT id FROM kunde_history WHERE kunde_id = :id")
+                .param("id", kunde.id).query(Long.class).single()
+
+        when:
+        commandService.save(kunde, [],
+                [new KundeHistoryEntry("DELETE", historyId, null, null)])
+
+        then:
+        jdbcClient.sql("SELECT COUNT(*) FROM kunde_history WHERE kunde_id = :id")
+                .param("id", kunde.id).query(Long.class).single() == 0
+    }
+
+    def "UPDATE Kontakthistorie ohne ID wirft IllegalArgumentException"() {
+        given:
+        def kunde = commandService.save(newKunde("IT-Cmd Update-History-NoId"))
+
+        when:
+        commandService.save(kunde, [],
+                [new KundeHistoryEntry("UPDATE", null, historyTypeId, "Geaendert")])
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "DELETE Kontakthistorie ohne ID wirft IllegalArgumentException"() {
+        given:
+        def kunde = commandService.save(newKunde("IT-Cmd Delete-History-NoId"))
+
+        when:
+        commandService.save(kunde, [],
+                [new KundeHistoryEntry("DELETE", null, null, null)])
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
     private static Kunde newKunde(String company) {
         def k = new Kunde()
         k.company = company

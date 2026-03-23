@@ -204,8 +204,20 @@ public class PartnerController {
 
     @GetMapping("/search")
     public String search(@ModelAttribute PartnerSearchCriteria criteria,
+                         @RequestParam(required = false, defaultValue = "0") int offset,
                          Model model,
                          HttpServletResponse response) {
+        if (offset > 0) {
+            var results = queryService.search(criteria, offset, PAGE_SIZE);
+            int nextOffset = offset + PAGE_SIZE;
+            long total = queryService.countSearch(criteria);
+            if (nextOffset < total) {
+                response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
+            }
+            model.addAttribute("results", results);
+            return "partner/search-results :: results";
+        }
+
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
@@ -221,21 +233,6 @@ public class PartnerController {
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
         return "partner/search-page";
-    }
-
-    @GetMapping("/search-more")
-    public String searchMore(@ModelAttribute PartnerSearchCriteria criteria,
-                             @RequestParam int offset,
-                             Model model,
-                             HttpServletResponse response) {
-        var results = queryService.search(criteria, offset, PAGE_SIZE);
-        int nextOffset = offset + PAGE_SIZE;
-        long total = queryService.countSearch(criteria);
-        if (nextOffset < total) {
-            response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
-        }
-        model.addAttribute("results", results);
-        return "partner/search-results :: results";
     }
 
     private String buildEditSearchUrl(PartnerSearchCriteria criteria) {
@@ -256,7 +253,7 @@ public class PartnerController {
     }
 
     private String buildSearchMoreUrl(PartnerSearchCriteria criteria, int offset) {
-        var b = UriComponentsBuilder.fromPath("/partner/search-more").queryParam("offset", offset);
+        var b = UriComponentsBuilder.fromPath("/partner/search").queryParam("offset", offset);
         if (criteria.company()    != null) b.queryParam("company",    criteria.company());
         if (criteria.name1()      != null) b.queryParam("name1",      criteria.name1());
         if (criteria.name2()      != null) b.queryParam("name2",      criteria.name2());
