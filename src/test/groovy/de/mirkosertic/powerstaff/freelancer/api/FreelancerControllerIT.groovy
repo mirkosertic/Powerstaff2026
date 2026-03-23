@@ -3,6 +3,7 @@ package de.mirkosertic.powerstaff.freelancer.api
 import de.mirkosertic.powerstaff.AbstractContainerBaseIT
 import de.mirkosertic.powerstaff.freelancer.command.Freelancer
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService
+import de.mirkosertic.powerstaff.freelancer.command.DuplicateCodeException
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerHasPositionsException
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerTagCommandService
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerDetailView
@@ -251,6 +252,44 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
         then:
         result.andExpect(status().isConflict())
               .andExpect(jsonPath('$.conflict').value(true))
+    }
+
+    def "POST /freelancer/save bei DuplicateCodeException liefert 409 JSON mit duplicateCode:true"() {
+        given:
+        when(commandService.save(any(), any(), any(), any())).thenThrow(new DuplicateCodeException("CODE-123"))
+
+        when:
+        def result = mockMvc.perform(
+                post("/freelancer/save")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("id", "42")
+                        .param("dbVersion", "0")
+                        .param("code", "CODE-123")
+                        .param("contactsJson", "[]")
+                        .param("historyJson", "[]")
+                        .param("tagsJson", "[]"))
+
+        then:
+        result.andExpect(status().isConflict())
+              .andExpect(jsonPath('$.duplicateCode').value(true))
+    }
+
+    def "POST /freelancer/save mit ungueltigem JSON liefert 400 JSON mit error-Feld"() {
+        when:
+        def result = mockMvc.perform(
+                post("/freelancer/save")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("id", "42")
+                        .param("dbVersion", "0")
+                        .param("contactsJson", "NOT_VALID_JSON")
+                        .param("historyJson", "[]")
+                        .param("tagsJson", "[]"))
+
+        then:
+        result.andExpect(status().isBadRequest())
+              .andExpect(jsonPath('$.error').value("invalid json"))
     }
 
     // -------------------------------------------------------------------------

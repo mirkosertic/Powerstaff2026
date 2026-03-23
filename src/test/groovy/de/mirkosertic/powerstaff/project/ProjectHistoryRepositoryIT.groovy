@@ -96,4 +96,29 @@ class ProjectHistoryRepositoryIT extends AbstractContainerBaseIT {
         expect:
         queryService.findByProjectId(-1L).isEmpty()
     }
+
+    def "findById mit existierender ID gibt ProjectHistory zurueck"() {
+        given:
+        def h = new ProjectHistory()
+        h.projectId = projectId
+        h.description = "findById Test-Eintrag"
+        def saved = commandService.save(h)
+
+        when:
+        def result = commandService.findById(saved.id)
+
+        then:
+        result.isPresent()
+        result.get().id == saved.id
+        result.get().description == "findById Test-Eintrag"
+        result.get().projectId == projectId
+    }
+
+    def "findById mit unbekannter ID gibt Optional.empty() zurueck"() {
+        when:
+        def result = commandService.findById(9999999L)
+
+        then:
+        result.isEmpty()
+    }
 }

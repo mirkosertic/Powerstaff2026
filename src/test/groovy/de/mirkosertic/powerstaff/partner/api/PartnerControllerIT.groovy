@@ -242,6 +242,22 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
               .andExpect(jsonPath('$.conflict').value(true))
     }
 
+    def "POST /partner/save mit ungueltigem JSON liefert 400 mit error-Feld"() {
+        when:
+        def result = mockMvc.perform(
+                post("/partner/save")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("id", "42")
+                        .param("dbVersion", "0")
+                        .param("contactsJson", "NOT_VALID_JSON")
+                        .param("historyJson", "[]"))
+
+        then:
+        result.andExpect(status().isBadRequest())
+              .andExpect(jsonPath('$.error').value("invalid json"))
+    }
+
     def "POST /partner/delete/{id} Erfolg leitet auf /partner/new weiter (302)"() {
         when:
         def result = mockMvc.perform(

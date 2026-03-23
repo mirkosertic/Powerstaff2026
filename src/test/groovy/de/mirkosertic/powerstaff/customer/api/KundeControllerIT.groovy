@@ -207,6 +207,22 @@ class KundeControllerIT extends AbstractContainerBaseIT {
               .andExpect(jsonPath('$.conflict').value(true))
     }
 
+    def "POST /kunde/save mit ungueltigem JSON liefert 400 mit error-Feld"() {
+        when:
+        def result = mockMvc.perform(
+                post("/kunde/save")
+                        .with(csrf())
+                        .with(user("testuser"))
+                        .param("id", "42")
+                        .param("dbVersion", "0")
+                        .param("contactsJson", "NOT_VALID_JSON")
+                        .param("historyJson", "[]"))
+
+        then:
+        result.andExpect(status().isBadRequest())
+              .andExpect(jsonPath('$.error').value("invalid json"))
+    }
+
     def "POST /kunde/delete/{id} leitet auf /kunde/new weiter (302)"() {
         when:
         def result = mockMvc.perform(
