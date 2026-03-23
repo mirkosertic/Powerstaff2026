@@ -46,3 +46,33 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] KundeController.buildSearchMoreUrl is completely untested, this can be unified while fixing the issued above.
 - [x] The E2E / Docker Tests sometimes leave dangling volumes and do not properly clean up. This should be fixed.
 - [x] FreeelancerCommandService.findByCode is completely untested.
+- [ ] Bearbeiten und Löschen von Projektpositionen ist nicht möglich. In der Browser-Console werden die JavaScript Fehler
+  Bearbeiten: Uncaught ReferenceError: openEditPositionModal is not defined
+  onclick http://localhost:8080/project/1:1
+  Löschen: Uncaught ReferenceError: openDeletePositionModal is not defined
+  onclick http://localhost:8080/project/1:1
+  Dieser Fehle muss korrigiert und durch E2E Playwright Tests validiert werden!
+- [ ] Der Button "Freiberufler diesem Projekt zuordnen" auf dem Freiberufler-Formular ist zu groß. Es soll der Text
+  "Projekt zuordnen" verwendet werden!
+- [ ] Der "Suchen" Button auf dem Freiberufler, Partner und Kunden Formular soll nur bei leeren Formularen angezeigt
+  werden, also wenn ich auf "Neu" klicke bzw. der Datensatz noch keine Id hat. Dieses Verhalten soll auch über E2E
+  Tests mittels Playwright getestet werden.
+- [ ] Die Audit-Info in der Navbar soll aus Platzgründen zweizeilig angezeigt werden, und mit etwas kleinerer Schrift.
+  Die Erste Zeile enweder "Neu, noch nicht gespeichert" bzw. "Erfast ...", die zweite Zeile dann mit "Geändert ..."
+  Diese Anpassung soll für die Formulare Freiberufler, Partner und Kunden umgesetzt werden.
+- [ ] Der Profilsuche-Chat Bereich im Profilsuche Formular hat links und rechts noch einen kleinen Rand, weshalb
+  er ein wenig breiter ist als die Fluchtlinien und die Darstellung z.B. auf dem Freiberufler-Formular. Dieser
+  rand bzw. abstand hat auch eine komische Farbe (gräulich), was irgendwie unpassend wirkt. Der Abstand soll
+  entfernt werden.
+- [ ] Der Administrationsbereich soll um eine Benutzerverwaltung erweitert werden. Es soll eine Liste aller
+  Benutzer angezeigt werden, und es sollen auch neue Benutzer angelegt, bestehende Benutzer bearbeitet und
+  auch gelöscht werden können. Bearbeitet werden sollen alle Merkmale eines Benutzers, für die boolean Attribute
+  sollen Checkboxen verwendet werden.
+- [ ] Fehler bei der Validierung von Datumsfeldern. Dieser Fehler betrifft vermutlich alle Orte, wo ein Datum bzw.
+  ein Zeitstempel / Localdatetime eingegeben werden kann, entweder über Freitext oder über ein Datepicker.
+  Im Backend wird folgende Fehlermeldung ausgegeben:  [Failed to convert property value of type 'java.lang.String' to required type 'java.time.LocalDateTime' for property 'lastContactDate'; Failed to convert from type [java.lang.String] to type [@org.springframework.data.relational.core.mapping.Column java.time.LocalDateTime] for value [2005-01-01]]]
+  im Frontend habe ich allerdings keinen Validierungsfehler vor dem Speichern des Formulars bekommen. Im Fall
+  von falschen Datumsangaben möchte ich im Frontend einen Validierungsfehler angezeigt bekommen, und natürlich
+  muss das Backend diese Eingabe auch bearbeiten können. Als Datumsformat soll das Format dd.MM.yyyy verwendet werden,
+  die Zeitzone ist die aktuelle Server-Zeitzone. Für diesen Fehler müssen Tests und idealerweise auch E2E Playwright
+  Tests für alle Formulare mit Datumsfeldern implementiert werden.

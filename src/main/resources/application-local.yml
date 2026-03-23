@@ -21,3 +21,17 @@ logging:
     org.springframework.jdbc.core: DEBUG
     org.springframework.security: TRACE
     root: INFO
+
+  ai:
+  #mcp:
+  #  client:
+  #    streamable-http:
+  #      connections:
+  #        lucene-search:
+  #          url: http://localhost:9000
+  #          endpoint: /mcp/message
+   ollama:
+     base-url: http://localhost:11434
+     chat:
+      options:
+        model: qwen3:4b

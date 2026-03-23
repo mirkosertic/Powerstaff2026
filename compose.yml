@@ -17,3 +17,19 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+  ollama:
+    image: ollama/ollama
+    container_name: powerstaff-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama_data:/root/.ollama:rw
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    # Hinweis: macOS (Docker Desktop) unterstützt kein GPU-Passthrough –
+    # für Metal-Beschleunigung Ollama nativ (außerhalb Docker) betreiben.
