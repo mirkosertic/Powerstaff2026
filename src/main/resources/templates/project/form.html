@@ -16,7 +16,7 @@
       ${project.id != null} ? 'modal-delete' : null,
       null,
       ${project.id != null}
-        ? 'Erfasst: ' + ${#temporals.format(project.creationDate,'dd.MM.yyyy')} + ' ' + ${project.creationUser} + ' · Geändert: ' + ${#temporals.format(project.changedDate,'dd.MM.yyyy')} + ' ' + ${project.changedUser}
+        ? 'Erfasst: ' + ${#temporals.format(project.creationDate,'dd.MM.yyyy')} + ' ' + ${project.creationUser} + '<br>Geändert: ' + ${#temporals.format(project.changedDate,'dd.MM.yyyy')} + ' ' + ${project.changedUser}
         : 'Neu, noch nicht gespeichert',
       'search-panel',
       null,
@@ -501,7 +501,7 @@
   // ---- Positionen ----
   let currentPosId = null;
 
-  function openEditPositionModal(btn) {
+  window.openEditPositionModal = function openEditPositionModal(btn) {
     currentPosId = btn.dataset.posId;
     document.getElementById('edit-pos-id').value = currentPosId;
     document.getElementById('edit-pos-dbversion').value = btn.dataset.dbVersion;
@@ -509,7 +509,7 @@
     document.getElementById('edit-pos-konditionen').value = btn.dataset.konditionen || '';
     document.getElementById('edit-pos-kommentar').value = btn.dataset.kommentar || '';
     openModal('modal-edit-position');
-  }
+  };
 
   document.getElementById('btn-save-position')?.addEventListener('click', async () => {
     const posId = document.getElementById('edit-pos-id').value;
@@ -539,18 +539,18 @@
     }
   });
 
-  function reloadPosition() {
+  window.reloadPosition = function reloadPosition() {
     closeModal('modal-pos-conflict');
     location.reload();
-  }
+  };
 
   let deletePosId = null;
-  function openDeletePositionModal(btn) {
+  window.openDeletePositionModal = function openDeletePositionModal(btn) {
     deletePosId = btn.dataset.posId;
     document.getElementById('modal-delete-pos-text').textContent =
       `Die Zuordnung von ${btn.dataset.code} / ${btn.dataset.name} wird aufgehoben. Sind Sie sicher?`;
     openModal('modal-delete-position');
-  }
+  };
 
   document.getElementById('btn-confirm-delete-position')?.addEventListener('click', async () => {
     await fetch(`/project/${PROJECT_ID}/positions/${deletePosId}/delete`, { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } });
@@ -598,20 +598,20 @@
   // ---- Kontakthistorie ----
   let editHistoryId = null;
 
-  function openEditHistoryModal(btn) {
+  window.openEditHistoryModal = function openEditHistoryModal(btn) {
     editHistoryId = btn.dataset.historyId;
     document.getElementById('history-entry-id').value = editHistoryId;
     document.getElementById('history-entry-description').value = btn.dataset.description || '';
     document.querySelector('#modal-history [slot="title"]')?.textContent;
     openModal('modal-history');
-  }
+  };
 
-  function openAddHistoryModal() {
+  window.openAddHistoryModal = function openAddHistoryModal() {
     editHistoryId = null;
     document.getElementById('history-entry-id').value = '';
     document.getElementById('history-entry-description').value = '';
     openModal('modal-history');
-  }
+  };
 
   document.getElementById('btn-save-history')?.addEventListener('click', async () => {
     const description = document.getElementById('history-entry-description').value;
@@ -633,11 +633,11 @@
     location.reload();
   });
 
-  async function deleteHistoryEntry(btn) {
+  window.deleteHistoryEntry = async function deleteHistoryEntry(btn) {
     const hId = btn.dataset.historyId;
     await fetch(`/project/${PROJECT_ID}/history/${hId}`, { method: 'DELETE', headers: { 'X-XSRF-TOKEN': getCsrfToken() } });
     location.reload();
-  }
+  };
 
   // ---- bfcache pageshow-Handler ----
   window.addEventListener('pageshow', (e) => {

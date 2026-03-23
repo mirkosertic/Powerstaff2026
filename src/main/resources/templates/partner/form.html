@@ -16,9 +16,9 @@
       ${partner.id != null} ? 'modal-delete' : null,
       ${rememberedProject},
       ${partner.id != null}
-        ? 'Erfasst: ' + ${#temporals.format(partner.creationDate,'dd.MM.yyyy')} + ' ' + ${partner.creationUser} + ' · Geändert: ' + ${#temporals.format(partner.changedDate,'dd.MM.yyyy')} + ' ' + ${partner.changedUser}
+        ? 'Erfasst: ' + ${#temporals.format(partner.creationDate,'dd.MM.yyyy')} + ' ' + ${partner.creationUser} + '<br>Geändert: ' + ${#temporals.format(partner.changedDate,'dd.MM.yyyy')} + ' ' + ${partner.changedUser}
         : 'Neu, noch nicht gespeichert',
-      'search-panel',
+      ${partner.id == null} ? 'search-panel' : null,
       null,
       null)}">
   </div>
@@ -504,7 +504,7 @@
       if (dirty) dirty.classList.add('visible');
     });
 
-    function deleteContact(btn) {
+    window.deleteContact = function deleteContact(btn) {
       var localId = btn.dataset.localId ? parseInt(btn.dataset.localId) : null;
       var contactId = btn.dataset.contactId ? parseInt(btn.dataset.contactId) : null;
       if (localId) {
@@ -529,7 +529,7 @@
       document.getElementById('history-json').value = JSON.stringify(historyChanges);
     }
 
-    function editHistory(btn) {
+    window.editHistory = function editHistory(btn) {
       _editHistoryId = btn.dataset.historyId ? parseInt(btn.dataset.historyId) : null;
       document.getElementById('history-edit-id').value = _editHistoryId || '';
       var typeId = btn.dataset.typeId ? parseInt(btn.dataset.typeId) : null;
@@ -598,7 +598,7 @@
       if (dirty) dirty.classList.add('visible');
     });
 
-    function deleteHistory(btn) {
+    window.deleteHistory = function deleteHistory(btn) {
       var localId = btn.dataset.localId ? parseInt(btn.dataset.localId) : null;
       var historyId = btn.dataset.historyId ? parseInt(btn.dataset.historyId) : null;
       if (localId) {
@@ -656,7 +656,7 @@
     });
 
     // ---- Freelancer-Zuordnung ----
-    function assignFreelancer() {
+    window.assignFreelancer = function assignFreelancer() {
       if (!partnerId) return;
       var code = document.getElementById('fl-code-input').value.trim();
       if (!code) return;
@@ -690,7 +690,7 @@
       });
     });
 
-    function removeFreelancer(btn) {
+    window.removeFreelancer = function removeFreelancer(btn) {
       var flId = btn.dataset.freelancerId;
       var pid = btn.dataset.partnerId;
       fetch('/partner/' + pid + '/remove-freelancer/' + flId, { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } })

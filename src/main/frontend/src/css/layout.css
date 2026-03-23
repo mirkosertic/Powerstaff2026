@@ -192,10 +192,9 @@
   min-width: 0;
   padding: 0 14px;
   font-size: .75rem;
+  line-height: 1.4;
   color: var(--text-3);
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 #tb-audit strong {
   color: var(--text-2);

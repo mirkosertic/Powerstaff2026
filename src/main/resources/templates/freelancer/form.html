@@ -16,10 +16,10 @@
       ${freelancer.id != null} ? 'modal-delete' : null,
       ${rememberedProject},
       ${freelancer.id != null}
-        ? 'Erfasst: ' + ${#temporals.format(freelancer.creationDate,'dd.MM.yyyy')} + ' ' + ${freelancer.creationUser} + ' · Geändert: ' + ${#temporals.format(freelancer.changedDate,'dd.MM.yyyy')} + ' ' + ${freelancer.changedUser}
+        ? 'Erfasst: ' + ${#temporals.format(freelancer.creationDate,'dd.MM.yyyy')} + ' ' + ${freelancer.creationUser} + '<br>Geändert: ' + ${#temporals.format(freelancer.changedDate,'dd.MM.yyyy')} + ' ' + ${freelancer.changedUser}
         : 'Neu, noch nicht gespeichert',
-      'search-panel',
-      ${freelancer.id != null and rememberedProject != null} ? 'Freiberufler diesem Projekt zuordnen' : null,
+      ${freelancer.id == null} ? 'search-panel' : null,
+      ${freelancer.id != null and rememberedProject != null} ? 'Projekt zuordnen' : null,
       null)}">
   </div>
 
@@ -176,6 +176,7 @@
           <div class="fg">
             <label>Letzter Kontakt</label>
             <input type="date" name="lastContactDate"
+                   data-testid="field-last-contact-date"
                    th:value="${freelancer.lastContactDate != null} ? ${#temporals.format(freelancer.lastContactDate, 'yyyy-MM-dd')} : ''"/>
           </div>
         </div>
@@ -586,7 +587,7 @@
       if (dirty) dirty.classList.add('visible');
     });
 
-    function deleteContact(btn) {
+    window.deleteContact = function deleteContact(btn) {
       var localId = btn.dataset.localId ? parseInt(btn.dataset.localId) : null;
       var contactId = btn.dataset.contactId ? parseInt(btn.dataset.contactId) : null;
       if (localId) {
@@ -613,7 +614,7 @@
       document.getElementById('history-json').value = JSON.stringify(historyChanges);
     }
 
-    function editHistory(btn) {
+    window.editHistory = function editHistory(btn) {
       _editHistoryId = btn.dataset.historyId ? parseInt(btn.dataset.historyId) : null;
       document.getElementById('history-edit-id').value = _editHistoryId || '';
       var typeId = btn.dataset.typeId ? parseInt(btn.dataset.typeId) : null;
@@ -682,7 +683,7 @@
       if (dirty) dirty.classList.add('visible');
     });
 
-    function deleteHistoryEntry(btn) {
+    window.deleteHistoryEntry = function deleteHistoryEntry(btn) {
       var localId = btn.dataset.localId ? parseInt(btn.dataset.localId) : null;
       var historyId = btn.dataset.historyId ? parseInt(btn.dataset.historyId) : null;
       if (localId) {
@@ -905,7 +906,7 @@
     })();
 
     // ---- Zum gemerkten Projekt zuordnen ----
-    function assignToRememberedProject() {
+    window.assignToRememberedProject = function assignToRememberedProject() {
       if (!freelancerId) return;
       fetch('/freelancer/' + freelancerId + '/assign-to-remembered-project', { method: 'POST', headers: { 'X-XSRF-TOKEN': getCsrfToken() } })
         .then(function(r) {

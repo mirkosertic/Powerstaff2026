@@ -55,7 +55,7 @@
   </div>
 
   <!-- Audit-Informationen -->
-  <div id="tb-audit" th:text="${auditInfo}"></div>
+  <div id="tb-audit" th:utext="${auditInfo}"></div>
 
   <!-- Gemerktes Projekt (§21) – nur anzeigen wenn vorhanden -->
   <div id="tb-project" th:if="${rememberedProject != null}">

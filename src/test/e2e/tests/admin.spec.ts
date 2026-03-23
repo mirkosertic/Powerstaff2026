@@ -55,4 +55,84 @@ test.describe('Administration', () => {
         await expect(page.locator('td').filter({ hasText: /^E2E-Tag-Playwright$/ }).first()).toBeVisible();
     });
 
+    // -------------------------------------------------------------------------
+    // Benutzerverwaltung
+    // -------------------------------------------------------------------------
+
+    test('Benutzerverwaltung-Seite lädt und zeigt Tabelle mit Benutzern', async ({ page }) => {
+        await page.goto('/admin/benutzer');
+
+        await expect(page.locator('[data-testid="user-row-testuser"]')).toBeVisible();
+    });
+
+    test('Neuen Benutzer anlegen: Modal öffnen, Formular ausfüllen und speichern', async ({ page }) => {
+        await page.goto('/admin/benutzer');
+
+        // Modal öffnen
+        await page.locator('[data-testid="btn-new-user"]').click();
+        await expect(page.locator('#modal-new-user')).not.toHaveClass(/hidden/);
+
+        // Formular ausfüllen
+        await page.locator('#modal-new-user #new-username').fill('e2e-testbenutzer');
+        await page.locator('#modal-new-user #new-password').fill('E2EPasswort1!');
+        await page.locator('#modal-new-user input[name="enabled"]').check();
+
+        // Speichern (Form submit → Seite lädt neu)
+        await page.locator('[data-testid="btn-submit-user"]').click();
+        await page.waitForURL(/\/admin\/benutzer/);
+
+        // Neuer Benutzer in der Liste
+        await expect(page.locator('[data-testid="user-row-e2e-testbenutzer"]')).toBeVisible();
+    });
+
+    test('Benutzer bearbeiten: Edit-Modal öffnen, Flag ändern und speichern', async ({ page }) => {
+        await page.goto('/admin/benutzer');
+
+        // Edit-Button für testuser klicken
+        await page.locator('[data-testid="btn-edit-user-testuser"]').click();
+        await expect(page.locator('#modal-edit-user')).not.toHaveClass(/hidden/);
+
+        // "Aktiv"-Checkbox umschalten (aktuell aktiv laut Seed)
+        const enabledCb = page.locator('#modal-edit-user #edit-user-enabled');
+        const wasChecked = await enabledCb.isChecked();
+        if (wasChecked) {
+            await enabledCb.uncheck();
+        } else {
+            await enabledCb.check();
+        }
+
+        // Speichern
+        await page.locator('[data-testid="btn-submit-edit-user"]').click();
+        await page.waitForURL(/\/admin\/benutzer/);
+
+        // Zeile noch vorhanden nach Reload
+        await expect(page.locator('[data-testid="user-row-testuser"]')).toBeVisible();
+    });
+
+    test('Benutzer löschen: Löschen-Button → Bestätigung → Zeile aus Tabelle entfernt', async ({ page }) => {
+        // Dieser Test braucht einen eigenen Benutzer, der gelöscht werden kann.
+        // Voraussetzung: "e2e-testbenutzer" wurde im vorangehenden Test angelegt.
+        // Da Tests unabhängig sein sollen, legen wir ihn hier erneut an (idempotent via UI).
+        await page.goto('/admin/benutzer');
+
+        // Prüfen ob Benutzer bereits existiert; falls nicht anlegen
+        const existingRow = page.locator('[data-testid="user-row-e2e-loeschtest"]');
+        if (!(await existingRow.isVisible())) {
+            await page.locator('[data-testid="btn-new-user"]').click();
+            await page.locator('#modal-new-user #new-username').fill('e2e-loeschtest');
+            await page.locator('#modal-new-user #new-password').fill('E2EPasswort1!');
+            await page.locator('[data-testid="btn-submit-user"]').click();
+            await page.waitForURL(/\/admin\/benutzer/);
+        }
+
+        // Confirm-Dialog akzeptieren
+        page.once('dialog', dialog => dialog.accept());
+
+        // Löschen-Button klicken
+        await page.locator('[data-testid="btn-delete-user-e2e-loeschtest"]').click();
+
+        // Zeile verschwindet aus dem DOM (kein Reload, JS entfernt sie direkt)
+        await expect(page.locator('[data-testid="user-row-e2e-loeschtest"]')).not.toBeAttached({ timeout: 5_000 });
+    });
+
 });

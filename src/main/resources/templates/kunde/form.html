@@ -16,9 +16,9 @@
       ${kunde.id != null} ? 'modal-delete' : null,
       ${rememberedProject},
       ${kunde.id != null}
-        ? 'Erfasst: ' + ${#temporals.format(kunde.creationDate,'dd.MM.yyyy')} + ' ' + ${kunde.creationUser} + ' · Geändert: ' + ${#temporals.format(kunde.changedDate,'dd.MM.yyyy')} + ' ' + ${kunde.changedUser}
+        ? 'Erfasst: ' + ${#temporals.format(kunde.creationDate,'dd.MM.yyyy')} + ' ' + ${kunde.creationUser} + '<br>Geändert: ' + ${#temporals.format(kunde.changedDate,'dd.MM.yyyy')} + ' ' + ${kunde.changedUser}
         : 'Neu, noch nicht gespeichert',
-      'search-panel',
+      ${kunde.id == null} ? 'search-panel' : null,
       null,
       null)}">
   </div>
@@ -449,7 +449,7 @@
       if (dirty) dirty.classList.add('visible');
     });
 
-    function deleteContact(btn) {
+    window.deleteContact = function deleteContact(btn) {
       var localId = btn.dataset.localId ? parseInt(btn.dataset.localId) : null;
       var contactId = btn.dataset.contactId ? parseInt(btn.dataset.contactId) : null;
       if (localId) {
@@ -474,7 +474,7 @@
       document.getElementById('history-json').value = JSON.stringify(historyChanges);
     }
 
-    function editHistory(btn) {
+    window.editHistory = function editHistory(btn) {
       _editHistoryId = btn.dataset.historyId ? parseInt(btn.dataset.historyId) : null;
       document.getElementById('history-edit-id').value = _editHistoryId || '';
       var typeId = btn.dataset.typeId ? parseInt(btn.dataset.typeId) : null;
@@ -543,7 +543,7 @@
       if (dirty) dirty.classList.add('visible');
     });
 
-    function deleteHistoryEntry(btn) {
+    window.deleteHistoryEntry = function deleteHistoryEntry(btn) {
       var localId = btn.dataset.localId ? parseInt(btn.dataset.localId) : null;
       var historyId = btn.dataset.historyId ? parseInt(btn.dataset.historyId) : null;
       if (localId) {

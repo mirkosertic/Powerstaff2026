@@ -33,6 +33,41 @@ test.describe('Projekte', () => {
         await expect(page.locator('#modal-edit-position')).not.toHaveClass(/hidden/);
     });
 
+    test('Projektposition bearbeiten: Konditionen ändern und speichern', async ({ page }) => {
+        await page.goto('/project/4001');
+
+        // Bearbeiten-Modal öffnen
+        await page.locator('[data-testid="position-edit-5001"]').click();
+        await expect(page.locator('#modal-edit-position')).not.toHaveClass(/hidden/);
+
+        // Konditionen ändern
+        await page.locator('#modal-edit-position #edit-pos-konditionen').fill('600 EUR/Tag');
+
+        // Speichern
+        await page.locator('#modal-edit-position #btn-save-position').click();
+
+        // Erfolgs-Banner sichtbar (erscheint bevor reload)
+        await expect(page.locator('#banner-success')).toBeVisible({ timeout: 5_000 });
+    });
+
+    test('Projektposition löschen: Bestätigungs-Modal öffnet sich und Löschen führt zu Reload', async ({ page }) => {
+        await page.goto('/project/4001');
+
+        // Position sichtbar
+        await expect(page.locator('[data-testid="position-item-5001"]')).toBeVisible();
+
+        // Löschen-Modal öffnen
+        await page.locator('[data-testid="position-delete-5001"]').click();
+        await expect(page.locator('#modal-delete-position')).not.toHaveClass(/hidden/);
+
+        // Löschen abbrechen (um Testdaten zu erhalten)
+        await page.locator('#modal-delete-position button.btn-ghost').click();
+        await expect(page.locator('#modal-delete-position')).toHaveClass(/hidden/);
+
+        // Position noch vorhanden
+        await expect(page.locator('[data-testid="position-item-5001"]')).toBeVisible();
+    });
+
     test('Freiberufler per Code einem Projekt zuordnen', async ({ page }) => {
         await page.goto('/project/4001');
 

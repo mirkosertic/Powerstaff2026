@@ -65,4 +65,30 @@ test.describe('Freiberufler', () => {
         }
     });
 
+    test('Suchen-Button bei neuem Datensatz sichtbar', async ({ page }) => {
+        await page.goto('/freelancer/new');
+
+        await expect(page.locator('[data-testid="btn-search"]')).toBeVisible();
+    });
+
+    test('Suchen-Button bei bestehendem Datensatz nicht sichtbar', async ({ page }) => {
+        await page.goto('/freelancer/1001');
+
+        await expect(page.locator('[data-testid="btn-search"]')).not.toBeVisible();
+    });
+
+    test('Datumsfeld lastContactDate: Datum setzen und speichern ohne Konvertierungsfehler', async ({ page }) => {
+        await page.goto('/freelancer/1001');
+
+        // Datum setzen (ISO-Format für input[type=date])
+        await page.locator('[data-testid="field-last-contact-date"]').fill('2026-03-15');
+
+        await page.locator('[data-testid="btn-save"]').click();
+
+        await page.waitForURL(/\/freelancer\/1001/);
+        await expect(page.locator('#banner-success')).toBeVisible();
+        // Kein Konvertierungsfehler-Banner
+        await expect(page.locator('#banner-save-error')).not.toBeVisible();
+    });
+
 });
