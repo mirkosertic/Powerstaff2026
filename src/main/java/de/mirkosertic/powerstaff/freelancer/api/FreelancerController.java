@@ -271,8 +271,7 @@ public class FreelancerController {
         return "freelancer/search-page";
     }
 
-    private String buildEditSearchUrl(FreelancerSearchCriteria c) {
-        var b = UriComponentsBuilder.fromPath("/freelancer/new");
+    private void appendCriteriaParams(UriComponentsBuilder b, FreelancerSearchCriteria c) {
         if (c.name1()           != null) b.queryParam("name1",           c.name1());
         if (c.name2()           != null) b.queryParam("name2",           c.name2());
         if (c.company()         != null) b.queryParam("company",         c.company());
@@ -294,33 +293,18 @@ public class FreelancerController {
         if (c.salaryPerDayLongMax() != null) b.queryParam("salaryPerDayLongMax", c.salaryPerDayLongMax());
         if (c.sortField()       != null) b.queryParam("sortField",       c.sortField());
         if (c.sortDir()         != null) b.queryParam("sortDir",         c.sortDir());
-        return b.build().toUriString();
+    }
+
+    private String buildEditSearchUrl(FreelancerSearchCriteria c) {
+        var b = UriComponentsBuilder.fromPath("/freelancer/new");
+        appendCriteriaParams(b, c);
+        return b.encode().build().toUriString();
     }
 
     private String buildSearchMoreUrl(FreelancerSearchCriteria c, int offset) {
         var b = UriComponentsBuilder.fromPath("/freelancer/search").queryParam("offset", offset);
-        if (c.name1()           != null) b.queryParam("name1",           c.name1());
-        if (c.name2()           != null) b.queryParam("name2",           c.name2());
-        if (c.company()         != null) b.queryParam("company",         c.company());
-        if (c.street()          != null) b.queryParam("street",          c.street());
-        if (c.country()         != null) b.queryParam("country",         c.country());
-        if (c.plz()             != null) b.queryParam("plz",             c.plz());
-        if (c.city()            != null) b.queryParam("city",            c.city());
-        if (c.nationalitaet()   != null) b.queryParam("nationalitaet",   c.nationalitaet());
-        if (c.comments()        != null) b.queryParam("comments",        c.comments());
-        if (c.einsatzdetails()  != null) b.queryParam("einsatzdetails",  c.einsatzdetails());
-        if (c.contactPerson()   != null) b.queryParam("contactPerson",   c.contactPerson());
-        if (c.contactReason()   != null) b.queryParam("contactReason",   c.contactReason());
-        if (c.kontaktart()      != null) b.queryParam("kontaktart",      c.kontaktart());
-        if (c.debitorNr()       != null) b.queryParam("debitorNr",       c.debitorNr());
-        if (c.gulpId()          != null) b.queryParam("gulpId",          c.gulpId());
-        if (c.code()            != null) b.queryParam("code",            c.code());
-        if (c.skills()          != null) b.queryParam("skills",          c.skills());
-        if (c.salaryLongMax()   != null) b.queryParam("salaryLongMax",   c.salaryLongMax());
-        if (c.salaryPerDayLongMax() != null) b.queryParam("salaryPerDayLongMax", c.salaryPerDayLongMax());
-        if (c.sortField()       != null) b.queryParam("sortField",       c.sortField());
-        if (c.sortDir()         != null) b.queryParam("sortDir",         c.sortDir());
-        return b.build().toUriString();
+        appendCriteriaParams(b, c);
+        return b.encode().build().toUriString();
     }
 
     // -------------------------------------------------------------------------

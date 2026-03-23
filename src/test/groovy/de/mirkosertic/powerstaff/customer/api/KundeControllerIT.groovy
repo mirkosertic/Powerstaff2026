@@ -317,6 +317,34 @@ class KundeControllerIT extends AbstractContainerBaseIT {
         result.andExpect(status().isOk())
     }
 
+    def "GET /kunde/search mit offset gibt X-Next-Url Header zurueck (200)"() {
+        given:
+        when(queryService.countSearch(any())).thenReturn(100L)
+
+        when:
+        def result = mockMvc.perform(
+                get("/kunde/search")
+                        .param("offset", "20")
+                        .param("company", "Test")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().exists("X-Next-Url"))
+    }
+
+    def "GET /kunde/search ohne offset gibt kein X-Next-Url Header (200)"() {
+        when:
+        def result = mockMvc.perform(
+                get("/kunde/search")
+                        .param("company", "Test")
+                        .with(user("testuser")))
+
+        then:
+        result.andExpect(status().isOk())
+              .andExpect(header().doesNotExist("X-Next-Url"))
+    }
+
     // -------------------------------------------------------------------------
     // Thymeleaf-Rendering HTML-Inhalte pruefen
     // -------------------------------------------------------------------------

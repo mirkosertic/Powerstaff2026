@@ -283,6 +283,28 @@ class FreelancerCommandServiceIT extends AbstractContainerBaseIT {
         count == 1
     }
 
+    def "findByCode mit existierendem Code gibt Freelancer zurueck"() {
+        given:
+        def freelancer = newFreelancer("IT-Cmd FindByCode")
+        freelancer.code = "IT-CMD-CODE-001"
+        def saved = commandService.save(freelancer)
+
+        when:
+        def result = commandService.findByCode("IT-CMD-CODE-001")
+
+        then:
+        result.isPresent()
+        result.get().id() == saved.id
+    }
+
+    def "findByCode mit unbekanntem Code gibt Optional.empty() zurueck"() {
+        when:
+        def result = commandService.findByCode("UNBEKANNT-9999")
+
+        then:
+        result.isEmpty()
+    }
+
     private static Freelancer newFreelancer(String name1) {
         def f = new Freelancer()
         f.name1 = name1

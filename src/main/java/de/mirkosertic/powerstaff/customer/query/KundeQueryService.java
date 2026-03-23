@@ -4,8 +4,9 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -68,17 +69,8 @@ public class KundeQueryService {
                 FROM kunde
                 WHERE 1=1
                 """);
-        var params = new ArrayList<>();
-        appendLike(sql, params, "company", criteria.company());
-        appendLike(sql, params, "name1", criteria.name1());
-        appendLike(sql, params, "name2", criteria.name2());
-        appendLike(sql, params, "street", criteria.street());
-        appendLike(sql, params, "country", criteria.country());
-        appendLike(sql, params, "plz", criteria.plz());
-        appendLike(sql, params, "city", criteria.city());
-        appendLike(sql, params, "comments", criteria.comments());
-        appendLike(sql, params, "debitor_nr", criteria.debitorNr());
-        appendLike(sql, params, "kreditor_nr", criteria.kreditorNr());
+        Map<String, Object> params = new LinkedHashMap<>();
+        appendCriteria(sql, params, criteria);
         String orderBy;
         if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
             String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
@@ -86,34 +78,27 @@ public class KundeQueryService {
         } else {
             orderBy = DEFAULT_SORT;
         }
-        sql.append(" ORDER BY ").append(orderBy).append(" LIMIT ? OFFSET ?");
-        params.add(limit);
-        params.add(offset);
+        String pLimit = "p" + (params.size() + 1);
+        String pOffset = "p" + (params.size() + 2);
+        sql.append(" ORDER BY ").append(orderBy).append(" LIMIT :").append(pLimit).append(" OFFSET :").append(pOffset);
+        params.put(pLimit, limit);
+        params.put(pOffset, offset);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (int i = 0; i < params.size(); i++) {
-            stmt = stmt.param(i + 1, params.get(i));
+        for (var entry : params.entrySet()) {
+            stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(KundeSearchResult.class).list();
     }
 
     public long countSearch(KundeSearchCriteria criteria) {
         var sql = new StringBuilder("SELECT COUNT(*) FROM kunde WHERE 1=1");
-        var params = new ArrayList<>();
-        appendLike(sql, params, "company", criteria.company());
-        appendLike(sql, params, "name1", criteria.name1());
-        appendLike(sql, params, "name2", criteria.name2());
-        appendLike(sql, params, "street", criteria.street());
-        appendLike(sql, params, "country", criteria.country());
-        appendLike(sql, params, "plz", criteria.plz());
-        appendLike(sql, params, "city", criteria.city());
-        appendLike(sql, params, "comments", criteria.comments());
-        appendLike(sql, params, "debitor_nr", criteria.debitorNr());
-        appendLike(sql, params, "kreditor_nr", criteria.kreditorNr());
+        Map<String, Object> params = new LinkedHashMap<>();
+        appendCriteria(sql, params, criteria);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (int i = 0; i < params.size(); i++) {
-            stmt = stmt.param(i + 1, params.get(i));
+        for (var entry : params.entrySet()) {
+            stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(Long.class).single();
     }
@@ -166,10 +151,24 @@ public class KundeQueryService {
         };
     }
 
-    private static void appendLike(StringBuilder sql, List<Object> params, String column, String value) {
+    private static void appendCriteria(StringBuilder sql, Map<String, Object> params, KundeSearchCriteria criteria) {
+        appendLike(sql, params, "company", criteria.company());
+        appendLike(sql, params, "name1", criteria.name1());
+        appendLike(sql, params, "name2", criteria.name2());
+        appendLike(sql, params, "street", criteria.street());
+        appendLike(sql, params, "country", criteria.country());
+        appendLike(sql, params, "plz", criteria.plz());
+        appendLike(sql, params, "city", criteria.city());
+        appendLike(sql, params, "comments", criteria.comments());
+        appendLike(sql, params, "debitor_nr", criteria.debitorNr());
+        appendLike(sql, params, "kreditor_nr", criteria.kreditorNr());
+    }
+
+    private static void appendLike(StringBuilder sql, Map<String, Object> params, String column, String value) {
         if (value != null && !value.isBlank()) {
-            sql.append(" AND ").append(column).append(" LIKE ?");
-            params.add("%" + value + "%");
+            String paramName = "p" + (params.size() + 1);
+            sql.append(" AND ").append(column).append(" LIKE :").append(paramName);
+            params.put(paramName, "%" + value + "%");
         }
     }
 }

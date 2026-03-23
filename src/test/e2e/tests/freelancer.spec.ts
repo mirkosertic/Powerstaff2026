@@ -46,6 +46,14 @@ test.describe('Freiberufler', () => {
         await expect(page.locator('#banner-success')).toBeVisible();
     });
 
+    test('Suche zeigt kein Nachladen-Element wenn alle Ergebnisse auf eine Seite passen', async ({ page }) => {
+        await page.goto('/freelancer/search?city=M%C3%BCnchen');
+        await page.waitForURL(/\/freelancer\/search/);
+
+        // Seed hat nur 1 Treffer für München — weit unter PAGE_SIZE (20)
+        await expect(page.locator('ps-infinite-scroll')).not.toBeAttached();
+    });
+
     test('Freiberufler einem gemerkten Projekt zuordnen – Bereits zugeordnet (409)', async ({ page }) => {
         await page.goto('/project/4001');
         await page.goto('/freelancer/1001');

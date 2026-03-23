@@ -290,8 +290,7 @@ public class ProjectController {
         }
     }
 
-    private String buildEditSearchUrl(ProjectSearchCriteria c) {
-        var b = UriComponentsBuilder.fromPath("/project/new");
+    private void appendCriteriaParams(UriComponentsBuilder b, ProjectSearchCriteria c) {
         if (c.projectNumber()    != null) b.queryParam("projectNumber",    c.projectNumber());
         if (c.descriptionShort() != null) b.queryParam("descriptionShort", c.descriptionShort());
         if (c.descriptionLong()  != null) b.queryParam("descriptionLong",  c.descriptionLong());
@@ -303,22 +302,17 @@ public class ProjectController {
         if (c.kreditorNr()       != null) b.queryParam("kreditorNr",       c.kreditorNr());
         if (c.sortField()        != null) b.queryParam("sortField",        c.sortField());
         if (c.sortDir()          != null) b.queryParam("sortDir",          c.sortDir());
-        return b.build().toUriString();
+    }
+
+    private String buildEditSearchUrl(ProjectSearchCriteria c) {
+        var b = UriComponentsBuilder.fromPath("/project/new");
+        appendCriteriaParams(b, c);
+        return b.encode().build().toUriString();
     }
 
     private String buildSearchMoreUrl(ProjectSearchCriteria c, int offset) {
         var b = UriComponentsBuilder.fromPath("/project/search").queryParam("offset", offset);
-        if (c.projectNumber()    != null) b.queryParam("projectNumber",    c.projectNumber());
-        if (c.descriptionShort() != null) b.queryParam("descriptionShort", c.descriptionShort());
-        if (c.descriptionLong()  != null) b.queryParam("descriptionLong",  c.descriptionLong());
-        if (c.skills()           != null) b.queryParam("skills",           c.skills());
-        if (c.workplace()        != null) b.queryParam("workplace",        c.workplace());
-        if (c.duration()         != null) b.queryParam("duration",         c.duration());
-        if (c.status()           != null) b.queryParam("status",           c.status());
-        if (c.debitorNr()        != null) b.queryParam("debitorNr",        c.debitorNr());
-        if (c.kreditorNr()       != null) b.queryParam("kreditorNr",       c.kreditorNr());
-        if (c.sortField()        != null) b.queryParam("sortField",        c.sortField());
-        if (c.sortDir()          != null) b.queryParam("sortDir",          c.sortDir());
-        return b.build().toUriString();
+        appendCriteriaParams(b, c);
+        return b.encode().build().toUriString();
     }
 }

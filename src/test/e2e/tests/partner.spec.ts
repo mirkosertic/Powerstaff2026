@@ -31,6 +31,14 @@ test.describe('Partner', () => {
         await expect(page.locator('input[name="company"]')).not.toBeEmpty();
     });
 
+    test('Suche zeigt kein Nachladen-Element wenn alle Ergebnisse auf eine Seite passen', async ({ page }) => {
+        await page.goto('/partner/search?company=Partner+GmbH');
+        await page.waitForURL(/\/partner\/search/);
+
+        // Seed hat nur 1 Treffer — weit unter PAGE_SIZE (20)
+        await expect(page.locator('ps-infinite-scroll')).not.toBeAttached();
+    });
+
     test('Kontakthistorie bei Partner hinzufügen', async ({ page }) => {
         await page.goto('/partner/2001');
 

@@ -230,8 +230,7 @@ public class KundeController {
         return "kunde/search-page";
     }
 
-    private String buildEditSearchUrl(KundeSearchCriteria c) {
-        var b = UriComponentsBuilder.fromPath("/kunde/new");
+    private void appendCriteriaParams(UriComponentsBuilder b, KundeSearchCriteria c) {
         if (c.company()    != null) b.queryParam("company",    c.company());
         if (c.name1()      != null) b.queryParam("name1",      c.name1());
         if (c.name2()      != null) b.queryParam("name2",      c.name2());
@@ -244,23 +243,17 @@ public class KundeController {
         if (c.debitorNr()  != null) b.queryParam("debitorNr",  c.debitorNr());
         if (c.sortField()  != null) b.queryParam("sortField",  c.sortField());
         if (c.sortDir()    != null) b.queryParam("sortDir",    c.sortDir());
-        return b.build().toUriString();
+    }
+
+    private String buildEditSearchUrl(KundeSearchCriteria c) {
+        var b = UriComponentsBuilder.fromPath("/kunde/new");
+        appendCriteriaParams(b, c);
+        return b.encode().build().toUriString();
     }
 
     private String buildSearchMoreUrl(KundeSearchCriteria c, int offset) {
         var b = UriComponentsBuilder.fromPath("/kunde/search").queryParam("offset", offset);
-        if (c.company()    != null) b.queryParam("company",    c.company());
-        if (c.name1()      != null) b.queryParam("name1",      c.name1());
-        if (c.name2()      != null) b.queryParam("name2",      c.name2());
-        if (c.street()     != null) b.queryParam("street",     c.street());
-        if (c.country()    != null) b.queryParam("country",    c.country());
-        if (c.plz()        != null) b.queryParam("plz",        c.plz());
-        if (c.city()       != null) b.queryParam("city",       c.city());
-        if (c.comments()   != null) b.queryParam("comments",   c.comments());
-        if (c.kreditorNr() != null) b.queryParam("kreditorNr", c.kreditorNr());
-        if (c.debitorNr()  != null) b.queryParam("debitorNr",  c.debitorNr());
-        if (c.sortField()  != null) b.queryParam("sortField",  c.sortField());
-        if (c.sortDir()    != null) b.queryParam("sortDir",    c.sortDir());
-        return b.build().toUriString();
+        appendCriteriaParams(b, c);
+        return b.encode().build().toUriString();
     }
 }

@@ -45,6 +45,14 @@ test.describe('Projekte', () => {
         await expect(page.locator('#banner-assigned, #assign-code-already-assigned').first()).toBeVisible({ timeout: 5_000 });
     });
 
+    test('Suche zeigt kein Nachladen-Element wenn alle Ergebnisse auf eine Seite passen', async ({ page }) => {
+        await page.goto('/project/search?projectNumber=E2E');
+        await page.waitForURL(/\/project\/search/);
+
+        // Seed hat nur 1 Treffer — weit unter PAGE_SIZE (20)
+        await expect(page.locator('ps-infinite-scroll')).not.toBeAttached();
+    });
+
     test('Projekthistorie hinzufügen', async ({ page }) => {
         await page.goto('/project/4001');
 

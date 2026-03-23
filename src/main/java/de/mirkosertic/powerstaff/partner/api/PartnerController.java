@@ -235,8 +235,7 @@ public class PartnerController {
         return "partner/search-page";
     }
 
-    private String buildEditSearchUrl(PartnerSearchCriteria criteria) {
-        var b = UriComponentsBuilder.fromPath("/partner/new");
+    private void appendCriteriaParams(UriComponentsBuilder b, PartnerSearchCriteria criteria) {
         if (criteria.company()    != null) b.queryParam("company",    criteria.company());
         if (criteria.name1()      != null) b.queryParam("name1",      criteria.name1());
         if (criteria.name2()      != null) b.queryParam("name2",      criteria.name2());
@@ -249,24 +248,18 @@ public class PartnerController {
         if (criteria.kreditorNr() != null) b.queryParam("kreditorNr", criteria.kreditorNr());
         if (criteria.sortField()  != null) b.queryParam("sortField",  criteria.sortField());
         if (criteria.sortDir()    != null) b.queryParam("sortDir",    criteria.sortDir());
-        return b.build().toUriString();
+    }
+
+    private String buildEditSearchUrl(PartnerSearchCriteria criteria) {
+        var b = UriComponentsBuilder.fromPath("/partner/new");
+        appendCriteriaParams(b, criteria);
+        return b.encode().build().toUriString();
     }
 
     private String buildSearchMoreUrl(PartnerSearchCriteria criteria, int offset) {
         var b = UriComponentsBuilder.fromPath("/partner/search").queryParam("offset", offset);
-        if (criteria.company()    != null) b.queryParam("company",    criteria.company());
-        if (criteria.name1()      != null) b.queryParam("name1",      criteria.name1());
-        if (criteria.name2()      != null) b.queryParam("name2",      criteria.name2());
-        if (criteria.street()     != null) b.queryParam("street",     criteria.street());
-        if (criteria.country()    != null) b.queryParam("country",    criteria.country());
-        if (criteria.plz()        != null) b.queryParam("plz",        criteria.plz());
-        if (criteria.city()       != null) b.queryParam("city",       criteria.city());
-        if (criteria.comments()   != null) b.queryParam("comments",   criteria.comments());
-        if (criteria.debitorNr()  != null) b.queryParam("debitorNr",  criteria.debitorNr());
-        if (criteria.kreditorNr() != null) b.queryParam("kreditorNr", criteria.kreditorNr());
-        if (criteria.sortField()  != null) b.queryParam("sortField",  criteria.sortField());
-        if (criteria.sortDir()    != null) b.queryParam("sortDir",    criteria.sortDir());
-        return b.build().toUriString();
+        appendCriteriaParams(b, criteria);
+        return b.encode().build().toUriString();
     }
 
     // -------------------------------------------------------------------------

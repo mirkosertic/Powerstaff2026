@@ -31,6 +31,14 @@ test.describe('Kunden', () => {
         await expect(page.locator('[data-testid="kunde-project-row-4001"]')).toBeVisible();
     });
 
+    test('Suche zeigt kein Nachladen-Element wenn alle Ergebnisse auf eine Seite passen', async ({ page }) => {
+        await page.goto('/kunde/search?company=Kunde+AG');
+        await page.waitForURL(/\/kunde\/search/);
+
+        // Seed hat nur 1 Treffer — weit unter PAGE_SIZE (20)
+        await expect(page.locator('ps-infinite-scroll')).not.toBeAttached();
+    });
+
     test('Klick auf Projekt in Kundenliste navigiert zur Projektseite', async ({ page }) => {
         await page.goto('/kunde/3001');
 

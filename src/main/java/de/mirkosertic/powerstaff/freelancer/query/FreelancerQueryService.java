@@ -5,9 +5,10 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -79,15 +80,17 @@ public class FreelancerQueryService {
                 FROM freelancer
                 WHERE 1=1
                 """);
-        var params = new ArrayList<>();
+        Map<String, Object> params = new LinkedHashMap<>();
         appendStringCriteria(sql, params, criteria);
         if (criteria.salaryLongMax() != null) {
-            sql.append(" AND salary_long <= ?");
-            params.add(criteria.salaryLongMax());
+            String pName = "p" + (params.size() + 1);
+            sql.append(" AND salary_long <= :").append(pName);
+            params.put(pName, criteria.salaryLongMax());
         }
         if (criteria.salaryPerDayLongMax() != null) {
-            sql.append(" AND salary_per_day_long <= ?");
-            params.add(criteria.salaryPerDayLongMax());
+            String pName = "p" + (params.size() + 1);
+            sql.append(" AND salary_per_day_long <= :").append(pName);
+            params.put(pName, criteria.salaryPerDayLongMax());
         }
         String orderBy;
         if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
@@ -96,33 +99,37 @@ public class FreelancerQueryService {
         } else {
             orderBy = DEFAULT_SORT;
         }
-        sql.append(" ORDER BY ").append(orderBy).append(" LIMIT ? OFFSET ?");
-        params.add(limit);
-        params.add(offset);
+        String pLimit = "p" + (params.size() + 1);
+        String pOffset = "p" + (params.size() + 2);
+        sql.append(" ORDER BY ").append(orderBy).append(" LIMIT :").append(pLimit).append(" OFFSET :").append(pOffset);
+        params.put(pLimit, limit);
+        params.put(pOffset, offset);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (int i = 0; i < params.size(); i++) {
-            stmt = stmt.param(i + 1, params.get(i));
+        for (var entry : params.entrySet()) {
+            stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(FreelancerSearchResult.class).list();
     }
 
     public long countSearch(FreelancerSearchCriteria criteria) {
         var sql = new StringBuilder("SELECT COUNT(*) FROM freelancer WHERE 1=1");
-        var params = new ArrayList<>();
+        Map<String, Object> params = new LinkedHashMap<>();
         appendStringCriteria(sql, params, criteria);
         if (criteria.salaryLongMax() != null) {
-            sql.append(" AND salary_long <= ?");
-            params.add(criteria.salaryLongMax());
+            String pName = "p" + (params.size() + 1);
+            sql.append(" AND salary_long <= :").append(pName);
+            params.put(pName, criteria.salaryLongMax());
         }
         if (criteria.salaryPerDayLongMax() != null) {
-            sql.append(" AND salary_per_day_long <= ?");
-            params.add(criteria.salaryPerDayLongMax());
+            String pName = "p" + (params.size() + 1);
+            sql.append(" AND salary_per_day_long <= :").append(pName);
+            params.put(pName, criteria.salaryPerDayLongMax());
         }
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (int i = 0; i < params.size(); i++) {
-            stmt = stmt.param(i + 1, params.get(i));
+        for (var entry : params.entrySet()) {
+            stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(Long.class).single();
     }
@@ -191,7 +198,7 @@ public class FreelancerQueryService {
                 .list();
     }
 
-    private static void appendStringCriteria(StringBuilder sql, List<Object> params, FreelancerSearchCriteria c) {
+    private static void appendStringCriteria(StringBuilder sql, Map<String, Object> params, FreelancerSearchCriteria c) {
         appendLike(sql, params, "name1", c.name1());
         appendLike(sql, params, "name2", c.name2());
         appendLike(sql, params, "company", c.company());
@@ -211,10 +218,11 @@ public class FreelancerQueryService {
         appendLike(sql, params, "skills", c.skills());
     }
 
-    private static void appendLike(StringBuilder sql, List<Object> params, String column, String value) {
+    private static void appendLike(StringBuilder sql, Map<String, Object> params, String column, String value) {
         if (value != null && !value.isBlank()) {
-            sql.append(" AND ").append(column).append(" LIKE ?");
-            params.add("%" + value + "%");
+            String paramName = "p" + (params.size() + 1);
+            sql.append(" AND ").append(column).append(" LIKE :").append(paramName);
+            params.put(paramName, "%" + value + "%");
         }
     }
 }

@@ -4,8 +4,9 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -72,7 +73,7 @@ public class PartnerQueryService {
                 FROM partner
                 WHERE 1=1
                 """);
-        var params = new ArrayList<>();
+        Map<String, Object> params = new LinkedHashMap<>();
         appendCriteria(sql, params, criteria);
         String orderBy;
         if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
@@ -81,30 +82,32 @@ public class PartnerQueryService {
         } else {
             orderBy = DEFAULT_SORT;
         }
-        sql.append(" ORDER BY ").append(orderBy).append(" LIMIT ? OFFSET ?");
-        params.add(limit);
-        params.add(offset);
+        String pLimit = "p" + (params.size() + 1);
+        String pOffset = "p" + (params.size() + 2);
+        sql.append(" ORDER BY ").append(orderBy).append(" LIMIT :").append(pLimit).append(" OFFSET :").append(pOffset);
+        params.put(pLimit, limit);
+        params.put(pOffset, offset);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (int i = 0; i < params.size(); i++) {
-            stmt = stmt.param(i + 1, params.get(i));
+        for (var entry : params.entrySet()) {
+            stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(PartnerSearchResult.class).list();
     }
 
     public long countSearch(PartnerSearchCriteria criteria) {
         var sql = new StringBuilder("SELECT COUNT(*) FROM partner WHERE 1=1");
-        var params = new ArrayList<>();
+        Map<String, Object> params = new LinkedHashMap<>();
         appendCriteria(sql, params, criteria);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (int i = 0; i < params.size(); i++) {
-            stmt = stmt.param(i + 1, params.get(i));
+        for (var entry : params.entrySet()) {
+            stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(Long.class).single();
     }
 
-    private static void appendCriteria(StringBuilder sql, List<Object> params, PartnerSearchCriteria criteria) {
+    private static void appendCriteria(StringBuilder sql, Map<String, Object> params, PartnerSearchCriteria criteria) {
         appendLike(sql, params, "company", criteria.company());
         appendLike(sql, params, "name1", criteria.name1());
         appendLike(sql, params, "name2", criteria.name2());
@@ -117,10 +120,11 @@ public class PartnerQueryService {
         appendLike(sql, params, "kreditor_nr", criteria.kreditorNr());
     }
 
-    private static void appendLike(StringBuilder sql, List<Object> params, String column, String value) {
+    private static void appendLike(StringBuilder sql, Map<String, Object> params, String column, String value) {
         if (value != null && !value.isBlank()) {
-            sql.append(" AND ").append(column).append(" LIKE ?");
-            params.add("%" + value + "%");
+            String paramName = "p" + (params.size() + 1);
+            sql.append(" AND ").append(column).append(" LIKE :").append(paramName);
+            params.put(paramName, "%" + value + "%");
         }
     }
 
