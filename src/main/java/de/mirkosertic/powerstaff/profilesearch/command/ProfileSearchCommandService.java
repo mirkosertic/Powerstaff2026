@@ -62,7 +62,7 @@ public class ProfileSearchCommandService {
                 .update();
 
         // Generate title from first user message (first 60 chars)
-        if ("user".equals(role)) {
+        if (LlmService.ROLE_USER.equals(role)) {
             var isFirstUserMessage = jdbcClient.sql(
                     "SELECT COUNT(*) FROM profile_search_message WHERE chat_id = :chatId AND role = 'user'")
                     .param("chatId", chatId)

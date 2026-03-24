@@ -22,7 +22,8 @@
       <a class="btn btn-pri" th:href="@{/admin/benutzer}">Benutzer</a>
     </div>
 
-    <!-- Fehlermeldung -->
+    <!-- Meldungen -->
+    <div th:if="${success}" class="banner banner-success mb-md" th:text="${success}"></div>
     <div th:if="${error}" class="banner-forbidden mb-md" th:text="${error}"></div>
 
     <!-- Benutzerliste -->
@@ -132,6 +133,28 @@
     </div>
   </div>
 
+  <!-- Modal: Benutzer löschen (Bestätigung) -->
+  <div class="mbk hidden" id="modal-delete-user">
+    <div class="mbox">
+      <div class="mhd">
+        <h3>Benutzer löschen</h3>
+        <button class="mx" type="button" onclick="closeModal('modal-delete-user')">&#x2715;</button>
+      </div>
+      <div class="mbody">
+        <p>Soll der Benutzer <strong id="delete-user-name-display"></strong> wirklich gelöscht werden?</p>
+        <div id="delete-user-error" class="banner-forbidden hidden" style="margin-top:0.75rem"></div>
+      </div>
+      <div class="mft">
+        <button class="btn btn-ghost" type="button"
+                data-testid="btn-cancel-delete-user"
+                onclick="closeModal('modal-delete-user')">Abbrechen</button>
+        <button class="btn btn-danger" type="button"
+                data-testid="btn-confirm-delete-user"
+                id="btn-confirm-delete-user">Löschen</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal: Benutzer bearbeiten -->
   <div class="mbk hidden" id="modal-edit-user">
     <div class="mbox">
@@ -173,6 +196,9 @@
   </div>
 
   <script>
+    let _pendingDeleteUsername = null;
+    let _pendingDeleteEl = null;
+
     document.addEventListener('click', function(e) {
       const editBtn = e.target.closest('[data-action="edit-user"]');
       if (editBtn) {
@@ -188,26 +214,32 @@
 
       const delBtn = e.target.closest('[data-action="delete-user"]');
       if (delBtn) {
-        deleteUser(delBtn.dataset.username, delBtn);
+        _pendingDeleteUsername = delBtn.dataset.username;
+        _pendingDeleteEl = delBtn;
+        document.getElementById('delete-user-name-display').textContent = _pendingDeleteUsername;
+        document.getElementById('delete-user-error').classList.add('hidden');
+        document.getElementById('delete-user-error').textContent = '';
+        openModal('modal-delete-user');
       }
     });
 
-    async function deleteUser(username, el) {
-      if (!confirm('Benutzer "' + username + '" wirklich löschen?')) return;
-      const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
-      const token = match ? decodeURIComponent(match[1]) : '';
+    document.getElementById('btn-confirm-delete-user').addEventListener('click', async function() {
+      const username = _pendingDeleteUsername;
       const resp = await fetch('/admin/benutzer/' + username, {
         method: 'DELETE',
-        headers: { 'X-XSRF-TOKEN': token }
+        headers: { 'X-XSRF-TOKEN': getCsrfToken() }
       });
       const data = await resp.json();
       if (resp.ok && data.ok) {
-        const row = el.closest('tr');
-        if (row) row.remove();
+        _pendingDeleteUsername = null;
+        _pendingDeleteEl = null;
+        window.location.href = '/admin/benutzer?deleted=' + encodeURIComponent(username);
       } else {
-        alert(data.error || 'Fehler beim Löschen.');
+        const errDiv = document.getElementById('delete-user-error');
+        errDiv.textContent = data.error || 'Fehler beim Löschen.';
+        errDiv.classList.remove('hidden');
       }
-    }
+    });
   </script>
 
 </body>

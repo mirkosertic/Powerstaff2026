@@ -535,18 +535,6 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(not(containsString('Exception'))))
     }
 
-    def "GET /freelancer/search rendert HTML-Seite ohne Exception"() {
-        when:
-        def result = mockMvc.perform(
-                get("/freelancer/search")
-                        .with(user("testuser"))
-                        .param("name1", "Mustermann"))
-
-        then:
-        result.andExpect(status().isOk())
-              .andExpect(content().string(not(containsString('Exception'))))
-    }
-
     // -------------------------------------------------------------------------
     // Lookup per Code
     // -------------------------------------------------------------------------

@@ -56,7 +56,7 @@
 
   <!-- app.js muss VOR dem Content-Block geladen werden, damit globale Funktionen
        (guardedNavigate, openModal, etc.) in den Inline-Scripts der Templates verfügbar sind. -->
-  <script th:src="@{/generated/app.js}"></script>
+  <script th:src="@{/generated/app.js}" defer></script>
 
   <!-- Content-Slot -->
   <th:block th:replace="${content}"/>

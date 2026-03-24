@@ -1,14 +1,14 @@
 package de.mirkosertic.powerstaff.profilesearch.api;
 
-import de.mirkosertic.powerstaff.profilesearch.LlmService;
+import de.mirkosertic.powerstaff.profilesearch.command.LlmService;
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchCommandService;
-import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchMessage;
 import de.mirkosertic.powerstaff.profilesearch.query.ChatListView;
 import de.mirkosertic.powerstaff.profilesearch.query.MessageView;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,11 +61,21 @@ public class ProfileSearchController {
     }
 
     @GetMapping("/chat/{chatId}")
-    public String chat(@PathVariable Long chatId, Principal principal, Model model) {
+    public String chat(@PathVariable Long chatId,
+                       @RequestParam(defaultValue = "0") int offset,
+                       Principal principal,
+                       Model model,
+                       HttpServletResponse response) {
         String userId = principal.getName();
-        List<ChatListView> sidebar = queryService.findChatsByUser(userId, 0, PAGE_SIZE);
+        List<ChatListView> sidebar = queryService.findChatsByUser(userId, offset, PAGE_SIZE);
         long totalChats = queryService.countChatsByUser(userId);
         List<MessageView> messages = queryService.findMessagesByChat(chatId);
+
+        // Set X-Next-Url header for infinite scroll if more data available
+        int nextOffset = offset + PAGE_SIZE;
+        if (nextOffset < totalChats) {
+            response.setHeader("X-Next-Url", "/profilesearch/chat/" + chatId + "?offset=" + nextOffset);
+        }
 
         model.addAttribute("chatId", chatId);
         model.addAttribute("messages", messages);
@@ -73,7 +83,9 @@ public class ProfileSearchController {
         model.addAttribute("totalChats", totalChats);
         model.addAttribute("pageSize", PAGE_SIZE);
         model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
-        return "profilesearch/form";
+
+        // Return fragment for infinite scroll requests, full page otherwise
+        return offset == 0 ? "profilesearch/form" : "profilesearch/sidebar-entry";
     }
 
     @PostMapping("/chat/new")
@@ -111,30 +123,17 @@ public class ProfileSearchController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public SendResponse sendMessage(@PathVariable Long chatId, @RequestBody SendRequest request,
-                                    Principal principal) {
+                                    Principal principal,
+                                    HttpSession session) {
         String userId = principal.getName();
-
-        // Save user message
-        commandService.addMessage(chatId, "user", request.message());
 
         // Build LLM context and load full message history for LLM
         var context = queryService.buildLlmContext(userId);
-        List<ProfileSearchMessage> history = queryService.findMessagesByChat(chatId).stream()
-                .map(mv -> {
-                    ProfileSearchMessage msg = new ProfileSearchMessage();
-                    msg.setRole(mv.role());
-                    msg.setContent(mv.content());
-                    return msg;
-                })
-                .toList();
 
         // Call LLM
-        String assistantReply = llmService.sendMessage(context, history, request.message());
+        LlmService.Reply assistantReply = llmService.sendMessage(principal, session.getId(), Long.toString(chatId), context, request.message());
 
-        // Save assistant reply
-        var saved = commandService.addMessage(chatId, "assistant", assistantReply);
-
-        return new SendResponse(saved.getId(), "assistant", assistantReply);
+        return new SendResponse(assistantReply.id(), assistantReply.role(), assistantReply.message());
     }
 
     private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
@@ -142,19 +141,4 @@ public class ProfileSearchController {
         return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);
     }
 
-    @GetMapping("/sidebar-more")
-    public String sidebarMore(@RequestParam int offset, Principal principal, Model model,
-                              HttpServletResponse response) {
-        String userId = principal.getName();
-        List<ChatListView> entries = queryService.findChatsByUser(userId, offset, PAGE_SIZE);
-        long total = queryService.countChatsByUser(userId);
-
-        int nextOffset = offset + PAGE_SIZE;
-        if (nextOffset < total) {
-            response.setHeader("X-Next-Url", "/profilesearch/sidebar-more?offset=" + nextOffset);
-        }
-
-        model.addAttribute("sidebar", entries);
-        return "profilesearch/sidebar-entry";
-    }
 }

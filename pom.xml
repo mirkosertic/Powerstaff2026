@@ -141,6 +141,14 @@
             <artifactId>spring-ai-starter-model-ollama</artifactId>
         </dependency>
 
+        <!-- ====== Netty ====== -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <version>4.2.10.Final</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- ===== Test: Spring Boot ===== -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -234,7 +242,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <!-- @{...} = late binding: JaCoCo setzt jacocoArgLine erst in initialize -->
-                    <argLine>@{jacocoArgLine}</argLine>
+                    <!-- Java 21+: Dynamic Agent Loading explizit erlauben (Mockito/ByteBuddy) -->
+                    <argLine>@{jacocoArgLine} -Djdk.attach.allowAttachSelf=true -XX:+EnableDynamicAgentLoading</argLine>
                     <includes>
                         <include>**/*Spec.class</include>
                     </includes>
@@ -246,7 +255,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <argLine>@{jacocoItArgLine}</argLine>
+                    <argLine>@{jacocoItArgLine} -Djdk.attach.allowAttachSelf=true -XX:+EnableDynamicAgentLoading</argLine>
                     <includes>
                         <include>**/*IT.class</include>
                     </includes>
@@ -401,6 +410,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>npm-install</id>
@@ -447,6 +457,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.6.3</version>
                         <executions>
                             <!-- Vorherigen Container + Volumes aufräumen (idempotent, läuft auch wenn nichts läuft).
                                  Stellt sicher: keine Altdaten aus fehlgeschlagenen Vorläufen. -->

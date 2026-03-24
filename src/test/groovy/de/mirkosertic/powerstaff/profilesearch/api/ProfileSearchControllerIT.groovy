@@ -1,9 +1,8 @@
 package de.mirkosertic.powerstaff.profilesearch.api
 
 import de.mirkosertic.powerstaff.AbstractContainerBaseIT
-import de.mirkosertic.powerstaff.profilesearch.LlmService
+import de.mirkosertic.powerstaff.profilesearch.command.LlmService
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchCommandService
-import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchMessage
 import de.mirkosertic.powerstaff.profilesearch.query.ChatListView
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService
 import de.mirkosertic.powerstaff.profilesearch.query.MessageView
@@ -20,7 +19,6 @@ import java.time.LocalDateTime
 
 import static org.mockito.ArgumentMatchers.any
 import static org.mockito.ArgumentMatchers.anyInt
-import static org.mockito.ArgumentMatchers.anyLong
 import static org.mockito.ArgumentMatchers.anyString
 import static org.mockito.Mockito.when
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -34,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl
 import static org.hamcrest.Matchers.containsString
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 
@@ -127,20 +124,13 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
                 .andExpect(jsonPath('$.redirectTo').value('/profilesearch/chat/55'))
     }
 
-    def "POST /profilesearch/chat/{chatId}/send speichert Nachricht und liefert JSON"() {
+    def "POST /profilesearch/chat/{chatId}/send ruft LLM auf und liefert JSON"() {
         given:
-        def savedMsg = new ProfileSearchMessage()
-        savedMsg.setId(201L)
-        savedMsg.setRole("assistant")
-        savedMsg.setContent("Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.")
+        def reply = new LlmService.Reply(201L, "assistant", "Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.")
 
         when(queryService.buildLlmContext("testuser")).thenReturn(Optional.empty())
-        when(queryService.findMessagesByChat(42L)).thenReturn([
-                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo")
-        ])
-        when(commandService.addMessage(anyLong(), anyString(), anyString())).thenReturn(savedMsg)
-        when(llmService.sendMessage(any(), any(), anyString()))
-                .thenReturn("Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.")
+        when(llmService.sendMessage(any(), anyString(), anyString(), any(), anyString()))
+                .thenReturn(reply)
 
         expect:
         mockMvc.perform(post("/profilesearch/chat/42/send")
@@ -148,20 +138,36 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content('{"message":"Hallo"}'))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath('$.id').value(201))
                 .andExpect(jsonPath('$.role').value("assistant"))
                 .andExpect(jsonPath('$.content').value("Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert."))
     }
 
-    def "GET /profilesearch/sidebar-more liefert Sidebar-Fragment"() {
+    def "GET /profilesearch/chat/{chatId} mit offset > 0 liefert Sidebar-Fragment"() {
         given:
         def chatView = new ChatListView(42L, LocalDateTime.now(), "testuser", LocalDateTime.now(), "Titel", null, null)
         when(queryService.findChatsByUser(anyString(), anyInt(), anyInt())).thenReturn([chatView])
         when(queryService.countChatsByUser(anyString())).thenReturn(1L)
+        when(queryService.findMessagesByChat(42L)).thenReturn([])
 
         expect:
-        mockMvc.perform(get("/profilesearch/sidebar-more?offset=0").with(user("testuser")))
+        mockMvc.perform(get("/profilesearch/chat/42?offset=20").with(user("testuser")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profilesearch/sidebar-entry"))
+    }
+
+    def "GET /profilesearch/chat/{chatId} mit offset=0 setzt X-Next-Url Header wenn mehr Daten vorhanden"() {
+        given:
+        def chatView = new ChatListView(42L, LocalDateTime.now(), "testuser", LocalDateTime.now(), "Titel", null, null)
+        when(queryService.findChatsByUser(anyString(), anyInt(), anyInt())).thenReturn([chatView])
+        when(queryService.countChatsByUser(anyString())).thenReturn(50L)
+        when(queryService.findMessagesByChat(42L)).thenReturn([])
+
+        expect:
+        mockMvc.perform(get("/profilesearch/chat/42").with(user("testuser")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profilesearch/form"))
+                .andExpect(header().string("X-Next-Url", "/profilesearch/chat/42?offset=20"))
     }
 
     def "GET /profilesearch/chat/{chatId} rendert chat-page HTML-Struktur korrekt"() {

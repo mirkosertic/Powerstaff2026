@@ -125,16 +125,15 @@ test.describe('Administration', () => {
             await page.waitForURL(/\/admin\/benutzer/);
         }
 
-        // Löschen-Button klicken und Confirm-Dialog akzeptieren
-        // Hinweis: page.waitForEvent('dialog') ist zuverlässiger als page.once('dialog', ...)
-        // da der native confirm() synchron während des Klicks ausgelöst wird.
-        const dialogPromise = page.waitForEvent('dialog');
+        // Löschen-Button klicken → HTML-Bestätigungsmodal öffnet sich
         await page.locator('[data-testid="btn-delete-user-e2e-loeschtest"]').click();
-        const dialog = await dialogPromise;
-        await dialog.accept();
+        await expect(page.locator('#modal-delete-user')).toBeVisible();
+        await page.locator('[data-testid="btn-confirm-delete-user"]').click();
 
-        // Zeile verschwindet aus dem DOM (kein Reload, JS entfernt sie direkt)
-        await expect(page.locator('[data-testid="user-row-e2e-loeschtest"]')).not.toBeAttached({ timeout: 5_000 });
+        // Nach Redirect: Benutzerliste ohne gelöschten Benutzer, Success-Banner sichtbar
+        await page.waitForURL(/\/admin\/benutzer/);
+        await expect(page.locator('.banner-success')).toBeVisible();
+        await expect(page.locator('[data-testid="user-row-e2e-loeschtest"]')).not.toBeAttached();
     });
 
 });

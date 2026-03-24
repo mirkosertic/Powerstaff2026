@@ -22,7 +22,13 @@ class PsChatInput extends HTMLElement {
     this._sendBtn  = this.querySelector('#chat-send');
     this._stopBtn  = this.querySelector('#chat-stop');
 
-    if (!this._textarea || !this._sendBtn) return;
+    if (!this._textarea || !this._sendBtn) {
+      console.error('ps-chat-input: Required child elements not found', {
+        textarea: !!this._textarea,
+        sendBtn: !!this._sendBtn
+      });
+      return;
+    }
 
     this._lineHeight = null;
 

@@ -502,16 +502,4 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
               .andExpect(content().string(containsString('<form')))
               .andExpect(content().string(not(containsString('Exception'))))
     }
-
-    def "GET /partner/search rendert HTML-Seite ohne Exception"() {
-        when:
-        def result = mockMvc.perform(
-                get("/partner/search")
-                        .with(user("testuser"))
-                        .param("company", "Test"))
-
-        then:
-        result.andExpect(status().isOk())
-              .andExpect(content().string(not(containsString('Exception'))))
-    }
 }

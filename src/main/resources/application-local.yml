@@ -13,6 +13,29 @@ spring:
     cookie:
       secure: false
 
+
+  ai:
+    model:
+      embedding: "undefined"
+      chat: "ollama"
+
+    mcp:
+      client:
+        streamable-http:
+          connections:
+            lucene-search:
+             url: http://localhost:11000
+             endpoint: /mcp/message
+    ollama:
+      base-url: http://localhost:11434
+      init:
+        pull-model-strategy: always
+        timeout: 60s
+        max-retries: 1
+      chat:
+        options:
+          model: qwen3.5:4b
+
 # Logging – Entwicklung
 logging:
   level:
@@ -22,16 +45,3 @@ logging:
     org.springframework.security: TRACE
     root: INFO
 
-  ai:
-  #mcp:
-  #  client:
-  #    streamable-http:
-  #      connections:
-  #        lucene-search:
-  #          url: http://localhost:9000
-  #          endpoint: /mcp/message
-   ollama:
-     base-url: http://localhost:11434
-     chat:
-      options:
-        model: qwen3:4b

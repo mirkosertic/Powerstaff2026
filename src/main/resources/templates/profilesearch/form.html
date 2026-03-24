@@ -72,7 +72,7 @@
         <!-- Infinite Scroll Sentinel (§25) -->
         <ps-infinite-scroll
             th:if="${totalChats > pageSize}"
-            th:attr="data-next-url='/profilesearch/sidebar-more?offset=' + ${pageSize},data-target='#sidebar-session-list'">
+            th:attr="data-next-url='/profilesearch/chat/' + ${chatId} + '?offset=' + ${pageSize},data-target='#sidebar-session-list'">
         </ps-infinite-scroll>
       </div>
     </aside>
@@ -183,7 +183,6 @@
 
     // ── Nachrichten senden ───────────────────────────────────────────────────
     const msgArea = document.getElementById('chat-messages');
-    const inputEl = document.getElementById('ps-chat-input-el');
 
     function scrollToBottom() {
       msgArea.scrollTop = msgArea.scrollHeight;
@@ -228,7 +227,11 @@
 
     let currentAbortCtrl = null;
 
-    if (inputEl) {
+    // Wait for custom element to be defined before attaching event listeners
+    customElements.whenDefined('ps-chat-input').then(() => {
+      const inputEl = document.getElementById('ps-chat-input-el');
+      if (!inputEl) return;
+
       inputEl.addEventListener('ps-send', function(e) {
         const text = e.detail.text;
         if (!text) return;
@@ -276,13 +279,13 @@
         }
         inputEl.removeAttribute('pending');
       });
-    }
 
-    // bfcache handler
-    window.addEventListener('pageshow', function(e) {
-      if (e.persisted) {
-        inputEl && inputEl.removeAttribute('pending');
-      }
+      // bfcache handler
+      window.addEventListener('pageshow', function(e) {
+        if (e.persisted) {
+          inputEl.removeAttribute('pending');
+        }
+      });
     });
     /*]]>*/
   </script>

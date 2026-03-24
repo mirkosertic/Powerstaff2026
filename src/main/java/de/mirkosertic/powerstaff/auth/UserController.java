@@ -32,9 +32,12 @@ public class UserController {
     // -------------------------------------------------------------------------
 
     @GetMapping
-    public String list(Model model) {
+    public String list(Model model, @RequestParam(required = false) String deleted) {
         model.addAttribute("users", userQueryService.findAll());
         model.addAttribute("activePage", "admin");
+        if (deleted != null) {
+            model.addAttribute("success", "Benutzer „" + deleted + " wurde erfolgreich gelöscht.");
+        }
         return "admin/users";
     }
 
