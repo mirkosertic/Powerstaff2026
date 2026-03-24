@@ -125,11 +125,13 @@ test.describe('Administration', () => {
             await page.waitForURL(/\/admin\/benutzer/);
         }
 
-        // Confirm-Dialog akzeptieren
-        page.once('dialog', dialog => dialog.accept());
-
-        // Löschen-Button klicken
+        // Löschen-Button klicken und Confirm-Dialog akzeptieren
+        // Hinweis: page.waitForEvent('dialog') ist zuverlässiger als page.once('dialog', ...)
+        // da der native confirm() synchron während des Klicks ausgelöst wird.
+        const dialogPromise = page.waitForEvent('dialog');
         await page.locator('[data-testid="btn-delete-user-e2e-loeschtest"]').click();
+        const dialog = await dialogPromise;
+        await dialog.accept();
 
         // Zeile verschwindet aus dem DOM (kein Reload, JS entfernt sie direkt)
         await expect(page.locator('[data-testid="user-row-e2e-loeschtest"]')).not.toBeAttached({ timeout: 5_000 });
