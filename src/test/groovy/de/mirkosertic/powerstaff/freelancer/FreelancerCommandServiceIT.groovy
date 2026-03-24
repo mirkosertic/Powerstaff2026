@@ -323,13 +323,17 @@ class FreelancerCommandServiceIT extends AbstractContainerBaseIT {
 
         then:
         // DB-Werte müssen erhalten bleiben
-        def dbRow = jdbcClient
-            .sql("SELECT creation_date, creation_user FROM freelancer WHERE id = :id")
+        def dbCreationDate = jdbcClient
+            .sql("SELECT creation_date FROM freelancer WHERE id = :id")
             .param("id", first.id)
-            .query(Map.class).single()
-        dbRow.creation_date != null
-        dbRow.creation_user != null
-        dbRow.creation_user == first.creationUser
+            .query(java.time.LocalDateTime.class).single()
+        def dbCreationUser = jdbcClient
+            .sql("SELECT creation_user FROM freelancer WHERE id = :id")
+            .param("id", first.id)
+            .query(String.class).single()
+        dbCreationDate != null
+        dbCreationUser != null
+        dbCreationUser == first.creationUser
     }
 
     private static Freelancer newFreelancer(String name1) {
