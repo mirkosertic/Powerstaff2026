@@ -28,6 +28,9 @@ public class ProfileSearchMessage {
 
     private String content;
 
+    @Column("json_payload")
+    private String jsonPayload;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -45,4 +48,7 @@ public class ProfileSearchMessage {
 
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
+
+    public String getJsonPayload() { return jsonPayload; }
+    public void setJsonPayload(String jsonPayload) { this.jsonPayload = jsonPayload; }
 }

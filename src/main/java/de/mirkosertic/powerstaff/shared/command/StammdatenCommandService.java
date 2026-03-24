@@ -54,6 +54,10 @@ public class StammdatenCommandService {
         return projectPositionStatusRepository.findByDefaultStatusTrue();
     }
 
+    public void deleteProjectPositionStatus(Long id) {
+        projectPositionStatusRepository.deleteById(id);
+    }
+
     public Tag saveTag(Tag tag) {
         return tagRepository.save(tag);
     }

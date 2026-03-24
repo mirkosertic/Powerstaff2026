@@ -16,4 +16,8 @@ interface PsUserRepository extends CrudRepository<PsUser, String> {
     void updateFlags(@Param("username") String username,
                      @Param("mustChangePassword") boolean mustChangePassword,
                      @Param("enabled") boolean enabled);
+
+    @Modifying
+    @Query("UPDATE ps_user SET profile_search_system_prompt = :prompt WHERE username = :username")
+    void updateSystemPrompt(@Param("username") String username, @Param("prompt") String prompt);
 }

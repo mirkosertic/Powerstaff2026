@@ -94,6 +94,23 @@ public class UserController {
     }
 
     // -------------------------------------------------------------------------
+    // System-Prompt bearbeiten
+    // -------------------------------------------------------------------------
+
+    @PostMapping("/{username}/systemprompt")
+    public String updateSystemPrompt(@PathVariable String username,
+                                     @RequestParam String profileSearchSystemPrompt,
+                                     RedirectAttributes redirectAttributes) {
+        if (userCommandService.findByUsername(username).isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Benutzer nicht gefunden.");
+            return "redirect:/admin/benutzer";
+        }
+        userCommandService.updateSystemPrompt(username, profileSearchSystemPrompt);
+        redirectAttributes.addFlashAttribute("success", "Systemprompt für \"" + username + "\" wurde gespeichert.");
+        return "redirect:/admin/benutzer";
+    }
+
+    // -------------------------------------------------------------------------
     // Löschen
     // -------------------------------------------------------------------------
 

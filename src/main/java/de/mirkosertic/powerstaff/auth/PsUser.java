@@ -20,11 +20,20 @@ public class PsUser implements Persistable<String> {
     @Column("enabled")
     private final boolean enabled;
 
-    public PsUser(String username, String passwordHash, boolean mustChangePassword, boolean enabled) {
+    @Column("profile_search_system_prompt")
+    private final String profileSearchSystemPrompt;
+
+    public static final String DEFAULT_SYSTEM_PROMPT =
+            "Du bist ein freundlicher KI-Assistent für den Benutzer {user} und antwortest immer auf deutsch. Dein Name ist Staffi.";
+
+    public PsUser(String username, String passwordHash, boolean mustChangePassword, boolean enabled,
+                  String profileSearchSystemPrompt) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.mustChangePassword = mustChangePassword;
         this.enabled = enabled;
+        this.profileSearchSystemPrompt = profileSearchSystemPrompt != null
+                ? profileSearchSystemPrompt : DEFAULT_SYSTEM_PROMPT;
     }
 
     /**
@@ -57,5 +66,9 @@ public class PsUser implements Persistable<String> {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public String getProfileSearchSystemPrompt() {
+        return profileSearchSystemPrompt;
     }
 }

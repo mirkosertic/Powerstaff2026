@@ -20,8 +20,13 @@ public class UserCommandService {
     @Transactional
     public void createUser(String username, String plainPassword, boolean mustChangePassword, boolean enabled) {
         String hash = passwordEncoder.encode(plainPassword);
-        PsUser user = new PsUser(username, hash, mustChangePassword, enabled);
+        PsUser user = new PsUser(username, hash, mustChangePassword, enabled, PsUser.DEFAULT_SYSTEM_PROMPT);
         repository.save(user);
+    }
+
+    @Transactional
+    public void updateSystemPrompt(String username, String prompt) {
+        repository.updateSystemPrompt(username, prompt != null ? prompt : PsUser.DEFAULT_SYSTEM_PROMPT);
     }
 
     @Transactional

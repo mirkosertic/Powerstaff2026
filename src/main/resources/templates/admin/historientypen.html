@@ -42,8 +42,16 @@
                 <td th:text="${type.description}"></td>
                 <td>
                   <button class="ibtn" type="button"
-                          th:attr="data-id=${type.id}, data-description=${type.description}"
+                          th:attr="data-id=${type.id}, data-description=${type.description},
+                                   data-testid='btn-edit-histtype-' + ${type.id}"
                           data-action="edit-ht">&#9998;</button>
+                  <form th:action="@{/admin/historientypen/{id}/delete(id=${type.id})}" method="post"
+                        style="display:inline">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button class="ibtn del" type="submit"
+                            th:attr="data-testid='btn-delete-histtype-' + ${type.id}"
+                            onclick="return confirm('Historientyp wirklich löschen?')">&#x1F5D1;</button>
+                  </form>
                 </td>
               </tr>
               <tr th:if="${#lists.isEmpty(types)}">

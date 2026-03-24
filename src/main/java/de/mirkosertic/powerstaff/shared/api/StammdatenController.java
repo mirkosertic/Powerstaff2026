@@ -106,6 +106,12 @@ public class StammdatenController {
         return "redirect:/admin/positionsstatus";
     }
 
+    @PostMapping("/positionsstatus/{id}/delete")
+    public String deletePositionsStatus(@PathVariable long id) {
+        stammdatenCommandService.deleteProjectPositionStatus(id);
+        return "redirect:/admin/positionsstatus";
+    }
+
     @PostMapping("/positionsstatus/{id}")
     public String updatePositionsStatus(@PathVariable long id,
                                         @RequestParam String description,

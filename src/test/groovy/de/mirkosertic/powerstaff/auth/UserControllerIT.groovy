@@ -53,24 +53,24 @@ class UserControllerIT extends AbstractContainerBaseIT {
 
         // Standard-Stubs
         when(userQueryService.findAll()).thenReturn([
-                new UserView("admin", false, true),
-                new UserView("sachbearbeiter1", true, true)
+                new UserView("admin", false, true, PsUser.DEFAULT_SYSTEM_PROMPT),
+                new UserView("sachbearbeiter1", true, true, PsUser.DEFAULT_SYSTEM_PROMPT)
         ])
         when(userQueryService.findByUsername("admin"))
-                .thenReturn(Optional.of(new UserView("admin", false, true)))
+                .thenReturn(Optional.of(new UserView("admin", false, true, PsUser.DEFAULT_SYSTEM_PROMPT)))
         when(userQueryService.findByUsername("sachbearbeiter1"))
-                .thenReturn(Optional.of(new UserView("sachbearbeiter1", true, true)))
+                .thenReturn(Optional.of(new UserView("sachbearbeiter1", true, true, PsUser.DEFAULT_SYSTEM_PROMPT)))
         when(userQueryService.findByUsername("nicht_vorhanden"))
                 .thenReturn(Optional.empty())
 
         def adminUser = new PsUser("admin",
                 '{bcrypt}$2a$10$abcdefghijklmnopqrstuuVGlGNBdm6/GQ4DV.jMRfF4wrfHOFuq6',
-                false, true)
+                false, true, PsUser.DEFAULT_SYSTEM_PROMPT)
         when(userCommandService.findByUsername("admin")).thenReturn(Optional.of(adminUser))
         when(userCommandService.findByUsername("sachbearbeiter1"))
                 .thenReturn(Optional.of(new PsUser("sachbearbeiter1",
                         '{bcrypt}$2a$10$abcdefghijklmnopqrstuuVGlGNBdm6/GQ4DV.jMRfF4wrfHOFuq6',
-                        true, true)))
+                        true, true, PsUser.DEFAULT_SYSTEM_PROMPT)))
         when(userCommandService.findByUsername("nicht_vorhanden")).thenReturn(Optional.empty())
 
         doNothing().when(userCommandService).createUser(anyString(), anyString(), anyBoolean(), anyBoolean())

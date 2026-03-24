@@ -19,6 +19,45 @@ test.describe('Administration', () => {
         await expect(page.locator('td').filter({ hasText: /^E2E-Testtyp$/ }).first()).toBeVisible();
     });
 
+    test('Historientyp bearbeiten: Edit-Modal öffnen und Bezeichnung ändern', async ({ page }) => {
+        // Voraussetzung: Mindestens ein Historientyp vorhanden (Seed-Daten)
+        await page.goto('/admin/historientypen');
+
+        // Ersten Edit-Button klicken
+        const editBtn = page.locator('[data-testid^="btn-edit-histtype-"]').first();
+        await editBtn.click();
+        await expect(page.locator('#modal-edit-ht')).not.toHaveClass(/hidden/);
+
+        // Bezeichnung überschreiben
+        await page.locator('#edit-ht-description').fill('E2E-Bearbeiteter-Typ');
+        await page.locator('#edit-ht-form button[type="submit"]').click();
+        await page.waitForURL(/\/admin\/historientypen/);
+
+        await expect(page.locator('td').filter({ hasText: /^E2E-Bearbeiteter-Typ$/ }).first()).toBeVisible();
+    });
+
+    test('Historientyp löschen: Löschen-Button → Bestätigung → Zeile entfernt', async ({ page }) => {
+        // Eigenen Historientyp anlegen, den wir dann löschen
+        await page.goto('/admin/historientypen');
+
+        await page.locator('[data-testid="btn-new-histtype"]').click();
+        await page.locator('#new-ht-description').fill('E2E-Loeschtyp');
+        await page.locator('[data-testid="btn-submit-histtype"]').click();
+        await page.waitForURL(/\/admin\/historientypen/);
+
+        // Lösch-Button für den neu angelegten Eintrag finden und klicken
+        // Der browser-confirm-Dialog muss bestätigt werden
+        const deleteBtn = page.locator('td').filter({ hasText: /^E2E-Loeschtyp$/ })
+            .locator('..') // zur Zeile
+            .locator('[data-testid^="btn-delete-histtype-"]');
+
+        page.on('dialog', dialog => dialog.accept());
+        await deleteBtn.click();
+        await page.waitForURL(/\/admin\/historientypen/);
+
+        await expect(page.locator('td').filter({ hasText: /^E2E-Loeschtyp$/ })).not.toBeAttached();
+    });
+
     test('Positionsstatus-Seite lädt und zeigt Einträge', async ({ page }) => {
         await page.goto('/admin/positionsstatus');
 
@@ -38,6 +77,45 @@ test.describe('Administration', () => {
         await expect(page.locator('td').filter({ hasText: /^E2E-Status$/ }).first()).toBeVisible();
     });
 
+    test('Positionsstatus bearbeiten: Edit-Modal öffnen und Bezeichnung ändern', async ({ page }) => {
+        await page.goto('/admin/positionsstatus');
+
+        // Ersten Edit-Button klicken
+        const editBtn = page.locator('[data-testid^="btn-edit-posstatus-"]').first();
+        await editBtn.click();
+        await expect(page.locator('#modal-edit-status')).not.toHaveClass(/hidden/);
+
+        // Bezeichnung ändern
+        await page.locator('#edit-status-description').fill('E2E-Bearbeiteter-Status');
+        await page.locator('#edit-status-form button[type="submit"]').click();
+        await page.waitForURL(/\/admin\/positionsstatus/);
+
+        await expect(page.locator('td').filter({ hasText: /^E2E-Bearbeiteter-Status$/ }).first()).toBeVisible();
+    });
+
+    test('Positionsstatus löschen: Löschen-Button → Bestätigung → Zeile entfernt', async ({ page }) => {
+        // Eigenen Status anlegen, den wir dann löschen
+        await page.goto('/admin/positionsstatus');
+
+        await page.locator('[data-testid="btn-new-posstatus"]').click();
+        await page.locator('#new-status-description').fill('E2E-Loeschstatus');
+        await page.locator('#new-status-color').fill('#fef3c7');
+        await page.locator('#new-status-colortext').fill('#92400e');
+        await page.locator('[data-testid="btn-submit-posstatus"]').click();
+        await page.waitForURL(/\/admin\/positionsstatus/);
+
+        // Lösch-Button für den neu angelegten Status finden
+        const deleteBtn = page.locator('td').filter({ hasText: /^E2E-Loeschstatus$/ })
+            .locator('..') // zur Zeile
+            .locator('[data-testid^="btn-delete-posstatus-"]');
+
+        page.on('dialog', dialog => dialog.accept());
+        await deleteBtn.click();
+        await page.waitForURL(/\/admin\/positionsstatus/);
+
+        await expect(page.locator('td').filter({ hasText: /^E2E-Loeschstatus$/ })).not.toBeAttached();
+    });
+
     test('Tags-Seite lädt und zeigt Einträge', async ({ page }) => {
         await page.goto('/admin/tags');
 
@@ -53,6 +131,45 @@ test.describe('Administration', () => {
         await page.waitForURL(/\/admin\/tags/);
 
         await expect(page.locator('td').filter({ hasText: /^E2E-Tag-Playwright$/ }).first()).toBeVisible();
+    });
+
+    test('Tag bearbeiten: Edit-Modal öffnen und Namen ändern', async ({ page }) => {
+        await page.goto('/admin/tags');
+
+        // Ersten Edit-Button klicken
+        const editBtn = page.locator('[data-action="edit-tag"]').first();
+        await editBtn.click();
+        await expect(page.locator('#modal-edit-tag')).not.toHaveClass(/hidden/);
+
+        // Namen überschreiben
+        await page.locator('#edit-tag-name').fill('E2E-Bearbeiteter-Tag');
+        await page.locator('#edit-tag-form button[type="submit"]').click();
+        await page.waitForURL(/\/admin\/tags/);
+
+        await expect(page.locator('td').filter({ hasText: /^E2E-Bearbeiteter-Tag$/ }).first()).toBeVisible();
+    });
+
+    test('Tag löschen: Löschen-Button → confirm-Dialog bestätigen → Zeile entfernt', async ({ page }) => {
+        // Tag anlegen, der gelöscht werden soll
+        await page.goto('/admin/tags');
+
+        await page.locator('#new-tag-type').selectOption('BEMERKUNG');
+        await page.locator('#new-tag-name').fill('E2E-Loeschtag');
+        await page.locator('[data-testid="btn-submit-tag"]').click();
+        await page.waitForURL(/\/admin\/tags/);
+
+        // Tag-Zeile finden und Lösch-Button klicken
+        const tagRow = page.locator('td').filter({ hasText: /^E2E-Loeschtag$/ }).locator('..');
+        const deleteBtn = tagRow.locator('[data-action="delete-tag"]');
+
+        // Browser-confirm-Dialog akzeptieren
+        page.on('dialog', dialog => dialog.accept());
+        await deleteBtn.click();
+
+        // Zeile soll nach AJAX-Löschen aus dem DOM verschwinden
+        await expect(page.locator('td').filter({ hasText: /^E2E-Loeschtag$/ })).not.toBeAttached({
+            timeout: 5_000,
+        });
     });
 
     // -------------------------------------------------------------------------

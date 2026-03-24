@@ -3,6 +3,7 @@ package de.mirkosertic.powerstaff.auth;
 public record UserView(
         String username,
         boolean mustChangePassword,
-        boolean enabled
+        boolean enabled,
+        String profileSearchSystemPrompt
 ) {
 }
