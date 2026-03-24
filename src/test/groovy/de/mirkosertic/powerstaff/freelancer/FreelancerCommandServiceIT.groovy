@@ -305,6 +305,33 @@ class FreelancerCommandServiceIT extends AbstractContainerBaseIT {
         result.isEmpty()
     }
 
+    def "zweites Speichern loescht creationDate und creationUser in der DB nicht"() {
+        given:
+        // Erster Speichervorgang (INSERT) setzt Audit-Felder
+        def first = commandService.save(newFreelancer("IT-Cmd AuditPreserve"))
+        assert first.creationDate != null
+        assert first.creationUser != null
+
+        when:
+        // Simuliert Controller @ModelAttribute-Binding: neues Objekt ohne Audit-Felder, nur ID gesetzt
+        def fromForm = newFreelancer("IT-Cmd AuditPreserve")
+        fromForm.id = first.id
+        fromForm.dbVersion = first.dbVersion
+        fromForm.name2 = "Geändert via Form"
+        // creationDate und creationUser bleiben bewusst null (so wie beim Form-Submit)
+        commandService.save(fromForm)
+
+        then:
+        // DB-Werte müssen erhalten bleiben
+        def dbRow = jdbcClient
+            .sql("SELECT creation_date, creation_user FROM freelancer WHERE id = :id")
+            .param("id", first.id)
+            .query(Map.class).single()
+        dbRow.creation_date != null
+        dbRow.creation_user != null
+        dbRow.creation_user == first.creationUser
+    }
+
     private static Freelancer newFreelancer(String name1) {
         def f = new Freelancer()
         f.name1 = name1

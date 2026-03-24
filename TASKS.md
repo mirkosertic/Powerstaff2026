@@ -275,3 +275,8 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   Beim Editieren wird das korrekte "Geändert" Datum und Benutzer gesetzt.
 - [x] Wenn ich einen neuen Partner oder Kunden speichere, erhält er im Audit-Log sowohl ein Erstellungs als auch ein Geändert Datum, als ob er zweimal gespeichert wird. Das sollte so nicht sein.
 - [x] Ich kann kein neues Projekt anlegen. Wenn ich die Projektmaske leere, muss der Speichern-Button angezeigt werden, das wird er aber im Moment nicht.
+- [x] NAch dem zweimaligen Speichern eines Freiberuglers steht im Audit log: "Erfasst: ? ?
+  Geändert: 24.03.2026 admin"". Das Erfassungsdatum und der Benutzer werden als ? ausgegeben. Das ist falsch, und ist vermutlich auch für die Partner, Kunden und das Projekte Formular falsch. Lt Datenbank wurde für die geänderten Daten der creationUser und der creationTimestamp auf null zurückgesetzt. Das macht das komplette Audit kaputt!
+- [x] Wenn ein Freiberufler ohne Code aus einem Projekt entwernd wird (Zuweisung gelöscht), erscheint im Bestätigungsdialog die Meldung "**Die Zuordnung von undefined / Tester wird aufgehoben. Sind Sie sicher?**". Das "Undefined" muss hier durch etwas sinnvolleres Ersetzt werden, z.B. "Keine Kodierung",
+- [x] Der Administrationsbereich scheint eine etwas andere Grö0e zu haben als z.B. der Freiberufler-Bereich. Das gleiche Problem hat die Profilsuche. Wenn ich zwischen den Bereichen hin und her wechsel, spring als Indiz die Top-Navigation immer ein paar Pixel von Links nach Rechts. Das ist störend, auf allen Seiten sollte das selbe Layout verwendet werden!
+  Der gleiche Effekt tritt auf, wenn ich im Administrationsbereich zwischen den Unterpunkten Tags, Benutzer, Positionsstatus und Historientypen hin und her wechsel.

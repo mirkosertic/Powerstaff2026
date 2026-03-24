@@ -546,7 +546,7 @@
   window.openDeletePositionModal = function openDeletePositionModal(btn) {
     deletePosId = btn.dataset.posId;
     document.getElementById('modal-delete-pos-text').textContent =
-      `Die Zuordnung von ${btn.dataset.code} / ${btn.dataset.name} wird aufgehoben. Sind Sie sicher?`;
+      `Die Zuordnung von ${btn.dataset.code ?? 'Keine Kodierung'} / ${btn.dataset.name} wird aufgehoben. Sind Sie sicher?`;
     openModal('modal-delete-position');
   };
 

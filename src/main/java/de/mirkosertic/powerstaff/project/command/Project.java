@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.InsertOnlyProperty;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
@@ -24,10 +25,12 @@ public class Project {
     private Long dbVersion;
 
     @CreatedDate
+    @InsertOnlyProperty
     @Column("creation_date")
     private LocalDateTime creationDate;
 
     @CreatedBy
+    @InsertOnlyProperty
     @Column("creation_user")
     private String creationUser;
 
