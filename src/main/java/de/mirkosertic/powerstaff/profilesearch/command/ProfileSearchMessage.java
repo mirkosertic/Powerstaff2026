@@ -3,6 +3,7 @@ package de.mirkosertic.powerstaff.profilesearch.command;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.InsertOnlyProperty;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ public class ProfileSearchMessage {
     private Long id;
 
     @CreatedDate
+    @InsertOnlyProperty
     @Column("creation_date")
     private LocalDateTime creationDate;
 
