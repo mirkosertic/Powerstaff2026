@@ -30,7 +30,7 @@ test.describe('Administration', () => {
 
         // Bezeichnung überschreiben
         await page.locator('#edit-ht-description').fill('E2E-Bearbeiteter-Typ');
-        await page.locator('#edit-ht-form button[type="submit"]').click();
+        await page.locator('#modal-edit-ht button[type="submit"]').click();
         await page.waitForURL(/\/admin\/historientypen/);
 
         await expect(page.locator('td').filter({ hasText: /^E2E-Bearbeiteter-Typ$/ }).first()).toBeVisible();
@@ -87,7 +87,7 @@ test.describe('Administration', () => {
 
         // Bezeichnung ändern
         await page.locator('#edit-status-description').fill('E2E-Bearbeiteter-Status');
-        await page.locator('#edit-status-form button[type="submit"]').click();
+        await page.locator('#modal-edit-status button[type="submit"]').click();
         await page.waitForURL(/\/admin\/positionsstatus/);
 
         await expect(page.locator('td').filter({ hasText: /^E2E-Bearbeiteter-Status$/ }).first()).toBeVisible();
@@ -144,7 +144,7 @@ test.describe('Administration', () => {
 
         // Namen überschreiben
         await page.locator('#edit-tag-name').fill('E2E-Bearbeiteter-Tag');
-        await page.locator('#edit-tag-form button[type="submit"]').click();
+        await page.locator('#modal-edit-tag button[type="submit"]').click();
         await page.waitForURL(/\/admin\/tags/);
 
         await expect(page.locator('td').filter({ hasText: /^E2E-Bearbeiteter-Tag$/ }).first()).toBeVisible();
