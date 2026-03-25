@@ -13,8 +13,8 @@ public class RememberedProjectService {
     private final RememberedProjectRepository repository;
     private final ProjectQueryService projectQueryService;
 
-    public RememberedProjectService(RememberedProjectRepository repository,
-                                    ProjectQueryService projectQueryService) {
+    public RememberedProjectService(final RememberedProjectRepository repository,
+                                    final ProjectQueryService projectQueryService) {
         this.repository = repository;
         this.projectQueryService = projectQueryService;
     }
@@ -23,17 +23,17 @@ public class RememberedProjectService {
      * Setzt das gemerkte Projekt für einen User (Upsert).
      * Existiert bereits ein Eintrag, wird er überschrieben.
      */
-    public void set(String userId, Long projectId) {
-        boolean exists = repository.existsById(userId);
+    public void set(final String userId, final Long projectId) {
+        final boolean exists = repository.existsById(userId);
         repository.save(new RememberedProject(userId, projectId, !exists));
     }
 
     @Transactional(readOnly = true)
-    public Optional<Long> get(String userId) {
+    public Optional<Long> get(final String userId) {
         return repository.findById(userId).map(RememberedProject::getProjectId);
     }
 
-    public void clear(String userId) {
+    public void clear(final String userId) {
         repository.deleteById(userId);
     }
 
@@ -42,7 +42,7 @@ public class RememberedProjectService {
      * Für andere Module – vermeidet direkten Zugriff auf ProjectQueryService aus Fremd-Modulen.
      */
     @Transactional(readOnly = true)
-    public Optional<RememberedProjectInfo> getRememberedProjectInfo(String userId) {
+    public Optional<RememberedProjectInfo> getRememberedProjectInfo(final String userId) {
         return get(userId)
                 .flatMap(projectQueryService::findById)
                 .map(p -> new RememberedProjectInfo(p.id(), p.projectNumber(), p.descriptionShort()));

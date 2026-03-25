@@ -61,13 +61,13 @@ public class FreelancerController {
     private final ProjectPositionCommandService positionCommandService;
     private final ObjectMapper objectMapper;
 
-    public FreelancerController(FreelancerCommandService commandService,
-                                FreelancerQueryService queryService,
-                                FreelancerTagCommandService tagCommandService,
-                                HistoryTypeQueryService historyTypeQueryService,
-                                RememberedProjectService rememberedProjectService,
-                                ProjectPositionCommandService positionCommandService,
-                                ObjectMapper objectMapper) {
+    public FreelancerController(final FreelancerCommandService commandService,
+                                final FreelancerQueryService queryService,
+                                final FreelancerTagCommandService tagCommandService,
+                                final HistoryTypeQueryService historyTypeQueryService,
+                                final RememberedProjectService rememberedProjectService,
+                                final ProjectPositionCommandService positionCommandService,
+                                final ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.tagCommandService = tagCommandService;
@@ -82,7 +82,7 @@ public class FreelancerController {
     // -------------------------------------------------------------------------
 
     @GetMapping
-    public String index(@CookieValue(name = COOKIE_LAST_FREELANCER_ID, required = false) Long lastId) {
+    public String index(@CookieValue(name = COOKIE_LAST_FREELANCER_ID, required = false) final Long lastId) {
         if (lastId != null && queryService.findById(lastId).isPresent()) {
             return "redirect:/freelancer/" + lastId;
         }
@@ -106,14 +106,14 @@ public class FreelancerController {
     }
 
     @GetMapping("/previous/{id}")
-    public String previous(@PathVariable long id) {
+    public String previous(@PathVariable final long id) {
         return queryService.findPrevious(id)
                 .map(f -> "redirect:/freelancer/" + f.id())
                 .orElse("redirect:/freelancer/new");
     }
 
     @GetMapping("/next/{id}")
-    public String next(@PathVariable long id) {
+    public String next(@PathVariable final long id) {
         return queryService.findNext(id)
                 .map(f -> "redirect:/freelancer/" + f.id())
                 .orElse("redirect:/freelancer/new");
@@ -124,9 +124,9 @@ public class FreelancerController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/{id}")
-    public String show(@PathVariable long id, HttpServletResponse response, Model model, Principal principal) {
-        var freelancer = commandService.findById(id).orElseThrow();
-        var cookie = new Cookie(COOKIE_LAST_FREELANCER_ID, String.valueOf(id));
+    public String show(@PathVariable final long id, final HttpServletResponse response, final Model model, final Principal principal) {
+        final var freelancer = commandService.findById(id).orElseThrow();
+        final var cookie = new Cookie(COOKIE_LAST_FREELANCER_ID, String.valueOf(id));
         cookie.setPath("/freelancer");
         cookie.setMaxAge(COOKIE_MAX_AGE);
         response.addCookie(cookie);
@@ -135,8 +135,8 @@ public class FreelancerController {
     }
 
     @GetMapping("/new")
-    public String newForm(HttpServletResponse response, Model model, Principal principal) {
-        var cookie = new Cookie(COOKIE_LAST_FREELANCER_ID, "");
+    public String newForm(final HttpServletResponse response, final Model model, final Principal principal) {
+        final var cookie = new Cookie(COOKIE_LAST_FREELANCER_ID, "");
         cookie.setPath("/freelancer");
         cookie.setMaxAge(0); // löschen
         response.addCookie(cookie);
@@ -144,7 +144,7 @@ public class FreelancerController {
         return "freelancer/form";
     }
 
-    private void populateModel(Model model, Freelancer freelancer, Long freelancerId, Principal principal) {
+    private void populateModel(final Model model, final Freelancer freelancer, final Long freelancerId, final Principal principal) {
         model.addAttribute("freelancer", freelancer);
         if (freelancerId != null) {
             model.addAttribute("contacts", queryService.findContactsByFreelancerId(freelancerId));
@@ -165,10 +165,10 @@ public class FreelancerController {
                 freelancer.getChangedDate(), freelancer.getChangedUser()));
     }
 
-    private String buildAuditInfo(Long id, LocalDateTime creationDate, String creationUser,
-                                   LocalDateTime changedDate, String changedUser) {
+    private String buildAuditInfo(final Long id, final LocalDateTime creationDate, final String creationUser,
+                                  final LocalDateTime changedDate, final String changedUser) {
         if (id == null) return "Neu, noch nicht gespeichert";
-        String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : "?")
+        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : "?")
                        + " " + (creationUser != null ? creationUser : "?");
         String result = "Erfasst: " + created;
         if (changedDate != null && !changedDate.equals(creationDate)) {
@@ -179,7 +179,7 @@ public class FreelancerController {
         return result;
     }
 
-    private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
+    private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
         if (principal == null) return null;
         return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);
     }
@@ -190,28 +190,28 @@ public class FreelancerController {
 
     @PostMapping("/save")
     @ResponseBody
-    public ResponseEntity<?> save(@ModelAttribute Freelancer freelancer,
-                                  @RequestParam(required = false, defaultValue = "[]") String contactsJson,
-                                  @RequestParam(required = false, defaultValue = "[]") String historyJson,
-                                  @RequestParam(required = false, defaultValue = "[]") String tagsJson,
-                                  HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> save(@ModelAttribute final Freelancer freelancer,
+                                  @RequestParam(required = false, defaultValue = "[]") final String contactsJson,
+                                  @RequestParam(required = false, defaultValue = "[]") final String historyJson,
+                                  @RequestParam(required = false, defaultValue = "[]") final String tagsJson,
+                                  final HttpServletResponse response) throws IOException {
         try {
-            List<FreelancerContactEntry> contactChanges = objectMapper.readValue(
+            final List<FreelancerContactEntry> contactChanges = objectMapper.readValue(
                     contactsJson, new TypeReference<>() {});
-            List<FreelancerHistoryEntry> historyChanges = objectMapper.readValue(
+            final List<FreelancerHistoryEntry> historyChanges = objectMapper.readValue(
                     historyJson, new TypeReference<>() {});
-            List<FreelancerTagEntry> tagChanges = objectMapper.readValue(
+            final List<FreelancerTagEntry> tagChanges = objectMapper.readValue(
                     tagsJson, new TypeReference<>() {});
-            var saved = commandService.save(freelancer, contactChanges, historyChanges, tagChanges);
+            final var saved = commandService.save(freelancer, contactChanges, historyChanges, tagChanges);
             response.sendRedirect("/freelancer/" + saved.getId() + "?saved=true");
             return null;
-        } catch (DuplicateCodeException e) {
+        } catch (final DuplicateCodeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("duplicateCode", true));
-        } catch (OptimisticLockingFailureException e) {
+        } catch (final OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("conflict", true));
-        } catch (JacksonException e) {
+        } catch (final JacksonException e) {
             return ResponseEntity.badRequest().body(Map.of("error", "invalid json"));
         }
     }
@@ -222,13 +222,13 @@ public class FreelancerController {
 
     @PostMapping("/delete/{id}")
     @ResponseBody
-    public ResponseEntity<?> delete(@PathVariable long id,
-                                    HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> delete(@PathVariable final long id,
+                                    final HttpServletResponse response) throws IOException {
         try {
             commandService.deleteById(id);
             response.sendRedirect("/freelancer/new");
             return null;
-        } catch (FreelancerHasPositionsException e) {
+        } catch (final FreelancerHasPositionsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("blocked", true, "projectIds", e.getProjectIds()));
         }
@@ -240,8 +240,8 @@ public class FreelancerController {
 
     @PostMapping("/{id}/assign-to-remembered-project")
     @ResponseBody
-    public ResponseEntity<?> assignToRememberedProject(@PathVariable long id, Principal principal) {
-        var projectId = rememberedProjectService.get(principal.getName());
+    public ResponseEntity<?> assignToRememberedProject(@PathVariable final long id, final Principal principal) {
+        final var projectId = rememberedProjectService.get(principal.getName());
         if (projectId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("noProject", true));
@@ -249,7 +249,7 @@ public class FreelancerController {
         try {
             positionCommandService.assignFreelancerToProject(id, projectId.get(), null, null, null);
             return ResponseEntity.ok(Map.of("projectId", projectId.get()));
-        } catch (FreelancerAlreadyAssignedException e) {
+        } catch (final FreelancerAlreadyAssignedException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("alreadyAssigned", true));
         }
@@ -260,14 +260,14 @@ public class FreelancerController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/search")
-    public String search(@ModelAttribute FreelancerSearchCriteria criteria,
-                         @RequestParam(required = false, defaultValue = "0") int offset,
-                         Model model,
-                         HttpServletResponse response) {
+    public String search(@ModelAttribute final FreelancerSearchCriteria criteria,
+                         @RequestParam(required = false, defaultValue = "0") final int offset,
+                         final Model model,
+                         final HttpServletResponse response) {
         if (offset > 0) {
-            var results = queryService.search(criteria, offset, PAGE_SIZE);
-            int nextOffset = offset + PAGE_SIZE;
-            long total = queryService.countSearch(criteria);
+            final var results = queryService.search(criteria, offset, PAGE_SIZE);
+            final int nextOffset = offset + PAGE_SIZE;
+            final long total = queryService.countSearch(criteria);
             if (nextOffset < total) {
                 response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
             }
@@ -279,20 +279,20 @@ public class FreelancerController {
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
 
-        var results = queryService.search(criteria, 0, PAGE_SIZE);
-        long total = queryService.countSearch(criteria);
+        final var results = queryService.search(criteria, 0, PAGE_SIZE);
+        final long total = queryService.countSearch(criteria);
         model.addAttribute("results", results);
         model.addAttribute("totalCount", total);
         model.addAttribute("criteria", criteria);
         model.addAttribute("sortField", criteria.sortField());
         model.addAttribute("sortDir", criteria.sortDir());
-        String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
+        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
         return "freelancer/search-page";
     }
 
-    private void appendCriteriaParams(UriComponentsBuilder b, FreelancerSearchCriteria c) {
+    private void appendCriteriaParams(final UriComponentsBuilder b, final FreelancerSearchCriteria c) {
         if (c.name1()           != null) b.queryParam("name1",           c.name1());
         if (c.name2()           != null) b.queryParam("name2",           c.name2());
         if (c.company()         != null) b.queryParam("company",         c.company());
@@ -316,14 +316,14 @@ public class FreelancerController {
         if (c.sortDir()         != null) b.queryParam("sortDir",         c.sortDir());
     }
 
-    private String buildEditSearchUrl(FreelancerSearchCriteria c) {
-        var b = UriComponentsBuilder.fromPath("/freelancer/new");
+    private String buildEditSearchUrl(final FreelancerSearchCriteria c) {
+        final var b = UriComponentsBuilder.fromPath("/freelancer/new");
         appendCriteriaParams(b, c);
         return b.encode().build().toUriString();
     }
 
-    private String buildSearchMoreUrl(FreelancerSearchCriteria c, int offset) {
-        var b = UriComponentsBuilder.fromPath("/freelancer/search").queryParam("offset", offset);
+    private String buildSearchMoreUrl(final FreelancerSearchCriteria c, final int offset) {
+        final var b = UriComponentsBuilder.fromPath("/freelancer/search").queryParam("offset", offset);
         appendCriteriaParams(b, c);
         return b.encode().build().toUriString();
     }
@@ -334,8 +334,8 @@ public class FreelancerController {
 
     @GetMapping("/{id}/available-tags/{type}")
     @ResponseBody
-    public List<TagInfo> availableTags(@PathVariable long id,
-                                       @PathVariable TagType type) {
+    public List<TagInfo> availableTags(@PathVariable final long id,
+                                       @PathVariable final TagType type) {
         return queryService.findAvailableTagsByFreelancerIdAndType(id, type);
     }
 
@@ -345,11 +345,11 @@ public class FreelancerController {
 
     @GetMapping("/lookup")
     @ResponseBody
-    public ResponseEntity<?> lookupByCode(@RequestParam String code) {
+    public ResponseEntity<?> lookupByCode(@RequestParam final String code) {
         if (code == null || code.isBlank()) {
             return ResponseEntity.badRequest().body(Map.of("error", "code required"));
         }
-        var result = commandService.findByCode(code.trim());
+        final var result = commandService.findByCode(code.trim());
         if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("notFound", true));
         }

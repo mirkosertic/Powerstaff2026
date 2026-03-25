@@ -32,23 +32,23 @@ public class ProfileSearchMessage {
     private String jsonPayload;
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(final Long id) { this.id = id; }
 
     public LocalDateTime getCreationDate() { return creationDate; }
-    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
+    public void setCreationDate(final LocalDateTime creationDate) { this.creationDate = creationDate; }
 
     public Long getChatId() { return chatId; }
-    public void setChatId(Long chatId) { this.chatId = chatId; }
+    public void setChatId(final Long chatId) { this.chatId = chatId; }
 
     public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public void setRole(final String role) { this.role = role; }
 
     public int getSequence() { return sequence; }
-    public void setSequence(int sequence) { this.sequence = sequence; }
+    public void setSequence(final int sequence) { this.sequence = sequence; }
 
     public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public void setContent(final String content) { this.content = content; }
 
     public String getJsonPayload() { return jsonPayload; }
-    public void setJsonPayload(String jsonPayload) { this.jsonPayload = jsonPayload; }
+    public void setJsonPayload(final String jsonPayload) { this.jsonPayload = jsonPayload; }
 }

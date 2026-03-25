@@ -21,26 +21,26 @@ public class MustChangePasswordFilter extends OncePerRequestFilter {
 
     private final PsUserRepository repository;
 
-    public MustChangePasswordFilter(PsUserRepository repository) {
+    public MustChangePasswordFilter(final PsUserRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(final HttpServletRequest request,
+                                    final HttpServletResponse response,
+                                    final FilterChain filterChain) throws ServletException, IOException {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()
                 && !(authentication.getPrincipal() instanceof String)) {
 
-            String requestUri = request.getRequestURI();
-            boolean isExcluded = EXCLUDED_PREFIXES.stream().anyMatch(requestUri::startsWith);
+            final String requestUri = request.getRequestURI();
+            final boolean isExcluded = EXCLUDED_PREFIXES.stream().anyMatch(requestUri::startsWith);
 
             if (!isExcluded) {
-                String username = authentication.getName();
-                boolean mustChange = repository.findById(username)
+                final String username = authentication.getName();
+                final boolean mustChange = repository.findById(username)
                         .map(PsUser::isMustChangePassword)
                         .orElse(false);
 

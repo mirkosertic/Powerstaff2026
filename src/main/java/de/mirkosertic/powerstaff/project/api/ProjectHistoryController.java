@@ -25,8 +25,8 @@ public class ProjectHistoryController {
     private final ProjectHistoryCommandService commandService;
     private final ProjectHistoryQueryService queryService;
 
-    public ProjectHistoryController(ProjectHistoryCommandService commandService,
-                                    ProjectHistoryQueryService queryService) {
+    public ProjectHistoryController(final ProjectHistoryCommandService commandService,
+                                    final ProjectHistoryQueryService queryService) {
         this.commandService = commandService;
         this.queryService = queryService;
     }
@@ -34,9 +34,9 @@ public class ProjectHistoryController {
     record HistoryRequest(String description) {}
 
     @PostMapping
-    public ResponseEntity<List<ProjectHistoryView>> create(@PathVariable Long projectId,
-                                                           @RequestBody HistoryRequest request) {
-        var history = new ProjectHistory();
+    public ResponseEntity<List<ProjectHistoryView>> create(@PathVariable final Long projectId,
+                                                           @RequestBody final HistoryRequest request) {
+        final var history = new ProjectHistory();
         history.setProjectId(projectId);
         history.setDescription(request.description());
         commandService.save(history);
@@ -44,10 +44,10 @@ public class ProjectHistoryController {
     }
 
     @PutMapping("/{historyId}")
-    public ResponseEntity<Map<String, Boolean>> update(@PathVariable Long projectId,
-                                                       @PathVariable Long historyId,
-                                                       @RequestBody HistoryRequest request) {
-        var history = commandService.findById(historyId)
+    public ResponseEntity<Map<String, Boolean>> update(@PathVariable final Long projectId,
+                                                       @PathVariable final Long historyId,
+                                                       @RequestBody final HistoryRequest request) {
+        final var history = commandService.findById(historyId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         history.setDescription(request.description());
         commandService.save(history);
@@ -55,8 +55,8 @@ public class ProjectHistoryController {
     }
 
     @DeleteMapping("/{historyId}")
-    public ResponseEntity<Map<String, Boolean>> delete(@PathVariable Long projectId,
-                                                       @PathVariable Long historyId) {
+    public ResponseEntity<Map<String, Boolean>> delete(@PathVariable final Long projectId,
+                                                       @PathVariable final Long historyId) {
         commandService.delete(historyId);
         return ResponseEntity.ok(Map.of("ok", true));
     }

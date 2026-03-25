@@ -41,23 +41,23 @@ public class ProjectHistory {
     private Long projectId;
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(final Long id) { this.id = id; }
 
     public LocalDateTime getCreationDate() { return creationDate; }
-    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
+    public void setCreationDate(final LocalDateTime creationDate) { this.creationDate = creationDate; }
 
     public String getCreationUser() { return creationUser; }
-    public void setCreationUser(String creationUser) { this.creationUser = creationUser; }
+    public void setCreationUser(final String creationUser) { this.creationUser = creationUser; }
 
     public LocalDateTime getChangedDate() { return changedDate; }
-    public void setChangedDate(LocalDateTime changedDate) { this.changedDate = changedDate; }
+    public void setChangedDate(final LocalDateTime changedDate) { this.changedDate = changedDate; }
 
     public String getChangedUser() { return changedUser; }
-    public void setChangedUser(String changedUser) { this.changedUser = changedUser; }
+    public void setChangedUser(final String changedUser) { this.changedUser = changedUser; }
 
     public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(final String description) { this.description = description; }
 
     public Long getProjectId() { return projectId; }
-    public void setProjectId(Long projectId) { this.projectId = projectId; }
+    public void setProjectId(final Long projectId) { this.projectId = projectId; }
 }

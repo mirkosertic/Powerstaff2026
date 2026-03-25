@@ -12,11 +12,11 @@ public class ProjectHistoryQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public ProjectHistoryQueryService(JdbcClient jdbcClient) {
+    public ProjectHistoryQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
-    public List<ProjectHistoryView> findByProjectId(Long projectId) {
+    public List<ProjectHistoryView> findByProjectId(final Long projectId) {
         return jdbcClient.sql("""
                 SELECT id, creation_date, creation_user, changed_date, changed_user, description, project_id
                 FROM project_history

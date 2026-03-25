@@ -37,10 +37,10 @@ public class ProfileSearchController {
     private final LlmService llmService;
     private final RememberedProjectService rememberedProjectService;
 
-    public ProfileSearchController(ProfileSearchCommandService commandService,
-                                   ProfileSearchQueryService queryService,
-                                   LlmService llmService,
-                                   RememberedProjectService rememberedProjectService) {
+    public ProfileSearchController(final ProfileSearchCommandService commandService,
+                                   final ProfileSearchQueryService queryService,
+                                   final LlmService llmService,
+                                   final RememberedProjectService rememberedProjectService) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.llmService = llmService;
@@ -48,31 +48,31 @@ public class ProfileSearchController {
     }
 
     @GetMapping
-    public void index(Principal principal, HttpServletResponse response) throws IOException {
-        String userId = principal.getName();
-        var latestChatId = queryService.findLatestChatByUser(userId);
+    public void index(final Principal principal, final HttpServletResponse response) throws IOException {
+        final String userId = principal.getName();
+        final var latestChatId = queryService.findLatestChatByUser(userId);
         if (latestChatId.isPresent()) {
             response.sendRedirect("/profilesearch/chat/" + latestChatId.get());
         } else {
-            Long projectId = rememberedProjectService.get(userId).orElse(null);
-            Long chatId = commandService.createChat(userId, projectId);
+            final Long projectId = rememberedProjectService.get(userId).orElse(null);
+            final Long chatId = commandService.createChat(userId, projectId);
             response.sendRedirect("/profilesearch/chat/" + chatId);
         }
     }
 
     @GetMapping("/chat/{chatId}")
-    public String chat(@PathVariable Long chatId,
-                       @RequestParam(defaultValue = "0") int offset,
-                       Principal principal,
-                       Model model,
-                       HttpServletResponse response) {
-        String userId = principal.getName();
-        List<ChatListView> sidebar = queryService.findChatsByUser(userId, offset, PAGE_SIZE);
-        long totalChats = queryService.countChatsByUser(userId);
-        List<MessageView> messages = queryService.findMessagesByChat(chatId);
+    public String chat(@PathVariable final Long chatId,
+                       @RequestParam(defaultValue = "0") final int offset,
+                       final Principal principal,
+                       final Model model,
+                       final HttpServletResponse response) {
+        final String userId = principal.getName();
+        final List<ChatListView> sidebar = queryService.findChatsByUser(userId, offset, PAGE_SIZE);
+        final long totalChats = queryService.countChatsByUser(userId);
+        final List<MessageView> messages = queryService.findMessagesByChat(chatId);
 
         // Set X-Next-Url header for infinite scroll if more data available
-        int nextOffset = offset + PAGE_SIZE;
+        final int nextOffset = offset + PAGE_SIZE;
         if (nextOffset < totalChats) {
             response.setHeader("X-Next-Url", "/profilesearch/chat/" + chatId + "?offset=" + nextOffset);
         }
@@ -89,27 +89,27 @@ public class ProfileSearchController {
     }
 
     @PostMapping("/chat/new")
-    public String newChat(Principal principal) {
-        String userId = principal.getName();
-        Long projectId = rememberedProjectService.get(userId).orElse(null);
-        Long chatId = commandService.createChat(userId, projectId);
+    public String newChat(final Principal principal) {
+        final String userId = principal.getName();
+        final Long projectId = rememberedProjectService.get(userId).orElse(null);
+        final Long chatId = commandService.createChat(userId, projectId);
         return "redirect:/profilesearch/chat/" + chatId;
     }
 
     @DeleteMapping("/chat/{chatId}")
     @ResponseBody
-    public Map<String, String> deleteChat(@PathVariable Long chatId, Principal principal) {
-        String userId = principal.getName();
+    public Map<String, String> deleteChat(@PathVariable final Long chatId, final Principal principal) {
+        final String userId = principal.getName();
         commandService.deleteChat(chatId);
 
         // Navigate to most recently modified remaining chat, or create a new one
-        var nextChatId = queryService.findLatestChatByUser(userId);
-        String redirectTo;
+        final var nextChatId = queryService.findLatestChatByUser(userId);
+        final String redirectTo;
         if (nextChatId.isPresent()) {
             redirectTo = "/profilesearch/chat/" + nextChatId.get();
         } else {
-            Long projectId = rememberedProjectService.get(userId).orElse(null);
-            Long newId = commandService.createChat(userId, projectId);
+            final Long projectId = rememberedProjectService.get(userId).orElse(null);
+            final Long newId = commandService.createChat(userId, projectId);
             redirectTo = "/profilesearch/chat/" + newId;
         }
         return Map.of("redirectTo", redirectTo);
@@ -119,24 +119,30 @@ public class ProfileSearchController {
 
     record SendResponse(Long id, String role, String content, String jsonPayload) {}
 
+    record SendResponseWrapper(List<SendResponse> messages) {}
+
     @PostMapping(value = "/chat/{chatId}/send", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public SendResponse sendMessage(@PathVariable Long chatId, @RequestBody SendRequest request,
-                                    Principal principal,
-                                    HttpSession session) {
-        String userId = principal.getName();
+    public SendResponseWrapper sendMessage(@PathVariable final Long chatId, @RequestBody final SendRequest request,
+                                           final Principal principal,
+                                           final HttpSession session) {
+        final String userId = principal.getName();
 
         // Build LLM context and load full message history for LLM
-        var context = queryService.buildLlmContext(userId);
+        final var context = queryService.buildLlmContext(userId);
 
         // Call LLM
-        LlmService.Reply assistantReply = llmService.sendMessage(principal, session.getId(), Long.toString(chatId), context, request.message());
+        final List<LlmService.Reply> replies = llmService.sendMessage(principal, session.getId(), Long.toString(chatId), context, request.message());
 
-        return new SendResponse(assistantReply.id(), assistantReply.role(), assistantReply.message(), assistantReply.jsonPayload());
+        final List<SendResponse> responses = replies.stream()
+                .map(r -> new SendResponse(r.id(), r.role(), r.message(), r.jsonPayload()))
+                .toList();
+
+        return new SendResponseWrapper(responses);
     }
 
-    private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
+    private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
         if (principal == null) return null;
         return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);
     }

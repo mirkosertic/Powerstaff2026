@@ -27,6 +27,10 @@ spring:
     openai:
       api-key: "invalid"
 
+    model:
+      embedding: "undefined"
+      chat: "undefined"
+
 # Server – Bind-Adresse und Session-Cookie-Flags
 server:
   address: 127.0.0.1

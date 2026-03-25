@@ -10,7 +10,7 @@ public class FreelancerTagCommandService {
 
     private final FreelancerTagRepository tagRepository;
 
-    public FreelancerTagCommandService(FreelancerTagRepository tagRepository) {
+    public FreelancerTagCommandService(final FreelancerTagRepository tagRepository) {
         this.tagRepository = tagRepository;
     }
 
@@ -20,16 +20,16 @@ public class FreelancerTagCommandService {
      * noRollbackFor: Aufrufer kann DuplicateTagException abfangen ohne die Transaktion zu poisonen.
      */
     @Transactional(noRollbackFor = DuplicateTagException.class)
-    public FreelancerTag addTag(long freelancerId, long tagId) {
+    public FreelancerTag addTag(final long freelancerId, final long tagId) {
         if (tagRepository.existsByFreelancerIdAndTagId(freelancerId, tagId)) {
             throw new DuplicateTagException(freelancerId, tagId);
         }
-        var tag = new FreelancerTag();
+        final var tag = new FreelancerTag();
         tag.setFreelancerId(freelancerId);
         tag.setTagId(tagId);
         try {
             return tagRepository.save(tag);
-        } catch (DataIntegrityViolationException e) {
+        } catch (final DataIntegrityViolationException e) {
             // Race condition: Duplicate zwischen existsBy-Check und save abfangen
             throw new DuplicateTagException(freelancerId, tagId);
         }
@@ -38,14 +38,14 @@ public class FreelancerTagCommandService {
     /**
      * Entfernt eine Tag-Zuordnung anhand der Zuordnungs-ID.
      */
-    public void removeTag(long freelancerTagId) {
+    public void removeTag(final long freelancerTagId) {
         tagRepository.deleteById(freelancerTagId);
     }
 
     /**
      * Entfernt eine Tag-Zuordnung anhand von Freiberufler-ID und Tag-Entity-ID.
      */
-    public void removeTagByTagId(long freelancerId, long tagId) {
+    public void removeTagByTagId(final long freelancerId, final long tagId) {
         tagRepository.deleteByFreelancerIdAndTagId(freelancerId, tagId);
     }
 }

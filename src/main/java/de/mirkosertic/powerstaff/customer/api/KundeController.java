@@ -52,11 +52,11 @@ public class KundeController {
     private final RememberedProjectService rememberedProjectService;
     private final ObjectMapper objectMapper;
 
-    public KundeController(KundeCommandService commandService,
-                           KundeQueryService queryService,
-                           HistoryTypeQueryService historyTypeQueryService,
-                           RememberedProjectService rememberedProjectService,
-                           ObjectMapper objectMapper) {
+    public KundeController(final KundeCommandService commandService,
+                           final KundeQueryService queryService,
+                           final HistoryTypeQueryService historyTypeQueryService,
+                           final RememberedProjectService rememberedProjectService,
+                           final ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.historyTypeQueryService = historyTypeQueryService;
@@ -69,7 +69,7 @@ public class KundeController {
     // -------------------------------------------------------------------------
 
     @GetMapping
-    public String index(@CookieValue(name = COOKIE_LAST_KUNDE_ID, required = false) Long lastId) {
+    public String index(@CookieValue(name = COOKIE_LAST_KUNDE_ID, required = false) final Long lastId) {
         if (lastId != null && queryService.findById(lastId).isPresent()) {
             return "redirect:/kunde/" + lastId;
         }
@@ -93,14 +93,14 @@ public class KundeController {
     }
 
     @GetMapping("/previous/{id}")
-    public String previous(@PathVariable long id) {
+    public String previous(@PathVariable final long id) {
         return queryService.findPrevious(id)
                 .map(k -> "redirect:/kunde/" + k.id())
                 .orElse("redirect:/kunde/new");
     }
 
     @GetMapping("/next/{id}")
-    public String next(@PathVariable long id) {
+    public String next(@PathVariable final long id) {
         return queryService.findNext(id)
                 .map(k -> "redirect:/kunde/" + k.id())
                 .orElse("redirect:/kunde/new");
@@ -111,9 +111,9 @@ public class KundeController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/{id}")
-    public String show(@PathVariable long id, HttpServletResponse response, Model model, Principal principal) {
-        var kunde = commandService.findById(id).orElseThrow();
-        var cookie = new Cookie(COOKIE_LAST_KUNDE_ID, String.valueOf(id));
+    public String show(@PathVariable final long id, final HttpServletResponse response, final Model model, final Principal principal) {
+        final var kunde = commandService.findById(id).orElseThrow();
+        final var cookie = new Cookie(COOKIE_LAST_KUNDE_ID, String.valueOf(id));
         cookie.setPath("/kunde");
         cookie.setMaxAge(COOKIE_MAX_AGE);
         response.addCookie(cookie);
@@ -122,8 +122,8 @@ public class KundeController {
     }
 
     @GetMapping("/new")
-    public String newForm(HttpServletResponse response, Model model, Principal principal) {
-        var cookie = new Cookie(COOKIE_LAST_KUNDE_ID, "");
+    public String newForm(final HttpServletResponse response, final Model model, final Principal principal) {
+        final var cookie = new Cookie(COOKIE_LAST_KUNDE_ID, "");
         cookie.setPath("/kunde");
         cookie.setMaxAge(0); // löschen
         response.addCookie(cookie);
@@ -131,7 +131,7 @@ public class KundeController {
         return "kunde/form";
     }
 
-    private void populateModel(Model model, Kunde kunde, Long kundeId, Principal principal) {
+    private void populateModel(final Model model, final Kunde kunde, final Long kundeId, final Principal principal) {
         model.addAttribute("kunde", kunde);
         if (kundeId != null) {
             model.addAttribute("contacts", queryService.findContactsByKundeId(kundeId));
@@ -151,10 +151,10 @@ public class KundeController {
                 kunde.getChangedDate(), kunde.getChangedUser()));
     }
 
-    private String buildAuditInfo(Long id, LocalDateTime creationDate, String creationUser,
-                                   LocalDateTime changedDate, String changedUser) {
+    private String buildAuditInfo(final Long id, final LocalDateTime creationDate, final String creationUser,
+                                  final LocalDateTime changedDate, final String changedUser) {
         if (id == null) return "Neu, noch nicht gespeichert";
-        String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : "?")
+        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : "?")
                        + " " + (creationUser != null ? creationUser : "?");
         String result = "Erfasst: " + created;
         if (changedDate != null && !changedDate.equals(creationDate)) {
@@ -165,7 +165,7 @@ public class KundeController {
         return result;
     }
 
-    private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
+    private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
         if (principal == null) return null;
         return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);
     }
@@ -176,22 +176,22 @@ public class KundeController {
 
     @PostMapping("/save")
     @ResponseBody
-    public ResponseEntity<?> save(@ModelAttribute Kunde kunde,
-                                  @RequestParam(required = false, defaultValue = "[]") String contactsJson,
-                                  @RequestParam(required = false, defaultValue = "[]") String historyJson,
-                                  HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> save(@ModelAttribute final Kunde kunde,
+                                  @RequestParam(required = false, defaultValue = "[]") final String contactsJson,
+                                  @RequestParam(required = false, defaultValue = "[]") final String historyJson,
+                                  final HttpServletResponse response) throws IOException {
         try {
-            List<KundeContactEntry> contacts = objectMapper.readValue(
+            final List<KundeContactEntry> contacts = objectMapper.readValue(
                     contactsJson, new TypeReference<>() {});
-            List<KundeHistoryEntry> newHistory = objectMapper.readValue(
+            final List<KundeHistoryEntry> newHistory = objectMapper.readValue(
                     historyJson, new TypeReference<>() {});
-            var saved = commandService.save(kunde, contacts, newHistory);
+            final var saved = commandService.save(kunde, contacts, newHistory);
             response.sendRedirect("/kunde/" + saved.getId() + "?saved=true");
             return null;
-        } catch (OptimisticLockingFailureException e) {
+        } catch (final OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("conflict", true));
-        } catch (JacksonException e) {
+        } catch (final JacksonException e) {
             return ResponseEntity.badRequest().body(Map.of("error", "invalid json"));
         }
     }
@@ -202,13 +202,13 @@ public class KundeController {
 
     @PostMapping("/delete/{id}")
     @ResponseBody
-    public ResponseEntity<?> delete(@PathVariable long id,
-                                    HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> delete(@PathVariable final long id,
+                                    final HttpServletResponse response) throws IOException {
         try {
             commandService.deleteById(id);
             response.sendRedirect("/kunde/new");
             return null;
-        } catch (KundeHasProjectsException e) {
+        } catch (final KundeHasProjectsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("blocked", true, "projectIds", e.getProjectIds()));
         }
@@ -219,14 +219,14 @@ public class KundeController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/search")
-    public String search(@ModelAttribute KundeSearchCriteria criteria,
-                         @RequestParam(required = false, defaultValue = "0") int offset,
-                         Model model,
-                         HttpServletResponse response) {
+    public String search(@ModelAttribute final KundeSearchCriteria criteria,
+                         @RequestParam(required = false, defaultValue = "0") final int offset,
+                         final Model model,
+                         final HttpServletResponse response) {
         if (offset > 0) {
-            var results = queryService.search(criteria, offset, PAGE_SIZE);
-            int nextOffset = offset + PAGE_SIZE;
-            long total = queryService.countSearch(criteria);
+            final var results = queryService.search(criteria, offset, PAGE_SIZE);
+            final int nextOffset = offset + PAGE_SIZE;
+            final long total = queryService.countSearch(criteria);
             if (nextOffset < total) {
                 response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
             }
@@ -238,20 +238,20 @@ public class KundeController {
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
 
-        var results = queryService.search(criteria, 0, PAGE_SIZE);
-        long total = queryService.countSearch(criteria);
+        final var results = queryService.search(criteria, 0, PAGE_SIZE);
+        final long total = queryService.countSearch(criteria);
         model.addAttribute("results", results);
         model.addAttribute("totalCount", total);
         model.addAttribute("criteria", criteria);
         model.addAttribute("sortField", criteria.sortField());
         model.addAttribute("sortDir", criteria.sortDir());
-        String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
+        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
         return "kunde/search-page";
     }
 
-    private void appendCriteriaParams(UriComponentsBuilder b, KundeSearchCriteria c) {
+    private void appendCriteriaParams(final UriComponentsBuilder b, final KundeSearchCriteria c) {
         if (c.company()    != null) b.queryParam("company",    c.company());
         if (c.name1()      != null) b.queryParam("name1",      c.name1());
         if (c.name2()      != null) b.queryParam("name2",      c.name2());
@@ -266,14 +266,14 @@ public class KundeController {
         if (c.sortDir()    != null) b.queryParam("sortDir",    c.sortDir());
     }
 
-    private String buildEditSearchUrl(KundeSearchCriteria c) {
-        var b = UriComponentsBuilder.fromPath("/kunde/new");
+    private String buildEditSearchUrl(final KundeSearchCriteria c) {
+        final var b = UriComponentsBuilder.fromPath("/kunde/new");
         appendCriteriaParams(b, c);
         return b.encode().build().toUriString();
     }
 
-    private String buildSearchMoreUrl(KundeSearchCriteria c, int offset) {
-        var b = UriComponentsBuilder.fromPath("/kunde/search").queryParam("offset", offset);
+    private String buildSearchMoreUrl(final KundeSearchCriteria c, final int offset) {
+        final var b = UriComponentsBuilder.fromPath("/kunde/search").queryParam("offset", offset);
         appendCriteriaParams(b, c);
         return b.encode().build().toUriString();
     }

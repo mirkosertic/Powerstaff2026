@@ -39,7 +39,7 @@ public enum ProjectStatus {
 
     private final int code;
 
-    ProjectStatus(int code) {
+    ProjectStatus(final int code) {
         this.code = code;
     }
 
@@ -49,8 +49,8 @@ public enum ProjectStatus {
 
     public abstract String getLabel();
 
-    public static ProjectStatus fromInt(int code) {
-        for (ProjectStatus status : values()) {
+    public static ProjectStatus fromInt(final int code) {
+        for (final ProjectStatus status : values()) {
             if (status.code == code) {
                 return status;
             }

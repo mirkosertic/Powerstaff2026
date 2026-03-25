@@ -13,17 +13,17 @@ public class PsAuthenticationSuccessHandler implements AuthenticationSuccessHand
 
     private final PsUserRepository repository;
 
-    public PsAuthenticationSuccessHandler(PsUserRepository repository) {
+    public PsAuthenticationSuccessHandler(final PsUserRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(final HttpServletRequest request,
+                                        final HttpServletResponse response,
+                                        final Authentication authentication) throws IOException {
 
-        String username = authentication.getName();
-        boolean mustChange = repository.findById(username)
+        final String username = authentication.getName();
+        final boolean mustChange = repository.findById(username)
                 .map(PsUser::isMustChangePassword)
                 .orElse(false);
 

@@ -16,11 +16,11 @@ public class ProfileSearchQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public ProfileSearchQueryService(JdbcClient jdbcClient) {
+    public ProfileSearchQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
-    public List<ChatListView> findChatsByUser(String userId, int offset, int limit) {
+    public List<ChatListView> findChatsByUser(final String userId, final int offset, final int limit) {
         return jdbcClient.sql("""
                 SELECT c.id, c.creation_date, c.creation_user, c.changed_date, c.title,
                        c.project_id, p.project_number
@@ -37,14 +37,14 @@ public class ProfileSearchQueryService {
                 .list();
     }
 
-    public long countChatsByUser(String userId) {
+    public long countChatsByUser(final String userId) {
         return jdbcClient.sql("SELECT COUNT(*) FROM profile_search_chat WHERE creation_user = :userId")
                 .param("userId", userId)
                 .query(Long.class)
                 .single();
     }
 
-    public List<MessageView> findMessagesByChat(Long chatId) {
+    public List<MessageView> findMessagesByChat(final Long chatId) {
         return jdbcClient.sql("""
                 SELECT id, creation_date, chat_id, role, sequence, content, json_payload
                 FROM profile_search_message
@@ -56,7 +56,7 @@ public class ProfileSearchQueryService {
                 .list();
     }
 
-    public Optional<Long> findLatestChatByUser(String userId) {
+    public Optional<Long> findLatestChatByUser(final String userId) {
         return jdbcClient.sql("""
                 SELECT id FROM profile_search_chat
                 WHERE creation_user = :userId
@@ -69,9 +69,9 @@ public class ProfileSearchQueryService {
     }
 
 
-    public Optional<LlmProjectContext> buildLlmContext(String userId) {
+    public Optional<LlmProjectContext> buildLlmContext(final String userId) {
         // Step 1: find remembered project for user
-        var projectIdOpt = jdbcClient.sql(
+        final var projectIdOpt = jdbcClient.sql(
                         "SELECT project_id FROM remembered_project WHERE user_id = :userId")
                 .param("userId", userId)
                 .query(Long.class)
@@ -80,14 +80,14 @@ public class ProfileSearchQueryService {
         if (projectIdOpt.isEmpty()) {
             return Optional.empty();
         }
-        long projectId = projectIdOpt.get();
+        final long projectId = projectIdOpt.get();
 
         // Step 2: load project fields
         record ProjectRow(String projectNumber, String descriptionShort, String descriptionLong,
                           String workplace, String skills, String duration,
                           LocalDateTime startDate, int status, Long stundensatzVk) {}
 
-        var projectOpt = jdbcClient.sql("""
+        final var projectOpt = jdbcClient.sql("""
                 SELECT project_number, description_short, description_long, workplace, skills,
                        duration, start_date, status, stundensatz_vk
                 FROM project WHERE id = :projectId
@@ -99,14 +99,14 @@ public class ProfileSearchQueryService {
         if (projectOpt.isEmpty()) {
             return Optional.empty();
         }
-        var project = projectOpt.get();
+        final var project = projectOpt.get();
 
         // Step 3: load positions with freelancer and status info
         record PositionRow(Long freelancerId, String code, String name1, String name2,
                            String freelancerSkills, String positionStatus,
                            String konditionen, String kommentar) {}
 
-        var positionRows = jdbcClient.sql("""
+        final var positionRows = jdbcClient.sql("""
                 SELECT pp.freelancer_id, f.code, f.name1, f.name2, f.skills AS freelancer_skills,
                        pps.description AS position_status, pp.konditionen, pp.kommentar
                 FROM project_position pp
@@ -119,9 +119,9 @@ public class ProfileSearchQueryService {
                 .list();
 
         // Step 4: for each position, load tags
-        List<LlmFreelancerContext> positions = new ArrayList<>();
-        for (var pos : positionRows) {
-            var tags = jdbcClient.sql("""
+        final List<LlmFreelancerContext> positions = new ArrayList<>();
+        for (final var pos : positionRows) {
+            final var tags = jdbcClient.sql("""
                     SELECT t.tagname FROM tags t
                     JOIN freelancer_tags ft ON ft.tag_id = t.id
                     WHERE ft.freelancer_id = :freelancerId
@@ -140,7 +140,7 @@ public class ProfileSearchQueryService {
         String statusLabel;
         try {
             statusLabel = ProjectStatus.fromInt(project.status()).getLabel();
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             statusLabel = String.valueOf(project.status());
         }
 

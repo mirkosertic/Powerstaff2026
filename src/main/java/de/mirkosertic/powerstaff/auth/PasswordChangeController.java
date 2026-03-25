@@ -16,23 +16,23 @@ public class PasswordChangeController {
     private final PsUserRepository repository;
     private final PasswordEncoder passwordEncoder;
 
-    public PasswordChangeController(PsUserRepository repository, PasswordEncoder passwordEncoder) {
+    public PasswordChangeController(final PsUserRepository repository, final PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
-    public String showForm(Model model) {
+    public String showForm(final Model model) {
         model.addAttribute("passwordChangeCommand", new PasswordChangeCommand());
         return "auth/password-change";
     }
 
     @PostMapping
-    public String changePassword(@RequestParam("oldPassword") String oldPassword,
-                                  @RequestParam("newPassword") String newPassword,
-                                  @RequestParam("newPasswordConfirm") String newPasswordConfirm,
-                                  Authentication authentication,
-                                  Model model) {
+    public String changePassword(@RequestParam("oldPassword") final String oldPassword,
+                                 @RequestParam("newPassword") final String newPassword,
+                                 @RequestParam("newPasswordConfirm") final String newPasswordConfirm,
+                                 final Authentication authentication,
+                                 final Model model) {
 
         if (!newPassword.equals(newPasswordConfirm)) {
             model.addAttribute("passwordChangeCommand", new PasswordChangeCommand());
@@ -46,8 +46,8 @@ public class PasswordChangeController {
             return "auth/password-change";
         }
 
-        String username = authentication.getName();
-        PsUser psUser = repository.findById(username).orElse(null);
+        final String username = authentication.getName();
+        final PsUser psUser = repository.findById(username).orElse(null);
 
         if (psUser == null || !passwordEncoder.matches(oldPassword, psUser.getPasswordHash())) {
             model.addAttribute("passwordChangeCommand", new PasswordChangeCommand());
@@ -55,7 +55,7 @@ public class PasswordChangeController {
             return "auth/password-change";
         }
 
-        String newHash = passwordEncoder.encode(newPassword);
+        final String newHash = passwordEncoder.encode(newPassword);
         repository.updatePassword(username, newHash);
 
         return "redirect:/";

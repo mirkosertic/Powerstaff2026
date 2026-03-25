@@ -36,11 +36,11 @@ public class FreelancerQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public FreelancerQueryService(JdbcClient jdbcClient) {
+    public FreelancerQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
-    public Optional<FreelancerDetailView> findById(long id) {
+    public Optional<FreelancerDetailView> findById(final long id) {
         return jdbcClient.sql(SELECT_FREELANCER + "WHERE id = :id")
                 .param("id", id)
                 .query(FreelancerDetailView.class)
@@ -59,82 +59,82 @@ public class FreelancerQueryService {
                 .optional();
     }
 
-    public Optional<FreelancerDetailView> findPrevious(long currentId) {
+    public Optional<FreelancerDetailView> findPrevious(final long currentId) {
         return jdbcClient.sql(SELECT_FREELANCER + "WHERE id < :currentId ORDER BY id DESC LIMIT 1")
                 .param("currentId", currentId)
                 .query(FreelancerDetailView.class)
                 .optional();
     }
 
-    public Optional<FreelancerDetailView> findNext(long currentId) {
+    public Optional<FreelancerDetailView> findNext(final long currentId) {
         return jdbcClient.sql(SELECT_FREELANCER + "WHERE id > :currentId ORDER BY id ASC LIMIT 1")
                 .param("currentId", currentId)
                 .query(FreelancerDetailView.class)
                 .optional();
     }
 
-    public List<FreelancerSearchResult> search(FreelancerSearchCriteria criteria, int offset, int limit) {
-        var sql = new StringBuilder("""
+    public List<FreelancerSearchResult> search(final FreelancerSearchCriteria criteria, final int offset, final int limit) {
+        final var sql = new StringBuilder("""
                 SELECT id, code, name1, name2, company, city,
                        availability_as_date, salary_long, salary_per_day_long, skills
                 FROM freelancer
                 WHERE 1=1
                 """);
-        Map<String, Object> params = new LinkedHashMap<>();
+        final Map<String, Object> params = new LinkedHashMap<>();
         appendStringCriteria(sql, params, criteria);
         if (criteria.salaryLongMax() != null) {
-            String pName = "p" + (params.size() + 1);
+            final String pName = "p" + (params.size() + 1);
             sql.append(" AND salary_long <= :").append(pName);
             params.put(pName, criteria.salaryLongMax());
         }
         if (criteria.salaryPerDayLongMax() != null) {
-            String pName = "p" + (params.size() + 1);
+            final String pName = "p" + (params.size() + 1);
             sql.append(" AND salary_per_day_long <= :").append(pName);
             params.put(pName, criteria.salaryPerDayLongMax());
         }
-        String orderBy;
+        final String orderBy;
         if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
-            String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
+            final String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
             orderBy = criteria.sortField() + " " + dir;
         } else {
             orderBy = DEFAULT_SORT;
         }
-        String pLimit = "p" + (params.size() + 1);
-        String pOffset = "p" + (params.size() + 2);
+        final String pLimit = "p" + (params.size() + 1);
+        final String pOffset = "p" + (params.size() + 2);
         sql.append(" ORDER BY ").append(orderBy).append(" LIMIT :").append(pLimit).append(" OFFSET :").append(pOffset);
         params.put(pLimit, limit);
         params.put(pOffset, offset);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (var entry : params.entrySet()) {
+        for (final var entry : params.entrySet()) {
             stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(FreelancerSearchResult.class).list();
     }
 
-    public long countSearch(FreelancerSearchCriteria criteria) {
-        var sql = new StringBuilder("SELECT COUNT(*) FROM freelancer WHERE 1=1");
-        Map<String, Object> params = new LinkedHashMap<>();
+    public long countSearch(final FreelancerSearchCriteria criteria) {
+        final var sql = new StringBuilder("SELECT COUNT(*) FROM freelancer WHERE 1=1");
+        final Map<String, Object> params = new LinkedHashMap<>();
         appendStringCriteria(sql, params, criteria);
         if (criteria.salaryLongMax() != null) {
-            String pName = "p" + (params.size() + 1);
+            final String pName = "p" + (params.size() + 1);
             sql.append(" AND salary_long <= :").append(pName);
             params.put(pName, criteria.salaryLongMax());
         }
         if (criteria.salaryPerDayLongMax() != null) {
-            String pName = "p" + (params.size() + 1);
+            final String pName = "p" + (params.size() + 1);
             sql.append(" AND salary_per_day_long <= :").append(pName);
             params.put(pName, criteria.salaryPerDayLongMax());
         }
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (var entry : params.entrySet()) {
+        for (final var entry : params.entrySet()) {
             stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(Long.class).single();
     }
 
-    public List<FreelancerContactView> findContactsByFreelancerId(long freelancerId) {
+    public List<FreelancerContactView> findContactsByFreelancerId(final long freelancerId) {
         return jdbcClient.sql("""
                 SELECT id, type, value, freelancer_id
                 FROM freelancer_contact
@@ -146,7 +146,7 @@ public class FreelancerQueryService {
                 .list();
     }
 
-    public List<FreelancerHistoryView> findHistoryByFreelancerId(long freelancerId) {
+    public List<FreelancerHistoryView> findHistoryByFreelancerId(final long freelancerId) {
         return jdbcClient.sql("""
                 SELECT fh.id, fh.creation_date, fh.creation_user, fh.changed_date, fh.changed_user,
                        fh.description, fh.type_id, ht.description AS type_description, fh.freelancer_id
@@ -160,7 +160,7 @@ public class FreelancerQueryService {
                 .list();
     }
 
-    public List<TagInfo> findTagsByFreelancerId(long freelancerId) {
+    public List<TagInfo> findTagsByFreelancerId(final long freelancerId) {
         return jdbcClient.sql("""
                 SELECT t.id, t.tagname AS name, t.type
                 FROM freelancer_tags ft
@@ -179,7 +179,7 @@ public class FreelancerQueryService {
                 .toList();
     }
 
-    public List<TagInfo> findAvailableTagsByFreelancerIdAndType(long freelancerId, TagType type) {
+    public List<TagInfo> findAvailableTagsByFreelancerIdAndType(final long freelancerId, final TagType type) {
         return jdbcClient.sql("""
                 SELECT t.id, t.tagname AS name, t.type
                 FROM tags t
@@ -198,7 +198,7 @@ public class FreelancerQueryService {
                 .list();
     }
 
-    private static void appendStringCriteria(StringBuilder sql, Map<String, Object> params, FreelancerSearchCriteria c) {
+    private static void appendStringCriteria(final StringBuilder sql, final Map<String, Object> params, final FreelancerSearchCriteria c) {
         appendLike(sql, params, "name1", c.name1());
         appendLike(sql, params, "name2", c.name2());
         appendLike(sql, params, "company", c.company());
@@ -218,9 +218,9 @@ public class FreelancerQueryService {
         appendLike(sql, params, "skills", c.skills());
     }
 
-    private static void appendLike(StringBuilder sql, Map<String, Object> params, String column, String value) {
+    private static void appendLike(final StringBuilder sql, final Map<String, Object> params, final String column, final String value) {
         if (value != null && !value.isBlank()) {
-            String paramName = "p" + (params.size() + 1);
+            final String paramName = "p" + (params.size() + 1);
             sql.append(" AND ").append(column).append(" LIKE :").append(paramName);
             params.put(paramName, "%" + value + "%");
         }

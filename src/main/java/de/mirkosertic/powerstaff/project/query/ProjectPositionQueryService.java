@@ -12,18 +12,18 @@ public class ProjectPositionQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public ProjectPositionQueryService(JdbcClient jdbcClient) {
+    public ProjectPositionQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
-    public List<ProjectPositionView> findByProjectId(Long projectId, String sortField, String sortDir) {
-        var safeField = switch (sortField != null ? sortField : "code") {
+    public List<ProjectPositionView> findByProjectId(final Long projectId, final String sortField, final String sortDir) {
+        final var safeField = switch (sortField != null ? sortField : "code") {
             case "name1" -> "f.name1";
             case "name2" -> "f.name2";
             case "statusDescription" -> "pps.description";
             default -> "f.code";
         };
-        var safeDir = "desc".equalsIgnoreCase(sortDir) ? "DESC" : "ASC";
+        final var safeDir = "desc".equalsIgnoreCase(sortDir) ? "DESC" : "ASC";
 
         return jdbcClient.sql(
                 "SELECT pp.id, pp.db_version, pp.freelancer_id, f.code, f.name1, f.name2,"
@@ -39,8 +39,8 @@ public class ProjectPositionQueryService {
                 .list();
     }
 
-    public boolean existsPosition(Long projectId, Long freelancerId) {
-        var count = jdbcClient.sql(
+    public boolean existsPosition(final Long projectId, final Long freelancerId) {
+        final var count = jdbcClient.sql(
                 "SELECT COUNT(*) FROM project_position WHERE project_id = :projectId AND freelancer_id = :freelancerId")
                 .param("projectId", projectId)
                 .param("freelancerId", freelancerId)

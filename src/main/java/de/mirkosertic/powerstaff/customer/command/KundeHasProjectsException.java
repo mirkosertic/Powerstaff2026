@@ -6,7 +6,7 @@ public class KundeHasProjectsException extends RuntimeException {
 
     private final List<Long> projectIds;
 
-    public KundeHasProjectsException(List<Long> projectIds) {
+    public KundeHasProjectsException(final List<Long> projectIds) {
         super("Kunde ist Projekten zugeordnet: " + projectIds);
         this.projectIds = projectIds;
     }

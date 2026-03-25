@@ -6,7 +6,7 @@ public class PartnerHasProjectsException extends RuntimeException {
 
     private final List<Long> projectIds;
 
-    public PartnerHasProjectsException(List<Long> projectIds) {
+    public PartnerHasProjectsException(final List<Long> projectIds) {
         super("Partner cannot be deleted: linked to projects " + projectIds);
         this.projectIds = projectIds;
     }

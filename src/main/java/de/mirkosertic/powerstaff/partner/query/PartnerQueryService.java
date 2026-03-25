@@ -26,11 +26,11 @@ public class PartnerQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public PartnerQueryService(JdbcClient jdbcClient) {
+    public PartnerQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
-    public Optional<PartnerDetailView> findById(Long id) {
+    public Optional<PartnerDetailView> findById(final Long id) {
         return jdbcClient.sql(SELECT_PARTNER + "WHERE id = :id")
                 .param("id", id)
                 .query(PartnerDetailView.class)
@@ -49,14 +49,14 @@ public class PartnerQueryService {
                 .optional();
     }
 
-    public Optional<PartnerDetailView> findPrevious(Long currentId) {
+    public Optional<PartnerDetailView> findPrevious(final Long currentId) {
         return jdbcClient.sql(SELECT_PARTNER + "WHERE id < :currentId ORDER BY id DESC LIMIT 1")
                 .param("currentId", currentId)
                 .query(PartnerDetailView.class)
                 .optional();
     }
 
-    public Optional<PartnerDetailView> findNext(Long currentId) {
+    public Optional<PartnerDetailView> findNext(final Long currentId) {
         return jdbcClient.sql(SELECT_PARTNER + "WHERE id > :currentId ORDER BY id ASC LIMIT 1")
                 .param("currentId", currentId)
                 .query(PartnerDetailView.class)
@@ -67,47 +67,47 @@ public class PartnerQueryService {
      * QBE search: all non-null/non-blank fields are combined with AND LIKE '%value%'.
      * Returns up to {@code limit} results starting at {@code offset}, sorted by company ASC.
      */
-    public List<PartnerSearchResult> search(PartnerSearchCriteria criteria, int offset, int limit) {
-        var sql = new StringBuilder("""
+    public List<PartnerSearchResult> search(final PartnerSearchCriteria criteria, final int offset, final int limit) {
+        final var sql = new StringBuilder("""
                 SELECT id, company, name1, name2, city
                 FROM partner
                 WHERE 1=1
                 """);
-        Map<String, Object> params = new LinkedHashMap<>();
+        final Map<String, Object> params = new LinkedHashMap<>();
         appendCriteria(sql, params, criteria);
-        String orderBy;
+        final String orderBy;
         if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
-            String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
+            final String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
             orderBy = criteria.sortField() + " " + dir;
         } else {
             orderBy = DEFAULT_SORT;
         }
-        String pLimit = "p" + (params.size() + 1);
-        String pOffset = "p" + (params.size() + 2);
+        final String pLimit = "p" + (params.size() + 1);
+        final String pOffset = "p" + (params.size() + 2);
         sql.append(" ORDER BY ").append(orderBy).append(" LIMIT :").append(pLimit).append(" OFFSET :").append(pOffset);
         params.put(pLimit, limit);
         params.put(pOffset, offset);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (var entry : params.entrySet()) {
+        for (final var entry : params.entrySet()) {
             stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(PartnerSearchResult.class).list();
     }
 
-    public long countSearch(PartnerSearchCriteria criteria) {
-        var sql = new StringBuilder("SELECT COUNT(*) FROM partner WHERE 1=1");
-        Map<String, Object> params = new LinkedHashMap<>();
+    public long countSearch(final PartnerSearchCriteria criteria) {
+        final var sql = new StringBuilder("SELECT COUNT(*) FROM partner WHERE 1=1");
+        final Map<String, Object> params = new LinkedHashMap<>();
         appendCriteria(sql, params, criteria);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (var entry : params.entrySet()) {
+        for (final var entry : params.entrySet()) {
             stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(Long.class).single();
     }
 
-    private static void appendCriteria(StringBuilder sql, Map<String, Object> params, PartnerSearchCriteria criteria) {
+    private static void appendCriteria(final StringBuilder sql, final Map<String, Object> params, final PartnerSearchCriteria criteria) {
         appendLike(sql, params, "company", criteria.company());
         appendLike(sql, params, "name1", criteria.name1());
         appendLike(sql, params, "name2", criteria.name2());
@@ -120,15 +120,15 @@ public class PartnerQueryService {
         appendLike(sql, params, "kreditor_nr", criteria.kreditorNr());
     }
 
-    private static void appendLike(StringBuilder sql, Map<String, Object> params, String column, String value) {
+    private static void appendLike(final StringBuilder sql, final Map<String, Object> params, final String column, final String value) {
         if (value != null && !value.isBlank()) {
-            String paramName = "p" + (params.size() + 1);
+            final String paramName = "p" + (params.size() + 1);
             sql.append(" AND ").append(column).append(" LIKE :").append(paramName);
             params.put(paramName, "%" + value + "%");
         }
     }
 
-    public List<PartnerFreelancerView> findFreelancersByPartner(Long partnerId) {
+    public List<PartnerFreelancerView> findFreelancersByPartner(final Long partnerId) {
         return jdbcClient.sql("""
                 SELECT id, code, name1, name2, company, availability_as_date, salary_long
                 FROM freelancer
@@ -140,7 +140,7 @@ public class PartnerQueryService {
                 .list();
     }
 
-    public List<PartnerProjectView> findProjectsByPartner(Long partnerId) {
+    public List<PartnerProjectView> findProjectsByPartner(final Long partnerId) {
         return jdbcClient.sql("""
                 SELECT id, project_number, description_short, workplace, start_date, status
                 FROM project
@@ -152,7 +152,7 @@ public class PartnerQueryService {
                 .list();
     }
 
-    public List<PartnerContactView> findContactsByPartner(Long partnerId) {
+    public List<PartnerContactView> findContactsByPartner(final Long partnerId) {
         return jdbcClient.sql("""
                 SELECT id, type, value, partner_id
                 FROM partner_contact
@@ -164,7 +164,7 @@ public class PartnerQueryService {
                 .list();
     }
 
-    public List<PartnerHistoryView> findHistoryByPartner(Long partnerId) {
+    public List<PartnerHistoryView> findHistoryByPartner(final Long partnerId) {
         return jdbcClient.sql("""
                 SELECT ph.id, ph.creation_date, ph.creation_user, ph.changed_date, ph.changed_user,
                        ph.description, ph.type_id, ht.description AS type_description, ph.partner_id

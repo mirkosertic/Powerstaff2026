@@ -10,7 +10,7 @@ public class ProjectPositionStatusQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public ProjectPositionStatusQueryService(JdbcClient jdbcClient) {
+    public ProjectPositionStatusQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 

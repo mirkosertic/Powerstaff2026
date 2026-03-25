@@ -39,7 +39,7 @@ public enum TagType {
 
     private final int order;
 
-    TagType(int order) {
+    TagType(final int order) {
         this.order = order;
     }
 

@@ -17,11 +17,11 @@ public class FreelancerCommandService {
     private final FreelancerTagCommandService tagCommandService;
     private final JdbcClient jdbcClient;
 
-    public FreelancerCommandService(FreelancerRepository freelancerRepository,
-                                    FreelancerContactRepository contactRepository,
-                                    FreelancerHistoryRepository historyRepository,
-                                    FreelancerTagCommandService tagCommandService,
-                                    JdbcClient jdbcClient) {
+    public FreelancerCommandService(final FreelancerRepository freelancerRepository,
+                                    final FreelancerContactRepository contactRepository,
+                                    final FreelancerHistoryRepository historyRepository,
+                                    final FreelancerTagCommandService tagCommandService,
+                                    final JdbcClient jdbcClient) {
         this.freelancerRepository = freelancerRepository;
         this.contactRepository = contactRepository;
         this.historyRepository = historyRepository;
@@ -37,14 +37,14 @@ public class FreelancerCommandService {
      * wenn der Code bereits von einem anderen Freiberufler verwendet wird.
      */
     /** Convenience-Methode für Tests und interne Aufrufe ohne Delta-Listen. */
-    public Freelancer save(Freelancer freelancer) {
+    public Freelancer save(final Freelancer freelancer) {
         return save(freelancer, List.of(), List.of(), List.of());
     }
 
-    public Freelancer save(Freelancer freelancer,
-                           List<FreelancerContactEntry> contactChanges,
-                           List<FreelancerHistoryEntry> historyChanges,
-                           List<FreelancerTagEntry> tagChanges) {
+    public Freelancer save(final Freelancer freelancer,
+                           final List<FreelancerContactEntry> contactChanges,
+                           final List<FreelancerHistoryEntry> historyChanges,
+                           final List<FreelancerTagEntry> tagChanges) {
         // Leeren Code → NULL normalisieren (verhindert UNIQUE-Constraint-Verletzung)
         if (freelancer.getCode() != null && freelancer.getCode().isBlank()) {
             freelancer.setCode(null);
@@ -58,13 +58,13 @@ public class FreelancerCommandService {
             });
         }
 
-        Freelancer saved = freelancerRepository.save(freelancer);
-        long freelancerId = saved.getId();
+        final Freelancer saved = freelancerRepository.save(freelancer);
+        final long freelancerId = saved.getId();
 
         // Kontakt-Delta verarbeiten
-        for (FreelancerContactEntry cmd : contactChanges) {
+        for (final FreelancerContactEntry cmd : contactChanges) {
             if ("ADD".equals(cmd.op())) {
-                FreelancerContact contact = new FreelancerContact();
+                final FreelancerContact contact = new FreelancerContact();
                 contact.setType(cmd.type());
                 contact.setValue(cmd.value());
                 contact.setFreelancerId(freelancerId);
@@ -78,9 +78,9 @@ public class FreelancerCommandService {
         }
 
         // Historie-Delta verarbeiten
-        for (FreelancerHistoryEntry cmd : historyChanges) {
+        for (final FreelancerHistoryEntry cmd : historyChanges) {
             if ("ADD".equals(cmd.op())) {
-                FreelancerHistory history = new FreelancerHistory();
+                final FreelancerHistory history = new FreelancerHistory();
                 history.setDescription(cmd.description());
                 history.setTypeId(cmd.typeId());
                 history.setFreelancerId(freelancerId);
@@ -103,11 +103,11 @@ public class FreelancerCommandService {
         }
 
         // Tag-Delta verarbeiten
-        for (FreelancerTagEntry cmd : tagChanges) {
+        for (final FreelancerTagEntry cmd : tagChanges) {
             if ("ADD".equals(cmd.op()) && cmd.tagId() != null) {
                 try {
                     tagCommandService.addTag(freelancerId, cmd.tagId());
-                } catch (DuplicateTagException ignored) {
+                } catch (final DuplicateTagException ignored) {
                     // Tag bereits zugeordnet – ignorieren (idempotent)
                 }
             } else if ("DELETE".equals(cmd.op()) && cmd.tagId() != null) {
@@ -119,7 +119,7 @@ public class FreelancerCommandService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Freelancer> findById(long id) {
+    public Optional<Freelancer> findById(final long id) {
         return freelancerRepository.findById(id);
     }
 
@@ -128,7 +128,7 @@ public class FreelancerCommandService {
      * Liefert ein öffentliches Lookup-Ergebnis für Cross-Modul-Nutzung.
      */
     @Transactional(readOnly = true)
-    public Optional<FreelancerLookupResult> findByCode(String code) {
+    public Optional<FreelancerLookupResult> findByCode(final String code) {
         return freelancerRepository.findByCode(code)
                 .map(f -> new FreelancerLookupResult(f.getId(), f.getPartnerId(), f.getCompany()));
     }
@@ -137,8 +137,8 @@ public class FreelancerCommandService {
      * Löscht einen Freiberufler. Wirft {@link FreelancerHasPositionsException} wenn aktive
      * Projektpositionen auf diesen Freiberufler verweisen.
      */
-    public void deleteById(long id) {
-        List<Long> linkedProjectIds = jdbcClient
+    public void deleteById(final long id) {
+        final List<Long> linkedProjectIds = jdbcClient
                 .sql("SELECT project_id FROM project_position WHERE freelancer_id = :freelancerId")
                 .param("freelancerId", id)
                 .query(Long.class)
@@ -155,7 +155,7 @@ public class FreelancerCommandService {
      * Ordnet einen Freiberufler einem Partner zu.
      * Targeted UPDATE — kein vollständiges Aggregate-Save, um den Audit-Trail zu schützen.
      */
-    public void assignToPartner(long freelancerId, long partnerId) {
+    public void assignToPartner(final long freelancerId, final long partnerId) {
         jdbcClient.sql("UPDATE freelancer SET partner_id = :partnerId WHERE id = :freelancerId")
                 .param("partnerId", partnerId)
                 .param("freelancerId", freelancerId)
@@ -165,7 +165,7 @@ public class FreelancerCommandService {
     /**
      * Löst die Zuordnung eines Freiberuflers zu einem Partner auf.
      */
-    public void removeFromPartner(long freelancerId, long partnerId) {
+    public void removeFromPartner(final long freelancerId, final long partnerId) {
         jdbcClient.sql("UPDATE freelancer SET partner_id = NULL WHERE id = :freelancerId AND partner_id = :partnerId")
                 .param("freelancerId", freelancerId)
                 .param("partnerId", partnerId)

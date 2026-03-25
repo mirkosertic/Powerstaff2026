@@ -22,7 +22,7 @@ public class UserController {
     private final UserQueryService userQueryService;
     private final UserCommandService userCommandService;
 
-    public UserController(UserQueryService userQueryService, UserCommandService userCommandService) {
+    public UserController(final UserQueryService userQueryService, final UserCommandService userCommandService) {
         this.userQueryService = userQueryService;
         this.userCommandService = userCommandService;
     }
@@ -32,7 +32,7 @@ public class UserController {
     // -------------------------------------------------------------------------
 
     @GetMapping
-    public String list(Model model, @RequestParam(required = false) String deleted) {
+    public String list(final Model model, @RequestParam(required = false) final String deleted) {
         model.addAttribute("users", userQueryService.findAll());
         model.addAttribute("activePage", "admin");
         if (deleted != null) {
@@ -46,11 +46,11 @@ public class UserController {
     // -------------------------------------------------------------------------
 
     @PostMapping
-    public String createUser(@RequestParam String username,
-                             @RequestParam String password,
-                             @RequestParam(defaultValue = "false") boolean mustChangePassword,
-                             @RequestParam(defaultValue = "false") boolean enabled,
-                             RedirectAttributes redirectAttributes) {
+    public String createUser(@RequestParam final String username,
+                             @RequestParam final String password,
+                             @RequestParam(defaultValue = "false") final boolean mustChangePassword,
+                             @RequestParam(defaultValue = "false") final boolean enabled,
+                             final RedirectAttributes redirectAttributes) {
         if (username == null || username.isBlank()) {
             redirectAttributes.addFlashAttribute("error", "Benutzername darf nicht leer sein.");
             return "redirect:/admin/benutzer";
@@ -72,12 +72,12 @@ public class UserController {
     // -------------------------------------------------------------------------
 
     @PostMapping("/{username}")
-    public String updateUser(@PathVariable String username,
-                             @RequestParam(defaultValue = "false") boolean mustChangePassword,
-                             @RequestParam(defaultValue = "false") boolean enabled,
-                             @RequestParam(required = false) String newPassword,
-                             Authentication authentication,
-                             RedirectAttributes redirectAttributes) {
+    public String updateUser(@PathVariable final String username,
+                             @RequestParam(defaultValue = "false") final boolean mustChangePassword,
+                             @RequestParam(defaultValue = "false") final boolean enabled,
+                             @RequestParam(required = false) final String newPassword,
+                             final Authentication authentication,
+                             final RedirectAttributes redirectAttributes) {
         if (userCommandService.findByUsername(username).isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Benutzer nicht gefunden.");
             return "redirect:/admin/benutzer";
@@ -98,9 +98,9 @@ public class UserController {
     // -------------------------------------------------------------------------
 
     @PostMapping("/{username}/systemprompt")
-    public String updateSystemPrompt(@PathVariable String username,
-                                     @RequestParam String profileSearchSystemPrompt,
-                                     RedirectAttributes redirectAttributes) {
+    public String updateSystemPrompt(@PathVariable final String username,
+                                     @RequestParam final String profileSearchSystemPrompt,
+                                     final RedirectAttributes redirectAttributes) {
         if (userCommandService.findByUsername(username).isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Benutzer nicht gefunden.");
             return "redirect:/admin/benutzer";
@@ -116,8 +116,8 @@ public class UserController {
 
     @DeleteMapping("/{username}")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable String username,
-                                                          Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable final String username,
+                                                          final Authentication authentication) {
         if (authentication != null && authentication.getName().equals(username)) {
             return ResponseEntity.badRequest()
                     .body(Map.of("ok", false, "error", "Sie können sich nicht selbst löschen."));

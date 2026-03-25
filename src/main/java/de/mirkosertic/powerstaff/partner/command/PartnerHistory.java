@@ -44,26 +44,26 @@ public class PartnerHistory {
     private Long partnerId;
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(final Long id) { this.id = id; }
 
     public LocalDateTime getCreationDate() { return creationDate; }
-    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
+    public void setCreationDate(final LocalDateTime creationDate) { this.creationDate = creationDate; }
 
     public String getCreationUser() { return creationUser; }
-    public void setCreationUser(String creationUser) { this.creationUser = creationUser; }
+    public void setCreationUser(final String creationUser) { this.creationUser = creationUser; }
 
     public LocalDateTime getChangedDate() { return changedDate; }
-    public void setChangedDate(LocalDateTime changedDate) { this.changedDate = changedDate; }
+    public void setChangedDate(final LocalDateTime changedDate) { this.changedDate = changedDate; }
 
     public String getChangedUser() { return changedUser; }
-    public void setChangedUser(String changedUser) { this.changedUser = changedUser; }
+    public void setChangedUser(final String changedUser) { this.changedUser = changedUser; }
 
     public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(final String description) { this.description = description; }
 
     public Long getTypeId() { return typeId; }
-    public void setTypeId(Long typeId) { this.typeId = typeId; }
+    public void setTypeId(final Long typeId) { this.typeId = typeId; }
 
     public Long getPartnerId() { return partnerId; }
-    public void setPartnerId(Long partnerId) { this.partnerId = partnerId; }
+    public void setPartnerId(final Long partnerId) { this.partnerId = partnerId; }
 }

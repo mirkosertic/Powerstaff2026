@@ -1,6 +1,7 @@
 package de.mirkosertic.powerstaff.project.command;
 
 import de.mirkosertic.powerstaff.shared.query.ProjectPositionStatusQueryService;
+import de.mirkosertic.powerstaff.shared.query.ProjectPositionStatusView;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,16 +13,16 @@ public class ProjectPositionCommandService {
     private final ProjectPositionRepository repository;
     private final ProjectPositionStatusQueryService positionStatusQueryService;
 
-    public ProjectPositionCommandService(ProjectPositionRepository repository,
-                                         ProjectPositionStatusQueryService positionStatusQueryService) {
+    public ProjectPositionCommandService(final ProjectPositionRepository repository,
+                                         final ProjectPositionStatusQueryService positionStatusQueryService) {
         this.repository = repository;
         this.positionStatusQueryService = positionStatusQueryService;
     }
 
-    public ProjectPosition save(ProjectPosition position) {
+    public ProjectPosition save(final ProjectPosition position) {
         try {
             return repository.save(position);
-        } catch (DataIntegrityViolationException e) {
+        } catch (final DataIntegrityViolationException e) {
             if (position.getProjectId() != null && position.getFreelancerId() != null) {
                 throw new FreelancerAlreadyAssignedException(position.getFreelancerId(), position.getProjectId());
             }
@@ -33,15 +34,15 @@ public class ProjectPositionCommandService {
      * Assigns a freelancer to a project. Delegates from FreelancerController (ADR-018).
      * If statusId is null, the configured default ProjectPositionStatus is used.
      */
-    public void assignFreelancerToProject(long freelancerId, long projectId, Long statusId, String konditionen, String kommentar) {
+    public void assignFreelancerToProject(final long freelancerId, final long projectId, final Long statusId, final String konditionen, final String kommentar) {
         Long resolvedStatusId = statusId;
         if (resolvedStatusId == null) {
             resolvedStatusId = positionStatusQueryService.findDefault()
-                    .map(s -> s.id())
+                    .map(ProjectPositionStatusView::id)
                     .orElseThrow(() -> new IllegalStateException(
                             "Kein Standard-Positionsstatus konfiguriert. Bitte im Administrationsbereich einen Standard-Status festlegen."));
         }
-        var position = new ProjectPosition();
+        final var position = new ProjectPosition();
         position.setProjectId(projectId);
         position.setFreelancerId(freelancerId);
         position.setStatusId(resolvedStatusId);
@@ -49,7 +50,7 @@ public class ProjectPositionCommandService {
         position.setKommentar(kommentar);
         try {
             repository.save(position);
-        } catch (DataIntegrityViolationException e) {
+        } catch (final DataIntegrityViolationException e) {
             throw new FreelancerAlreadyAssignedException(freelancerId, projectId);
         }
     }
@@ -58,8 +59,8 @@ public class ProjectPositionCommandService {
      * Aktualisiert die editierbaren Felder einer bestehenden Projektposition (Status, Konditionen, Kommentar).
      * Lädt den bestehenden Datensatz, um Audit-Informationen und die Freiberufler-Zuordnung zu erhalten.
      */
-    public ProjectPosition updateEditable(long positionId, Long statusId, String konditionen, String kommentar, Long dbVersion) {
-        var position = repository.findById(positionId)
+    public ProjectPosition updateEditable(final long positionId, final Long statusId, final String konditionen, final String kommentar, final Long dbVersion) {
+        final var position = repository.findById(positionId)
                 .orElseThrow(() -> new IllegalArgumentException("Projektposition nicht gefunden: " + positionId));
         position.setStatusId(statusId);
         position.setKonditionen(konditionen);
@@ -68,7 +69,7 @@ public class ProjectPositionCommandService {
         return repository.save(position);
     }
 
-    public void delete(Long positionId) {
+    public void delete(final Long positionId) {
         repository.deleteById(positionId);
     }
 }

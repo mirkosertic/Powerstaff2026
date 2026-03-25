@@ -28,11 +28,11 @@ public class ProjectQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public ProjectQueryService(JdbcClient jdbcClient) {
+    public ProjectQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
-    public Optional<ProjectDetailView> findById(Long id) {
+    public Optional<ProjectDetailView> findById(final Long id) {
         return jdbcClient.sql(SELECT_PROJECT + "WHERE id = :id")
                 .param("id", id)
                 .query(ProjectDetailView.class)
@@ -51,27 +51,27 @@ public class ProjectQueryService {
                 .optional();
     }
 
-    public Optional<ProjectDetailView> findPrevious(Long currentId) {
+    public Optional<ProjectDetailView> findPrevious(final Long currentId) {
         return jdbcClient.sql(SELECT_PROJECT + "WHERE id < :currentId ORDER BY id DESC LIMIT 1")
                 .param("currentId", currentId)
                 .query(ProjectDetailView.class)
                 .optional();
     }
 
-    public Optional<ProjectDetailView> findNext(Long currentId) {
+    public Optional<ProjectDetailView> findNext(final Long currentId) {
         return jdbcClient.sql(SELECT_PROJECT + "WHERE id > :currentId ORDER BY id ASC LIMIT 1")
                 .param("currentId", currentId)
                 .query(ProjectDetailView.class)
                 .optional();
     }
 
-    public List<ProjectSearchResult> search(ProjectSearchCriteria criteria, int offset, int limit) {
-        var sql = new StringBuilder("""
+    public List<ProjectSearchResult> search(final ProjectSearchCriteria criteria, final int offset, final int limit) {
+        final var sql = new StringBuilder("""
                 SELECT id, project_number, description_short, workplace, start_date, status, stundensatz_vk
                 FROM project
                 WHERE 1=1
                 """);
-        Map<String, Object> params = new LinkedHashMap<>();
+        final Map<String, Object> params = new LinkedHashMap<>();
         appendLike(sql, params, "project_number", criteria.projectNumber());
         appendLike(sql, params, "description_short", criteria.descriptionShort());
         appendLike(sql, params, "description_long", criteria.descriptionLong());
@@ -81,33 +81,33 @@ public class ProjectQueryService {
         appendLike(sql, params, "debitor_nr", criteria.debitorNr());
         appendLike(sql, params, "kreditor_nr", criteria.kreditorNr());
         if (criteria.status() != null) {
-            String pName = "p" + (params.size() + 1);
+            final String pName = "p" + (params.size() + 1);
             sql.append(" AND status = :").append(pName);
             params.put(pName, criteria.status());
         }
-        String orderBy;
+        final String orderBy;
         if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
-            String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
+            final String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
             orderBy = criteria.sortField() + " " + dir;
         } else {
             orderBy = DEFAULT_SORT;
         }
-        String pLimit = "p" + (params.size() + 1);
-        String pOffset = "p" + (params.size() + 2);
+        final String pLimit = "p" + (params.size() + 1);
+        final String pOffset = "p" + (params.size() + 2);
         sql.append(" ORDER BY ").append(orderBy).append(" LIMIT :").append(pLimit).append(" OFFSET :").append(pOffset);
         params.put(pLimit, limit);
         params.put(pOffset, offset);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (var entry : params.entrySet()) {
+        for (final var entry : params.entrySet()) {
             stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(ProjectSearchResult.class).list();
     }
 
-    public long countSearch(ProjectSearchCriteria criteria) {
-        var sql = new StringBuilder("SELECT COUNT(*) FROM project WHERE 1=1");
-        Map<String, Object> params = new LinkedHashMap<>();
+    public long countSearch(final ProjectSearchCriteria criteria) {
+        final var sql = new StringBuilder("SELECT COUNT(*) FROM project WHERE 1=1");
+        final Map<String, Object> params = new LinkedHashMap<>();
         appendLike(sql, params, "project_number", criteria.projectNumber());
         appendLike(sql, params, "description_short", criteria.descriptionShort());
         appendLike(sql, params, "description_long", criteria.descriptionLong());
@@ -117,21 +117,21 @@ public class ProjectQueryService {
         appendLike(sql, params, "debitor_nr", criteria.debitorNr());
         appendLike(sql, params, "kreditor_nr", criteria.kreditorNr());
         if (criteria.status() != null) {
-            String pName = "p" + (params.size() + 1);
+            final String pName = "p" + (params.size() + 1);
             sql.append(" AND status = :").append(pName);
             params.put(pName, criteria.status());
         }
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (var entry : params.entrySet()) {
+        for (final var entry : params.entrySet()) {
             stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(Long.class).single();
     }
 
-    private static void appendLike(StringBuilder sql, Map<String, Object> params, String column, String value) {
+    private static void appendLike(final StringBuilder sql, final Map<String, Object> params, final String column, final String value) {
         if (value != null && !value.isBlank()) {
-            String paramName = "p" + (params.size() + 1);
+            final String paramName = "p" + (params.size() + 1);
             sql.append(" AND ").append(column).append(" LIKE :").append(paramName);
             params.put(paramName, "%" + value + "%");
         }

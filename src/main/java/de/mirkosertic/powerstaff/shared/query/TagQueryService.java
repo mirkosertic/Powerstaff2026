@@ -11,7 +11,7 @@ public class TagQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public TagQueryService(JdbcClient jdbcClient) {
+    public TagQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
@@ -22,7 +22,7 @@ public class TagQueryService {
                 .list();
     }
 
-    public List<TagView> findByType(TagType type) {
+    public List<TagView> findByType(final TagType type) {
         return jdbcClient
                 .sql("SELECT id, tagname, type FROM tags WHERE type = :type ORDER BY tagname ASC")
                 .param("type", type.name())

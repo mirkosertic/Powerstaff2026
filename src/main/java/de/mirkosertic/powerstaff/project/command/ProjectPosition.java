@@ -54,35 +54,35 @@ public class ProjectPosition {
     private String kommentar;
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(final Long id) { this.id = id; }
 
     public Long getDbVersion() { return dbVersion; }
-    public void setDbVersion(Long dbVersion) { this.dbVersion = dbVersion; }
+    public void setDbVersion(final Long dbVersion) { this.dbVersion = dbVersion; }
 
     public LocalDateTime getCreationDate() { return creationDate; }
-    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
+    public void setCreationDate(final LocalDateTime creationDate) { this.creationDate = creationDate; }
 
     public String getCreationUser() { return creationUser; }
-    public void setCreationUser(String creationUser) { this.creationUser = creationUser; }
+    public void setCreationUser(final String creationUser) { this.creationUser = creationUser; }
 
     public LocalDateTime getChangedDate() { return changedDate; }
-    public void setChangedDate(LocalDateTime changedDate) { this.changedDate = changedDate; }
+    public void setChangedDate(final LocalDateTime changedDate) { this.changedDate = changedDate; }
 
     public String getChangedUser() { return changedUser; }
-    public void setChangedUser(String changedUser) { this.changedUser = changedUser; }
+    public void setChangedUser(final String changedUser) { this.changedUser = changedUser; }
 
     public Long getProjectId() { return projectId; }
-    public void setProjectId(Long projectId) { this.projectId = projectId; }
+    public void setProjectId(final Long projectId) { this.projectId = projectId; }
 
     public Long getFreelancerId() { return freelancerId; }
-    public void setFreelancerId(Long freelancerId) { this.freelancerId = freelancerId; }
+    public void setFreelancerId(final Long freelancerId) { this.freelancerId = freelancerId; }
 
     public Long getStatusId() { return statusId; }
-    public void setStatusId(Long statusId) { this.statusId = statusId; }
+    public void setStatusId(final Long statusId) { this.statusId = statusId; }
 
     public String getKonditionen() { return konditionen; }
-    public void setKonditionen(String konditionen) { this.konditionen = konditionen; }
+    public void setKonditionen(final String konditionen) { this.konditionen = konditionen; }
 
     public String getKommentar() { return kommentar; }
-    public void setKommentar(String kommentar) { this.kommentar = kommentar; }
+    public void setKommentar(final String kommentar) { this.kommentar = kommentar; }
 }

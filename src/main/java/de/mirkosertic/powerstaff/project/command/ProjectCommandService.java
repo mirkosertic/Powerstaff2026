@@ -13,14 +13,14 @@ public class ProjectCommandService {
     private final ProjectRepository projectRepository;
     private final ProjectValidator projectValidator;
 
-    public ProjectCommandService(ProjectRepository projectRepository,
-                                 ProjectValidator projectValidator) {
+    public ProjectCommandService(final ProjectRepository projectRepository,
+                                 final ProjectValidator projectValidator) {
         this.projectRepository = projectRepository;
         this.projectValidator = projectValidator;
     }
 
-    public Project save(Project project) {
-        var errors = new BeanPropertyBindingResult(project, "project");
+    public Project save(final Project project) {
+        final var errors = new BeanPropertyBindingResult(project, "project");
         projectValidator.validate(project, errors);
         if (errors.hasErrors()) {
             throw new BothFKsException();
@@ -29,11 +29,11 @@ public class ProjectCommandService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Project> findById(long id) {
+    public Optional<Project> findById(final long id) {
         return projectRepository.findById(id);
     }
 
-    public void deleteById(long id) {
+    public void deleteById(final long id) {
         projectRepository.deleteById(id);
     }
 }

@@ -14,7 +14,7 @@ public class HistoryType {
     public HistoryType() {
     }
 
-    public HistoryType(String description) {
+    public HistoryType(final String description) {
         this.description = description;
     }
 
@@ -26,7 +26,7 @@ public class HistoryType {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 }

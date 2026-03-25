@@ -63,56 +63,56 @@ public class Kunde {
     private String kreditorNr;
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(final Long id) { this.id = id; }
 
     public Long getDbVersion() { return dbVersion; }
-    public void setDbVersion(Long dbVersion) { this.dbVersion = dbVersion; }
+    public void setDbVersion(final Long dbVersion) { this.dbVersion = dbVersion; }
 
     public LocalDateTime getCreationDate() { return creationDate; }
-    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
+    public void setCreationDate(final LocalDateTime creationDate) { this.creationDate = creationDate; }
 
     public String getCreationUser() { return creationUser; }
-    public void setCreationUser(String creationUser) { this.creationUser = creationUser; }
+    public void setCreationUser(final String creationUser) { this.creationUser = creationUser; }
 
     public LocalDateTime getChangedDate() { return changedDate; }
-    public void setChangedDate(LocalDateTime changedDate) { this.changedDate = changedDate; }
+    public void setChangedDate(final LocalDateTime changedDate) { this.changedDate = changedDate; }
 
     public String getChangedUser() { return changedUser; }
-    public void setChangedUser(String changedUser) { this.changedUser = changedUser; }
+    public void setChangedUser(final String changedUser) { this.changedUser = changedUser; }
 
     public String getCompany() { return company; }
-    public void setCompany(String company) { this.company = company; }
+    public void setCompany(final String company) { this.company = company; }
 
     public String getName1() { return name1; }
-    public void setName1(String name1) { this.name1 = name1; }
+    public void setName1(final String name1) { this.name1 = name1; }
 
     public String getName2() { return name2; }
-    public void setName2(String name2) { this.name2 = name2; }
+    public void setName2(final String name2) { this.name2 = name2; }
 
     public String getStreet() { return street; }
-    public void setStreet(String street) { this.street = street; }
+    public void setStreet(final String street) { this.street = street; }
 
     public String getCountry() { return country; }
-    public void setCountry(String country) { this.country = country; }
+    public void setCountry(final String country) { this.country = country; }
 
     public String getPlz() { return plz; }
-    public void setPlz(String plz) { this.plz = plz; }
+    public void setPlz(final String plz) { this.plz = plz; }
 
     public String getCity() { return city; }
-    public void setCity(String city) { this.city = city; }
+    public void setCity(final String city) { this.city = city; }
 
     public boolean isContactForbidden() { return contactForbidden; }
-    public void setContactForbidden(boolean contactForbidden) { this.contactForbidden = contactForbidden; }
+    public void setContactForbidden(final boolean contactForbidden) { this.contactForbidden = contactForbidden; }
 
     public boolean isShowAgain() { return showAgain; }
-    public void setShowAgain(boolean showAgain) { this.showAgain = showAgain; }
+    public void setShowAgain(final boolean showAgain) { this.showAgain = showAgain; }
 
     public String getComments() { return comments; }
-    public void setComments(String comments) { this.comments = comments; }
+    public void setComments(final String comments) { this.comments = comments; }
 
     public String getDebitorNr() { return debitorNr; }
-    public void setDebitorNr(String debitorNr) { this.debitorNr = debitorNr; }
+    public void setDebitorNr(final String debitorNr) { this.debitorNr = debitorNr; }
 
     public String getKreditorNr() { return kreditorNr; }
-    public void setKreditorNr(String kreditorNr) { this.kreditorNr = kreditorNr; }
+    public void setKreditorNr(final String kreditorNr) { this.kreditorNr = kreditorNr; }
 }

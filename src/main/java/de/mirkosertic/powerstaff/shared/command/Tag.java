@@ -18,7 +18,7 @@ public class Tag {
     public Tag() {
     }
 
-    public Tag(String tagname, String type) {
+    public Tag(final String tagname, final String type) {
         this.tagname = tagname;
         this.type = type;
     }
@@ -31,7 +31,7 @@ public class Tag {
         return tagname;
     }
 
-    public void setTagname(String tagname) {
+    public void setTagname(final String tagname) {
         this.tagname = tagname;
     }
 
@@ -39,7 +39,7 @@ public class Tag {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(final String type) {
         this.type = type;
     }
 }

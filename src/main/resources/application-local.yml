@@ -16,7 +16,6 @@ spring:
 
   ai:
     model:
-      embedding: "undefined"
       chat: "ollama"
 
     mcp:

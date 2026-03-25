@@ -29,10 +29,10 @@ public class SimpleLoggerAdvisor implements CallAdvisor, StreamAdvisor {
 
 
     @Override
-    public ChatClientResponse adviseCall(@NonNull ChatClientRequest chatClientRequest, CallAdvisorChain callAdvisorChain) {
+    public ChatClientResponse adviseCall(@NonNull final ChatClientRequest chatClientRequest, final CallAdvisorChain callAdvisorChain) {
         logRequest(chatClientRequest);
 
-        ChatClientResponse chatClientResponse = callAdvisorChain.nextCall(chatClientRequest);
+        final ChatClientResponse chatClientResponse = callAdvisorChain.nextCall(chatClientRequest);
 
         logResponse(chatClientResponse);
 
@@ -40,20 +40,20 @@ public class SimpleLoggerAdvisor implements CallAdvisor, StreamAdvisor {
     }
 
     @Override
-    public Flux<ChatClientResponse> adviseStream(@NonNull ChatClientRequest chatClientRequest,
-                                                 StreamAdvisorChain streamAdvisorChain) {
+    public Flux<ChatClientResponse> adviseStream(@NonNull final ChatClientRequest chatClientRequest,
+                                                 final StreamAdvisorChain streamAdvisorChain) {
         logRequest(chatClientRequest);
 
-        Flux<ChatClientResponse> chatClientResponses = streamAdvisorChain.nextStream(chatClientRequest);
+        final Flux<ChatClientResponse> chatClientResponses = streamAdvisorChain.nextStream(chatClientRequest);
 
         return new ChatClientMessageAggregator().aggregateChatClientResponse(chatClientResponses, this::logResponse);
     }
 
-    private void logRequest(ChatClientRequest request) {
+    private void logRequest(final ChatClientRequest request) {
         logger.debug("request: {}", request);
     }
 
-    private void logResponse(ChatClientResponse chatClientResponse) {
+    private void logResponse(final ChatClientResponse chatClientResponse) {
         logger.debug("response: {}", chatClientResponse);
     }
 

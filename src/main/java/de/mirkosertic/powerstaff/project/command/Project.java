@@ -84,65 +84,65 @@ public class Project {
     private String kreditorNr;
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(final Long id) { this.id = id; }
 
     public Long getDbVersion() { return dbVersion; }
-    public void setDbVersion(Long dbVersion) { this.dbVersion = dbVersion; }
+    public void setDbVersion(final Long dbVersion) { this.dbVersion = dbVersion; }
 
     public LocalDateTime getCreationDate() { return creationDate; }
-    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
+    public void setCreationDate(final LocalDateTime creationDate) { this.creationDate = creationDate; }
 
     public String getCreationUser() { return creationUser; }
-    public void setCreationUser(String creationUser) { this.creationUser = creationUser; }
+    public void setCreationUser(final String creationUser) { this.creationUser = creationUser; }
 
     public LocalDateTime getChangedDate() { return changedDate; }
-    public void setChangedDate(LocalDateTime changedDate) { this.changedDate = changedDate; }
+    public void setChangedDate(final LocalDateTime changedDate) { this.changedDate = changedDate; }
 
     public String getChangedUser() { return changedUser; }
-    public void setChangedUser(String changedUser) { this.changedUser = changedUser; }
+    public void setChangedUser(final String changedUser) { this.changedUser = changedUser; }
 
     public String getProjectNumber() { return projectNumber; }
-    public void setProjectNumber(String projectNumber) { this.projectNumber = projectNumber; }
+    public void setProjectNumber(final String projectNumber) { this.projectNumber = projectNumber; }
 
     public LocalDate getEntryDate() { return entryDate; }
-    public void setEntryDate(LocalDate entryDate) { this.entryDate = entryDate; }
+    public void setEntryDate(final LocalDate entryDate) { this.entryDate = entryDate; }
 
     public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public void setStartDate(final LocalDate startDate) { this.startDate = startDate; }
 
     public String getDuration() { return duration; }
-    public void setDuration(String duration) { this.duration = duration; }
+    public void setDuration(final String duration) { this.duration = duration; }
 
     public int getStatus() { return status; }
-    public void setStatus(int status) { this.status = status; }
+    public void setStatus(final int status) { this.status = status; }
 
     public boolean isVisibleOnWebSite() { return visibleOnWebSite; }
-    public void setVisibleOnWebSite(boolean visibleOnWebSite) { this.visibleOnWebSite = visibleOnWebSite; }
+    public void setVisibleOnWebSite(final boolean visibleOnWebSite) { this.visibleOnWebSite = visibleOnWebSite; }
 
     public String getDescriptionShort() { return descriptionShort; }
-    public void setDescriptionShort(String descriptionShort) { this.descriptionShort = descriptionShort; }
+    public void setDescriptionShort(final String descriptionShort) { this.descriptionShort = descriptionShort; }
 
     public String getDescriptionLong() { return descriptionLong; }
-    public void setDescriptionLong(String descriptionLong) { this.descriptionLong = descriptionLong; }
+    public void setDescriptionLong(final String descriptionLong) { this.descriptionLong = descriptionLong; }
 
     public String getSkills() { return skills; }
-    public void setSkills(String skills) { this.skills = skills; }
+    public void setSkills(final String skills) { this.skills = skills; }
 
     public String getWorkplace() { return workplace; }
-    public void setWorkplace(String workplace) { this.workplace = workplace; }
+    public void setWorkplace(final String workplace) { this.workplace = workplace; }
 
     public Long getCustomerId() { return customerId; }
-    public void setCustomerId(Long customerId) { this.customerId = customerId; }
+    public void setCustomerId(final Long customerId) { this.customerId = customerId; }
 
     public Long getPartnerId() { return partnerId; }
-    public void setPartnerId(Long partnerId) { this.partnerId = partnerId; }
+    public void setPartnerId(final Long partnerId) { this.partnerId = partnerId; }
 
     public Long getStundensatzVk() { return stundensatzVk; }
-    public void setStundensatzVk(Long stundensatzVk) { this.stundensatzVk = stundensatzVk; }
+    public void setStundensatzVk(final Long stundensatzVk) { this.stundensatzVk = stundensatzVk; }
 
     public String getDebitorNr() { return debitorNr; }
-    public void setDebitorNr(String debitorNr) { this.debitorNr = debitorNr; }
+    public void setDebitorNr(final String debitorNr) { this.debitorNr = debitorNr; }
 
     public String getKreditorNr() { return kreditorNr; }
-    public void setKreditorNr(String kreditorNr) { this.kreditorNr = kreditorNr; }
+    public void setKreditorNr(final String kreditorNr) { this.kreditorNr = kreditorNr; }
 }

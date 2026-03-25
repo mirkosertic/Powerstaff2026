@@ -16,10 +16,10 @@ public class PartnerCommandService {
     private final PartnerHistoryRepository historyRepository;
     private final JdbcClient jdbcClient;
 
-    public PartnerCommandService(PartnerRepository partnerRepository,
-                                 PartnerContactRepository contactRepository,
-                                 PartnerHistoryRepository historyRepository,
-                                 JdbcClient jdbcClient) {
+    public PartnerCommandService(final PartnerRepository partnerRepository,
+                                 final PartnerContactRepository contactRepository,
+                                 final PartnerHistoryRepository historyRepository,
+                                 final JdbcClient jdbcClient) {
         this.partnerRepository = partnerRepository;
         this.contactRepository = contactRepository;
         this.historyRepository = historyRepository;
@@ -29,7 +29,7 @@ public class PartnerCommandService {
     /**
      * Speichert nur die Partner-Stammdaten (ohne Kontakte/Historie).
      */
-    public Partner save(Partner partner) {
+    public Partner save(final Partner partner) {
         return partnerRepository.save(partner);
     }
 
@@ -38,16 +38,16 @@ public class PartnerCommandService {
      * Nur Einträge mit op="ADD" oder op="DELETE" werden verarbeitet;
      * unveränderte Einträge erhalten keinen neuen Audit-Timestamp.
      */
-    public Partner save(Partner partner,
-                        List<PartnerContactEntry> contactChanges,
-                        List<PartnerHistoryEntry> historyChanges) {
-        Partner saved = partnerRepository.save(partner);
-        long partnerId = saved.getId();
+    public Partner save(final Partner partner,
+                        final List<PartnerContactEntry> contactChanges,
+                        final List<PartnerHistoryEntry> historyChanges) {
+        final Partner saved = partnerRepository.save(partner);
+        final long partnerId = saved.getId();
 
         // Kontakt-Delta verarbeiten
-        for (PartnerContactEntry cmd : contactChanges) {
+        for (final PartnerContactEntry cmd : contactChanges) {
             if ("ADD".equals(cmd.op())) {
-                PartnerContact contact = new PartnerContact();
+                final PartnerContact contact = new PartnerContact();
                 contact.setType(cmd.type());
                 contact.setValue(cmd.value());
                 contact.setPartnerId(partnerId);
@@ -61,9 +61,9 @@ public class PartnerCommandService {
         }
 
         // Historie-Delta verarbeiten
-        for (PartnerHistoryEntry cmd : historyChanges) {
+        for (final PartnerHistoryEntry cmd : historyChanges) {
             if ("ADD".equals(cmd.op())) {
-                PartnerHistory history = new PartnerHistory();
+                final PartnerHistory history = new PartnerHistory();
                 history.setDescription(cmd.description());
                 history.setTypeId(cmd.typeId());
                 history.setPartnerId(partnerId);
@@ -89,7 +89,7 @@ public class PartnerCommandService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Partner> findById(long id) {
+    public Optional<Partner> findById(final long id) {
         return partnerRepository.findById(id);
     }
 
@@ -97,8 +97,8 @@ public class PartnerCommandService {
      * Löscht einen Partner. Wirft {@link PartnerHasProjectsException} wenn Projekte
      * auf diesen Partner verweisen (RESTRICT-Check vor dem eigentlichen Delete).
      */
-    public void deleteById(long id) {
-        List<Long> linkedProjectIds = jdbcClient
+    public void deleteById(final long id) {
+        final List<Long> linkedProjectIds = jdbcClient
                 .sql("SELECT id FROM project WHERE partner_id = :partnerId")
                 .param("partnerId", id)
                 .query(Long.class)

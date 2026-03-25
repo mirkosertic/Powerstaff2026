@@ -26,11 +26,11 @@ public class KundeQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public KundeQueryService(JdbcClient jdbcClient) {
+    public KundeQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
-    public Optional<KundeDetailView> findById(Long id) {
+    public Optional<KundeDetailView> findById(final Long id) {
         return jdbcClient.sql(SELECT_KUNDE + "WHERE id = :id")
                 .param("id", id)
                 .query(KundeDetailView.class)
@@ -49,63 +49,63 @@ public class KundeQueryService {
                 .optional();
     }
 
-    public Optional<KundeDetailView> findPrevious(Long currentId) {
+    public Optional<KundeDetailView> findPrevious(final Long currentId) {
         return jdbcClient.sql(SELECT_KUNDE + "WHERE id < :currentId ORDER BY id DESC LIMIT 1")
                 .param("currentId", currentId)
                 .query(KundeDetailView.class)
                 .optional();
     }
 
-    public Optional<KundeDetailView> findNext(Long currentId) {
+    public Optional<KundeDetailView> findNext(final Long currentId) {
         return jdbcClient.sql(SELECT_KUNDE + "WHERE id > :currentId ORDER BY id ASC LIMIT 1")
                 .param("currentId", currentId)
                 .query(KundeDetailView.class)
                 .optional();
     }
 
-    public List<KundeSearchResult> search(KundeSearchCriteria criteria, int offset, int limit) {
-        var sql = new StringBuilder("""
+    public List<KundeSearchResult> search(final KundeSearchCriteria criteria, final int offset, final int limit) {
+        final var sql = new StringBuilder("""
                 SELECT id, company, name1, name2, city
                 FROM kunde
                 WHERE 1=1
                 """);
-        Map<String, Object> params = new LinkedHashMap<>();
+        final Map<String, Object> params = new LinkedHashMap<>();
         appendCriteria(sql, params, criteria);
-        String orderBy;
+        final String orderBy;
         if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
-            String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
+            final String dir = "desc".equalsIgnoreCase(criteria.sortDir()) ? "DESC" : "ASC";
             orderBy = criteria.sortField() + " " + dir;
         } else {
             orderBy = DEFAULT_SORT;
         }
-        String pLimit = "p" + (params.size() + 1);
-        String pOffset = "p" + (params.size() + 2);
+        final String pLimit = "p" + (params.size() + 1);
+        final String pOffset = "p" + (params.size() + 2);
         sql.append(" ORDER BY ").append(orderBy).append(" LIMIT :").append(pLimit).append(" OFFSET :").append(pOffset);
         params.put(pLimit, limit);
         params.put(pOffset, offset);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (var entry : params.entrySet()) {
+        for (final var entry : params.entrySet()) {
             stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(KundeSearchResult.class).list();
     }
 
-    public long countSearch(KundeSearchCriteria criteria) {
-        var sql = new StringBuilder("SELECT COUNT(*) FROM kunde WHERE 1=1");
-        Map<String, Object> params = new LinkedHashMap<>();
+    public long countSearch(final KundeSearchCriteria criteria) {
+        final var sql = new StringBuilder("SELECT COUNT(*) FROM kunde WHERE 1=1");
+        final Map<String, Object> params = new LinkedHashMap<>();
         appendCriteria(sql, params, criteria);
 
         var stmt = jdbcClient.sql(sql.toString());
-        for (var entry : params.entrySet()) {
+        for (final var entry : params.entrySet()) {
             stmt = stmt.param(entry.getKey(), entry.getValue());
         }
         return stmt.query(Long.class).single();
     }
 
-    public List<KundeProjectListItem> findProjectsByKundeId(Long kundeId, String sortField, String sortDir) {
-        String safeField = allowedSortField(sortField);
-        String safeDir = "DESC".equalsIgnoreCase(sortDir) ? "DESC" : "ASC";
+    public List<KundeProjectListItem> findProjectsByKundeId(final Long kundeId, final String sortField, final String sortDir) {
+        final String safeField = allowedSortField(sortField);
+        final String safeDir = "DESC".equalsIgnoreCase(sortDir) ? "DESC" : "ASC";
         return jdbcClient.sql("SELECT id, project_number, description_short, workplace, start_date, status"
                 + " FROM project"
                 + " WHERE customer_id = :kundeId"
@@ -115,7 +115,7 @@ public class KundeQueryService {
                 .list();
     }
 
-    public List<KundeContactView> findContactsByKundeId(Long kundeId) {
+    public List<KundeContactView> findContactsByKundeId(final Long kundeId) {
         return jdbcClient.sql("""
                 SELECT id, type, value, kunde_id
                 FROM kunde_contact
@@ -127,7 +127,7 @@ public class KundeQueryService {
                 .list();
     }
 
-    public List<KundeHistoryView> findHistoryByKundeId(Long kundeId) {
+    public List<KundeHistoryView> findHistoryByKundeId(final Long kundeId) {
         return jdbcClient.sql("""
                 SELECT kh.id, kh.creation_date, kh.creation_user, kh.changed_date, kh.changed_user,
                        kh.description, kh.type_id, ht.description AS type_description, kh.kunde_id
@@ -141,7 +141,7 @@ public class KundeQueryService {
                 .list();
     }
 
-    private static String allowedSortField(String field) {
+    private static String allowedSortField(final String field) {
         return switch (field == null ? "" : field) {
             case "projectNumber" -> "project_number";
             case "descriptionShort" -> "description_short";
@@ -151,7 +151,7 @@ public class KundeQueryService {
         };
     }
 
-    private static void appendCriteria(StringBuilder sql, Map<String, Object> params, KundeSearchCriteria criteria) {
+    private static void appendCriteria(final StringBuilder sql, final Map<String, Object> params, final KundeSearchCriteria criteria) {
         appendLike(sql, params, "company", criteria.company());
         appendLike(sql, params, "name1", criteria.name1());
         appendLike(sql, params, "name2", criteria.name2());
@@ -164,9 +164,9 @@ public class KundeQueryService {
         appendLike(sql, params, "kreditor_nr", criteria.kreditorNr());
     }
 
-    private static void appendLike(StringBuilder sql, Map<String, Object> params, String column, String value) {
+    private static void appendLike(final StringBuilder sql, final Map<String, Object> params, final String column, final String value) {
         if (value != null && !value.isBlank()) {
-            String paramName = "p" + (params.size() + 1);
+            final String paramName = "p" + (params.size() + 1);
             sql.append(" AND ").append(column).append(" LIKE :").append(paramName);
             params.put(paramName, "%" + value + "%");
         }

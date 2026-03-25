@@ -11,7 +11,7 @@ public class UserQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public UserQueryService(JdbcClient jdbcClient) {
+    public UserQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
@@ -22,7 +22,7 @@ public class UserQueryService {
                 .list();
     }
 
-    public Optional<UserView> findByUsername(String username) {
+    public Optional<UserView> findByUsername(final String username) {
         return jdbcClient
                 .sql("SELECT username, must_change_password, enabled, profile_search_system_prompt FROM ps_user WHERE username = :username")
                 .param("username", username)

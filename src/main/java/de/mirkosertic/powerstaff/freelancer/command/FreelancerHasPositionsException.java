@@ -6,7 +6,7 @@ public class FreelancerHasPositionsException extends RuntimeException {
 
     private final List<Long> projectIds;
 
-    public FreelancerHasPositionsException(List<Long> projectIds) {
+    public FreelancerHasPositionsException(final List<Long> projectIds) {
         super("Freiberufler ist aktiven Projekten zugeordnet: " + projectIds);
         this.projectIds = projectIds;
     }

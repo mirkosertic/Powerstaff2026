@@ -35,10 +35,10 @@ public class StammdatenController {
     private final StammdatenCommandService stammdatenCommandService;
 
     public StammdatenController(
-            HistoryTypeQueryService historyTypeQueryService,
-            ProjectPositionStatusQueryService projectPositionStatusQueryService,
-            TagQueryService tagQueryService,
-            StammdatenCommandService stammdatenCommandService) {
+            final HistoryTypeQueryService historyTypeQueryService,
+            final ProjectPositionStatusQueryService projectPositionStatusQueryService,
+            final TagQueryService tagQueryService,
+            final StammdatenCommandService stammdatenCommandService) {
         this.historyTypeQueryService = historyTypeQueryService;
         this.projectPositionStatusQueryService = projectPositionStatusQueryService;
         this.tagQueryService = tagQueryService;
@@ -59,7 +59,7 @@ public class StammdatenController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/historientypen")
-    public String historientypen(Model model) {
+    public String historientypen(final Model model) {
         model.addAttribute("types", historyTypeQueryService.findAll());
         model.addAttribute("newType", new HistoryType());
         model.addAttribute("activePage", "admin");
@@ -67,14 +67,14 @@ public class StammdatenController {
     }
 
     @PostMapping("/historientypen")
-    public String createHistoryType(@ModelAttribute HistoryType newType) {
+    public String createHistoryType(@ModelAttribute final HistoryType newType) {
         stammdatenCommandService.saveHistoryType(newType);
         return "redirect:/admin/historientypen";
     }
 
     @PostMapping("/historientypen/{id}")
-    public String updateHistoryType(@PathVariable long id,
-                                    @RequestParam String description) {
+    public String updateHistoryType(@PathVariable final long id,
+                                    @RequestParam final String description) {
         stammdatenCommandService.findHistoryTypeById(id).ifPresent(ht -> {
             ht.setDescription(description);
             stammdatenCommandService.saveHistoryType(ht);
@@ -83,7 +83,7 @@ public class StammdatenController {
     }
 
     @PostMapping("/historientypen/{id}/delete")
-    public String deleteHistoryType(@PathVariable long id) {
+    public String deleteHistoryType(@PathVariable final long id) {
         stammdatenCommandService.deleteHistoryType(id);
         return "redirect:/admin/historientypen";
     }
@@ -93,7 +93,7 @@ public class StammdatenController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/positionsstatus")
-    public String positionsstatus(Model model) {
+    public String positionsstatus(final Model model) {
         model.addAttribute("statusList", projectPositionStatusQueryService.findAll());
         model.addAttribute("newStatus", new ProjectPositionStatus());
         model.addAttribute("activePage", "admin");
@@ -101,23 +101,23 @@ public class StammdatenController {
     }
 
     @PostMapping("/positionsstatus")
-    public String createPositionsStatus(@ModelAttribute ProjectPositionStatus newStatus) {
+    public String createPositionsStatus(@ModelAttribute final ProjectPositionStatus newStatus) {
         stammdatenCommandService.saveProjectPositionStatus(newStatus);
         return "redirect:/admin/positionsstatus";
     }
 
     @PostMapping("/positionsstatus/{id}/delete")
-    public String deletePositionsStatus(@PathVariable long id) {
+    public String deletePositionsStatus(@PathVariable final long id) {
         stammdatenCommandService.deleteProjectPositionStatus(id);
         return "redirect:/admin/positionsstatus";
     }
 
     @PostMapping("/positionsstatus/{id}")
-    public String updatePositionsStatus(@PathVariable long id,
-                                        @RequestParam String description,
-                                        @RequestParam String color,
-                                        @RequestParam String colorText,
-                                        @RequestParam(defaultValue = "false") boolean defaultStatus) {
+    public String updatePositionsStatus(@PathVariable final long id,
+                                        @RequestParam final String description,
+                                        @RequestParam final String color,
+                                        @RequestParam final String colorText,
+                                        @RequestParam(defaultValue = "false") final boolean defaultStatus) {
         stammdatenCommandService.findProjectPositionStatusById(id).ifPresent(pps -> {
             pps.setDescription(description);
             pps.setColor(color);
@@ -133,9 +133,9 @@ public class StammdatenController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/tags")
-    public String tags(Model model) {
-        Map<TagType, List<TagView>> tagsByType = new LinkedHashMap<>();
-        for (TagType type : TagType.values()) {
+    public String tags(final Model model) {
+        final Map<TagType, List<TagView>> tagsByType = new LinkedHashMap<>();
+        for (final TagType type : TagType.values()) {
             tagsByType.put(type, tagQueryService.findByType(type));
         }
         model.addAttribute("tagsByType", tagsByType);
@@ -146,16 +146,16 @@ public class StammdatenController {
     }
 
     @PostMapping("/tags")
-    public String createTag(@RequestParam String tagname,
-                            @RequestParam String tagType) {
-        Tag tag = new Tag(tagname, tagType);
+    public String createTag(@RequestParam final String tagname,
+                            @RequestParam final String tagType) {
+        final Tag tag = new Tag(tagname, tagType);
         stammdatenCommandService.saveTag(tag);
         return "redirect:/admin/tags";
     }
 
     @PostMapping("/tags/{id}")
-    public String updateTag(@PathVariable long id,
-                            @RequestParam String tagname) {
+    public String updateTag(@PathVariable final long id,
+                            @RequestParam final String tagname) {
         stammdatenCommandService.findTagById(id).ifPresent(tag -> {
             tag.setTagname(tagname);
             stammdatenCommandService.saveTag(tag);
@@ -165,7 +165,7 @@ public class StammdatenController {
 
     @DeleteMapping("/tags/{id}")
     @ResponseBody
-    public ResponseEntity<Map<String, Boolean>> deleteTag(@PathVariable long id) {
+    public ResponseEntity<Map<String, Boolean>> deleteTag(@PathVariable final long id) {
         stammdatenCommandService.deleteTag(id);
         return ResponseEntity.ok(Map.of("ok", true));
     }

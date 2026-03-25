@@ -16,17 +16,17 @@ public class KundeCommandService {
     private final KundeHistoryRepository historyRepository;
     private final JdbcClient jdbcClient;
 
-    public KundeCommandService(KundeRepository kundeRepository,
-                               KundeContactRepository contactRepository,
-                               KundeHistoryRepository historyRepository,
-                               JdbcClient jdbcClient) {
+    public KundeCommandService(final KundeRepository kundeRepository,
+                               final KundeContactRepository contactRepository,
+                               final KundeHistoryRepository historyRepository,
+                               final JdbcClient jdbcClient) {
         this.kundeRepository = kundeRepository;
         this.contactRepository = contactRepository;
         this.historyRepository = historyRepository;
         this.jdbcClient = jdbcClient;
     }
 
-    public Kunde save(Kunde kunde) {
+    public Kunde save(final Kunde kunde) {
         return kundeRepository.save(kunde);
     }
 
@@ -35,16 +35,16 @@ public class KundeCommandService {
      * Nur Einträge mit op="ADD" oder op="DELETE" werden verarbeitet;
      * unveränderte Einträge erhalten keinen neuen Audit-Timestamp.
      */
-    public Kunde save(Kunde kunde,
-                      List<KundeContactEntry> contactChanges,
-                      List<KundeHistoryEntry> historyChanges) {
-        Kunde saved = kundeRepository.save(kunde);
-        long kundeId = saved.getId();
+    public Kunde save(final Kunde kunde,
+                      final List<KundeContactEntry> contactChanges,
+                      final List<KundeHistoryEntry> historyChanges) {
+        final Kunde saved = kundeRepository.save(kunde);
+        final long kundeId = saved.getId();
 
         // Kontakt-Delta verarbeiten
-        for (KundeContactEntry cmd : contactChanges) {
+        for (final KundeContactEntry cmd : contactChanges) {
             if ("ADD".equals(cmd.op())) {
-                KundeContact contact = new KundeContact();
+                final KundeContact contact = new KundeContact();
                 contact.setType(cmd.type());
                 contact.setValue(cmd.value());
                 contact.setKundeId(kundeId);
@@ -58,9 +58,9 @@ public class KundeCommandService {
         }
 
         // Historie-Delta verarbeiten
-        for (KundeHistoryEntry cmd : historyChanges) {
+        for (final KundeHistoryEntry cmd : historyChanges) {
             if ("ADD".equals(cmd.op())) {
-                KundeHistory history = new KundeHistory();
+                final KundeHistory history = new KundeHistory();
                 history.setDescription(cmd.description());
                 history.setTypeId(cmd.typeId());
                 history.setKundeId(kundeId);
@@ -86,12 +86,12 @@ public class KundeCommandService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Kunde> findById(long id) {
+    public Optional<Kunde> findById(final long id) {
         return kundeRepository.findById(id);
     }
 
-    public void deleteById(long id) {
-        List<Long> linkedProjectIds = jdbcClient
+    public void deleteById(final long id) {
+        final List<Long> linkedProjectIds = jdbcClient
                 .sql("SELECT id FROM project WHERE customer_id = :kundeId")
                 .param("kundeId", id)
                 .query(Long.class)

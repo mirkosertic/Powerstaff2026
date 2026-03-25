@@ -26,7 +26,7 @@ public class RememberedProject implements Persistable<String> {
 
     public RememberedProject() {}
 
-    public RememberedProject(String userId, Long projectId, boolean isNew) {
+    public RememberedProject(final String userId, final Long projectId, final boolean isNew) {
         this.userId = userId;
         this.projectId = projectId;
         this.isNew = isNew;
@@ -39,8 +39,8 @@ public class RememberedProject implements Persistable<String> {
     public boolean isNew() { return isNew; }
 
     public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
+    public void setUserId(final String userId) { this.userId = userId; }
 
     public Long getProjectId() { return projectId; }
-    public void setProjectId(Long projectId) { this.projectId = projectId; }
+    public void setProjectId(final Long projectId) { this.projectId = projectId; }
 }

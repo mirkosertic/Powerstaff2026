@@ -108,113 +108,113 @@ public class Freelancer {
     private String skills;
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(final Long id) { this.id = id; }
 
     public Long getDbVersion() { return dbVersion; }
-    public void setDbVersion(Long dbVersion) { this.dbVersion = dbVersion; }
+    public void setDbVersion(final Long dbVersion) { this.dbVersion = dbVersion; }
 
     public LocalDateTime getCreationDate() { return creationDate; }
-    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
+    public void setCreationDate(final LocalDateTime creationDate) { this.creationDate = creationDate; }
 
     public String getCreationUser() { return creationUser; }
-    public void setCreationUser(String creationUser) { this.creationUser = creationUser; }
+    public void setCreationUser(final String creationUser) { this.creationUser = creationUser; }
 
     public LocalDateTime getChangedDate() { return changedDate; }
-    public void setChangedDate(LocalDateTime changedDate) { this.changedDate = changedDate; }
+    public void setChangedDate(final LocalDateTime changedDate) { this.changedDate = changedDate; }
 
     public String getChangedUser() { return changedUser; }
-    public void setChangedUser(String changedUser) { this.changedUser = changedUser; }
+    public void setChangedUser(final String changedUser) { this.changedUser = changedUser; }
 
     public String getTitel() { return titel; }
-    public void setTitel(String titel) { this.titel = titel; }
+    public void setTitel(final String titel) { this.titel = titel; }
 
     public String getName1() { return name1; }
-    public void setName1(String name1) { this.name1 = name1; }
+    public void setName1(final String name1) { this.name1 = name1; }
 
     public String getName2() { return name2; }
-    public void setName2(String name2) { this.name2 = name2; }
+    public void setName2(final String name2) { this.name2 = name2; }
 
     public String getCompany() { return company; }
-    public void setCompany(String company) { this.company = company; }
+    public void setCompany(final String company) { this.company = company; }
 
     public String getStreet() { return street; }
-    public void setStreet(String street) { this.street = street; }
+    public void setStreet(final String street) { this.street = street; }
 
     public String getCountry() { return country; }
-    public void setCountry(String country) { this.country = country; }
+    public void setCountry(final String country) { this.country = country; }
 
     public String getPlz() { return plz; }
-    public void setPlz(String plz) { this.plz = plz; }
+    public void setPlz(final String plz) { this.plz = plz; }
 
     public String getCity() { return city; }
-    public void setCity(String city) { this.city = city; }
+    public void setCity(final String city) { this.city = city; }
 
     public String getNationalitaet() { return nationalitaet; }
-    public void setNationalitaet(String nationalitaet) { this.nationalitaet = nationalitaet; }
+    public void setNationalitaet(final String nationalitaet) { this.nationalitaet = nationalitaet; }
 
     public String getGeburtsdatum() { return geburtsdatum; }
-    public void setGeburtsdatum(String geburtsdatum) { this.geburtsdatum = geburtsdatum; }
+    public void setGeburtsdatum(final String geburtsdatum) { this.geburtsdatum = geburtsdatum; }
 
     public Long getPartnerId() { return partnerId; }
-    public void setPartnerId(Long partnerId) { this.partnerId = partnerId; }
+    public void setPartnerId(final Long partnerId) { this.partnerId = partnerId; }
 
     public boolean isContactForbidden() { return contactForbidden; }
-    public void setContactForbidden(boolean contactForbidden) { this.contactForbidden = contactForbidden; }
+    public void setContactForbidden(final boolean contactForbidden) { this.contactForbidden = contactForbidden; }
 
     public boolean isShowAgain() { return showAgain; }
-    public void setShowAgain(boolean showAgain) { this.showAgain = showAgain; }
+    public void setShowAgain(final boolean showAgain) { this.showAgain = showAgain; }
 
     public String getComments() { return comments; }
-    public void setComments(String comments) { this.comments = comments; }
+    public void setComments(final String comments) { this.comments = comments; }
 
     public String getEinsatzdetails() { return einsatzdetails; }
-    public void setEinsatzdetails(String einsatzdetails) { this.einsatzdetails = einsatzdetails; }
+    public void setEinsatzdetails(final String einsatzdetails) { this.einsatzdetails = einsatzdetails; }
 
     public String getContactPerson() { return contactPerson; }
-    public void setContactPerson(String contactPerson) { this.contactPerson = contactPerson; }
+    public void setContactPerson(final String contactPerson) { this.contactPerson = contactPerson; }
 
     public String getContactType() { return contactType; }
-    public void setContactType(String contactType) { this.contactType = contactType; }
+    public void setContactType(final String contactType) { this.contactType = contactType; }
 
     public String getContactReason() { return contactReason; }
-    public void setContactReason(String contactReason) { this.contactReason = contactReason; }
+    public void setContactReason(final String contactReason) { this.contactReason = contactReason; }
 
     public LocalDateTime getLastContactDate() { return lastContactDate; }
-    public void setLastContactDate(LocalDateTime lastContactDate) { this.lastContactDate = lastContactDate; }
+    public void setLastContactDate(final LocalDateTime lastContactDate) { this.lastContactDate = lastContactDate; }
 
     public String getKontaktart() { return kontaktart; }
-    public void setKontaktart(String kontaktart) { this.kontaktart = kontaktart; }
+    public void setKontaktart(final String kontaktart) { this.kontaktart = kontaktart; }
 
     public LocalDate getAvailabilityAsDate() { return availabilityAsDate; }
-    public void setAvailabilityAsDate(LocalDate availabilityAsDate) { this.availabilityAsDate = availabilityAsDate; }
+    public void setAvailabilityAsDate(final LocalDate availabilityAsDate) { this.availabilityAsDate = availabilityAsDate; }
 
     public Long getSalaryLong() { return salaryLong; }
-    public void setSalaryLong(Long salaryLong) { this.salaryLong = salaryLong; }
+    public void setSalaryLong(final Long salaryLong) { this.salaryLong = salaryLong; }
 
     public Long getSalaryPerDayLong() { return salaryPerDayLong; }
-    public void setSalaryPerDayLong(Long salaryPerDayLong) { this.salaryPerDayLong = salaryPerDayLong; }
+    public void setSalaryPerDayLong(final Long salaryPerDayLong) { this.salaryPerDayLong = salaryPerDayLong; }
 
     public Long getSalaryRemote() { return salaryRemote; }
-    public void setSalaryRemote(Long salaryRemote) { this.salaryRemote = salaryRemote; }
+    public void setSalaryRemote(final Long salaryRemote) { this.salaryRemote = salaryRemote; }
 
     public Long getSalaryPartnerLong() { return salaryPartnerLong; }
-    public void setSalaryPartnerLong(Long salaryPartnerLong) { this.salaryPartnerLong = salaryPartnerLong; }
+    public void setSalaryPartnerLong(final Long salaryPartnerLong) { this.salaryPartnerLong = salaryPartnerLong; }
 
     public Long getSalaryPartnerPerDayLong() { return salaryPartnerPerDayLong; }
-    public void setSalaryPartnerPerDayLong(Long salaryPartnerPerDayLong) { this.salaryPartnerPerDayLong = salaryPartnerPerDayLong; }
+    public void setSalaryPartnerPerDayLong(final Long salaryPartnerPerDayLong) { this.salaryPartnerPerDayLong = salaryPartnerPerDayLong; }
 
     public boolean isDatenschutz() { return datenschutz; }
-    public void setDatenschutz(boolean datenschutz) { this.datenschutz = datenschutz; }
+    public void setDatenschutz(final boolean datenschutz) { this.datenschutz = datenschutz; }
 
     public String getDebitorNr() { return debitorNr; }
-    public void setDebitorNr(String debitorNr) { this.debitorNr = debitorNr; }
+    public void setDebitorNr(final String debitorNr) { this.debitorNr = debitorNr; }
 
     public String getGulpId() { return gulpId; }
-    public void setGulpId(String gulpId) { this.gulpId = gulpId; }
+    public void setGulpId(final String gulpId) { this.gulpId = gulpId; }
 
     public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
+    public void setCode(final String code) { this.code = code; }
 
     public String getSkills() { return skills; }
-    public void setSkills(String skills) { this.skills = skills; }
+    public void setSkills(final String skills) { this.skills = skills; }
 }

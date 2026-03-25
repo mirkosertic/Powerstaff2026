@@ -10,7 +10,7 @@ public class HistoryTypeQueryService {
 
     private final JdbcClient jdbcClient;
 
-    public HistoryTypeQueryService(JdbcClient jdbcClient) {
+    public HistoryTypeQueryService(final JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 

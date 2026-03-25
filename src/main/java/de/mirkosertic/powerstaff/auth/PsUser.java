@@ -26,8 +26,8 @@ public class PsUser implements Persistable<String> {
     public static final String DEFAULT_SYSTEM_PROMPT =
             "Du bist ein freundlicher KI-Assistent für den Benutzer {user} und antwortest immer auf deutsch. Dein Name ist Staffi.";
 
-    public PsUser(String username, String passwordHash, boolean mustChangePassword, boolean enabled,
-                  String profileSearchSystemPrompt) {
+    public PsUser(final String username, final String passwordHash, final boolean mustChangePassword, final boolean enabled,
+                  final String profileSearchSystemPrompt) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.mustChangePassword = mustChangePassword;

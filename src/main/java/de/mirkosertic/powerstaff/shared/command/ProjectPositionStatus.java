@@ -23,7 +23,7 @@ public class ProjectPositionStatus {
     public ProjectPositionStatus() {
     }
 
-    public ProjectPositionStatus(String description, String color, String colorText) {
+    public ProjectPositionStatus(final String description, final String color, final String colorText) {
         this.description = description;
         this.color = color;
         this.colorText = colorText;
@@ -37,7 +37,7 @@ public class ProjectPositionStatus {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -45,7 +45,7 @@ public class ProjectPositionStatus {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(final String color) {
         this.color = color;
     }
 
@@ -53,7 +53,7 @@ public class ProjectPositionStatus {
         return colorText;
     }
 
-    public void setColorText(String colorText) {
+    public void setColorText(final String colorText) {
         this.colorText = colorText;
     }
 
@@ -61,7 +61,7 @@ public class ProjectPositionStatus {
         return defaultStatus;
     }
 
-    public void setDefaultStatus(boolean defaultStatus) {
+    public void setDefaultStatus(final boolean defaultStatus) {
         this.defaultStatus = defaultStatus;
     }
 }

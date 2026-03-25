@@ -24,14 +24,14 @@ public class SecurityConfig {
     private final MustChangePasswordFilter mustChangePasswordFilter;
     private final PsAuthenticationSuccessHandler authenticationSuccessHandler;
 
-    public SecurityConfig(MustChangePasswordFilter mustChangePasswordFilter,
-                          PsAuthenticationSuccessHandler authenticationSuccessHandler) {
+    public SecurityConfig(final MustChangePasswordFilter mustChangePasswordFilter,
+                          final PsAuthenticationSuccessHandler authenticationSuccessHandler) {
         this.mustChangePasswordFilter = mustChangePasswordFilter;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(final HttpSecurity http) {
         http
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/login", "/error", "/css/**", "/generated/**").permitAll()
@@ -64,10 +64,10 @@ public class SecurityConfig {
     @Bean
     @SuppressWarnings("deprecation")
     public PasswordEncoder passwordEncoder() {
-        Map<String, PasswordEncoder> encoders = new HashMap<>();
+        final Map<String, PasswordEncoder> encoders = new HashMap<>();
         encoders.put("bcrypt", new BCryptPasswordEncoder());
         encoders.put("noop", NoOpPasswordEncoder.getInstance());
-        DelegatingPasswordEncoder delegating = new DelegatingPasswordEncoder("bcrypt", encoders);
+        final DelegatingPasswordEncoder delegating = new DelegatingPasswordEncoder("bcrypt", encoders);
         delegating.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder());
         return delegating;
     }

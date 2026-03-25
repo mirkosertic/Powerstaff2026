@@ -13,18 +13,18 @@ import java.time.format.DateTimeParseException;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
-    public void addFormatters(FormatterRegistry registry) {
+    public void addFormatters(final FormatterRegistry registry) {
         // HTML <input type="date"> sends yyyy-MM-dd; also accept dd.MM.yyyy (German format)
         registry.addConverter(String.class, LocalDate.class, source -> {
             if (source == null || source.isBlank()) return null;
             // Try ISO format (yyyy-MM-dd) — standard HTML date input
             try {
                 return LocalDate.parse(source.trim(), DateTimeFormatter.ISO_LOCAL_DATE);
-            } catch (DateTimeParseException e1) {
+            } catch (final DateTimeParseException e1) {
                 // Try German format (dd.MM.yyyy)
                 try {
                     return LocalDate.parse(source.trim(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-                } catch (DateTimeParseException e2) {
+                } catch (final DateTimeParseException e2) {
                     throw new IllegalArgumentException("Ungültiges Datum: " + source + ". Erwartet: TT.MM.JJJJ");
                 }
             }
@@ -36,15 +36,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
             // Try ISO format (yyyy-MM-dd) → midnight
             try {
                 return LocalDate.parse(source.trim(), DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
-            } catch (DateTimeParseException e1) {
+            } catch (final DateTimeParseException e1) {
                 // Try German format (dd.MM.yyyy) → midnight
                 try {
                     return LocalDate.parse(source.trim(), DateTimeFormatter.ofPattern("dd.MM.yyyy")).atStartOfDay();
-                } catch (DateTimeParseException e2) {
+                } catch (final DateTimeParseException e2) {
                     // Try full ISO datetime (yyyy-MM-ddTHH:mm:ss)
                     try {
                         return LocalDateTime.parse(source.trim(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                    } catch (DateTimeParseException e3) {
+                    } catch (final DateTimeParseException e3) {
                         throw new IllegalArgumentException("Ungültiges Datum: " + source + ". Erwartet: TT.MM.JJJJ");
                     }
                 }

@@ -1,5 +1,6 @@
 package de.mirkosertic.powerstaff.partner.api;
 
+import de.mirkosertic.powerstaff.partner.query.PartnerDetailView;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
@@ -57,12 +58,12 @@ public class PartnerController {
     private final RememberedProjectService rememberedProjectService;
     private final ObjectMapper objectMapper;
 
-    public PartnerController(PartnerCommandService commandService,
-                             PartnerQueryService queryService,
-                             FreelancerCommandService freelancerCommandService,
-                             HistoryTypeQueryService historyTypeQueryService,
-                             RememberedProjectService rememberedProjectService,
-                             ObjectMapper objectMapper) {
+    public PartnerController(final PartnerCommandService commandService,
+                             final PartnerQueryService queryService,
+                             final FreelancerCommandService freelancerCommandService,
+                             final HistoryTypeQueryService historyTypeQueryService,
+                             final RememberedProjectService rememberedProjectService,
+                             final ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.freelancerCommandService = freelancerCommandService;
@@ -76,7 +77,7 @@ public class PartnerController {
     // -------------------------------------------------------------------------
 
     @GetMapping
-    public String index(@CookieValue(name = COOKIE_LAST_PARTNER_ID, required = false) Long lastId) {
+    public String index(@CookieValue(name = COOKIE_LAST_PARTNER_ID, required = false) final Long lastId) {
         if (lastId != null && queryService.findById(lastId).isPresent()) {
             return "redirect:/partner/" + lastId;
         }
@@ -100,14 +101,14 @@ public class PartnerController {
     }
 
     @GetMapping("/previous/{id}")
-    public String previous(@PathVariable long id) {
+    public String previous(@PathVariable final long id) {
         return queryService.findPrevious(id)
                 .map(p -> "redirect:/partner/" + p.id())
                 .orElse("redirect:/partner/new");
     }
 
     @GetMapping("/next/{id}")
-    public String next(@PathVariable long id) {
+    public String next(@PathVariable final long id) {
         return queryService.findNext(id)
                 .map(p -> "redirect:/partner/" + p.id())
                 .orElse("redirect:/partner/new");
@@ -118,9 +119,9 @@ public class PartnerController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/{id}")
-    public String show(@PathVariable long id, HttpServletResponse response, Model model, Principal principal) {
-        var partner = commandService.findById(id).orElseThrow();
-        var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, String.valueOf(id));
+    public String show(@PathVariable final long id, final HttpServletResponse response, final Model model, final Principal principal) {
+        final var partner = commandService.findById(id).orElseThrow();
+        final var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, String.valueOf(id));
         cookie.setPath("/partner");
         cookie.setMaxAge(COOKIE_MAX_AGE);
         response.addCookie(cookie);
@@ -140,12 +141,12 @@ public class PartnerController {
     }
 
     @GetMapping("/new")
-    public String newForm(HttpServletResponse response, Model model, Principal principal) {
-        var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, "");
+    public String newForm(final HttpServletResponse response, final Model model, final Principal principal) {
+        final var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, "");
         cookie.setPath("/partner");
         cookie.setMaxAge(0); // delete
         response.addCookie(cookie);
-        var partner = new Partner();
+        final var partner = new Partner();
         model.addAttribute("partner", partner);
         model.addAttribute("contacts", List.of());
         model.addAttribute("history", List.of());
@@ -161,10 +162,10 @@ public class PartnerController {
         return "partner/form";
     }
 
-    private String buildAuditInfo(Long id, LocalDateTime creationDate, String creationUser,
-                                   LocalDateTime changedDate, String changedUser) {
+    private String buildAuditInfo(final Long id, final LocalDateTime creationDate, final String creationUser,
+                                  final LocalDateTime changedDate, final String changedUser) {
         if (id == null) return "Neu, noch nicht gespeichert";
-        String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : "?")
+        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : "?")
                        + " " + (creationUser != null ? creationUser : "?");
         String result = "Erfasst: " + created;
         if (changedDate != null && !changedDate.equals(creationDate)) {
@@ -175,7 +176,7 @@ public class PartnerController {
         return result;
     }
 
-    private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {
+    private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
         if (principal == null) return null;
         return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);
     }
@@ -186,22 +187,22 @@ public class PartnerController {
 
     @PostMapping("/save")
     @ResponseBody
-    public ResponseEntity<?> save(@ModelAttribute Partner partner,
-                                  @RequestParam(required = false, defaultValue = "[]") String contactsJson,
-                                  @RequestParam(required = false, defaultValue = "[]") String historyJson,
-                                  HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> save(@ModelAttribute final Partner partner,
+                                  @RequestParam(required = false, defaultValue = "[]") final String contactsJson,
+                                  @RequestParam(required = false, defaultValue = "[]") final String historyJson,
+                                  final HttpServletResponse response) throws IOException {
         try {
-            List<PartnerContactEntry> contacts = objectMapper.readValue(
+            final List<PartnerContactEntry> contacts = objectMapper.readValue(
                     contactsJson, new TypeReference<>() {});
-            List<PartnerHistoryEntry> newHistory = objectMapper.readValue(
+            final List<PartnerHistoryEntry> newHistory = objectMapper.readValue(
                     historyJson, new TypeReference<>() {});
-            var saved = commandService.save(partner, contacts, newHistory);
+            final var saved = commandService.save(partner, contacts, newHistory);
             response.sendRedirect("/partner/" + saved.getId() + "?saved=true");
             return null;
-        } catch (OptimisticLockingFailureException e) {
+        } catch (final OptimisticLockingFailureException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("conflict", true));
-        } catch (JacksonException e) {
+        } catch (final JacksonException e) {
             return ResponseEntity.badRequest().body(Map.of("error", "invalid json"));
         }
     }
@@ -212,13 +213,13 @@ public class PartnerController {
 
     @PostMapping("/delete/{id}")
     @ResponseBody
-    public ResponseEntity<?> delete(@PathVariable long id,
-                                    HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> delete(@PathVariable final long id,
+                                    final HttpServletResponse response) throws IOException {
         try {
             commandService.deleteById(id);
             response.sendRedirect("/partner/new");
             return null;
-        } catch (PartnerHasProjectsException e) {
+        } catch (final PartnerHasProjectsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("blocked", true, "projectIds", e.getProjectIds()));
         }
@@ -229,14 +230,14 @@ public class PartnerController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/search")
-    public String search(@ModelAttribute PartnerSearchCriteria criteria,
-                         @RequestParam(required = false, defaultValue = "0") int offset,
-                         Model model,
-                         HttpServletResponse response) {
+    public String search(@ModelAttribute final PartnerSearchCriteria criteria,
+                         @RequestParam(required = false, defaultValue = "0") final int offset,
+                         final Model model,
+                         final HttpServletResponse response) {
         if (offset > 0) {
-            var results = queryService.search(criteria, offset, PAGE_SIZE);
-            int nextOffset = offset + PAGE_SIZE;
-            long total = queryService.countSearch(criteria);
+            final var results = queryService.search(criteria, offset, PAGE_SIZE);
+            final int nextOffset = offset + PAGE_SIZE;
+            final long total = queryService.countSearch(criteria);
             if (nextOffset < total) {
                 response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
             }
@@ -248,20 +249,20 @@ public class PartnerController {
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
 
-        var results = queryService.search(criteria, 0, PAGE_SIZE);
-        long total = queryService.countSearch(criteria);
+        final var results = queryService.search(criteria, 0, PAGE_SIZE);
+        final long total = queryService.countSearch(criteria);
         model.addAttribute("results", results);
         model.addAttribute("totalCount", total);
         model.addAttribute("criteria", criteria);
         model.addAttribute("sortField", criteria.sortField());
         model.addAttribute("sortDir", criteria.sortDir());
-        String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
+        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
         return "partner/search-page";
     }
 
-    private void appendCriteriaParams(UriComponentsBuilder b, PartnerSearchCriteria criteria) {
+    private void appendCriteriaParams(final UriComponentsBuilder b, final PartnerSearchCriteria criteria) {
         if (criteria.company()    != null) b.queryParam("company",    criteria.company());
         if (criteria.name1()      != null) b.queryParam("name1",      criteria.name1());
         if (criteria.name2()      != null) b.queryParam("name2",      criteria.name2());
@@ -276,14 +277,14 @@ public class PartnerController {
         if (criteria.sortDir()    != null) b.queryParam("sortDir",    criteria.sortDir());
     }
 
-    private String buildEditSearchUrl(PartnerSearchCriteria criteria) {
-        var b = UriComponentsBuilder.fromPath("/partner/new");
+    private String buildEditSearchUrl(final PartnerSearchCriteria criteria) {
+        final var b = UriComponentsBuilder.fromPath("/partner/new");
         appendCriteriaParams(b, criteria);
         return b.encode().build().toUriString();
     }
 
-    private String buildSearchMoreUrl(PartnerSearchCriteria criteria, int offset) {
-        var b = UriComponentsBuilder.fromPath("/partner/search").queryParam("offset", offset);
+    private String buildSearchMoreUrl(final PartnerSearchCriteria criteria, final int offset) {
+        final var b = UriComponentsBuilder.fromPath("/partner/search").queryParam("offset", offset);
         appendCriteriaParams(b, criteria);
         return b.encode().build().toUriString();
     }
@@ -294,10 +295,10 @@ public class PartnerController {
 
     @PostMapping("/{id}/assign-freelancer")
     @ResponseBody
-    public ResponseEntity<?> assignFreelancer(@PathVariable long id,
-                                              @RequestBody Map<String, String> body) {
-        String code = body.get("code");
-        FreelancerLookupResult freelancer = freelancerCommandService.findByCode(code).orElse(null);
+    public ResponseEntity<?> assignFreelancer(@PathVariable final long id,
+                                              @RequestBody final Map<String, String> body) {
+        final String code = body.get("code");
+        final FreelancerLookupResult freelancer = freelancerCommandService.findByCode(code).orElse(null);
 
         if (freelancer == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -305,8 +306,8 @@ public class PartnerController {
         }
 
         if (freelancer.partnerId() != null && freelancer.partnerId() != id) {
-            String otherCompany = queryService.findById(freelancer.partnerId())
-                    .map(p -> p.company())
+            final String otherCompany = queryService.findById(freelancer.partnerId())
+                    .map(PartnerDetailView::company)
                     .orElse("Unbekannter Partner");
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("otherPartner", otherCompany,
@@ -314,26 +315,26 @@ public class PartnerController {
         }
 
         freelancerCommandService.assignToPartner(freelancer.id(), id);
-        List<PartnerFreelancerView> updated = queryService.findFreelancersByPartner(id);
+        final List<PartnerFreelancerView> updated = queryService.findFreelancersByPartner(id);
         return ResponseEntity.ok(Map.of("ok", true, "freelancers", updated));
     }
 
     @PostMapping("/{id}/confirm-reassign-freelancer")
     @ResponseBody
-    public ResponseEntity<?> confirmReassignFreelancer(@PathVariable long id,
-                                                       @RequestBody Map<String, Long> body) {
-        long freelancerId = body.get("freelancerId");
+    public ResponseEntity<?> confirmReassignFreelancer(@PathVariable final long id,
+                                                       @RequestBody final Map<String, Long> body) {
+        final long freelancerId = body.get("freelancerId");
         freelancerCommandService.assignToPartner(freelancerId, id);
-        List<PartnerFreelancerView> updated = queryService.findFreelancersByPartner(id);
+        final List<PartnerFreelancerView> updated = queryService.findFreelancersByPartner(id);
         return ResponseEntity.ok(Map.of("ok", true, "freelancers", updated));
     }
 
     @PostMapping("/{id}/remove-freelancer/{freelancerId}")
     @ResponseBody
-    public ResponseEntity<?> removeFreelancer(@PathVariable long id,
-                                              @PathVariable long freelancerId) {
+    public ResponseEntity<?> removeFreelancer(@PathVariable final long id,
+                                              @PathVariable final long freelancerId) {
         freelancerCommandService.removeFromPartner(freelancerId, id);
-        List<PartnerFreelancerView> updated = queryService.findFreelancersByPartner(id);
+        final List<PartnerFreelancerView> updated = queryService.findFreelancersByPartner(id);
         return ResponseEntity.ok(Map.of("ok", true, "freelancers", updated));
     }
 }

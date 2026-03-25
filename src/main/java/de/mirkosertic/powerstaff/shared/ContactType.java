@@ -9,7 +9,7 @@ public enum ContactType {
         }
 
         @Override
-        public String buildLink(String value) {
+        public String buildLink(final String value) {
             return "mailto:" + value;
         }
     },
@@ -21,7 +21,7 @@ public enum ContactType {
         }
 
         @Override
-        public String buildLink(String value) {
+        public String buildLink(final String value) {
             if (value != null && value.startsWith("http")) {
                 return value;
             }
@@ -36,7 +36,7 @@ public enum ContactType {
         }
 
         @Override
-        public String buildLink(String value) {
+        public String buildLink(final String value) {
             if (value != null && value.startsWith("http")) {
                 return value;
             }
@@ -51,7 +51,7 @@ public enum ContactType {
         }
 
         @Override
-        public String buildLink(String value) {
+        public String buildLink(final String value) {
             if (value != null && value.startsWith("http")) {
                 return value;
             }
@@ -66,7 +66,7 @@ public enum ContactType {
         }
 
         @Override
-        public String buildLink(String value) {
+        public String buildLink(final String value) {
             return "tel:" + value;
         }
     },
@@ -78,7 +78,7 @@ public enum ContactType {
         }
 
         @Override
-        public String buildLink(String value) {
+        public String buildLink(final String value) {
             return "tel:" + value;
         }
     };

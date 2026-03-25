@@ -13,28 +13,28 @@ public class StammdatenCommandService {
     private final TagRepository tagRepository;
 
     public StammdatenCommandService(
-            HistoryTypeRepository historyTypeRepository,
-            ProjectPositionStatusRepository projectPositionStatusRepository,
-            TagRepository tagRepository) {
+            final HistoryTypeRepository historyTypeRepository,
+            final ProjectPositionStatusRepository projectPositionStatusRepository,
+            final TagRepository tagRepository) {
         this.historyTypeRepository = historyTypeRepository;
         this.projectPositionStatusRepository = projectPositionStatusRepository;
         this.tagRepository = tagRepository;
     }
 
-    public HistoryType saveHistoryType(HistoryType ht) {
+    public HistoryType saveHistoryType(final HistoryType ht) {
         return historyTypeRepository.save(ht);
     }
 
-    public void deleteHistoryType(Long id) {
+    public void deleteHistoryType(final Long id) {
         historyTypeRepository.deleteById(id);
     }
 
-    public Optional<HistoryType> findHistoryTypeById(Long id) {
+    public Optional<HistoryType> findHistoryTypeById(final Long id) {
         return historyTypeRepository.findById(id);
     }
 
     @Transactional
-    public ProjectPositionStatus saveProjectPositionStatus(ProjectPositionStatus pps) {
+    public ProjectPositionStatus saveProjectPositionStatus(final ProjectPositionStatus pps) {
         if (pps.isDefaultStatus()) {
             projectPositionStatusRepository.findByDefaultStatusTrue().ifPresent(existing -> {
                 if (!existing.getId().equals(pps.getId())) {
@@ -46,7 +46,7 @@ public class StammdatenCommandService {
         return projectPositionStatusRepository.save(pps);
     }
 
-    public Optional<ProjectPositionStatus> findProjectPositionStatusById(Long id) {
+    public Optional<ProjectPositionStatus> findProjectPositionStatusById(final Long id) {
         return projectPositionStatusRepository.findById(id);
     }
 
@@ -54,19 +54,19 @@ public class StammdatenCommandService {
         return projectPositionStatusRepository.findByDefaultStatusTrue();
     }
 
-    public void deleteProjectPositionStatus(Long id) {
+    public void deleteProjectPositionStatus(final Long id) {
         projectPositionStatusRepository.deleteById(id);
     }
 
-    public Tag saveTag(Tag tag) {
+    public Tag saveTag(final Tag tag) {
         return tagRepository.save(tag);
     }
 
-    public void deleteTag(Long id) {
+    public void deleteTag(final Long id) {
         tagRepository.deleteById(id);
     }
 
-    public Optional<Tag> findTagById(Long id) {
+    public Optional<Tag> findTagById(final Long id) {
         return tagRepository.findById(id);
     }
 }

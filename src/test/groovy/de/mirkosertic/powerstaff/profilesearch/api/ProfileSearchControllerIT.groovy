@@ -141,7 +141,7 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
         ])
         when(commandService.addMessage(anyLong(), anyString(), anyString())).thenReturn(savedMsg)
         when(llmService.sendMessage(any(), any(), any(), any(), anyString()))
-                .thenReturn(new LlmService.Reply(-1, LlmService.ROLE_SASSISTANT, "Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.", "{}"));
+                .thenReturn([new LlmService.Reply(-1, LlmService.ROLE_ASSISTANT, "Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.", "{}")]);
 
         expect:
         mockMvc.perform(post("/profilesearch/chat/42/send")
@@ -149,9 +149,9 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content('{"message":"Hallo"}'))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath('$.role').value("assistant"))
-                .andExpect(jsonPath('$.content').value("Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert."))
-                .andExpect(jsonPath('$.jsonPayload').value("{}"))
+                .andExpect(jsonPath('$.messages[0].role').value("assistant"))
+                .andExpect(jsonPath('$.messages[0].content').value("Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert."))
+                .andExpect(jsonPath('$.messages[0].jsonPayload').value("{}"))
     }
 
     def "GET /profilesearch/chat/{chatId} mit offset > 0 liefert Sidebar-Fragment"() {

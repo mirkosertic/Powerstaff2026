@@ -215,6 +215,7 @@
 #chat-messages {
   flex: 1;
   overflow-y: auto;
+  scrollbar-gutter: stable;
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
@@ -413,13 +414,13 @@ ps-chat-input {
 
 .msg-tool {
   align-self: flex-start;
+  min-width: 220px;
   max-width: 72%;
   font-family: ui-monospace, "SFMono-Regular", "Cascadia Code", Consolas, monospace;
   font-size: 12px;
   border-radius: var(--r);
   border: 1px solid var(--border);
   background: var(--surface-2);
-  overflow: hidden;
 }
 
 .msg-tool-call {
@@ -444,6 +445,7 @@ ps-chat-input {
   border: none;
   width: 100%;
   text-align: left;
+  border-radius: var(--r) var(--r) 0 0;
 }
 
 .msg-tool-header:hover {
@@ -455,9 +457,7 @@ ps-chat-input {
   flex: 1;
   font-weight: 600;
   color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .msg-tool-chevron {
