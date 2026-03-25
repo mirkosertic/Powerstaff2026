@@ -59,12 +59,14 @@ VALUES
      NOW(), 'testuser', NOW(), 'testuser')
 ON DUPLICATE KEY UPDATE db_version = db_version;
 
--- Projekt (1 Stück, Kunde 3001 zugeordnet)
+-- Projekt (2 Stück: 4001 → Kunde 3001, 4002 → Partner 2001)
 INSERT IGNORE INTO project
-    (id, db_version, project_number, description_short, customer_id, partner_id,
+    (id, db_version, project_number, description_short, status, customer_id, partner_id,
      creation_date, creation_user, changed_date, changed_user)
 VALUES
-    (4001, 0, 'E2E-P001', 'E2E Testprojekt', 3001, NULL,
+    (4001, 0, 'E2E-P001', 'E2E Testprojekt', 1, 3001, NULL,
+     NOW(), 'testuser', NOW(), 'testuser'),
+    (4002, 0, 'E2E-P002', 'E2E Partnerprojekt', 4, NULL, 2001,
      NOW(), 'testuser', NOW(), 'testuser')
 ON DUPLICATE KEY UPDATE db_version = db_version;
 

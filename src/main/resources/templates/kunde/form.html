@@ -191,7 +191,7 @@
             <td th:text="${p.descriptionShort()}"></td>
             <td th:text="${p.workplace()}"></td>
             <td th:text="${p.startDate() != null} ? ${#temporals.format(p.startDate(),'dd.MM.yyyy')} : ''"></td>
-            <td th:text="${p.status()}"></td>
+            <td th:text="${p.statusLabel()}" th:attr="data-testid='projekt-status-' + ${p.id()}"></td>
           </tr>
         </tbody>
       </table>

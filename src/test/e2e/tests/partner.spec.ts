@@ -39,6 +39,23 @@ test.describe('Partner', () => {
         await expect(page.locator('ps-infinite-scroll')).not.toBeAttached();
     });
 
+    test('Projekt-Status wird als Text angezeigt, nicht als numerischer Index', async ({ page }) => {
+        await page.goto('/partner/2001');
+
+        const projectRow = page.locator('[data-testid="partner-project-row-4002"]');
+        await expect(projectRow).toBeVisible();
+
+        const statusCell = page.locator('[data-testid="projekt-status-4002"]');
+        await expect(statusCell).toBeVisible();
+
+        const statusText = await statusCell.textContent();
+        const validLabels = ['Offen', 'Verloren', 'Storniert', 'Besetzt', 'Suche abgeschlossen'];
+        expect(validLabels).toContain(statusText?.trim());
+
+        // Kein reines Numeral (1–5)
+        expect(statusText?.trim()).not.toMatch(/^[1-5]$/);
+    });
+
     test('Kontakthistorie bei Partner hinzufügen', async ({ page }) => {
         await page.goto('/partner/2001');
 

@@ -46,4 +46,18 @@ test.describe('Kunden', () => {
         await page.waitForURL(/\/project\/4001/);
     });
 
+    test('Projekt-Status wird als Text angezeigt, nicht als numerischer Index', async ({ page }) => {
+        await page.goto('/kunde/3001');
+
+        const statusCell = page.locator('[data-testid="projekt-status-4001"]');
+        await expect(statusCell).toBeVisible();
+
+        const statusText = await statusCell.textContent();
+        const validLabels = ['Offen', 'Verloren', 'Storniert', 'Besetzt', 'Suche abgeschlossen'];
+        expect(validLabels).toContain(statusText?.trim());
+
+        // Kein reines Numeral (1–5)
+        expect(statusText?.trim()).not.toMatch(/^[1-5]$/);
+    });
+
 });

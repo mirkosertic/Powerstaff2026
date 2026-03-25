@@ -259,14 +259,16 @@
             <th>Kurzbeschreibung</th>
             <th>Einsatzort</th>
             <th>Start</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          <tr th:each="proj : ${projects}">
+          <tr th:each="proj : ${projects}" th:attr="data-testid='partner-project-row-' + ${proj.id()}">
             <td><a th:href="@{/project/{id}(id=${proj.id})}" th:text="${proj.projectNumber}"></a></td>
             <td th:text="${proj.descriptionShort}"></td>
             <td th:text="${proj.workplace}"></td>
             <td th:text="${proj.startDate != null} ? ${#temporals.format(proj.startDate,'dd.MM.yyyy')} : ''"></td>
+            <td th:text="${proj.statusLabel()}" th:attr="data-testid='projekt-status-' + ${proj.id()}"></td>
           </tr>
         </tbody>
       </table>
