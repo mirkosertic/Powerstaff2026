@@ -1,5 +1,7 @@
 package de.mirkosertic.powerstaff.profilesearch.command;
 
+import de.mirkosertic.powerstaff.auth.UserQueryService;
+import de.mirkosertic.powerstaff.auth.PsUser;
 import de.mirkosertic.powerstaff.profilesearch.query.LlmProjectContext;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
 import org.slf4j.Logger;
@@ -32,12 +34,14 @@ public class SpringAILlmService implements LlmService {
     private final ProfileSearchCommandService commandService;
     private final ProfileSearchQueryService queryService;
     private final ObjectMapper objectMapper;
+    private final UserQueryService userQueryService;
 
-    public SpringAILlmService(final ChatClient chatClient, final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService, final ObjectMapper objectMapper) {
+    public SpringAILlmService(final ChatClient chatClient, final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService, final ObjectMapper objectMapper, final UserQueryService userQueryService) {
         this.chatClient = chatClient;
         this.commandService = commandService;
         this.queryService = queryService;
         this.objectMapper = objectMapper;
+        this.userQueryService = userQueryService;
     }
 
     @Override
@@ -60,7 +64,10 @@ public class SpringAILlmService implements LlmService {
                 .conversationId(conversationId)
                 .build();
 
-        final var systemPrompt = new PromptTemplate("Du bist ein freundlicher KI-Assistent für den Benutzer {user} und antwortest immer auf deutsch. Dein Name ist Staffi.").render(Map.of("user", principal.getName()));
+        final var systemPromptTemplate = userQueryService.findByUsername(principal.getName())
+                .flatMap(u -> Optional.ofNullable(u.profileSearchSystemPrompt()))
+                .orElse(PsUser.DEFAULT_SYSTEM_PROMPT);
+        final var systemPrompt = new PromptTemplate(systemPromptTemplate).render(Map.of("user", principal.getName()));
         final var chatClientResponse = chatClient.prompt()
                 .advisors(
                         toolCallAdvisor,
