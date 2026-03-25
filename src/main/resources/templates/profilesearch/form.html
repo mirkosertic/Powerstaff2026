@@ -97,9 +97,12 @@
                th:classappend="${msg.role()} == 'user' ? ' user' : ' assistant'"
                th:attr="data-msg-id=${msg.id()}">
             <div class="msg-bubble"
-                 th:utext="${msg.role() == 'assistant'}
-                           ? ${#strings.replace(#strings.replace(#strings.replace(#strings.escapeXml(msg.content()), '&#xA;', '<br/>'), '&lt;', '<'), '&gt;', '>')}
-                           : ${#strings.escapeXml(msg.content())}">
+                 th:if="${msg.role() == 'user'}"
+                 th:text="${msg.content()}">
+            </div>
+            <div class="msg-bubble"
+                 th:if="${msg.role() == 'assistant'}"
+                 th:utext="${#strings.escapeXml(msg.content())}">
             </div>
             <div class="msg-meta"
                  th:text="${#temporals.format(msg.creationDate(), 'HH:mm')}">
