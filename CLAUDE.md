@@ -41,8 +41,14 @@ Repositories sind immer `package-private`. Kein direkter Repository-Zugriff zwis
 # Integrationstests (*IT) ausführen – benötigt Docker für Testcontainers
 ./mvnw verify
 
-# Alles zusammen
+# E2E TEsts ausführen – benötigt Docker für Testcontainers
+./mvnw verify -Pe2e
+
+# Alles zusammen ohne E2E-Tests
 ./mvnw clean verify
+
+# Alles zusammen mit E2E-Tests
+./mvnw clean verify -Pe2e
 
 # Nur Integrationstests
 ./mvnw failsafe:integration-test failsafe:verify

@@ -180,6 +180,7 @@ Prompt:
 > [Backend-Agent-Output einfügen]
 >
 > Prüfe:
+> - Ein vollständiger Maven-Build inkl. E2E-Tests funktioniert?
 > - CQRS-Trennung korrekt (Command/Query in getrennten Paketen)?
 > - Repositories package-private?
 > - Kommunikation zwischen Modulen nur über publizierte Interfaces oder Domain Events?

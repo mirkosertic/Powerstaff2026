@@ -3,6 +3,7 @@ package de.mirkosertic.powerstaff.profilesearch.api
 import de.mirkosertic.powerstaff.AbstractContainerBaseIT
 import de.mirkosertic.powerstaff.profilesearch.command.LlmService
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchCommandService
+import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchMessage
 import de.mirkosertic.powerstaff.profilesearch.query.ChatListView
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService
 import de.mirkosertic.powerstaff.profilesearch.query.MessageView
@@ -19,7 +20,10 @@ import java.time.LocalDateTime
 
 import static org.mockito.ArgumentMatchers.any
 import static org.mockito.ArgumentMatchers.anyInt
+import static org.mockito.ArgumentMatchers.anyLong
 import static org.mockito.ArgumentMatchers.anyString
+import static org.mockito.ArgumentMatchers.isNull
+import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.when
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
@@ -50,10 +54,10 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
     ProfileSearchQueryService queryService
 
     @MockitoBean
-    LlmService llmService
+    RememberedProjectService rememberedProjectService
 
     @MockitoBean
-    RememberedProjectService rememberedProjectService
+    LlmService llmService;
 
     def setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
@@ -124,13 +128,20 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
                 .andExpect(jsonPath('$.redirectTo').value('/profilesearch/chat/55'))
     }
 
-    def "POST /profilesearch/chat/{chatId}/send ruft LLM auf und liefert JSON"() {
+    def "POST /profilesearch/chat/{chatId}/send speichert Nachricht und liefert JSON"() {
         given:
-        def reply = new LlmService.Reply(201L, "assistant", "Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.", null)
+        def savedMsg = new ProfileSearchMessage()
+        savedMsg.setId(201L)
+        savedMsg.setRole("assistant")
+        savedMsg.setContent("Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.")
 
         when(queryService.buildLlmContext("testuser")).thenReturn(Optional.empty())
-        when(llmService.sendMessage(any(), anyString(), anyString(), any(), anyString()))
-                .thenReturn(reply)
+        when(queryService.findMessagesByChat(42L)).thenReturn([
+                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo", "")
+        ])
+        when(commandService.addMessage(anyLong(), anyString(), anyString())).thenReturn(savedMsg)
+        when(llmService.sendMessage(any(), any(), any(), any(), anyString()))
+                .thenReturn(new LlmService.Reply(-1, LlmService.ROLE_SASSISTANT, "Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.", "{}"));
 
         expect:
         mockMvc.perform(post("/profilesearch/chat/42/send")
@@ -138,9 +149,9 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content('{"message":"Hallo"}'))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath('$.id').value(201))
                 .andExpect(jsonPath('$.role').value("assistant"))
                 .andExpect(jsonPath('$.content').value("Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert."))
+                .andExpect(jsonPath('$.jsonPayload').value("{}"))
     }
 
     def "GET /profilesearch/chat/{chatId} mit offset > 0 liefert Sidebar-Fragment"() {
@@ -176,8 +187,8 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
         when(queryService.findChatsByUser(anyString(), anyInt(), anyInt())).thenReturn([chatView])
         when(queryService.countChatsByUser(anyString())).thenReturn(1L)
         when(queryService.findMessagesByChat(42L)).thenReturn([
-                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo KI", null),
-                new MessageView(2L, LocalDateTime.now(), 42L, "assistant", 2, "Antwort der KI", null)
+                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo KI", "{}"),
+                new MessageView(2L, LocalDateTime.now(), 42L, "assistant", 2, "Antwort der KI", "{}")
         ])
 
         expect:
@@ -192,64 +203,39 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
                 .andExpect(content().string(containsString('Hallo KI')))
     }
 
-    def "POST /profilesearch/chat/{chatId}/send liefert role tool_call in der JSON-Response"() {
+    def "DELETE /profilesearch/chat/{id} liefert JSON mit redirectTo wenn weiterer Chat vorhanden"() {
         given:
-        def reply = new LlmService.Reply(303L, LlmService.ROLE_TOOL_CALL, '{"tool":"search","args":{}}', null)
-
-        when(queryService.buildLlmContext("testuser")).thenReturn(Optional.empty())
-        when(llmService.sendMessage(any(), anyString(), anyString(), any(), anyString()))
-                .thenReturn(reply)
-
-        expect:
-        mockMvc.perform(post("/profilesearch/chat/42/send")
-                .with(user("testuser")).with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content('{"message":"Suche Freelancer"}'))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath('$.id').value(303))
-                .andExpect(jsonPath('$.role').value(LlmService.ROLE_TOOL_CALL))
-                .andExpect(jsonPath('$.content').value('{"tool":"search","args":{}}'))
-    }
-
-    def "POST /profilesearch/chat/{chatId}/send liefert role tool_result in der JSON-Response"() {
-        given:
-        def reply = new LlmService.Reply(404L, LlmService.ROLE_TOOL_RESULT, '{"freelancers":[]}', null)
-
-        when(queryService.buildLlmContext("testuser")).thenReturn(Optional.empty())
-        when(llmService.sendMessage(any(), anyString(), anyString(), any(), anyString()))
-                .thenReturn(reply)
-
-        expect:
-        mockMvc.perform(post("/profilesearch/chat/42/send")
-                .with(user("testuser")).with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content('{"message":"Zeig Ergebnis"}'))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath('$.id').value(404))
-                .andExpect(jsonPath('$.role').value(LlmService.ROLE_TOOL_RESULT))
-                .andExpect(jsonPath('$.content').value('{"freelancers":[]}'))
-    }
-
-    def "POST /profilesearch/chat/{chatId}/send Response-JSON enthaelt immer Felder id, role und content"() {
-        given:
-        def reply = new LlmService.Reply(555L, LlmService.ROLE_SASSISTANT, "Fertig.", null)
-
-        when(queryService.buildLlmContext("testuser")).thenReturn(Optional.empty())
-        when(llmService.sendMessage(any(), anyString(), anyString(), any(), anyString()))
-                .thenReturn(reply)
+        doNothing().when(commandService).deleteChat(anyLong())
+        when(queryService.findLatestChatByUser(anyString())).thenReturn(Optional.of(99L))
 
         when:
-        def result = mockMvc.perform(post("/profilesearch/chat/42/send")
-                .with(user("testuser")).with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content('{"message":"Test"}'))
+        def result = mockMvc.perform(
+                delete('/profilesearch/chat/42')
+                        .with(user('testuser').roles('USER'))
+                        .with(csrf())
+        )
 
         then:
         result.andExpect(status().isOk())
-        result.andExpect(jsonPath('$.id').exists())
-        result.andExpect(jsonPath('$.role').exists())
-        result.andExpect(jsonPath('$.content').exists())
-        result.andExpect(jsonPath('$.id').value(555))
-        result.andExpect(jsonPath('$.role').value(LlmService.ROLE_SASSISTANT))
+        result.andExpect(jsonPath('$.redirectTo').value('/profilesearch/chat/99'))
+    }
+
+    def "DELETE /profilesearch/chat/{id} erstellt neuen Chat wenn kein weiterer Chat vorhanden"() {
+        given:
+        doNothing().when(commandService).deleteChat(anyLong())
+        when(queryService.findLatestChatByUser(anyString())).thenReturn(Optional.empty())
+        when(rememberedProjectService.get(anyString())).thenReturn(Optional.empty())
+        when(commandService.createChat(anyString(), isNull())).thenReturn(77L)
+
+        when:
+        def result = mockMvc.perform(
+                delete('/profilesearch/chat/42')
+                        .with(user('testuser').roles('USER'))
+                        .with(csrf())
+        )
+
+        then:
+        result.andExpect(status().isOk())
+        result.andExpect(jsonPath('$.redirectTo').value('/profilesearch/chat/77'))
     }
 }
