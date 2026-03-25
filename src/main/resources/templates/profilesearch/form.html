@@ -238,7 +238,11 @@
       // Convert [freelancer:<id>:<label>] to Markdown links so marked processes them natively
       text = (text || '').replace(/\[freelancer:(\d+):([^\]]+)\]/g,
         (_, id, label) => `[${label}](/freelancer/${id})`);
-      return renderMarkdown(text);
+      // renderMarkdown is provided by app.js (marked.js); fallback for old builds
+      if (typeof renderMarkdown === 'function') {
+        return renderMarkdown(text);
+      }
+      return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
     }
 
     // Process all assistant bubbles already in the DOM (Thymeleaf rendered raw Markdown)
