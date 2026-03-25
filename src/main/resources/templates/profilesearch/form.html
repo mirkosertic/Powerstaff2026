@@ -238,16 +238,15 @@
       // Convert [freelancer:<id>:<label>] to Markdown links so marked processes them natively
       text = (text || '').replace(/\[freelancer:(\d+):([^\]]+)\]/g,
         (_, id, label) => `[${label}](/freelancer/${id})`);
-      // renderMarkdown is provided by app.js (marked.js); fallback for old builds
-      if (typeof renderMarkdown === 'function') {
-        return renderMarkdown(text);
-      }
-      return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+      return renderMarkdown(text);
     }
 
-    // Process all assistant bubbles already in the DOM (Thymeleaf rendered raw Markdown)
-    document.querySelectorAll('.chat-msg.assistant .msg-bubble').forEach(el => {
-      el.innerHTML = renderAssistantContent(el.textContent);
+    // Process assistant bubbles already in the DOM after app.js (deferred) has run.
+    // DOMContentLoaded fires after all deferred scripts, so renderMarkdown is available.
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.chat-msg.assistant .msg-bubble').forEach(function(el) {
+        el.innerHTML = renderAssistantContent(el.textContent);
+      });
     });
 
     // ── Tool-Msg Toggle ──────────────────────────────────────────────────────
