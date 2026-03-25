@@ -102,7 +102,7 @@
             </div>
             <div class="msg-bubble"
                  th:if="${msg.role() == 'assistant'}"
-                 th:utext="${#strings.escapeXml(msg.content())}">
+                 th:text="${msg.content()}">
             </div>
             <div class="msg-meta"
                  th:text="${#temporals.format(msg.creationDate(), 'HH:mm')}">
@@ -235,12 +235,16 @@
     scrollToBottom();
 
     function renderAssistantContent(text) {
-      // Convert [freelancer:<id>:<label>] to links
-      text = text.replace(/\[freelancer:(\d+):([^\]]+)\]/g,
-        (_, id, label) => `<a href="/freelancer/${id}" target="_blank">${label}</a>`);
-      // Escape everything else that wasn't already converted (simple <pre> fallback)
-      return text;
+      // Convert [freelancer:<id>:<label>] to Markdown links so marked processes them natively
+      text = (text || '').replace(/\[freelancer:(\d+):([^\]]+)\]/g,
+        (_, id, label) => `[${label}](/freelancer/${id})`);
+      return renderMarkdown(text);
     }
+
+    // Process all assistant bubbles already in the DOM (Thymeleaf rendered raw Markdown)
+    document.querySelectorAll('.chat-msg.assistant .msg-bubble').forEach(el => {
+      el.innerHTML = renderAssistantContent(el.textContent);
+    });
 
     // ── Tool-Msg Toggle ──────────────────────────────────────────────────────
     function toggleToolMsg(headerBtn) {

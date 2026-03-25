@@ -1,4 +1,5 @@
 import './main.css';
+import { marked } from 'marked';
 import './ps-modal.js';
 import './ps-dirty-banner.js';
 import './ps-infinite-scroll.js';
@@ -84,3 +85,16 @@ export function escHtml(str) {
     .replace(/"/g, '&quot;');
 }
 window.escHtml = escHtml;
+
+/**
+ * renderMarkdown – wandelt Markdown-Text in HTML um (GFM + breaks).
+ * Einzelne Zeilenumbrüche werden zu <br>, Fett/Kursiv/Code/Listen etc. werden
+ * korrekt gerendert. Verwendet marked.js (client-seitig, streaming-kompatibel).
+ * @param {string} text
+ * @returns {string} HTML-String
+ */
+marked.use({ gfm: true, breaks: true });
+function renderMarkdown(text) {
+  return marked.parse(text || '');
+}
+window.renderMarkdown = renderMarkdown;
