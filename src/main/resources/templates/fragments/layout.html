@@ -55,8 +55,10 @@
   </nav>
 
   <!-- app.js muss VOR dem Content-Block geladen werden, damit globale Funktionen
-       (guardedNavigate, openModal, etc.) in den Inline-Scripts der Templates verfügbar sind. -->
-  <script th:src="@{/generated/app.js}" defer></script>
+       (guardedNavigate, openModal, getCsrfToken, renderMarkdown, etc.) in den
+       Inline-Scripts der Templates sofort verfügbar sind. Kein defer – synchrone
+       Ausführung ist hier gewollt. -->
+  <script th:src="@{/generated/app.js}"></script>
 
   <!-- Content-Slot -->
   <th:block th:replace="${content}"/>
