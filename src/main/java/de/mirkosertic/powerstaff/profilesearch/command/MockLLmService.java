@@ -12,6 +12,6 @@ public class MockLLmService implements LlmService {
                               final String conversationId,
                               final Optional<LlmProjectContext> context,
                               final String userMessage) {
-        return new Reply(10, ROLE_SASSISTANT, "Mock Response Nummer 0");
+        return new Reply(10, ROLE_SASSISTANT, "Mock Response Nummer 0", null);
     }
 }

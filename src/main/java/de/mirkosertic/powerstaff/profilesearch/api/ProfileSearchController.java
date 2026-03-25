@@ -117,7 +117,7 @@ public class ProfileSearchController {
 
     record SendRequest(String message) {}
 
-    record SendResponse(Long id, String role, String content) {}
+    record SendResponse(Long id, String role, String content, String jsonPayload) {}
 
     @PostMapping(value = "/chat/{chatId}/send", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -133,7 +133,7 @@ public class ProfileSearchController {
         // Call LLM
         LlmService.Reply assistantReply = llmService.sendMessage(principal, session.getId(), Long.toString(chatId), context, request.message());
 
-        return new SendResponse(assistantReply.id(), assistantReply.role(), assistantReply.message());
+        return new SendResponse(assistantReply.id(), assistantReply.role(), assistantReply.message(), assistantReply.jsonPayload());
     }
 
     private RememberedProjectInfo buildRememberedProjectInfo(Principal principal) {

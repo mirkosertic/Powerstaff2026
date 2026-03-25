@@ -356,3 +356,92 @@ ps-chat-input {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* -----------------------------------------------------------------------------
+   §28 Tool-Nachrichten (tool_call / tool_result)
+   ----------------------------------------------------------------------------- */
+
+.msg-tool {
+  align-self: flex-start;
+  max-width: 72%;
+  font-family: ui-monospace, "SFMono-Regular", "Cascadia Code", Consolas, monospace;
+  font-size: 12px;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.msg-tool-call {
+  border-left: 3px solid var(--text-3);
+}
+
+.msg-tool-result {
+  border-left: 3px solid var(--ok-border);
+}
+
+.msg-tool-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 12px;
+  font-family: ui-monospace, "SFMono-Regular", "Cascadia Code", Consolas, monospace;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.msg-tool-header:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.msg-tool-name {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.msg-tool-chevron {
+  font-size: 10px;
+  color: var(--text-3);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.msg-tool-header[aria-expanded="true"] .msg-tool-chevron {
+  transform: rotate(90deg);
+}
+
+.msg-tool-body {
+  display: none;
+  padding: 0 10px 8px;
+  border-top: 1px solid var(--border-l);
+}
+
+.msg-tool-body.open {
+  display: block;
+}
+
+.msg-tool-body pre {
+  margin: 6px 0 0;
+  padding: 8px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-l);
+  border-radius: var(--r);
+  font-size: 11px;
+  font-family: ui-monospace, "SFMono-Regular", "Cascadia Code", Consolas, monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--text);
+  max-height: 300px;
+  overflow-y: auto;
+}

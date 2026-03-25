@@ -55,6 +55,6 @@ public class SpringAILlmService implements LlmService {
                 .call()
                 .content();
 
-        return new Reply(-1, ROLE_SASSISTANT, content);
+        return new Reply(-1, ROLE_SASSISTANT, content, null);
     }
 }

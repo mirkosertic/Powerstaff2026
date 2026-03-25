@@ -103,6 +103,79 @@ class ProfileSearchQueryServiceIT extends AbstractContainerBaseIT {
         queryService.findLatestChatByUser('not-existing-user').isEmpty()
     }
 
+    def "findMessagesByChat gibt jsonPayload korrekt zurueck wenn gespeichert"() {
+        given:
+        def chatId = commandService.createChat('IT-PSQ-JP-User', null)
+        chatIds << chatId
+        def payload = '{"tool":"search","args":{"skills":"Java"}}'
+        jdbcClient.sql("""
+                INSERT INTO profile_search_message (chat_id, role, sequence, content, json_payload)
+                VALUES (:chatId, :role, 1, :content, :payload)
+                """)
+                .param("chatId", chatId)
+                .param("role", 'tool_call')
+                .param("content", 'Suche starten')
+                .param("payload", payload)
+                .update()
+
+        when:
+        def messages = queryService.findMessagesByChat(chatId)
+
+        then:
+        messages.size() == 1
+        messages[0].role() == 'tool_call'
+        messages[0].jsonPayload() == payload
+    }
+
+    def "findMessagesByChat liefert null fuer jsonPayload wenn nicht gespeichert"() {
+        given:
+        def chatId = commandService.createChat('IT-PSQ-JP-Null-User', null)
+        chatIds << chatId
+        commandService.addMessage(chatId, 'user', 'Normale Nachricht ohne Payload')
+
+        when:
+        def messages = queryService.findMessagesByChat(chatId)
+
+        then:
+        messages.size() == 1
+        messages[0].jsonPayload() == null
+    }
+
+    def "findMessagesByChat liefert Nachrichten mit role tool_call und tool_result korrekt"() {
+        given:
+        def chatId = commandService.createChat('IT-PSQ-TC-User', null)
+        chatIds << chatId
+        def toolCallPayload = '{"tool":"findFreelancer","args":{"skills":"Kotlin"}}'
+        def toolResultPayload = '{"results":[{"code":"FL-001","name":"Max Muster"}]}'
+        jdbcClient.sql("""
+                INSERT INTO profile_search_message (chat_id, role, sequence, content, json_payload)
+                VALUES (:chatId, 'user', 1, 'Suche Kotlin-Experten', NULL)
+                """)
+                .param("chatId", chatId).update()
+        jdbcClient.sql("""
+                INSERT INTO profile_search_message (chat_id, role, sequence, content, json_payload)
+                VALUES (:chatId, 'tool_call', 2, 'Tool aufgerufen', :payload)
+                """)
+                .param("chatId", chatId).param("payload", toolCallPayload).update()
+        jdbcClient.sql("""
+                INSERT INTO profile_search_message (chat_id, role, sequence, content, json_payload)
+                VALUES (:chatId, 'tool_result', 3, 'Tool-Ergebnis', :payload)
+                """)
+                .param("chatId", chatId).param("payload", toolResultPayload).update()
+
+        when:
+        def messages = queryService.findMessagesByChat(chatId)
+
+        then:
+        messages.size() == 3
+        messages[0].role() == 'user'
+        messages[0].jsonPayload() == null
+        messages[1].role() == 'tool_call'
+        messages[1].jsonPayload() == toolCallPayload
+        messages[2].role() == 'tool_result'
+        messages[2].jsonPayload() == toolResultPayload
+    }
+
     def "buildLlmContext ohne gemerktes Projekt liefert empty"() {
         expect:
         queryService.buildLlmContext('no-remembered-project-user').isEmpty()

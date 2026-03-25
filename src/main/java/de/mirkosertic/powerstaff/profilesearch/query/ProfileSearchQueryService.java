@@ -46,7 +46,7 @@ public class ProfileSearchQueryService {
 
     public List<MessageView> findMessagesByChat(Long chatId) {
         return jdbcClient.sql("""
-                SELECT id, creation_date, chat_id, role, sequence, content
+                SELECT id, creation_date, chat_id, role, sequence, content, json_payload
                 FROM profile_search_message
                 WHERE chat_id = :chatId
                 ORDER BY sequence ASC

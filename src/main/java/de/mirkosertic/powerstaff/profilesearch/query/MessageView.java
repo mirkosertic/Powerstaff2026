@@ -8,6 +8,7 @@ public record MessageView(
         Long chatId,
         String role,
         int sequence,
-        String content
+        String content,
+        String jsonPayload
 ) {
 }

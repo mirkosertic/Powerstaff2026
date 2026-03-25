@@ -41,6 +41,10 @@ public class ProfileSearchCommandService {
     }
 
     public ProfileSearchMessage addMessage(Long chatId, String role, String content) {
+        return addMessage(chatId, role, content, null);
+    }
+
+    public ProfileSearchMessage addMessage(Long chatId, String role, String content, String jsonPayload) {
         // Determine next sequence number
         var maxSeq = jdbcClient.sql(
                 "SELECT COALESCE(MAX(sequence), 0) FROM profile_search_message WHERE chat_id = :chatId")
@@ -53,6 +57,7 @@ public class ProfileSearchCommandService {
         message.setRole(role);
         message.setSequence(maxSeq + 1);
         message.setContent(content);
+        message.setJsonPayload(jsonPayload);
         var saved = messageRepository.save(message);
 
         // Update changedDate in chat

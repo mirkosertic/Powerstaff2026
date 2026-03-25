@@ -126,7 +126,7 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
 
     def "POST /profilesearch/chat/{chatId}/send ruft LLM auf und liefert JSON"() {
         given:
-        def reply = new LlmService.Reply(201L, "assistant", "Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.")
+        def reply = new LlmService.Reply(201L, "assistant", "Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.", null)
 
         when(queryService.buildLlmContext("testuser")).thenReturn(Optional.empty())
         when(llmService.sendMessage(any(), anyString(), anyString(), any(), anyString()))
@@ -176,8 +176,8 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
         when(queryService.findChatsByUser(anyString(), anyInt(), anyInt())).thenReturn([chatView])
         when(queryService.countChatsByUser(anyString())).thenReturn(1L)
         when(queryService.findMessagesByChat(42L)).thenReturn([
-                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo KI"),
-                new MessageView(2L, LocalDateTime.now(), 42L, "assistant", 2, "Antwort der KI")
+                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo KI", null),
+                new MessageView(2L, LocalDateTime.now(), 42L, "assistant", 2, "Antwort der KI", null)
         ])
 
         expect:
@@ -190,5 +190,66 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
                 .andExpect(content().string(containsString('id="chat-input-area"')))
                 .andExpect(content().string(containsString('KI-Suche Test')))
                 .andExpect(content().string(containsString('Hallo KI')))
+    }
+
+    def "POST /profilesearch/chat/{chatId}/send liefert role tool_call in der JSON-Response"() {
+        given:
+        def reply = new LlmService.Reply(303L, LlmService.ROLE_TOOL_CALL, '{"tool":"search","args":{}}', null)
+
+        when(queryService.buildLlmContext("testuser")).thenReturn(Optional.empty())
+        when(llmService.sendMessage(any(), anyString(), anyString(), any(), anyString()))
+                .thenReturn(reply)
+
+        expect:
+        mockMvc.perform(post("/profilesearch/chat/42/send")
+                .with(user("testuser")).with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content('{"message":"Suche Freelancer"}'))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath('$.id').value(303))
+                .andExpect(jsonPath('$.role').value(LlmService.ROLE_TOOL_CALL))
+                .andExpect(jsonPath('$.content').value('{"tool":"search","args":{}}'))
+    }
+
+    def "POST /profilesearch/chat/{chatId}/send liefert role tool_result in der JSON-Response"() {
+        given:
+        def reply = new LlmService.Reply(404L, LlmService.ROLE_TOOL_RESULT, '{"freelancers":[]}', null)
+
+        when(queryService.buildLlmContext("testuser")).thenReturn(Optional.empty())
+        when(llmService.sendMessage(any(), anyString(), anyString(), any(), anyString()))
+                .thenReturn(reply)
+
+        expect:
+        mockMvc.perform(post("/profilesearch/chat/42/send")
+                .with(user("testuser")).with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content('{"message":"Zeig Ergebnis"}'))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath('$.id').value(404))
+                .andExpect(jsonPath('$.role').value(LlmService.ROLE_TOOL_RESULT))
+                .andExpect(jsonPath('$.content').value('{"freelancers":[]}'))
+    }
+
+    def "POST /profilesearch/chat/{chatId}/send Response-JSON enthaelt immer Felder id, role und content"() {
+        given:
+        def reply = new LlmService.Reply(555L, LlmService.ROLE_SASSISTANT, "Fertig.", null)
+
+        when(queryService.buildLlmContext("testuser")).thenReturn(Optional.empty())
+        when(llmService.sendMessage(any(), anyString(), anyString(), any(), anyString()))
+                .thenReturn(reply)
+
+        when:
+        def result = mockMvc.perform(post("/profilesearch/chat/42/send")
+                .with(user("testuser")).with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content('{"message":"Test"}'))
+
+        then:
+        result.andExpect(status().isOk())
+        result.andExpect(jsonPath('$.id').exists())
+        result.andExpect(jsonPath('$.role').exists())
+        result.andExpect(jsonPath('$.content').exists())
+        result.andExpect(jsonPath('$.id').value(555))
+        result.andExpect(jsonPath('$.role').value(LlmService.ROLE_SASSISTANT))
     }
 }

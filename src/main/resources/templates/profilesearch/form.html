@@ -90,7 +90,10 @@
 
         <!-- Nachrichten-Liste -->
         <th:block th:each="msg : ${messages}">
+
+          <!-- user / assistant Nachrichten -->
           <div class="chat-msg"
+               th:if="${msg.role() == 'user' or msg.role() == 'assistant'}"
                th:classappend="${msg.role()} == 'user' ? ' user' : ' assistant'"
                th:attr="data-msg-id=${msg.id()}">
             <div class="msg-bubble"
@@ -102,6 +105,45 @@
                  th:text="${#temporals.format(msg.creationDate(), 'HH:mm')}">
             </div>
           </div>
+
+          <!-- tool_call Nachricht -->
+          <div class="msg-tool msg-tool-call"
+               th:if="${msg.role() == 'tool_call'}"
+               th:attr="data-msg-id=${msg.id()},data-testid='msg-tool-call-' + ${msg.id()}">
+            <button class="msg-tool-header"
+                    aria-expanded="false"
+                    th:attr="data-testid='msg-tool-call-header-' + ${msg.id()}"
+                    onclick="toggleToolMsg(this)">
+              <span>🔧</span>
+              <span class="msg-tool-name" th:text="${msg.content()}">tool</span>
+              <span class="msg-tool-chevron">▶</span>
+            </button>
+            <div class="msg-tool-body"
+                 th:if="${msg.jsonPayload() != null}"
+                 th:attr="data-testid='msg-tool-call-body-' + ${msg.id()}">
+              <pre th:text="${msg.jsonPayload()}"></pre>
+            </div>
+          </div>
+
+          <!-- tool_result Nachricht -->
+          <div class="msg-tool msg-tool-result"
+               th:if="${msg.role() == 'tool_result'}"
+               th:attr="data-msg-id=${msg.id()},data-testid='msg-tool-result-' + ${msg.id()}">
+            <button class="msg-tool-header"
+                    aria-expanded="false"
+                    th:attr="data-testid='msg-tool-result-header-' + ${msg.id()}"
+                    onclick="toggleToolMsg(this)">
+              <span>✅</span>
+              <span class="msg-tool-name" th:text="${msg.content()}">tool</span>
+              <span class="msg-tool-chevron">▶</span>
+            </button>
+            <div class="msg-tool-body"
+                 th:if="${msg.jsonPayload() != null}"
+                 th:attr="data-testid='msg-tool-result-body-' + ${msg.id()}">
+              <pre th:text="${msg.jsonPayload()}"></pre>
+            </div>
+          </div>
+
         </th:block>
       </div>
 
@@ -197,28 +239,82 @@
       return text;
     }
 
-    function appendMsg(role, content, id) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'chat-msg ' + role;
-      if (id) wrapper.dataset.msgId = id;
-
-      const bubble = document.createElement('div');
-      bubble.className = 'msg-bubble';
-      if (role === 'assistant') {
-        bubble.innerHTML = renderAssistantContent(content);
-      } else {
-        bubble.textContent = content;
+    // ── Tool-Msg Toggle ──────────────────────────────────────────────────────
+    function toggleToolMsg(headerBtn) {
+      const expanded = headerBtn.getAttribute('aria-expanded') === 'true';
+      headerBtn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      const body = headerBtn.parentElement.querySelector('.msg-tool-body');
+      if (body) {
+        body.classList.toggle('open', !expanded);
       }
-      wrapper.appendChild(bubble);
+    }
 
-      const meta = document.createElement('div');
-      meta.className = 'msg-meta';
-      meta.textContent = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-      wrapper.appendChild(meta);
-
+    function appendMsg(role, content, id, jsonPayload) {
       // Remove empty-chat placeholder if present
       const empty = msgArea.querySelector('.empty-chat');
       if (empty) empty.remove();
+
+      let wrapper;
+
+      if (role === 'tool_call' || role === 'tool_result') {
+        const isCall = role === 'tool_call';
+        wrapper = document.createElement('div');
+        wrapper.className = 'msg-tool ' + (isCall ? 'msg-tool-call' : 'msg-tool-result');
+        if (id) wrapper.dataset.msgId = id;
+        wrapper.dataset.testid = (isCall ? 'msg-tool-call-' : 'msg-tool-result-') + (id || '');
+
+        const header = document.createElement('button');
+        header.className = 'msg-tool-header';
+        header.setAttribute('aria-expanded', 'false');
+        header.dataset.testid = (isCall ? 'msg-tool-call-header-' : 'msg-tool-result-header-') + (id || '');
+        header.setAttribute('onclick', 'toggleToolMsg(this)');
+
+        const icon = document.createElement('span');
+        icon.textContent = isCall ? '🔧' : '✅';
+
+        const name = document.createElement('span');
+        name.className = 'msg-tool-name';
+        name.textContent = content;
+
+        const chevron = document.createElement('span');
+        chevron.className = 'msg-tool-chevron';
+        chevron.textContent = '▶';
+
+        header.appendChild(icon);
+        header.appendChild(name);
+        header.appendChild(chevron);
+        wrapper.appendChild(header);
+
+        if (jsonPayload) {
+          const body = document.createElement('div');
+          body.className = 'msg-tool-body';
+          body.dataset.testid = (isCall ? 'msg-tool-call-body-' : 'msg-tool-result-body-') + (id || '');
+          const pre = document.createElement('pre');
+          pre.textContent = typeof jsonPayload === 'string'
+            ? jsonPayload
+            : JSON.stringify(jsonPayload, null, 2);
+          body.appendChild(pre);
+          wrapper.appendChild(body);
+        }
+      } else {
+        wrapper = document.createElement('div');
+        wrapper.className = 'chat-msg ' + role;
+        if (id) wrapper.dataset.msgId = id;
+
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+        if (role === 'assistant') {
+          bubble.innerHTML = renderAssistantContent(content);
+        } else {
+          bubble.textContent = content;
+        }
+        wrapper.appendChild(bubble);
+
+        const meta = document.createElement('div');
+        meta.className = 'msg-meta';
+        meta.textContent = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+        wrapper.appendChild(meta);
+      }
 
       msgArea.appendChild(wrapper);
       scrollToBottom();
@@ -258,7 +354,11 @@
         .then(r => r.json())
         .then(data => {
           typingEl.remove();
-          appendMsg('assistant', data.content, data.id);
+          if (Array.isArray(data.messages)) {
+            data.messages.forEach(m => appendMsg(m.role, m.content, m.id, m.jsonPayload));
+          } else {
+            appendMsg(data.role || 'assistant', data.content, data.id, data.jsonPayload);
+          }
         })
         .catch((err) => {
           typingEl.remove();
