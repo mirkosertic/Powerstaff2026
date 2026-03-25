@@ -73,7 +73,7 @@
                           th:attr="data-id=${tag.id}, data-tagname=${tag.tagname}"
                           data-action="edit-tag">&#9998;</button>
                   <button class="ibtn del" type="button"
-                          th:attr="data-id=${tag.id}"
+                          th:attr="data-id=${tag.id}, data-tagname=${tag.tagname}"
                           data-action="delete-tag">&#x1F5D1;</button>
                 </td>
               </tr>
@@ -86,6 +86,29 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- Modal: Tag löschen -->
+  <div class="mbk hidden" id="modal-delete-tag">
+    <div class="mbox">
+      <div class="mhd">
+        <h3>Tag löschen</h3>
+        <button class="mx" type="button" onclick="closeModal('modal-delete-tag')">&#x2715;</button>
+      </div>
+      <div class="mbody">
+        <p>Soll der Tag <strong id="delete-tag-name-display"></strong> wirklich gelöscht werden?</p>
+        <p style="color:var(--text-3);font-size:.85rem;margin-top:.5rem">
+          Der Tag wird von allen Freiberuflern entfernt, denen er aktuell zugeordnet ist.
+        </p>
+      </div>
+      <div class="mft">
+        <button class="btn btn-ghost" type="button"
+                onclick="closeModal('modal-delete-tag')">Abbrechen</button>
+        <button class="btn btn-danger" type="button"
+                id="btn-confirm-delete-tag"
+                data-testid="btn-confirm-delete-tag">Löschen</button>
+      </div>
+    </div>
   </div>
 
   <!-- Modal: Tag bearbeiten -->
@@ -113,6 +136,9 @@
   </div>
 
   <script>
+    let _pendingDeleteTagId = null;
+    let _pendingDeleteTagEl = null;
+
     document.addEventListener('click', function(e) {
       const editBtn = e.target.closest('[data-action="edit-tag"]');
       if (editBtn) {
@@ -124,12 +150,18 @@
 
       const delBtn = e.target.closest('[data-action="delete-tag"]');
       if (delBtn) {
-        deleteTag(delBtn.dataset.id, delBtn);
+        _pendingDeleteTagId = delBtn.dataset.id;
+        _pendingDeleteTagEl = delBtn;
+        document.getElementById('delete-tag-name-display').textContent =
+            '"' + delBtn.dataset.tagname + '"';
+        openModal('modal-delete-tag');
       }
     });
 
-    async function deleteTag(id, el) {
-      if (!confirm('Tag wirklich löschen?')) return;
+    document.getElementById('btn-confirm-delete-tag').addEventListener('click', async function() {
+      const id = _pendingDeleteTagId;
+      const el = _pendingDeleteTagEl;
+      closeModal('modal-delete-tag');
       const resp = await fetch('/admin/tags/' + id, {
         method: 'DELETE',
         headers: { 'X-XSRF-TOKEN': getCsrfToken() }
@@ -138,7 +170,9 @@
         const row = el.closest('tr');
         if (row) row.remove();
       }
-    }
+      _pendingDeleteTagId = null;
+      _pendingDeleteTagEl = null;
+    });
   </script>
 
 </body>

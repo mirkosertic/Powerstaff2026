@@ -45,14 +45,14 @@ test.describe('Administration', () => {
         await page.locator('[data-testid="btn-submit-histtype"]').click();
         await page.waitForURL(/\/admin\/historientypen/);
 
-        // Lösch-Button für den neu angelegten Eintrag finden und klicken
-        // Der browser-confirm-Dialog muss bestätigt werden
+        // Lösch-Button → HTML-Modal öffnet sich
         const deleteBtn = page.locator('td').filter({ hasText: /^E2E-Loeschtyp$/ })
             .locator('..') // zur Zeile
             .locator('[data-testid^="btn-delete-histtype-"]');
 
-        page.on('dialog', dialog => dialog.accept());
         await deleteBtn.click();
+        await expect(page.locator('#modal-delete-ht')).toBeVisible();
+        await page.locator('[data-testid="btn-confirm-delete-histtype"]').click();
         await page.waitForURL(/\/admin\/historientypen/);
 
         await expect(page.locator('td').filter({ hasText: /^E2E-Loeschtyp$/ })).not.toBeAttached();
@@ -104,13 +104,14 @@ test.describe('Administration', () => {
         await page.locator('[data-testid="btn-submit-posstatus"]').click();
         await page.waitForURL(/\/admin\/positionsstatus/);
 
-        // Lösch-Button für den neu angelegten Status finden
+        // Lösch-Button → HTML-Modal öffnet sich
         const deleteBtn = page.locator('td').filter({ hasText: /^E2E-Loeschstatus$/ })
             .locator('..') // zur Zeile
             .locator('[data-testid^="btn-delete-posstatus-"]');
 
-        page.on('dialog', dialog => dialog.accept());
         await deleteBtn.click();
+        await expect(page.locator('#modal-delete-status')).toBeVisible();
+        await page.locator('[data-testid="btn-confirm-delete-posstatus"]').click();
         await page.waitForURL(/\/admin\/positionsstatus/);
 
         await expect(page.locator('td').filter({ hasText: /^E2E-Loeschstatus$/ })).not.toBeAttached();
@@ -149,7 +150,7 @@ test.describe('Administration', () => {
         await expect(page.locator('td').filter({ hasText: /^E2E-Bearbeiteter-Tag$/ }).first()).toBeVisible();
     });
 
-    test('Tag löschen: Löschen-Button → confirm-Dialog bestätigen → Zeile entfernt', async ({ page }) => {
+    test('Tag löschen: Löschen-Button → HTML-Modal bestätigen → Zeile entfernt', async ({ page }) => {
         // Tag anlegen, der gelöscht werden soll
         await page.goto('/admin/tags');
 
@@ -162,9 +163,9 @@ test.describe('Administration', () => {
         const tagRow = page.locator('td').filter({ hasText: /^E2E-Loeschtag$/ }).locator('..');
         const deleteBtn = tagRow.locator('[data-action="delete-tag"]');
 
-        // Browser-confirm-Dialog akzeptieren
-        page.on('dialog', dialog => dialog.accept());
         await deleteBtn.click();
+        await expect(page.locator('#modal-delete-tag')).toBeVisible();
+        await page.locator('[data-testid="btn-confirm-delete-tag"]').click();
 
         // Zeile soll nach AJAX-Löschen aus dem DOM verschwinden
         await expect(page.locator('td').filter({ hasText: /^E2E-Loeschtag$/ })).not.toBeAttached({

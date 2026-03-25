@@ -63,13 +63,10 @@
                                    data-defaultstatus=${status.isDefault},
                                    data-testid='btn-edit-posstatus-' + ${status.id}"
                           data-action="edit-status">&#9998;</button>
-                  <form th:action="@{/admin/positionsstatus/{id}/delete(id=${status.id})}" method="post"
-                        style="display:inline">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <button class="ibtn del" type="submit"
-                            th:attr="data-testid='btn-delete-posstatus-' + ${status.id}"
-                            onclick="return confirm('Positionsstatus wirklich löschen?')">&#x1F5D1;</button>
-                  </form>
+                  <button class="ibtn del" type="button"
+                          th:attr="data-id=${status.id}, data-description=${status.description},
+                                   data-testid='btn-delete-posstatus-' + ${status.id}"
+                          data-action="delete-status">&#x1F5D1;</button>
                 </td>
               </tr>
               <tr th:if="${#lists.isEmpty(statusList)}">
@@ -171,16 +168,52 @@
     </div>
   </div>
 
+  <!-- Modal: Löschen -->
+  <div class="mbk hidden" id="modal-delete-status">
+    <div class="mbox">
+      <div class="mhd">
+        <h3>Positionsstatus löschen</h3>
+        <button class="mx" type="button" onclick="closeModal('modal-delete-status')">&#x2715;</button>
+      </div>
+      <div class="mbody">
+        <p>Soll der Positionsstatus <strong id="delete-status-name-display"></strong> wirklich gelöscht werden?</p>
+        <p style="color:var(--text-3);font-size:.85rem;margin-top:.5rem">
+          Projektpositionen mit diesem Status behalten ihre bisherige Zuordnung, können aber keinem aktiven Status mehr zugewiesen werden.
+        </p>
+        <form id="delete-status-form" method="post" action="#">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        </form>
+      </div>
+      <div class="mft">
+        <button class="btn btn-ghost" type="button"
+                onclick="closeModal('modal-delete-status')">Abbrechen</button>
+        <button class="btn btn-danger" type="submit" form="delete-status-form"
+                data-testid="btn-confirm-delete-posstatus">Löschen</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('click', function(e) {
-      const btn = e.target.closest('[data-action="edit-status"]');
-      if (!btn) return;
-      document.getElementById('edit-status-form').action = '/admin/positionsstatus/' + btn.dataset.id;
-      document.getElementById('edit-status-description').value = btn.dataset.description;
-      document.getElementById('edit-status-color').value = btn.dataset.color;
-      document.getElementById('edit-status-colortext').value = btn.dataset.colortext;
-      document.getElementById('edit-status-default').checked = btn.dataset.defaultstatus === 'true';
-      openModal('modal-edit-status');
+      const editBtn = e.target.closest('[data-action="edit-status"]');
+      if (editBtn) {
+        document.getElementById('edit-status-form').action = '/admin/positionsstatus/' + editBtn.dataset.id;
+        document.getElementById('edit-status-description').value = editBtn.dataset.description;
+        document.getElementById('edit-status-color').value = editBtn.dataset.color;
+        document.getElementById('edit-status-colortext').value = editBtn.dataset.colortext;
+        document.getElementById('edit-status-default').checked = editBtn.dataset.defaultstatus === 'true';
+        openModal('modal-edit-status');
+        return;
+      }
+
+      const delBtn = e.target.closest('[data-action="delete-status"]');
+      if (delBtn) {
+        document.getElementById('delete-status-form').action =
+            '/admin/positionsstatus/' + delBtn.dataset.id + '/delete';
+        document.getElementById('delete-status-name-display').textContent =
+            '"' + delBtn.dataset.description + '"';
+        openModal('modal-delete-status');
+      }
     });
   </script>
 
