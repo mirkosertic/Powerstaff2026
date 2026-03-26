@@ -691,6 +691,83 @@
                 </plugins>
             </build>
         </profile>
+
+        <!-- ===== SchemaSpy-Profil: Datenbankdokumentation generieren ===== -->
+        <!-- Aktivierung: ./mvnw generate-sources -Pschemaspy               -->
+        <!-- Voraussetzung: lokale MySQL-Instanz läuft (application-local.yml) -->
+        <!-- Voraussetzung: Graphviz installiert (brew install graphviz)       -->
+        <!-- Output: target/schemaspy/index.html                               -->
+        <profile>
+            <id>schemaspy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>run-schemaspy</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <mainClass>org.schemaspy.Main</mainClass>
+                            <!-- Plugin-Dependencies auf den Classpath legen (statt Projekt-Dependencies) -->
+                            <includeProjectDependencies>false</includeProjectDependencies>
+                            <includePluginDependencies>true</includePluginDependencies>
+                            <executableDependency>
+                                <groupId>org.schemaspy</groupId>
+                                <artifactId>schemaspy</artifactId>
+                            </executableDependency>
+                            <arguments>
+                                <!-- Datenbanktyp -->
+                                <argument>-t</argument>
+                                <argument>mysql</argument>
+                                <!-- Verbindungsdaten aus application-local.yml -->
+                                <argument>-host</argument>
+                                <argument>localhost</argument>
+                                <argument>-port</argument>
+                                <argument>3306</argument>
+                                <argument>-db</argument>
+                                <argument>powerstaff</argument>
+                                <argument>-u</argument>
+                                <argument>powerstaff</argument>
+                                <argument>-p</argument>
+                                <argument>powerstaff</argument>
+                                <!-- Schema = Datenbankname bei MySQL -->
+                                <argument>-s</argument>
+                                <argument>powerstaff</argument>
+                                <!-- MySQL-Treiber explizit angeben (SchemaSpy nutzt eigenen URLClassLoader) -->
+                                <argument>-dp</argument>
+                                <argument>${settings.localRepository}/com/mysql/mysql-connector-j/9.6.0/mysql-connector-j-9.6.0.jar</argument>
+                                <!-- Diagramme via viz.js (kein natives Graphviz nötig) -->
+                                <argument>-vizjs</argument>
+                                <!-- Output-Verzeichnis -->
+                                <argument>-o</argument>
+                                <argument>${project.build.directory}/schemaspy</argument>
+                            </arguments>
+                        </configuration>
+                        <dependencies>
+                            <!-- SchemaSpy 7.x mit allen transitiven Abhängigkeiten -->
+                            <dependency>
+                                <groupId>org.schemaspy</groupId>
+                                <artifactId>schemaspy</artifactId>
+                                <version>7.0.2</version>
+                            </dependency>
+                            <!-- MySQL-Connector für SchemaSpy (aus application-local.yml: mysql 9.6.0) -->
+                            <dependency>
+                                <groupId>com.mysql</groupId>
+                                <artifactId>mysql-connector-j</artifactId>
+                                <version>9.6.0</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
