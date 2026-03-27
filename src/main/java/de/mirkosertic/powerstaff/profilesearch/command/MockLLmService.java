@@ -13,6 +13,6 @@ public class MockLLmService implements LlmService {
                                     final String conversationId,
                                     final Optional<LlmProjectContext> context,
                                     final String userMessage) {
-        return List.of(new Reply(10, ROLE_ASSISTANT, "Mock Response Nummer 0", null));
+        return List.of(new Reply(10, ROLE_ASSISTANT, "Mock Response Nummer 0", null, 150, 50));
     }
 }

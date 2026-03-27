@@ -7,6 +7,7 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import tools.jackson.databind.ObjectMapper;
@@ -14,6 +15,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.List;
 
 @Configuration
+@EnableConfigurationProperties(ProfileSearchProperties.class)
 public class ProfileSearchConfig {
 
     @Bean

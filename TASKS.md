@@ -19,7 +19,8 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [x] Schreibe bitte noch E2E TEsts für die Bearbeitung und das Löschen der Entitäten "Historientypen", "Tags" und "Positionsstatus" aus der Admin-UI. Die Tests hier scheinen etwas lückenhaft zu sein.
 - [x] In der Profilsuche bzw. im CHatverlauf möchte ich zwei neue Subtypen anzeigen. Auf Seite des "Assistant" gibt es den Typen "Tool-Aufruf" sowie "Tool-Ergebnis". Der Name des Tools soll initial sichtbar sein, die Details dahinter allerdings eingeklappt, können aber ausgeklappt werden. Das Prinzip dahinter soll an Claude Code angelehnt sein. Von Seite Backend werden diese Einträge entsprechend dem Typen markiert.
   Passe also den UI Code an, sodass die Toolaufrufe und Toolergebnisse im Chatverlauf angezeigt werden. Benutzer und erweiter ggf. das Designsystem dafür, und orientiere Dich an der Darstellung von Claude Code.
-
+- [x] Ich möchte im Chat-Verlauf links neben dem Senden bzw. Stop Button tie aktuelle Kontextgröße zw. den Verbauch in % und die maximale Kontextgröße anzeigen, also Analog OIllama. Ich meine den Tokemverbauch bekommt man als
+  Antwort via Spring AI ChatClientResponse mit, ich bin mir aber nicht sicher, wie die Kontextgröße übermittelt wird. Falls das nicht automatisch ermittelt werden kann, so soll eine Konfigurationsoption für die Größe geschaffen werden.
 ---
 
 ## Profilsuche: Klassische Suche (Phase 1 - Mock-Implementation)

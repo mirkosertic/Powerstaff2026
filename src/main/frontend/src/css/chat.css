@@ -408,6 +408,15 @@ ps-chat-input {
   cursor: not-allowed;
 }
 
+.ctx-usage {
+  font-size: 11px;
+  color: var(--text-3);
+  white-space: nowrap;
+  align-self: center;
+  margin-right: auto;
+  font-variant-numeric: tabular-nums;
+}
+
 /* -----------------------------------------------------------------------------
    §28 Tool-Nachrichten (tool_call / tool_result)
    ----------------------------------------------------------------------------- */

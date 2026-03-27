@@ -141,7 +141,7 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
         ])
         when(commandService.addMessage(anyLong(), anyString(), anyString())).thenReturn(savedMsg)
         when(llmService.sendMessage(any(), any(), any(), any(), anyString()))
-                .thenReturn([new LlmService.Reply(-1, LlmService.ROLE_ASSISTANT, "Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.", "{}")]);
+                .thenReturn([new LlmService.Reply(-1, LlmService.ROLE_ASSISTANT, "Die KI-Profilsuche ist in Release 1.0 noch nicht aktiviert.", "{}", 0, 0)]);
 
         expect:
         mockMvc.perform(post("/profilesearch/chat/42/send")

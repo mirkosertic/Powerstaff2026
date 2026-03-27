@@ -156,6 +156,7 @@
           <textarea id="chat-input" data-testid="chat-input" rows="3"
                     placeholder="Nachricht eingeben… (Enter = Senden, Shift+Enter = Zeilenumbruch)"></textarea>
           <div class="chat-input-btns">
+            <span id="ctx-usage" class="ctx-usage" data-testid="ctx-usage" hidden></span>
             <button type="button" id="chat-stop" class="btn btn-ghost btn-sm" hidden>⏹ Stop</button>
             <button type="button" id="chat-send" data-testid="btn-chat-send" class="btn btn-pri btn-sm">↑ Senden</button>
           </div>
@@ -368,6 +369,16 @@
             data.messages.forEach(m => appendMsg(m.role, m.content, m.id, m.jsonPayload));
           } else {
             appendMsg(data.role || 'assistant', data.content, data.id, data.jsonPayload);
+          }
+          if (data.maxContextTokens && data.maxContextTokens > 0) {
+            const used = (data.promptTokens || 0) + (data.completionTokens || 0);
+            const max = data.maxContextTokens;
+            const pct = Math.round(used / max * 100);
+            const usedFmt = used.toLocaleString('de-DE');
+            const maxFmt = max.toLocaleString('de-DE');
+            const ctxEl = document.getElementById('ctx-usage');
+            ctxEl.textContent = usedFmt + '\u202f/\u202f' + maxFmt + '\u202fTokens\u202f(' + pct + '\u202f%)';
+            ctxEl.removeAttribute('hidden');
           }
         })
         .catch((err) => {

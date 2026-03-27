@@ -79,10 +79,14 @@ public class SpringAILlmService implements LlmService {
                 .call()
                 .chatResponse();
 
+        int promptTokens = 0;
+        int completionTokens = 0;
         if (chatClientResponse.getMetadata() != null) {
             final Usage usage = chatClientResponse.getMetadata().getUsage();
             if (usage != null) {
                 logger.info("Collected chat usage: {}", usage);
+                promptTokens = usage.getPromptTokens() != null ? usage.getPromptTokens().intValue() : 0;
+                completionTokens = usage.getCompletionTokens() != null ? usage.getCompletionTokens().intValue() : 0;
             }
         }
 
@@ -93,7 +97,7 @@ public class SpringAILlmService implements LlmService {
             final var message = persistedMessages.get(i);
 
             if (message instanceof final UserMessage msg) {
-                replies.add(new Reply(-1, LlmService.ROLE_USER, msg.getText(), null));
+                replies.add(new Reply(-1, LlmService.ROLE_USER, msg.getText(), null, null, null));
             } else if (message instanceof final AssistantMessage msg) {
                 if (msg.hasToolCalls()) {
                     final List<Map<String, Object>> toolCallOptions = new ArrayList<>();
@@ -105,9 +109,9 @@ public class SpringAILlmService implements LlmService {
                         call.put("id", toolCall.id());
                         toolCallOptions.add(call);
                     }
-                    replies.add(new Reply(-1, LlmService.ROLE_TOOL_CALL, msg.getText(), objectMapper.writeValueAsString(toolCallOptions)));
+                    replies.add(new Reply(-1, LlmService.ROLE_TOOL_CALL, msg.getText(), objectMapper.writeValueAsString(toolCallOptions), null, null));
                 } else {
-                    replies.add(new Reply(-1, LlmService.ROLE_ASSISTANT, msg.getText(), null));
+                    replies.add(new Reply(-1, LlmService.ROLE_ASSISTANT, msg.getText(), null, promptTokens, completionTokens));
                 }
             } else if (message instanceof final ToolResponseMessage msg) {
                 final List<Map<String, Object>> toolCallResponses = new ArrayList<>();
@@ -120,7 +124,7 @@ public class SpringAILlmService implements LlmService {
                     toolCallResponses.add(response);
                     toolCallNames.add(toolResponse.name());
                 }
-                replies.add(new Reply(-1, LlmService.ROLE_TOOL_RESULT, objectMapper.writeValueAsString(toolCallNames), objectMapper.writeValueAsString(toolCallResponses)));
+                replies.add(new Reply(-1, LlmService.ROLE_TOOL_RESULT, objectMapper.writeValueAsString(toolCallNames), objectMapper.writeValueAsString(toolCallResponses), null, null));
             } else {
                 logger.warn("Unsupported message type: {}", message);
             }

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface LlmService {
 
-    record Reply(long id, String role, String message, String jsonPayload) {}
+    record Reply(long id, String role, String message, String jsonPayload, Integer promptTokens, Integer completionTokens) {}
 
     String ROLE_USER = "user";
     String ROLE_ASSISTANT = "assistant";

@@ -2,6 +2,7 @@ package de.mirkosertic.powerstaff.profilesearch.api;
 
 import de.mirkosertic.powerstaff.profilesearch.command.LlmService;
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchCommandService;
+import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchProperties;
 import de.mirkosertic.powerstaff.profilesearch.query.ChatListView;
 import de.mirkosertic.powerstaff.profilesearch.query.MessageView;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
@@ -36,15 +37,18 @@ public class ProfileSearchController {
     private final ProfileSearchQueryService queryService;
     private final LlmService llmService;
     private final RememberedProjectService rememberedProjectService;
+    private final ProfileSearchProperties profileSearchProperties;
 
     public ProfileSearchController(final ProfileSearchCommandService commandService,
                                    final ProfileSearchQueryService queryService,
                                    final LlmService llmService,
-                                   final RememberedProjectService rememberedProjectService) {
+                                   final RememberedProjectService rememberedProjectService,
+                                   final ProfileSearchProperties profileSearchProperties) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.llmService = llmService;
         this.rememberedProjectService = rememberedProjectService;
+        this.profileSearchProperties = profileSearchProperties;
     }
 
     @GetMapping
@@ -119,7 +123,7 @@ public class ProfileSearchController {
 
     record SendResponse(Long id, String role, String content, String jsonPayload) {}
 
-    record SendResponseWrapper(List<SendResponse> messages) {}
+    record SendResponseWrapper(List<SendResponse> messages, int promptTokens, int completionTokens, int maxContextTokens) {}
 
     @PostMapping(value = "/chat/{chatId}/send", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -139,7 +143,16 @@ public class ProfileSearchController {
                 .map(r -> new SendResponse(r.id(), r.role(), r.message(), r.jsonPayload()))
                 .toList();
 
-        return new SendResponseWrapper(responses);
+        int promptTokens = 0;
+        int completionTokens = 0;
+        for (final LlmService.Reply reply : replies) {
+            if (reply.promptTokens() != null && reply.completionTokens() != null) {
+                promptTokens = reply.promptTokens();
+                completionTokens = reply.completionTokens();
+            }
+        }
+
+        return new SendResponseWrapper(responses, promptTokens, completionTokens, profileSearchProperties.getMaxContextTokens());
     }
 
     private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
