@@ -107,12 +107,72 @@
         <table data-testid="results-table">
           <thead>
             <tr>
-              <th>Name 1</th>
-              <th>Name 2</th>
-              <th>Letzter Kontakt</th>
-              <th>Tagessatz</th>
-              <th>Verfügbar ab</th>
-              <th>Code</th>
+              <th class="srt"
+                  th:classappend="${sortField == 'name1'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='name1',
+                    sortDir=${sortField == 'name1' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Name 1</a>
+              </th>
+              <th class="srt"
+                  th:classappend="${sortField == 'name2'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='name2',
+                    sortDir=${sortField == 'name2' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Name 2</a>
+              </th>
+              <th class="srt"
+                  th:classappend="${sortField == 'lastContactDate'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='lastContactDate',
+                    sortDir=${sortField == 'lastContactDate' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Letzter Kontakt</a>
+              </th>
+              <th class="srt"
+                  th:classappend="${sortField == 'salaryPerDayLong'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='salaryPerDayLong',
+                    sortDir=${sortField == 'salaryPerDayLong' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Tagessatz</a>
+              </th>
+              <th class="srt"
+                  th:classappend="${sortField == 'availabilityAsDate'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='availabilityAsDate',
+                    sortDir=${sortField == 'availabilityAsDate' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Verfügbar ab</a>
+              </th>
+              <th class="srt"
+                  th:classappend="${sortField == 'code'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='code',
+                    sortDir=${sortField == 'code' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Code</a>
+              </th>
               <th>Tags</th>
             </tr>
           </thead>

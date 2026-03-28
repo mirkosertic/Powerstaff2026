@@ -156,12 +156,14 @@ public class ProfileSearchQueryService {
         record Row(Long id, String code, String name1, String name2,
                    LocalDateTime lastContactDate, Long salaryPerDayLong,
                    LocalDateTime availabilityAsDate, boolean contactForbidden) {}
+        final String orderBy = resolveOrderBy(criteria.sortField(), criteria.sortDir());
         return jdbcClient.sql("""
                 SELECT f.id, f.code, f.name1, f.name2,
                        f.last_contact_date, f.salary_per_day_long,
                        f.availability_as_date, f.contact_forbidden
                 FROM freelancer f
-                ORDER BY f.name1
+                ORDER BY """ + orderBy + """
+
                 LIMIT :limit OFFSET :offset
                 """)
                 .param("limit", limit)
@@ -174,6 +176,19 @@ public class ProfileSearchQueryService {
                         r.lastContactDate(), r.salaryPerDayLong(),
                         r.availabilityAsDate(), r.contactForbidden(), List.of()))
                 .toList();
+    }
+
+    private String resolveOrderBy(final String sortField, final String sortDir) {
+        final String column = switch (sortField != null ? sortField : "") {
+            case "name2"            -> "f.name2";
+            case "lastContactDate"  -> "f.last_contact_date";
+            case "salaryPerDayLong" -> "f.salary_per_day_long";
+            case "availabilityAsDate" -> "f.availability_as_date";
+            case "code"             -> "f.code";
+            default                 -> "f.name1";
+        };
+        final String direction = "desc".equalsIgnoreCase(sortDir) ? "DESC" : "ASC";
+        return column + " " + direction;
     }
 
     public long countSearchFreelancers(final ProfileSearchCriteria criteria) {
