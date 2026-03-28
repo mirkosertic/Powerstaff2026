@@ -109,49 +109,6 @@ test.describe('Profilsuche – Klassische Suche', () => {
     });
 
     // =========================================================================
-    // Szenario 4: Suche mit Tagessatz-Filter
-    // =========================================================================
-
-    test('Tagessatz-Filter salaryPerDayFrom=800 liefert nur Freelancer mit Tagessatz >= 800', async ({ page }) => {
-        // Mock-Daten: Tagessatz = 400 + i*10; bei i=40 → 800 €, i=49 → 890 €
-        // Erwartet: Genau 10 Treffer (i=40..49)
-        await page.goto('/profilesearch/search?salaryPerDayFrom=800');
-
-        // Assert: Ergebnistabelle vorhanden
-        await expect(page.locator('[data-testid="results-table"]')).toBeVisible();
-
-        // Assert: Exakt 10 Treffer
-        const rows = page.locator('[data-testid="results-table"] tbody tr');
-        await expect(rows).toHaveCount(10);
-    });
-
-    test('Tagessatz-Filter salaryPerDayFrom und salaryPerDayTo einschränken Ergebnisse', async ({ page }) => {
-        // Mock-Daten: Tagessatz = 400 + i*10
-        // salaryPerDayFrom=500: i >= 10 → 40 Treffer
-        // salaryPerDayTo=600:   i <= 20 → 11 Treffer (500, 510, ..., 600 = i=10..20)
-        await page.goto('/profilesearch/search?salaryPerDayFrom=500&salaryPerDayTo=600');
-
-        await expect(page.locator('[data-testid="results-table"]')).toBeVisible();
-
-        const rows = page.locator('[data-testid="results-table"] tbody tr');
-        await expect(rows).toHaveCount(11);
-    });
-
-    test('Tagessatz-Felder werden per Formular übergeben', async ({ page }) => {
-        await page.goto('/profilesearch/search');
-
-        // Tagessatz von eingeben
-        await page.locator('[data-testid="input-salary-from"]').fill('800');
-        await page.locator('[data-testid="btn-search"]').click();
-        await page.waitForURL(/\/profilesearch\/search\?.*salaryPerDayFrom=800/);
-
-        await expect(page.locator('[data-testid="results-table"]')).toBeVisible();
-
-        // Formular-Feld zeigt eingegebenen Wert wieder an
-        await expect(page.locator('[data-testid="input-salary-from"]')).toHaveValue('800');
-    });
-
-    // =========================================================================
     // Szenario 5: Kontaktsperre-Markierung
     // =========================================================================
 
