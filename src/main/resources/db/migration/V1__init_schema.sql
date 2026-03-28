@@ -378,7 +378,7 @@ CREATE TABLE kunde (
     name1         VARCHAR(255) NULL                    COMMENT 'Nachname des Ansprechpartners beim Kunden',
     name2         VARCHAR(255) NULL                    COMMENT 'Vorname des Ansprechpartners beim Kunden',
     street        VARCHAR(255) NULL                    COMMENT 'Straße und Hausnummer',
-    country       VARCHAR(255) NULL                    COMMENT 'Land',
+    country       VARCHAR(255) NULL                    COMMENT 'Land  (gruppiert mit PLZ/Ort im Formular)',
     plz           VARCHAR(255) NULL                    COMMENT 'Postleitzahl',
     city          VARCHAR(255) NULL                    COMMENT 'Ort',
     contactforbidden BIT(1)    NOT NULL DEFAULT 0      COMMENT 'Kontaktsperre-Flag; bei true: rotes Banner im Formular',

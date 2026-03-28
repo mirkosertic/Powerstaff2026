@@ -15,6 +15,8 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.ToolResponseMessage;
 import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.metadata.ChatGenerationMetadata;
+import org.springframework.ai.chat.metadata.EmptyUsage;
 import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import tools.jackson.databind.ObjectMapper;
@@ -53,7 +55,34 @@ public class SpringAILlmService implements LlmService {
                 .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)
                 .build();
 
-        final var chatRepository = new SpringAIChatRepository(conversationId, queryService, commandService, objectMapper);
+        final var progressCollector = new ChatProgressCollector() {
+
+            @Override
+            public void toolInvocation(final String toolName, final String jsonPayload) {
+            }
+
+            @Override
+            public void toolResponses(final String toolNames, final String jsonPayload) {
+            }
+
+            @Override
+            public void thinkingToken(final String token) {
+            }
+
+            @Override
+            public void assistantResponseToken(final String token) {
+            }
+
+            @Override
+            public void stopped() {
+            }
+
+            @Override
+            public void reportUsage(final Integer promptTokens, final Integer completionTokens, final Integer totalTokens) {
+            }
+        };
+
+        final var chatRepository = new SpringAIChatRepository(conversationId, queryService, commandService, objectMapper, progressCollector);
 
         final var chatMemory = MessageWindowChatMemory.builder()
                 .maxMessages(10)
@@ -76,11 +105,40 @@ public class SpringAILlmService implements LlmService {
                 )
                 .system(systemPrompt)
                 .user(userMessage)
-                .call()
-                .chatResponse();
+                .stream()
+                .chatResponse()
+                .filter(t -> {
+
+                    final Usage usage = t.getMetadata().getUsage();
+                    if (!(usage instanceof EmptyUsage)) {
+                        progressCollector.reportUsage(usage.getPromptTokens(), usage.getCompletionTokens(), usage.getTotalTokens());
+                    }
+
+                    for (final var result : t.getResults()) {
+                        final AssistantMessage output = result.getOutput();
+                        final Map<String, Object> metadata = output.getMetadata();
+                        if (output.getText() == null) {
+                            // No Response from Assistant, maybe it is thinking?
+                            final Object reasoningContent = metadata.get("reasoningContent");
+                            if (reasoningContent != null) {
+                                progressCollector.thinkingToken(reasoningContent.toString());
+                            } else {
+                                System.out.println("Dont know what to do ....");
+                            }
+                        } else {
+                            progressCollector.assistantResponseToken(output.getText());
+                        }
+                        if (result.getMetadata().getFinishReason() != null && "STOP".equals(result.getMetadata().getFinishReason())) {
+                            progressCollector.stopped();
+                        }
+                    }
+                    return true;
+                })
+                .blockLast();
 
         int promptTokens = 0;
         int completionTokens = 0;
+
         if (chatClientResponse.getMetadata() != null) {
             final Usage usage = chatClientResponse.getMetadata().getUsage();
             if (usage != null) {

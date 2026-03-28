@@ -1,6 +1,7 @@
 package de.mirkosertic.powerstaff.profilesearch
 
 import de.mirkosertic.powerstaff.AbstractContainerBaseIT
+import de.mirkosertic.powerstaff.profilesearch.command.ChatProgressCollector
 import de.mirkosertic.powerstaff.profilesearch.command.PersistentAssistantMessage
 import de.mirkosertic.powerstaff.profilesearch.command.PersistentToolResponseMessage
 import de.mirkosertic.powerstaff.profilesearch.command.PersistentUserMessage
@@ -40,7 +41,8 @@ class SpringAIChatRepositoryIT extends AbstractContainerBaseIT {
     }
 
     private SpringAIChatRepository createRepo(Long chatId) {
-        new SpringAIChatRepository(String.valueOf(chatId), queryService, commandService, objectMapper)
+        new SpringAIChatRepository(String.valueOf(chatId), queryService, commandService, objectMapper, new ChatProgressCollector() {
+        })
     }
 
     def "UserMessage wird persistiert und korrekt als PersistentUserMessage geladen"() {

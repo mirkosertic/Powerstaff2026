@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class SpringAIChatRepository implements ChatMemoryRepository {
@@ -29,13 +30,15 @@ public class SpringAIChatRepository implements ChatMemoryRepository {
     private final ProfileSearchCommandService commandService;
     private final List<Message> newMessages;
     private final ObjectMapper objectMapper;
+    private final ChatProgressCollector chatProgressCollector;
 
-    public SpringAIChatRepository(final String conversationId, final ProfileSearchQueryService queryService, final ProfileSearchCommandService commandService, final ObjectMapper objectMapper) {
+    public SpringAIChatRepository(final String conversationId, final ProfileSearchQueryService queryService, final ProfileSearchCommandService commandService, final ObjectMapper objectMapper, final ChatProgressCollector chatProgressCollector) {
         this.conversationId = conversationId;
         this.queryService = queryService;
         this.commandService = commandService;
         this.newMessages = new ArrayList<>();
         this.objectMapper = objectMapper;
+        this.chatProgressCollector = chatProgressCollector;
     }
 
     @Override
@@ -108,7 +111,12 @@ public class SpringAIChatRepository implements ChatMemoryRepository {
                             call.put("id", toolCall.id());
                             toolCallOptions.add(call);
                         }
-                        commandService.addMessage(Long.parseLong(s), LlmService.ROLE_TOOL_CALL, x.getText(), objectMapper.writeValueAsString(toolCallOptions));
+
+                        final String jsonPayload = objectMapper.writeValueAsString(toolCallOptions);
+
+                        commandService.addMessage(Long.parseLong(s), LlmService.ROLE_TOOL_CALL, x.getText(), jsonPayload);
+
+                        chatProgressCollector.toolInvocation(x.getText(), jsonPayload);
                     } else {
                         commandService.addMessage(Long.parseLong(s), LlmService.ROLE_ASSISTANT, x.getText());
                     }
@@ -124,7 +132,14 @@ public class SpringAIChatRepository implements ChatMemoryRepository {
                         toolCallOptions.add(call);
                         toolCallNames.add(toolResponse.name());
                     }
-                    commandService.addMessage(Long.parseLong(s), LlmService.ROLE_TOOL_RESULT, objectMapper.writeValueAsString(toolCallNames), objectMapper.writeValueAsString(toolCallOptions));
+
+                    final String toolnames = objectMapper.writeValueAsString(toolCallNames);
+                    final String jsonPayload = objectMapper.writeValueAsString(toolCallOptions);
+
+                    commandService.addMessage(Long.parseLong(s), LlmService.ROLE_TOOL_RESULT, toolnames, jsonPayload);
+
+                    chatProgressCollector.toolResponses(toolnames, jsonPayload);
+
                     newMessages.add(message);
                 } else {
                     logger.warn("Cannot persist message: {}", message);
