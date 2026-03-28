@@ -6,6 +6,7 @@ public record ProfileSearchCriteria(
         Long salaryPerDayTo,
         String tagIds,
         String sortField,
-        String sortDir
+        String sortDir,
+        boolean semanticSearch
 ) {
 }

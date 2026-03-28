@@ -88,6 +88,17 @@
                    th:value="${criteria != null} ? ${criteria.tagIds()} : ''"/>
           </div>
 
+          <!-- Semantische Suche -->
+          <div class="mt-md">
+            <label class="cbfield"
+                   th:classappend="${criteria == null or criteria.semanticSearch()} ? ' on' : ''"
+                   data-testid="cb-semantic-search">
+              <input type="checkbox" name="semanticSearch" value="true"
+                     th:checked="${criteria == null or criteria.semanticSearch()}"/>
+              🔮 Semantische Suche
+            </label>
+          </div>
+
           <!-- Aktions-Buttons -->
           <div class="btn-row mt-md">
             <button type="submit" class="btn btn-pri" data-testid="btn-search">Suchen</button>
