@@ -1,8 +1,9 @@
 # UI Design System – Powerstaff 2026
 
-**Version:** 1.2 · März 2026
+**Version:** 1.3 · März 2026
 **Zweck:** Verbindliche Gestaltungsrichtlinien für alle Formulare und Ansichten der Applikation.
-Neue Formulare werden ausschließlich mit `base.css` und den hier beschriebenen HTML-Mustern erstellt.
+Neue Formulare werden ausschließlich mit den CSS-Dateien `base.css`, `layout.css`, `components.css`,
+`components2.css` und `chat.css` sowie den hier beschriebenen HTML-Mustern erstellt.
 
 ---
 
@@ -36,6 +37,9 @@ Neue Formulare werden ausschließlich mit `base.css` und den hier beschriebenen 
 26. [Chat: Nachrichten](#26-chat-nachrichten)
 27. [Chat: Eingabebereich & Toolbar-Variante](#27-chat-eingabebereich--toolbar-variante)
 28. [JavaScript-Architektur und Custom Elements](#28-javascript-architektur-und-custom-elements)
+29. [Modul-Navigation (btn-row)](#29-modul-navigation-btn-row)
+30. [Datentabelle (data-table)](#30-datentabelle-data-table)
+31. [Utility-Klassen](#31-utility-klassen)
 
 ---
 
@@ -91,25 +95,26 @@ Alle Tokens sind als CSS Custom Properties in `:root` definiert und über `base.
 
 ### Status
 
-| Token                   | Wert                          | Verwendung                 |
-|-------------------------|-------------------------------|----------------------------|
-| `--danger`              | `#b91c1c`                     | Fehlerzustand, Löschen     |
-| `--danger-l`            | `#fef2f2`                     | Gefahr-Hintergrund         |
-| `--warn-bg/border/text` | `#fffbeb / #d97706 / #7c4a03` | Warnbanner (ungespeichert) |
-| `--ok-bg/border/text`   | `#f0fdf4 / #16a34a / #14532d` | Erfolgsbanner              |
+| Token                   | Wert                          | Verwendung                          |
+|-------------------------|-------------------------------|-------------------------------------|
+| `--danger`              | `#b91c1c`                     | Fehlerzustand, Löschen              |
+| `--danger-l`            | `#fef2f2`                     | Gefahr-Hintergrund                  |
+| `--danger-ring`         | `rgba(185,28,28,.15)`         | Fokus-Ring Danger                   |
+| `--warn-bg/border/text` | `#fffbeb / #d97706 / #7c4a03` | Warnbanner (ungespeichert)          |
+| `--ok-bg/border/text`   | `#f0fdf4 / #16a34a / #14532d` | Erfolgsbanner                       |
 
 ### Abstände & Schatten
 
-| Token         | Wert                                                   |
-|---------------|--------------------------------------------------------|
-| `--r`         | `5px` – Standard-Borderradius                          |
-| `--r-l`       | `8px` – großer Borderradius (Karten, Modals)           |
-| `--shadow-xs` | `0 1px 2px rgba(0,0,0,.06)`                            |
+| Token         | Wert                                                    |
+|---------------|---------------------------------------------------------|
+| `--r`         | `5px` – Standard-Borderradius                           |
+| `--r-l`       | `8px` – großer Borderradius (Karten, Modals)            |
+| `--shadow-xs` | `0 1px 2px rgba(0,0,0,.06)`                             |
 | `--shadow-sm` | `0 1px 4px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05)` |
-| `--shadow-md` | `0 4px 12px rgba(0,0,0,.1)`                            |
-| `--shadow-lg` | `0 16px 40px rgba(0,0,0,.15)`                          |
-| `--nav-h`     | `44px`                                                 |
-| `--toolbar-h` | `50px`                                                 |
+| `--shadow-md` | `0 4px 12px rgba(0,0,0,.1)`                             |
+| `--shadow-lg` | `0 16px 40px rgba(0,0,0,.15)`                           |
+| `--nav-h`     | `44px`                                                  |
+| `--toolbar-h` | `50px`                                                  |
 
 ---
 
@@ -120,14 +125,14 @@ Alle Tokens sind als CSS Custom Properties in `:root` definiert und über `base.
 - **Basis-Fontsize:** `14px` (auf `<html>`)
 - **Line-height:** `1.55`
 
-| Verwendung            | Größe        | Gewicht | Besonderheiten                                                              |
-|-----------------------|--------------|---------|-----------------------------------------------------------------------------|
-| Primärtext            | `.88rem`     | 400     | Input-Werte                                                                 |
-| Sekundärtext / Labels | `.72–.75rem` | 600     | `letter-spacing: .02em`                                                     |
-| Kartenüberschriften   | `.7rem`      | 800     | `text-transform: uppercase`, `letter-spacing: .07em`                        |
-| Subsection-Labels     | `.67rem`     | 800     | `text-transform: uppercase`, `letter-spacing: .1em`, `color: var(--text-3)` |
-| Audit-Meta            | `.75rem`     | 400     | `color: var(--text-3)`                                                      |
-| Badge-Text            | `.65–.7rem`  | 700–800 | `text-transform: uppercase`                                                 |
+| Verwendung            | Größe       | Gewicht | Besonderheiten                                                              |
+|-----------------------|-------------|---------|-----------------------------------------------------------------------------|
+| Primärtext            | `.88rem`    | 400     | Input-Werte, `p`, `span`, `td`, `li`                                       |
+| Labels                | `.72rem`    | 600     | `letter-spacing: .02em`, `color: var(--text-2)`                            |
+| Kartenüberschriften   | `.7rem`     | 800     | `text-transform: uppercase`, `letter-spacing: .07em`                       |
+| Subsection-Labels     | `.67rem`    | 800     | `text-transform: uppercase`, `letter-spacing: .1em`, `color: var(--text-3)`|
+| Audit-Meta            | `.75rem`    | 400     | `color: var(--text-3)`                                                      |
+| Badge-Text            | `.65–.68rem`| 700–800 | `text-transform: uppercase`                                                 |
 
 ---
 
@@ -138,6 +143,7 @@ Alle Tokens sind als CSS Custom Properties in `:root` definiert und über `base.
 │  #app-nav  (sticky, top:0, z:110, dunkel)        │
 ├─────────────────────────────────────────────────┤
 │  #toolbar  (sticky, top:44px, z:100, weiß)       │
+│  └── #toolbar-inner  (max-width:1400px)          │
 ├─────────────────────────────────────────────────┤
 │  .banner-*  (optional)                           │
 ├─────────────────────────────────────────────────┤
@@ -149,6 +155,9 @@ Alle Tokens sind als CSS Custom Properties in `:root` definiert und über `base.
 └─────────────────────────────────────────────────┘
 ```
 
+**Hinweis:** Der `#toolbar`-Container enthält immer einen `#toolbar-inner`-Container, der den Inhalt auf
+`max-width: 1400px` begrenzt und per `display: flex; align-items: center` die Kinder ausrichtet.
+
 ```html
 <!DOCTYPE html>
 <html lang="de">
@@ -156,7 +165,6 @@ Alle Tokens sind als CSS Custom Properties in `:root` definiert und über `base.
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Powerstaff 2026 – [Modulname]</title>
-  <link rel="stylesheet" href="../prototype/base.css">
 </head>
 <body>
 
@@ -164,13 +172,17 @@ Alle Tokens sind als CSS Custom Properties in `:root` definiert und über `base.
   <nav id="app-nav">…</nav>
 
   <!-- Form-Toolbar -->
-  <div id="toolbar">…</div>
+  <div id="toolbar">
+    <div id="toolbar-inner">
+      …
+    </div>
+  </div>
 
-  <!-- Banners -->
-  <div id="banner-unsaved" class="banner banner-unsaved hidden">…</div>
-
-  <!-- Seiteninhalt -->
+  <!-- Banners (innerhalb #page oder direkt darunter) -->
   <div id="page">
+    <div class="banner banner-forbidden" th:if="…">…</div>
+    <div class="banner banner-success hidden" id="banner-success">…</div>
+
     <div class="form-grid">
       <!-- Karten hier einfügen -->
     </div>
@@ -190,12 +202,16 @@ Die App-Navigation ist die **dunkle Shell-Leiste** ganz oben. Sie gehört **nich
 <nav id="app-nav">
   <div id="app-nav-inner">
     <div id="nav-logo">Power<span>staff</span> 2026</div>
-    <span class="menu-item active">Freiberuflerverwaltung</span>
-    <span class="menu-item">Partnerverwaltung</span>
-    <span class="menu-item">Kundenverwaltung</span>
-    <span class="menu-item">Projekte</span>
-    <span class="menu-item">Profilsuche</span>
-    <span class="menu-item">Administration</span>
+    <a class="menu-item active" href="/freelancer">Freiberuflerverwaltung</a>
+    <a class="menu-item" href="/partner">Partnerverwaltung</a>
+    <a class="menu-item" href="/customer">Kundenverwaltung</a>
+    <a class="menu-item" href="/project">Projekte</a>
+    <a class="menu-item" href="/profilesearch/chat">Profilsuche</a>
+    <a class="menu-item" href="/admin/benutzer">Administration</a>
+    <span class="flex-spacer"></span>
+    <form method="post" action="/logout" class="inline">
+      <button type="submit" class="menu-item btn-logout">Abmelden</button>
+    </form>
   </div>
 </nav>
 ```
@@ -205,74 +221,133 @@ Die App-Navigation ist die **dunkle Shell-Leiste** ganz oben. Sie gehört **nich
 - Logo: `Power` in Weiß, Akzentbuchstaben `staff` in `#60a5fa`.
 - Max-Breite des Inners: `1400px`, zentriert.
 - Horizontales Scrollen auf kleinen Bildschirmen (Scrollbar unsichtbar).
+- `.flex-spacer` schiebt Abmelden-Button an den rechten Rand.
+- `.btn-logout` macht den Submit-Button optisch zu einem normalen `menu-item`.
 
 ---
 
 ## 6 Form-Toolbar
 
-Die Toolbar ist **modulspezifisch** und enthält Navigation, Audit-Info und Aktionen.
+Die Toolbar ist **modulspezifisch** und enthält Navigation, Audit-Info und Aktionen. Der
+`#toolbar-inner` stellt die horizontale Ausrichtung sicher und begrenzt auf `max-width: 1400px`.
 
 ```html
 <div id="toolbar">
-  <!-- Modulbezeichnung -->
-  <div id="tb-module">Freiberufler</div>
+  <div id="toolbar-inner">
 
-  <!-- Datensatz-Navigation -->
-  <div id="tb-nav">
-    <button class="tb-nav-btn" title="Erster">⏮</button>
-    <button class="tb-nav-btn" title="Vorheriger">◀</button>
-    <input type="text" id="tb-id-input" placeholder="ID">
-    <button class="tb-nav-btn" title="Nächster">▶</button>
-    <button class="tb-nav-btn" title="Letzter">⏭</button>
-  </div>
+    <!-- Modulbezeichnung -->
+    <div id="tb-module">Freiberufler</div>
 
-  <!-- Audit-Informationen -->
-  <div id="tb-audit">
-    Erstellt <strong>12.01.2025</strong> · Geändert <strong>10.03.2026</strong> von <strong>m.müller</strong>
-  </div>
+    <!-- Datensatz-Navigation (POST-Formulare, siehe §28) -->
+    <div id="tb-nav">
+      <form method="post" action="/freiberufler/navigate" style="display:inline">
+        <input type="hidden" name="direction" value="first">
+        <button type="submit" class="tb-nav-btn" title="Erster">⏮</button>
+      </form>
+      <form method="post" action="/freiberufler/navigate" style="display:inline">
+        <input type="hidden" name="direction" value="prev">
+        <button type="submit" class="tb-nav-btn" title="Vorheriger">◀</button>
+      </form>
+      <input type="text" id="tb-id-input" placeholder="ID">
+      <form method="post" action="/freiberufler/navigate" style="display:inline">
+        <input type="hidden" name="direction" value="next">
+        <button type="submit" class="tb-nav-btn" title="Nächster">▶</button>
+      </form>
+      <form method="post" action="/freiberufler/navigate" style="display:inline">
+        <input type="hidden" name="direction" value="last">
+        <button type="submit" class="tb-nav-btn" title="Letzter">⏭</button>
+      </form>
+    </div>
 
-  <!-- Aktionen -->
-  <div id="tb-actions">
-    <button class="btn btn-ghost">＋ Neu</button>
-    <button class="btn btn-pri">💾 Speichern</button>
-    <button class="btn btn-danger">🗑 Löschen</button>
-    <button class="btn btn-ghost">🔍 Suche</button>
+    <!-- Audit-Informationen -->
+    <div id="tb-audit">
+      Erstellt <strong>12.01.2025</strong> · Geändert <strong>10.03.2026</strong> von <strong>m.müller</strong>
+    </div>
+
+    <!-- Aktionen -->
+    <div id="tb-actions">
+      <button class="btn btn-ghost">＋ Neu</button>
+      <button class="btn btn-pri">💾 Speichern</button>
+      <button class="btn btn-danger" onclick="openModal('modal-delete')">🗑 Löschen</button>
+      <button class="btn btn-ghost">🔍 Suche</button>
+    </div>
+
   </div>
 </div>
 ```
 
 **Regeln:**
-- `#tb-module` trennt sich visuell mit `border-right` vom Rest.
-- Audit-Info (`#tb-audit`) wächst flexibel (`flex: 1`), wird auf Tablets ausgeblendet.
-- Aktionen stehen immer am rechten Rand (`margin-left: auto`).
+- `#tb-module` trennt sich visuell mit `border-right` vom Rest. Höhe füllt `100%` des `#toolbar`.
+- Audit-Info (`#tb-audit`) wächst flexibel (`flex: 1`), wird auf Tablets (< 900px) ausgeblendet.
+- Aktionen stehen immer am rechten Rand (`margin-left: auto` auf `#tb-actions`).
+- Löschen-Button öffnet stets ein Bestätigungs-Modal — kein direktes Ausführen ohne Bestätigung.
 
 ---
 
 ## 7 Banners
 
-Banners erscheinen zwischen Toolbar und Formular. Sie werden per JS mit der Klasse `.hidden` ein- und ausgeblendet.
+Banners erscheinen zwischen Toolbar und Formular (innerhalb von `#page`). Statische Banners werden
+serverseitig per Thymeleaf-Bedingung gerendert; dynamische werden per JS mit der Klasse `.hidden`
+ein- und ausgeblendet.
 
 ```html
-<!-- Gesperrter Datensatz -->
-<div class="banner banner-forbidden hidden">
-  🔒 Dieser Datensatz ist gesperrt und kann nicht bearbeitet werden.
+<!-- Kontaktsperre (statisch, dauerhaft sichtbar) -->
+<div class="banner banner-forbidden" th:if="${freelancer.contactForbidden}">
+  🔒 Kontaktsperre aktiv – keine Kontaktaufnahme erlaubt.
 </div>
 
-<!-- Ungespeicherte Änderungen (nur Hinweis, keine Blockierung) -->
-<div class="banner banner-unsaved hidden">
+<!-- Technischer Fehler (dynamisch) -->
+<div class="banner banner-error hidden" id="banner-save-error">
+  ✕ Beim Speichern ist ein technischer Fehler aufgetreten. Bitte erneut versuchen.
+</div>
+
+<!-- Ungespeicherte Änderungen – Custom Element (empfohlen) -->
+<ps-dirty-banner>⚠ Ungespeicherte Änderungen vorhanden.</ps-dirty-banner>
+
+<!-- Ungespeicherte Änderungen (klassisches Banner, alternativ) -->
+<div class="banner banner-unsaved hidden" id="banner-unsaved">
   ⚠️ Es gibt ungespeicherte Änderungen.
 </div>
 
 <!-- Erfolgsmeldung -->
-<div class="banner banner-success hidden">
+<div class="banner banner-success hidden" id="banner-success">
   ✓ Datensatz erfolgreich gespeichert.
 </div>
+
+<!-- Info (z. B. Zuordnung erfolgreich) -->
+<div class="banner banner-info hidden" id="banner-assign-project">
+  ✓ Freiberufler wurde dem gemerkten Projekt zugeordnet.
+</div>
 ```
+
+### Banner-Varianten
+
+| Klasse              | Hintergrund         | Rahmen              | Textfarbe           | Verwendung                         |
+|---------------------|---------------------|---------------------|---------------------|------------------------------------|
+| `.banner-forbidden` | `--danger-l`        | `--danger`          | `--danger`          | Kontaktsperre (dauerhaft)          |
+| `.banner-error`     | `--danger-l`        | `--danger`          | `--danger`          | Technischer Fehler                 |
+| `.banner-unsaved`   | `--warn-bg`         | `--warn-border`     | `--warn-text`       | Ungespeicherte Änderungen          |
+| `.banner-success`   | `--ok-bg`           | `--ok-border`       | `--ok-text`         | Erfolgreich gespeichert            |
+| `.banner-info`      | `--pri-l`           | `--pri`             | `--pri-d`           | Neutral-Info (z. B. Zuordnung OK)  |
 
 **Regeln:**
 - Ungespeicherte Änderungen führen **nur** zu einem Hinweisbanner. Sie blockieren keine weiteren Aktionen.
 - Erfolgsbanner wird nach ca. 3 Sekunden automatisch ausgeblendet.
-- Maximal ein Banner gleichzeitig sichtbar (außer Forbidden bleibt permanent).
+- `ps-dirty-banner` ist das bevorzugte Custom Element für ungespeicherte Änderungen (wird per `.visible`-Klasse ein/ausgeblendet statt `.hidden`).
+- Banners haben `max-width: 1400px` und sind zentriert — kein `#page`-Wrapper nötig, wenn sie direkt darunter stehen.
+
+### ps-dirty-banner Custom Element
+
+`ps-dirty-banner` ist standardmäßig `display: none`. Sobald das Custom Element die Klasse `.visible`
+erhält, wird es als Flex-Banner mit denselben Stilen wie `.banner-unsaved` angezeigt.
+
+```html
+<!-- Muss INNERHALB des <form>-Elements stehen -->
+<form id="freelancer-form" ...>
+  <ps-dirty-banner>⚠ Ungespeicherte Änderungen vorhanden.</ps-dirty-banner>
+  …
+</form>
+```
 
 ---
 
@@ -282,11 +357,11 @@ Alle Formularinhalte werden in Karten gruppiert. Karten können eingeklappt werd
 
 ```html
 <div class="fcard">
-  <div class="fcard-hd" onclick="toggleCard(this)">
+  <div class="fcard-hd" onclick="toggleCard('fcard-section-id')">
     <span class="fcard-title">Abschnitt-Titel</span>
-    <span class="fcard-chv open">▼</span>
+    <span class="fcard-chv open">▾</span>
   </div>
-  <div class="fcard-body">
+  <div class="fcard-body" id="fcard-section-id">
     <!-- Felder hier -->
   </div>
 </div>
@@ -294,8 +369,9 @@ Alle Formularinhalte werden in Karten gruppiert. Karten können eingeklappt werd
 
 **Toggling (Vanilla JS):**
 ```javascript
-function toggleCard(hd) {
-  const body = hd.nextElementSibling;
+function toggleCard(id) {
+  const body = document.getElementById(id);
+  const hd   = body.previousElementSibling;
   const chv  = hd.querySelector('.fcard-chv');
   const open = body.style.display !== 'none';
   body.style.display = open ? 'none' : '';
@@ -310,7 +386,9 @@ function toggleCard(hd) {
 **Regeln:**
 - Karten-Titel immer in Großbuchstaben (CSS übernimmt das via `text-transform`).
 - `fcard-body` hat `padding: 14px`.
-- Karten starten eingeklappt oder ausgeklappt je nach Relevanz.
+- Chevron: `.fcard-chv.open` = nach unten (0°), ohne `.open` = nach rechts (−90°, eingeklappt).
+- `fcard-hd:hover` zeigt `var(--pri-l)` als Hintergrund.
+- `fcard-hd` ohne onclick-Handler (reine Überschrift ohne Toggle) ist ebenfalls möglich — dann kein Cursor-Pointer.
 
 ---
 
@@ -329,12 +407,13 @@ function toggleCard(hd) {
 
 Innerhalb einer Karte werden Felder mit Grid-Klassen angeordnet:
 
-| Klasse | Spalten | Verwendung                   |
-|--------|---------|------------------------------|
-| `.fg2` | 2       | Standard-Zweiteilung         |
-| `.fg3` | 3       | z. B. PLZ / Ort / Land       |
-| `.fg4` | 4       | Datumsgruppen                |
-| `.fg5` | 5       | Schmale Felder nebeneinander |
+| Klasse     | Spalten | Verwendung                          |
+|------------|---------|-------------------------------------|
+| `.fg2`     | 2       | Standard-Zweiteilung                |
+| `.fg3`     | 3       | z. B. Suchbegriff / Von / Bis       |
+| `.fg4`     | 4       | Datumsgruppen                       |
+| `.fg5`     | 5       | Schmale Felder nebeneinander        |
+| `.fg-addr` | 3       | Adresszeile: Land (5rem) / PLZ (9rem) / Ort (1fr) |
 
 **Span-Klassen** (innerhalb eines Grid):
 
@@ -345,24 +424,35 @@ Innerhalb einer Karte werden Felder mit Grid-Klassen angeordnet:
 | `.s4`  | Feld belegt 4 Spalten |
 
 ```html
-<div class="fg3 mb">
-  <div class="fg s2">
-    <label>Straße</label>
-    <input type="text">
+<!-- Beispiel: 4-spaltiges Grid mit span -->
+<div class="fg4 mt-md">
+  <div class="fg">
+    <label>Anrede</label>
+    <input type="text" name="titel">
   </div>
   <div class="fg">
-    <label>Hausnummer</label>
-    <input type="text">
+    <label>Vorname</label>
+    <input type="text" name="name2">
+  </div>
+  <div class="fg s2">
+    <label>Name</label>
+    <input type="text" name="name1" required>
   </div>
 </div>
-<div class="fg3">
+
+<!-- Beispiel: Adresszeile -->
+<div class="fg-addr mt-md">
+  <div class="fg">
+    <label>Land</label>
+    <input type="text" name="land" placeholder="DE">
+  </div>
   <div class="fg">
     <label>PLZ</label>
-    <input type="text">
+    <input type="text" name="plz">
   </div>
-  <div class="fg s2">
+  <div class="fg">
     <label>Ort</label>
-    <input type="text">
+    <input type="text" name="ort">
   </div>
 </div>
 ```
@@ -398,20 +488,15 @@ Für Felder mit einer festen Wertemenge (z. B. Kontaktart) wird `<select>` anste
     <option value="">— bitte wählen —</option>
     <option value="NL">NL</option>
     <option value="NL1">NL1</option>
-    <option value="NL2">NL2</option>
-    <option value="X">X</option>
-    <option value="NO">NO</option>
-    <option value="LL">LL</option>
   </select>
 </div>
 ```
-
-In der QBE-Suchmaske erscheint dasselbe `<select>`; ist kein Wert gewählt (leere Option), wird das Feld nicht in die WHERE-Klausel aufgenommen. Ist ein Wert gewählt, wird **exakt** danach gefiltert (kein LIKE).
 
 **Regeln:**
 - Klasse `.mb` (`margin-bottom: 10px`) auf einer Grid-Zeile trennt Gruppen voneinander.
 - Inputs im Fokus: blaue Border + `box-shadow: 0 0 0 3px var(--pri-ring)`.
 - Auf mobilen Geräten (< 520px) kollabieren alle Field-Grids auf 1 Spalte.
+- `.was-validated input:invalid` / `select:invalid` / `textarea:invalid`: rote Border + Danger-Ring.
 
 ---
 
@@ -427,27 +512,26 @@ In der QBE-Suchmaske erscheint dasselbe `<select>`; ist kein Wert gewählt (leer
 <button class="btn btn-ghost">＋ Neu</button>
 
 <!-- Gefahr (Löschen) -->
-<button class="btn btn-danger">🗑 Löschen</button>
+<button class="btn btn-danger" onclick="openModal('modal-delete')">🗑 Löschen</button>
 
 <!-- Klein -->
 <button class="btn btn-ghost btn-sm">Bearbeiten</button>
 
 <!-- Hinzufügen (gestrichelt, inline) -->
 <button class="btn-add">＋ Eintrag hinzufügen</button>
+
+<!-- Icon-Button -->
+<button class="ibtn" title="Bearbeiten">✎</button>
+<button class="ibtn del" title="Löschen">🗑</button>
 ```
 
 ### Regeln
 - Primär-Button immer für die Hauptaktion (Speichern).
 - Ghost-Button für neutrale Aktionen (Neu, Abbrechen, Suche).
-- Danger-Button für destruktive Aktionen (Löschen). Im Ruhezustand dezent (heller Hintergrund), beim Hover volles Rot.
+- Danger-Button für destruktive Aktionen (Löschen). Im Ruhezustand dezent (heller Hintergrund), beim Hover volles Rot. **Immer über Modal bestätigen.**
 - `.btn-add` für das Hinzufügen von Listeneinträgen direkt im Formular (gestrichelte Border, keine Füllung).
-- Icon-Buttons (`.ibtn`) für Edit/Delete innerhalb von Listen.
-
-```html
-<!-- Icon-Button -->
-<button class="ibtn" title="Bearbeiten">✎</button>
-<button class="ibtn del" title="Löschen">🗑</button>
-```
+- Icon-Buttons (`.ibtn`) für Edit/Delete innerhalb von Listen. `.ibtn.del:hover` zeigt Danger-Farbe.
+- `.btn-sm` reduziert Padding auf `3px 8px`, Schrift auf `.72rem`.
 
 ---
 
@@ -473,9 +557,9 @@ Checkboxen werden nicht als klassische Checkboxen dargestellt, sondern als klick
 ```
 
 **Zustände:**
-- Standard: grauer Hintergrund (`--surface-2`)
-- `.on`: blaue Border + blauer Hintergrund (`--pri-l`)
-- `.on-danger`: rote Border + roter Hintergrund (`--danger-l`)
+- Standard: grauer Hintergrund (`--surface-2`), Border `--border`
+- `.on`: blaue Border (`--pri`) + blauer Hintergrund (`--pri-l`) + `font-weight: 600`
+- `.on-danger`: rote Border (`--danger`) + roter Hintergrund (`--danger-l`) + `font-weight: 600`
 
 **Klasse per JS setzen:**
 ```javascript
@@ -483,6 +567,11 @@ cbfield.addEventListener('change', e => {
   e.currentTarget.classList.toggle('on', e.target.checked);
 });
 ```
+
+**Regeln:**
+- `.cbrow` ist ein Flex-Wrapper mit `flex-wrap: wrap; gap: 6px; margin-top: 14px`.
+- Die Checkbox innerhalb des `.cbfield` ist sichtbar (14×14px, `accent-color: var(--pri)`).
+- Kann auch ohne `.cbrow` direkt als `<label class="cbfield">` verwendet werden (z. B. im Modal oder als alleinstehende Checkbox).
 
 ---
 
@@ -496,6 +585,10 @@ Zur Unterteilung innerhalb einer Karte ohne eigene Kartenebene:
 <hr class="div">
 <p class="sublbl">Weitere Angaben</p>
 ```
+
+**Regeln:**
+- `.sublbl`: `.67rem`, Gewicht 800, Großbuchstaben, `letter-spacing: .1em`, `color: var(--text-3)`, `margin: 10px 0 6px 0`.
+- `hr.div`: `border-top: 1px solid var(--border-l)`, kein Rand oben/unten außer `margin: 10px 0`.
 
 ---
 
@@ -527,18 +620,19 @@ Für strukturierte Listen von Kontaktkanälen (E-Mail, Telefon, Web etc.):
 
 ### Badge-Klassen
 
-| Klasse        | Typ     | Farbe |
-|---------------|---------|-------|
-| `.cb-email`   | E-Mail  | Blau  |
-| `.cb-telefon` | Telefon | Lila  |
-| `.cb-web`     | Website | Grün  |
-| `.cb-xing`    | XING    | Cyan  |
-| `.cb-gulp`    | GULP    | Gelb  |
-| `.cb-fax`     | Fax     | Grau  |
+| Klasse        | Typ     | Farbe                           |
+|---------------|---------|---------------------------------|
+| `.cb-email`   | E-Mail  | Blau (`#dbeafe` / `#1e40af`)    |
+| `.cb-telefon` | Telefon | Lila (`#ede9fe` / `#5b21b6`)    |
+| `.cb-web`     | Website | Grün (`#dcfce7` / `#166534`)    |
+| `.cb-xing`    | XING    | Cyan (`#cffafe` / `#155e75`)    |
+| `.cb-gulp`    | GULP    | Gelb (`#fef9c3` / `#713f12`)    |
+| `.cb-fax`     | Fax     | Grau (`--surface-2` / `--text-3`)|
 
 **Regeln:**
+- `.cacts` ist im Ruhezustand unsichtbar (`opacity: 0`) und erscheint beim Hover der Zeile.
 - Neuanlage und Bearbeitung erfolgen über ein Modal (nie inline-Edit).
-- `.citem:hover` hebt die Zeile blau hervor.
+- `.citem:hover` hebt die Zeile blau hervor (`--pri-l`).
 
 ---
 
@@ -576,6 +670,15 @@ Tags werden in Kategorien (z. B. Programmiersprachen, Branchen) gruppiert.
 </div>
 ```
 
+**Ausgewählter Chip (Toggle-Zustand in Suchfiltern):**
+```html
+<!-- Chip als Button (Profilsuche) -->
+<button type="button" class="chip selected" onclick="toggleTagChip(this)">Java</button>
+<button type="button" class="chip" onclick="toggleTagChip(this)">Python</button>
+```
+
+`.chip.selected`: `background: var(--pri)`, `color: white`, `border-color: var(--pri-d)`.
+
 **Kleine Chips (Tabellenzellen):**
 ```html
 <td><span class="chip-xs">Java</span><span class="chip-xs">Python</span></td>
@@ -583,13 +686,16 @@ Tags werden in Kategorien (z. B. Programmiersprachen, Branchen) gruppiert.
 
 **Regeln:**
 - `select.chip-add` wird nach Auswahl per JS zurückgesetzt und ein neuer Chip erzeugt.
-- `.tag-grid` ist 2-spaltig, auf Mobil 1-spaltig.
+- `.tag-grid` ist 2-spaltig, auf Mobil (< 520px) 1-spaltig.
+- `.chip` hat immer Primärfarbe als Hintergrund (`--pri-l`) und `border: 1px solid #bfdbfe`.
+- `.chip.selected` wird in Suchfiltern (Profilsuche) verwendet, nicht in Formularen.
+- `.chip-xs` für kompakte Chips in Tabellenzellen: kleiner (`0.65rem`), grauer Hintergrund.
 
 ---
 
 ## 15 Kontakthistorie
 
-Zeitliche Einträge (Anrufe, E-Mails, Notizen) in einem 2-spaltigen Grid.
+Zeitliche Einträge (Anrufe, E-Mails, Notizen) in einem Flex-Stack.
 Die Karte sollte immer `.col-wide` belegen, da Einträge längere Texte enthalten können.
 
 ### Mit Typ-Badge (Freiberufler, Partner, Kunden)
@@ -633,15 +739,17 @@ Das Projekte-Modul hat keine Typisierung. Der `.hbadge` entfällt; `.hmeta` wäc
 
 **Regeln:**
 - Neueste Einträge zuerst.
-- Hbody mit `white-space: pre-wrap` – Zeilenumbrüche im Text bleiben erhalten.
+- `.hbody` mit `white-space: pre-wrap` – Zeilenumbrüche im Text bleiben erhalten.
+- `.hacts` im Ruhezustand unsichtbar (`opacity: 0`), erscheint beim Hover des `.hitem`.
 - Bearbeitung/Neuanlage über Modal.
-- Typ-Badge nur einbauen, wenn das Modul eine `historytype`-Verknüpfung hat.
+- Typ-Badge (`.hbadge`) nur einbauen, wenn das Modul eine `historytype`-Verknüpfung hat.
 
 ---
 
 ## 16 Tabellen (Suchergebnisse)
 
-Für die QBE-Suche (Query by Example) und Trefferlistenansichten.
+Für die QBE-Suche (Query by Example) und Trefferlistenansichten. Die Tabelle wird in `.tbl-wrap`
+eingebettet (horizontales Scrollen auf kleinen Screens).
 
 ```html
 <div class="tbl-wrap">
@@ -668,12 +776,19 @@ Für die QBE-Suche (Query by Example) und Trefferlistenansichten.
         </td>
         <td>01.04.2026</td>
       </tr>
+      <tr class="row-forbidden">
+        <td class="td-name">Gesperrt</td>
+        <td colspan="5">— Kontaktsperre aktiv —</td>
+      </tr>
     </tbody>
   </table>
 </div>
 ```
 
-**Sortierbare Spalten:** Klasse `.srt` + aktueller Zustand `.srt-asc` oder `.srt-desc` (CSS fügt Pfeil-Indikator ein).
+**Sortierbare Spalten:** Klasse `.srt` auf dem `<th>`. Aktueller Zustand: `.srt-asc` (▲, blau) oder
+`.srt-desc` (▼, blau). Ohne `.srt-asc`/`.srt-desc` zeigt ein blasses Platzhalter-Icon.
+
+**Gesperrte Zeilen:** `.row-forbidden` auf `<tr>` färbt Hintergrund und Text rot (`--danger-l` / `--danger`).
 
 **Regeln:**
 - Name-Zelle mit `.td-name` (blau, fett) – signalisiert Klickbarkeit.
@@ -684,8 +799,7 @@ Für die QBE-Suche (Query by Example) und Trefferlistenansichten.
 ### Variante: Tabelle mit Aktionsspalte (Zuordnungslisten)
 
 Für Zuordnungslisten (z. B. Freiberufler im Projekt, Projekte beim Kunden) sind Zeilen nicht als Ganzes
-anklickbar. Nur bestimmte Zellen oder Buttons lösen Aktionen aus. Die Klasse `.no-click` auf `<tr>`
-deaktiviert den Zeilen-Hover-Effekt und den Pointer-Cursor.
+anklickbar. Die Klasse `.no-click` auf `<tr>` deaktiviert Hover-Effekt und Pointer-Cursor.
 
 ```html
 <div class="tbl-wrap">
@@ -711,7 +825,7 @@ deaktiviert den Zeilen-Hover-Effekt und den Pointer-Cursor.
         <td>95 €/h, Remote möglich</td>
         <td class="td-acts">
           <button class="ibtn" title="Bearbeiten">✎</button>
-          <button class="ibtn del" title="Zuordnung löschen">🗑</button>
+          <button class="ibtn del" title="Zuordnung löschen" onclick="openModal('modal-delete')">🗑</button>
         </td>
       </tr>
     </tbody>
@@ -729,7 +843,8 @@ deaktiviert den Zeilen-Hover-Effekt und den Pointer-Cursor.
 
 ## 17 Modals
 
-Modale Dialoge für CRUD-Operationen auf Unterentitäten (Kontakte, Historieneinträge) und Systemmeldungen (Konflikte, Bestätigungen).
+Modale Dialoge für CRUD-Operationen auf Unterentitäten (Kontakte, Historieneinträge) und
+Systemmeldungen (Konflikte, Bestätigungen).
 
 ### Standard-Modal
 
@@ -738,7 +853,7 @@ Modale Dialoge für CRUD-Operationen auf Unterentitäten (Kontakte, Historienein
   <div class="mbox">
     <div class="mhd">
       <h3>Kontaktmöglichkeit bearbeiten</h3>
-      <button class="mx" onclick="closeModal('modal-kontakt')">✕</button>
+      <button type="button" class="mx" onclick="closeModal('modal-kontakt')">✕</button>
     </div>
     <div class="mbody">
       <div class="mfld">
@@ -755,8 +870,8 @@ Modale Dialoge für CRUD-Operationen auf Unterentitäten (Kontakte, Historienein
       </div>
     </div>
     <div class="mft">
-      <button class="btn btn-ghost" onclick="closeModal('modal-kontakt')">Abbrechen</button>
-      <button class="btn btn-pri">Speichern</button>
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-kontakt')">Abbrechen</button>
+      <button type="button" class="btn btn-pri">Speichern</button>
     </div>
   </div>
 </div>
@@ -773,7 +888,7 @@ Klasse `.mbox.lg` erweitert die max-Breite auf `580px`.
   <div class="mbox">
     <div class="mhd">
       <h3>Datensatz löschen</h3>
-      <button class="mx" onclick="closeModal('modal-confirm')">✕</button>
+      <button type="button" class="mx" onclick="closeModal('modal-confirm')">✕</button>
     </div>
     <div class="mbody">
       <p class="mwarn">
@@ -782,8 +897,8 @@ Klasse `.mbox.lg` erweitert die max-Breite auf `580px`.
       </p>
     </div>
     <div class="mft">
-      <button class="btn btn-ghost" onclick="closeModal('modal-confirm')">Abbrechen</button>
-      <button class="btn btn-danger">Löschen</button>
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-confirm')">Abbrechen</button>
+      <button type="button" class="btn btn-danger">Löschen</button>
     </div>
   </div>
 </div>
@@ -801,11 +916,12 @@ document.querySelectorAll('.mbk').forEach(mbk => {
 ```
 
 **Regeln:**
-- Backdrop: `rgba(15,23,42,.45)` mit `backdrop-filter: blur(3px)`.
-- Einblende-Animation: `min-in` (Scale + Translate, 140ms).
+- Backdrop (`.mbk`): `rgba(15,23,42,.45)` mit `backdrop-filter: blur(3px)`.
+- Einblende-Animation: `mbox-in` (Scale + Translate, 140ms).
 - Footerleiste `.mft` hat `--surface-2` als Hintergrund.
 - Felder im Modal: Klasse `.mfld` mit `margin-bottom: 12px`.
 - Klick auf Backdrop schließt das Modal.
+- Hilfsklasse `.hidden` ist `display: none !important` (in `components2.css`).
 
 ---
 
@@ -813,19 +929,20 @@ document.querySelectorAll('.mbk').forEach(mbk => {
 
 ### Kollabierbare Karten
 
-Alle Karten können über den Kopfbereich ein-/ausgeklappt werden. `toggleCard(hd)` wird auf das `fcard-hd`-Element gebunden.
+Alle Karten können über den Kopfbereich ein-/ausgeklappt werden. `toggleCard(id)` wird auf das
+`fcard-hd`-Element gebunden und erhält die ID des `fcard-body`-Elements.
 
 ### Ungespeicherte Änderungen
 
-- Jede Änderung an einem Formularfeld setzt `unsavedChanges = true`.
-- Der Banner `#banner-unsaved` wird eingeblendet.
+- Jede Änderung an einem Formularfeld setzt den Dirty-State.
+- `ps-dirty-banner` erhält Klasse `.visible` (Custom Element) oder `.banner-unsaved` wird sichtbar.
 - **Keine** Blockierung von Navigation oder anderen Aktionen.
 - Nach erfolgreichem Speichern: Banner ausblenden, Erfolgsbanner einblenden.
 
 ### Datensatz-Navigation
 
-- Pfeil-Buttons in `#tb-nav` navigieren durch bekannte IDs.
-- ID-Eingabe im Textfeld lädt den Datensatz direkt.
+- Pfeil-Buttons in `#tb-nav` werden als POST-Formulare gerendert (ADR-014).
+- Der Server berechnet die Ziel-ID frisch aus der Datenbank – keine vorberechneten `<a>`-Links.
 - Deaktivierte Buttons (`disabled`-Attribut) bei erstem/letztem Datensatz.
 
 ### Optimistic Locking
@@ -836,8 +953,8 @@ Bei Speichern-Konflikten (Datensatz zwischenzeitlich geändert) erscheint ein Mo
 
 ### Sortierung in Tabellen
 
-- Klick auf `.srt`-Spaltenheader togglet `srt-asc` → `srt-desc` → keine Sortierung.
-- Aktueller Sortierstatus wird per CSS-Klasse visualisiert (▲/▼).
+- Klick auf `.srt`-Spaltenheader wechselt Sortierung: `srt-asc` → `srt-desc` → keine Sortierung.
+- Aktueller Sortierstatus wird per CSS-Klasse visualisiert (▲/▼, Primärfarbe).
 
 ### Gemerktes Projekt
 
@@ -848,11 +965,8 @@ Beim Navigieren im Projekte-Formular aktualisiert der Server das gemerkte Projek
 
 ### Tooltips
 
-Jedes Element mit `data-tip="..."` zeigt per CSS-Pseudo-Element einen Tooltip beim Hover.
-
-```html
-<button class="ibtn" data-tip="Bearbeiten">✎</button>
-```
+Jedes Element mit `title="…"` zeigt den Browser-nativen Tooltip beim Hover. Kein Custom-Tooltip-CSS
+notwendig.
 
 ---
 
@@ -883,7 +997,7 @@ Faustregel für die Spaltenanordnung:
 
 ### Schritt 5: Felder
 
-Verwende `.fg` für jedes Feld und `.fg2`–`.fg5` als Container für Feldgruppen.
+Verwende `.fg` für jedes Feld und `.fg2`–`.fg5` bzw. `.fg-addr` als Container für Feldgruppen.
 Orientiere dich an der Tabelle in [Abschnitt 9](#9-felder--field-grids).
 
 ### Schritt 6: Listen und Spezialkomponenten
@@ -901,8 +1015,9 @@ Für jede CRUD-Operation auf Unterentitäten ein Modal anlegen (am Ende des `<bo
 Mindest-JS pro Formular:
 ```javascript
 // Kartentoggle
-function toggleCard(hd) {
-  const body = hd.nextElementSibling;
+function toggleCard(id) {
+  const body = document.getElementById(id);
+  const hd   = body.previousElementSibling;
   const chv  = hd.querySelector('.fcard-chv');
   const open = body.style.display !== 'none';
   body.style.display = open ? 'none' : '';
@@ -917,32 +1032,29 @@ function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 document.querySelectorAll('.mbk').forEach(m =>
   m.addEventListener('click', e => { if (e.target === m) m.classList.add('hidden'); })
 );
-
-// Ungespeicherte Änderungen
-let dirty = false;
-document.querySelectorAll('input, select, textarea').forEach(el =>
-  el.addEventListener('change', () => {
-    dirty = true;
-    document.getElementById('banner-unsaved').classList.remove('hidden');
-  })
-);
 ```
 
 ### Checkliste vor Fertigstellung
 
-- [ ] Alle Karten-Titel in Großbuchstaben und mit `fcard-title`?
-- [ ] Jedes Eingabefeld hat ein `<label>`?
-- [ ] FK-Felder (read-only) mit `.fg-readonly` statt `<input>` umgesetzt?
-- [ ] Destruktive Aktionen gehen durch ein Bestätigungs-Modal?
-- [ ] Banner-IDs sind korrekt vergeben und starten mit `.hidden`?
-- [ ] Responsive getestet (860px und 520px Breakpoints)?
-- [ ] Fokus-Reihenfolge (Tab) sinnvoll?
-- [ ] Tooltips (`data-tip`) auf Icon-Buttons gesetzt?
-- [ ] Zuordnungstabellen verwenden `.no-click` und `.td-acts`?
-- [ ] Dynamisch gefärbte Badges verwenden `.badge-dyn` mit inline-style?
-- [ ] Profilsuche: `#chat-page` statt `.form-grid` als Wurzelelement?
-- [ ] Profilsuche: Sidebar-Toggle für mobile Screens vorhanden (`#sidebar-backdrop`)?
-- [ ] Profilsuche: User/Assistant-Bubbles korrekt mit `.chat-msg.user` / `.chat-msg.assistant`?
+```
+[ ] Alle Karten-Titel in Großbuchstaben und mit fcard-title?
+[ ] Jedes Eingabefeld hat ein <label>?
+[ ] FK-Felder (read-only) mit .fg-readonly statt <input> umgesetzt?
+[ ] Destruktive Aktionen gehen durch ein Bestätigungs-Modal?
+[ ] ps-dirty-banner ist INNERHALB des <form>-Elements?
+[ ] Responsive getestet (900px und 520px Breakpoints)?
+[ ] Fokus-Reihenfolge (Tab) sinnvoll?
+[ ] Tooltips (title="…") auf Icon-Buttons gesetzt?
+[ ] Zuordnungstabellen verwenden .no-click und .td-acts?
+[ ] Dynamisch gefärbte Badges verwenden .badge-dyn mit inline-style?
+[ ] Profilsuche: body > .btn-row und #chat-page statt .form-grid?
+[ ] Profilsuche: Sidebar-Toggle für mobile Screens vorhanden (#sidebar-backdrop)?
+[ ] Profilsuche: User/Assistant-Bubbles korrekt mit .chat-msg.user / .chat-msg.assistant?
+[ ] Löschen-Button in Toolbar ruft openModal() auf (nicht direktes Löschen)?
+[ ] Kontaktsperre-Banner nutzt .banner-forbidden (nicht .banner-error)?
+[ ] Admin-Navigation nutzt .btn-row (nicht .tab-nav oder eigene Struktur)?
+[ ] Tabellenzeilen mit Kontaktsperre haben .row-forbidden?
+```
 
 ---
 
@@ -958,7 +1070,7 @@ einen anklickbaren Link statt eines Eingabeelements.
 <div class="fg">
   <label>Partner</label>
   <div class="fg-readonly">
-    <a href="#" onclick="openPartner(17)">Mustermann GmbH</a>
+    <a href="/partner/17">Mustermann GmbH</a>
   </div>
 </div>
 
@@ -966,14 +1078,6 @@ einen anklickbaren Link statt eines Eingabeelements.
 <div class="fg">
   <label>Partner</label>
   <div class="fg-readonly empty">Kein Partner zugeordnet</div>
-</div>
-
-<!-- Vorausgefüllt aus Kontext (z. B. Projekt aus Kunden-Formular angelegt) -->
-<div class="fg">
-  <label>Kunde</label>
-  <div class="fg-readonly">
-    <a href="#" onclick="openKunde(5)">Acme Corp</a>
-  </div>
 </div>
 ```
 
@@ -987,51 +1091,39 @@ einen anklickbaren Link statt eines Eingabeelements.
 
 ## 21 Gemerktes Projekt (Toolbar-Erweiterung)
 
-Das gemerkte Projekt wird als kompaktes Pill-Element in der Toolbar angezeigt. Im Freiberufler-Formular
-ergänzt ein Button direkt daneben die Zuordnungsfunktion.
+Das gemerkte Projekt wird als kompaktes Element in der Toolbar angezeigt.
+`#tb-project` wird zwischen Audit-Info und Actions-Bereich platziert.
 
 ### Nur Anzeige (Partner- und Kunden-Formular)
 
 ```html
-<div id="toolbar">
-  <div id="tb-module">Partner</div>
-  <div id="tb-nav">…</div>
-  <div id="tb-audit">…</div>
-
-  <!-- Gemerktes Projekt (nur Anzeige) -->
-  <div id="tb-project">
-    📌 Gemerktes Projekt: <strong>2026-042</strong> – Java-Entwickler München
-  </div>
-
-  <div id="tb-actions">…</div>
+<div id="tb-project" th:if="${rememberedProject != null}">
+  📌 <a th:href="@{/project/{id}(id=${rememberedProject.projectId})}">
+    <strong th:text="${rememberedProject.projectNumber}"></strong>
+    – <span th:text="${rememberedProject.shortDescription}"></span>
+  </a>
 </div>
 ```
 
 ### Mit Zuordnungs-Button (Freiberufler-Formular, Datensatz geladen)
 
 ```html
-<div id="toolbar">
-  <div id="tb-module">Freiberufler</div>
-  <div id="tb-nav">…</div>
-  <div id="tb-audit">…</div>
-
-  <!-- Gemerktes Projekt + Aktion -->
-  <div id="tb-project">
-    📌 <strong>2026-042</strong> – Java-Entwickler München
-    <button class="btn btn-ghost btn-sm" onclick="openModal('modal-assign-project')">
-      Zuordnen
-    </button>
-  </div>
-
-  <div id="tb-actions">…</div>
+<div id="tb-project" th:if="${rememberedProject != null}">
+  📌 <a th:href="@{/project/{id}(id=${rememberedProject.projectId})}">
+    <strong th:text="${rememberedProject.projectNumber}"></strong>
+    – <span th:text="${rememberedProject.shortDescription}"></span>
+  </a>
+  <button class="btn btn-ghost btn-sm" onclick="openModal('modal-assign-project')">
+    Zuordnen
+  </button>
 </div>
 ```
 
 **Regeln:**
-- `#tb-project` nur rendern, wenn ein gemerktes Projekt vorhanden ist (server-seitig gesteuert).
+- `#tb-project` nur rendern, wenn ein gemerktes Projekt vorhanden ist (server-seitig via Thymeleaf `th:if`).
+- `#tb-project` hat `border-left`/`border-right`, `height: 100%`, `max-width: 460px`.
 - Zuordnungs-Button nur im Freiberufler-Formular und nur wenn ein Datensatz (ID) geladen ist.
-- Das Element ordnet sich zwischen Audit-Info und Actions-Bereich ein.
-- Auf Mobilgeräten (< 860px) kann `#tb-project` ausgeblendet werden, wenn der Platz nicht reicht.
+- Auf Mobilgeräten (< 860px) wird `#tb-project` automatisch per CSS ausgeblendet.
 
 ---
 
@@ -1047,6 +1139,12 @@ zur Laufzeit ändern kann. Die Farbe wird als inline-style gesetzt.
 <span class="badge-dyn" style="background:#fef2f2; color:#b91c1c;">Abgesagt</span>
 <span class="badge-dyn" style="background:#dbeafe; color:#1e40af;">Platziert</span>
 ```
+
+Alternativ existieren auch `.status-badge` (Alias) und `.badge-default` (grüner Default-Wert):
+```html
+<span class="badge-default">Aktiv</span>
+```
+`.badge-default` hat fix `--badge-bg: #d1fae5; --badge-fg: #065f46`.
 
 **Regeln:**
 - `.badge-dyn` liefert nur Form und Typografie; Farben kommen ausschließlich via inline-style.
@@ -1065,38 +1163,46 @@ Für die direkte Zuweisung eines bestehenden Datensatzes per Eingabefeld innerha
 (z. B. Freiberufler per Kodierung einem Partner zuordnen).
 
 ```html
-<div class="inline-assign">
-  <input type="text" placeholder="Kodierung eingeben…" id="assign-code-input">
-  <button class="btn btn-ghost btn-sm" onclick="assignByCode()">Zuordnen</button>
+<div class="list-hd">
+  <div class="btn-row-inline">
+    <input type="text" id="fl-code-input" placeholder="Code eingeben" class="input-narrow">
+    <button class="btn btn-ghost btn-sm" onclick="assignByCode()">Zuordnen</button>
+  </div>
 </div>
 
 <!-- Fehlermeldung (erscheint nach erfolglosem Versuch) -->
-<p class="empty" id="assign-error" style="display:none; color:var(--danger);">
+<p class="text-muted" id="assign-error" style="display:none; color:var(--danger);">
   Kein Freiberufler mit dieser Kodierung gefunden.
 </p>
 ```
 
 **Regeln:**
-- Das Eingabefeld hat eine feste Breite (`180px`), wächst nicht flex.
+- `.input-narrow` begrenzt das Eingabefeld auf `max-width: 7rem`.
+- `.btn-row-inline` ist ein Flex-Container ohne `margin-top` (für Verwendung in `.list-hd`).
+- `.list-hd` richtet Label/Titel links und Aktionen rechts aus (`justify-content: flex-end`).
 - Fehlermeldung erscheint direkt unterhalb der Zeile (kein Modal).
 - Nach erfolgreicher Zuordnung: Eingabefeld leeren, Liste neu laden, Fehlermeldung ausblenden.
-- Für komplexere Zuordnungen (z. B. mit weiteren Pflichtfeldern) stattdessen ein Modal verwenden.
-
----
 
 ---
 
 ## 24 Chat: Split-Panel-Layout (Profilsuche)
 
 Die Profilsuche verwendet **kein** `.form-grid`. Stattdessen ersetzt `#chat-page` den `#page`-Container
-und teilt den Inhaltsbereich in Sidebar und Hauptbereich auf.
+und teilt den Inhaltsbereich in Sidebar und Hauptbereich auf. Vor `#chat-page` steht eine
+Modul-Navigationsleiste (`.btn-row`), die direkt als Kind von `<body>` gerendert wird.
 
 ```html
 <body>
   <nav id="app-nav">…</nav>
-  <div id="toolbar">…</div>  <!-- Toolbar-Variante, siehe Abschnitt 27 -->
+  <div id="toolbar"><div id="toolbar-inner">…</div></div>
 
-  <!-- Kein #page / .form-grid hier! -->
+  <!-- Modul-Navigation direkt unter Toolbar -->
+  <div class="btn-row mb-md">
+    <a href="/profilesearch/chat" class="btn btn-pri">Chat / interaktiver Modus</a>
+    <a href="/profilesearch/search" class="btn btn-ghost">Volltextsuche</a>
+  </div>
+
+  <!-- Split-Panel: Sidebar + Chat-Hauptbereich -->
   <div id="chat-page">
     <aside id="chat-sidebar">…</aside>           <!-- Abschnitt 25 -->
     <div id="chat-main">
@@ -1110,11 +1216,12 @@ und teilt den Inhaltsbereich in Sidebar und Hauptbereich auf.
 </body>
 ```
 
-**Regeln:**
-- `#chat-page` nimmt die gesamte verbleibende Viewport-Höhe ein (`calc(100vh - nav-h - toolbar-h)`).
-- Auf großen Screens (≥ 1024 px): Sidebar ist fixiert sichtbar; kein Backdrop.
-- Auf kleinen Screens (< 1024 px): Sidebar als Overlay mit Backdrop (`#sidebar-backdrop`).
-- Der Sidebar-Zustand (auf-/eingeklappt) wird in `localStorage` gespeichert.
+**CSS-Details:**
+- `body > .btn-row`: max-width 1400px, margin 18px auto 0, padding 10px 20px 18px 18px.
+- `#chat-page`: `height: calc(100vh - var(--nav-h) - var(--toolbar-h) - 18px - 43px)`, `overflow: hidden`,
+  Rahmen ohne `border-top`, abgerundete untere Ecken.
+- Auf großen Screens (≥ 1024px): Sidebar ist fest sichtbar; kein Backdrop.
+- Auf kleinen Screens (< 1024px): Sidebar als Overlay mit Backdrop (`#sidebar-backdrop`).
 
 ```javascript
 // Sidebar-Toggle (großer Screen)
@@ -1146,7 +1253,7 @@ Die Sidebar listet alle Chat-Sitzungen des Sachbearbeiters.
 
   <p class="sidebar-label">Chat-Verlauf</p>
 
-  <div class="chat-session-list">
+  <div class="chat-session-list" id="sidebar-session-list">
 
     <!-- Aktive Sitzung (mit Projektbezug) -->
     <div class="chat-session-item active">
@@ -1155,38 +1262,49 @@ Die Sidebar listet alle Chat-Sitzungen des Sachbearbeiters.
         <div class="session-project">📁 2026-042</div>
         <div class="session-meta">Heute, 14:32</div>
       </div>
-      <button class="ibtn del" title="Chat löschen" onclick="deleteSession(1)">🗑</button>
+      <button class="ibtn del" title="Chat löschen"
+              onclick="confirmDeleteChat(event, 1)">🗑</button>
     </div>
 
     <!-- Inaktive Sitzung (ohne Projektbezug) -->
-    <div class="chat-session-item" onclick="loadSession(2)">
+    <div class="chat-session-item" onclick="location.href='/profilesearch/chat/2'">
       <div class="session-info">
         <div class="session-title">DevOps-Engineer mit K8s-Erfahrung</div>
         <!-- kein .session-project, da project_id = NULL -->
         <div class="session-meta">Gestern</div>
       </div>
-      <button class="ibtn del" title="Chat löschen" onclick="deleteSession(2)">🗑</button>
+      <button class="ibtn del" title="Chat löschen"
+              onclick="confirmDeleteChat(event, 2)">🗑</button>
     </div>
+
+    <!-- Infinite Scroll Sentinel (optional) -->
+    <ps-infinite-scroll
+        data-next-url="/profilesearch/chat/1?offset=20"
+        data-target="#sidebar-session-list">
+    </ps-infinite-scroll>
 
   </div>
 </aside>
 ```
 
+**Seitenleiste eingeklappt:** `.chat-session-item.collapsed` reduziert Sidebar auf 48px Breite;
+`.sidebar-label` und `.chat-session-list` werden ausgeblendet.
+
 **Regeln:**
 - `.sidebar-toggle` ist immer sichtbar, auch wenn die Sidebar eingeklappt ist.
-- `.session-title` wird mit `text-overflow: ellipsis` abgeschnitten — kein manuelles Bearbeiten.
-- `.session-project` nur rendern, wenn `project_id ≠ NULL`; zeigt die Projektnummer mit 📁-Icon.
-  Schrift: kleiner als `.session-meta`, Farbe `var(--text-3)`.
+- `.session-title` wird mit `text-overflow: ellipsis` abgeschnitten.
+- `.session-project` nur rendern, wenn `project_id ≠ NULL`.
 - Der Löschen-Button (`.ibtn.del`) ist im Ruhezustand unsichtbar (`opacity: 0`) und erscheint
   beim Hover der Zeile.
 - Die aktive Sitzung erhält die Klasse `.active`.
 - Sitzungen werden nach `changed_date` absteigend sortiert (jüngste zuerst).
+- `ps-infinite-scroll` übernimmt das Nachladen älterer Sitzungen per IntersectionObserver.
 
 ---
 
 ## 26 Chat: Nachrichten
 
-Der Nachrichtenbereich zeigt User- und Assistenten-Nachrichten als Bubbles.
+Der Nachrichtenbereich zeigt User-, Assistenten-, Tool-Call- und Tool-Result-Nachrichten.
 
 ```html
 <div id="chat-messages">
@@ -1199,26 +1317,47 @@ Der Nachrichtenbereich zeigt User- und Assistenten-Nachrichten als Bubbles.
   <!-- Nutzernachricht -->
   <div class="chat-msg user">
     <div class="msg-bubble">
-      Ich suche einen Senior Java-Entwickler mit Spring-Erfahrung für München, ab April verfügbar.
+      Ich suche einen Senior Java-Entwickler mit Spring-Erfahrung für München.
     </div>
     <div class="msg-meta">14:32</div>
   </div>
 
-  <!-- Assistenten-Antwort mit Freiberufler-Link -->
+  <!-- Assistenten-Antwort (Markdown gerendert) -->
   <div class="chat-msg assistant">
     <div class="msg-bubble">
       <p>Ich habe folgende passende Profile gefunden:</p>
       <ul>
-        <li><a href="#" onclick="openFreiberufler(42)">DEV-2024-07 – Max Müller</a>
-            – Java/Spring, verfügbar ab 01.04., 95 €/h</li>
-        <li><a href="#" onclick="openFreiberufler(87)">DEV-2023-15 – Anna Schmidt</a>
-            – Java/Quarkus, verfügbar ab 15.04., 105 €/h</li>
+        <li><a href="/freelancer/42">DEV-2024-07 – Max Müller</a> – Java/Spring, 95 €/h</li>
       </ul>
     </div>
     <div class="msg-meta">14:32</div>
   </div>
 
-  <!-- Ladeindikator (während Antwort generiert wird) -->
+  <!-- Tool-Call-Nachricht -->
+  <div class="msg-tool msg-tool-call">
+    <button class="msg-tool-header" aria-expanded="false" onclick="toggleToolMsg(this)">
+      <span>🔧</span>
+      <span class="msg-tool-name">search_freelancers</span>
+      <span class="msg-tool-chevron">▶</span>
+    </button>
+    <div class="msg-tool-body">
+      <pre>{"query": "Java Senior München"}</pre>
+    </div>
+  </div>
+
+  <!-- Tool-Result-Nachricht -->
+  <div class="msg-tool msg-tool-result">
+    <button class="msg-tool-header" aria-expanded="false" onclick="toggleToolMsg(this)">
+      <span>✅</span>
+      <span class="msg-tool-name">search_freelancers</span>
+      <span class="msg-tool-chevron">▶</span>
+    </button>
+    <div class="msg-tool-body">
+      <pre>{"results": [...]}</pre>
+    </div>
+  </div>
+
+  <!-- Ladeindikator -->
   <div class="chat-msg assistant chat-typing">
     <div class="msg-bubble">
       <div class="typing-dots">
@@ -1231,14 +1370,16 @@ Der Nachrichtenbereich zeigt User- und Assistenten-Nachrichten als Bubbles.
 ```
 
 **Regeln:**
-- User-Bubble: rechtsbündig, Primärfarbe (`--pri`) als Hintergrund, weißer Text.
-- Assistenten-Bubble: linksbündig, `--surface` Hintergrund mit Border, Markdown gerendert.
-- Freiberufler-Links in Assistenten-Antworten öffnen den Datensatz im Freiberufler-Formular.
-  Format im gespeicherten `content`: `[freelancer:<id>:<anzeigetext>]` — wird beim Rendering
-  in `<a href="#" onclick="openFreiberufler(<id>)"><anzeigetext></a>` umgewandelt.
+- User-Bubble: rechtsbündig (`align-self: flex-end`), Primärfarbe (`--pri`) als Hintergrund, weißer Text, `white-space: pre-wrap`.
+- Assistenten-Bubble: linksbündig (`align-self: flex-start`), `--surface-3` Hintergrund mit Border, Markdown gerendert.
+- Tool-Call (`.msg-tool-call`): linke Border `--text-3` (grau).
+- Tool-Result (`.msg-tool-result`): linke Border `--ok-border` (grün).
+- `.msg-tool-body` ist standardmäßig ausgeblendet; Klasse `.open` zeigt ihn.
+- `.msg-tool-header[aria-expanded="true"] .msg-tool-chevron` rotiert 90°.
 - Ladeindikator (`.chat-typing`) wird eingeblendet, während die Antwort generiert wird,
   und nach Erhalt der Antwort ersetzt.
-- Der Bereich scrollt automatisch zur letzten Nachricht (`scrollTop = scrollHeight`).
+- Freiberufler-Links im gespeicherten Content: Format `[freelancer:<id>:<anzeigetext>]` wird
+  beim Rendering in `<a href="/freelancer/<id>"><anzeigetext></a>` umgewandelt.
 
 ---
 
@@ -1248,28 +1389,36 @@ Der Nachrichtenbereich zeigt User- und Assistenten-Nachrichten als Bubbles.
 
 ```html
 <div id="chat-input-area">
-  <textarea id="chat-input" rows="1" placeholder="Nachricht eingeben… (Enter = Senden, Shift+Enter = Zeilenumbruch)"></textarea>
-  <button id="chat-send" class="btn btn-pri" onclick="sendMessage()">Senden</button>
+  <ps-chat-input id="ps-chat-input-el">
+    <textarea id="chat-input" rows="3"
+              placeholder="Nachricht eingeben… (Enter = Senden, Shift+Enter = Zeilenumbruch)"></textarea>
+    <div class="chat-input-btns">
+      <span id="ctx-usage" class="ctx-usage" hidden></span>
+      <button type="button" id="chat-stop" class="btn btn-ghost btn-sm" hidden>⏹ Stop</button>
+      <button type="button" id="chat-send" class="btn btn-pri btn-sm">↑ Senden</button>
+    </div>
+  </ps-chat-input>
 </div>
 ```
 
-```javascript
-// Textarea wächst automatisch mit dem Inhalt
-const input = document.getElementById('chat-input');
-input.addEventListener('input', () => {
-  input.style.height = 'auto';
-  input.style.height = Math.min(input.scrollHeight, 144) + 'px';
-});
-// Enter sendet, Shift+Enter fügt Zeilenumbruch ein
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-});
+**Token-Anzeige (`.ctx-usage`):**
+```html
+<span class="ctx-usage">12.345 / 100.000 Tokens (12 %)</span>
 ```
+`.ctx-usage` hat `font-size: 11px`, `color: var(--text-3)`, `white-space: nowrap`,
+`font-variant-numeric: tabular-nums`. Wird per `hidden`-Attribut ein-/ausgeblendet.
+
+**Chat-Input-Buttons (`.chat-input-btns`):**
+Absolute Positionierung unten rechts im `ps-chat-input`-Container:
+- `.ctx-usage` — Token-Verbrauchsanzeige, pusht Buttons nach rechts (`margin-right: auto`).
+- `#chat-stop` — Stop-Button, nur während aktiver Anfrage sichtbar.
+- `#chat-send` — Senden-Button.
 
 **Regeln:**
-- Textarea wächst automatisch bis zu 6 Zeilen (144 px), danach intern scrollbar.
-- Senden-Button während aktiver Antwortgenerierung deaktiviert (`disabled`-Attribut).
-- Eingabefeld nach dem Absenden leeren und Höhe zurücksetzen.
+- `ps-chat-input` ist das Custom Element, das Auto-Resize und Enter/Shift+Enter steuert.
+- Textarea wächst automatisch bis zu 240px, danach intern scrollbar.
+- `#chat-input` hat `padding: 10px 14px 48px` (Platz für `.chat-input-btns` unten).
+- Senden- und Stop-Button sind während aktiver Anfrage per `disabled`-Attribut gesteuert.
 
 ### Toolbar-Variante Profilsuche
 
@@ -1277,22 +1426,32 @@ Die Toolbar der Profilsuche hat **keine** Datensatz-Navigation und **keine** Aud
 
 ```html
 <div id="toolbar">
-  <!-- Modulbezeichnung -->
-  <div id="tb-module">Profilsuche</div>
+  <div id="toolbar-inner">
+    <!-- Modulbezeichnung -->
+    <div id="tb-module">Profilsuche</div>
 
-  <!-- Sidebar-Toggle (nur auf kleinen Screens sichtbar) -->
-  <button class="sidebar-toggle-mobile btn btn-ghost btn-sm"
-          onclick="openSidebar()" title="Chat-Verlauf">☰</button>
+    <!-- Sidebar-Toggle (nur auf kleinen Screens sichtbar) -->
+    <button class="sidebar-toggle-mobile btn btn-ghost btn-sm"
+            onclick="openSidebar()" title="Chat-Verlauf">☰</button>
 
-  <!-- Gemerktes Projekt (falls vorhanden) -->
-  <div id="tb-project">
-    📌 Gemerktes Projekt: <strong>2026-042</strong> – Java-Entwickler München
-  </div>
+    <!-- Gemerktes Projekt (falls vorhanden) -->
+    <div id="tb-project" th:if="${rememberedProject != null}">
+      📌 <a th:href="@{/project/{id}(id=${rememberedProject.projectId})}">
+        <strong th:text="${rememberedProject.projectNumber}"></strong>
+        – <span th:text="${rememberedProject.shortDescription}"></span>
+      </a>
+    </div>
 
-  <!-- Aktionen -->
-  <div id="tb-actions">
-    <button class="btn btn-ghost" onclick="newChat()">＋ Neuer Chat</button>
-    <button class="btn btn-danger" onclick="deleteCurrentChat()">🗑 Chat löschen</button>
+    <!-- Aktionen -->
+    <div id="tb-actions">
+      <form th:action="@{/profilesearch/chat/new}" method="post" class="inline">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn btn-ghost">＋ Neuer Chat</button>
+      </form>
+      <button type="button" class="btn btn-danger" onclick="openModal('modal-delete')">
+        🗑 Chat löschen
+      </button>
+    </div>
   </div>
 </div>
 ```
@@ -1300,9 +1459,9 @@ Die Toolbar der Profilsuche hat **keine** Datensatz-Navigation und **keine** Aud
 **Regeln:**
 - Kein `#tb-nav` (keine Datensatz-Navigation).
 - Kein `#tb-audit` (keine Audit-Information).
-- `.sidebar-toggle-mobile` ist nur auf kleinen Screens (< 1024 px) sichtbar (CSS: `display: none` auf großen Screens).
+- `.sidebar-toggle-mobile` ist nur auf kleinen Screens (< 1024px) sichtbar (Desktop: `display: none`).
 - `#tb-project` wird nur gerendert, wenn ein gemerktes Projekt vorhanden ist.
-- `btn-danger` für „Chat löschen" öffnet zunächst einen Bestätigungsdialog (`.mbk`).
+- `btn-danger` für „Chat löschen" öffnet einen Bestätigungsdialog (`.mbk`).
 
 ---
 
@@ -1310,20 +1469,23 @@ Die Toolbar der Profilsuche hat **keine** Datensatz-Navigation und **keine** Aud
 
 ### Verhältnis: Design-System-HTML ↔ Custom Elements
 
-Die HTML-Muster in diesem Dokument beschreiben die **statische Grundstruktur**, die der Server per Thymeleaf rendert. Eine Teilmenge dieser Elemente wird durch **Custom Elements** (`ps-`-Präfix) mit interaktivem Verhalten erweitert — gemäß `specs/SWARCHITEKTUR.md` Abschnitt 5 (ADR-011).
+Die HTML-Muster in diesem Dokument beschreiben die **statische Grundstruktur**, die der Server per
+Thymeleaf rendert. Eine Teilmenge dieser Elemente wird durch **Custom Elements** (`ps-`-Präfix) mit
+interaktivem Verhalten erweitert — gemäß `specs/SWARCHITEKTUR.md` Abschnitt 5 (ADR-011).
 
-**Prinzip Progressive Enhancement:** Custom Elements sind keine Ersetzung der Design-System-Muster, sondern deren JavaScript-Erweiterungsschicht. Der Server rendert die vollständige, Design-System-konforme HTML-Struktur innerhalb des Custom-Element-Tags. Ohne JS funktioniert die Seite als normales HTML. Mit JS upgradet `customElements.define()` das Element und fügt Verhalten hinzu — ohne die innere Struktur zu verändern.
+**Prinzip Progressive Enhancement:** Custom Elements sind keine Ersetzung der Design-System-Muster,
+sondern deren JavaScript-Erweiterungsschicht. Der Server rendert die vollständige HTML-Struktur
+innerhalb des Custom-Element-Tags. Ohne JS funktioniert die Seite als normales HTML. Mit JS
+upgradet `customElements.define()` das Element und fügt Verhalten hinzu.
 
 ### Mapping: Design-System-Muster → Custom Element
 
-| Design-System-Muster     | Abschnitt | Custom Element          | Kapseltes Verhalten                          |
-|--------------------------|-----------|-------------------------|----------------------------------------------|
-| `.mbk`-Modal-Struktur    | §17       | `<ps-modal>`            | open/close, Focus-Trap, Escape-Handler, ARIA |
-| `<table>`-Suchergebnisse | §16       | `<ps-infinite-scroll>`  | IntersectionObserver, AJAX-Nachladen         |
-| `#chat-input`-Textarea   | §27       | `<ps-growing-textarea>` | Auto-Resize bis 6 Zeilen                     |
-| `.badge-dyn`-Badge       | §22       | `<ps-status-badge>`     | Farbsetzung aus `data-bg`/`data-fg`          |
-| `#tb-project`-Pill       | §21       | `<ps-project-pill>`     | Sichtbarkeit, Dismiss                        |
-| `.chip`-Tag              | §14       | `<ps-tag-chip>`         | Entfernen mit Bestätigungsschritt            |
+| Design-System-Muster          | Abschnitt | Custom Element          | Kapseltes Verhalten                             |
+|-------------------------------|-----------|-------------------------|-------------------------------------------------|
+| `.mbk`-Modal-Struktur         | §17       | `<ps-modal>`            | open/close, Focus-Trap, Escape-Handler, ARIA    |
+| `<table>`/`<ps-infinite-scroll>` | §16, §25 | `<ps-infinite-scroll>` | IntersectionObserver, AJAX-Nachladen            |
+| `#chat-input`-Textarea        | §27       | `<ps-chat-input>`       | Auto-Resize, Enter/Shift+Enter, pending-Attribut|
+| `ps-dirty-banner`             | §7        | `<ps-dirty-banner>`     | Dirty-State, .visible-Klasse per Change-Events  |
 
 **Beispiel — Modal:**
 ```html
@@ -1347,9 +1509,20 @@ Die HTML-Muster in diesem Dokument beschreiben die **statische Grundstruktur**, 
 <!-- Mit JS:  customElements.define('ps-modal', ...) kapselt open/close, Focus-Trap, ARIA   -->
 ```
 
+**Beispiel — ps-infinite-scroll:**
+```html
+<!-- Sentinel am Ende der Liste: lädt automatisch die nächste Seite -->
+<ps-infinite-scroll
+    data-next-url="/freelancer/search?offset=20&q=Java"
+    data-target="#results-tbody">
+</ps-infinite-scroll>
+```
+`data-next-url`: URL der nächsten Seite (Partial-Fragment). `data-target`: CSS-Selektor des
+Containers, in den die nachgeladenen Zeilen eingefügt werden.
+
 ### Globale JavaScript-Initialisierung (`main.js`)
 
-`main.js` ist der Einstiegspunkt des Frontend-Builds und enthält systemweite Initialisierungen, die in **jedem Template aktiv** sind — ohne explizites Einbinden in einzelnen Seiten:
+`main.js` ist der Einstiegspunkt des Frontend-Builds und enthält systemweite Initialisierungen:
 
 | Initialisierung                               | Zweck                                                            | Referenz                    |
 |-----------------------------------------------|------------------------------------------------------------------|-----------------------------|
@@ -1357,40 +1530,112 @@ Die HTML-Muster in diesem Dokument beschreiben die **statische Grundstruktur**, 
 | `apiFetch`-Wrapper (CSRF-Token)               | Setzt `X-XSRF-TOKEN`-Header bei allen state-mutierenden Requests | SWARCHITEKTUR.md §5         |
 | `pageshow`-Event-Handler                      | Reload bei Wiederherstellung aus bfcache                         | SWARCHITEKTUR.md §5         |
 
-**Regel für Template-Autoren:** Diese globalen Handler müssen **nicht** in einzelnen Templates implementiert werden — sie sind durch `main.js` systemweit aktiv. Templates nutzen `apiFetch` statt `fetch` für alle `POST`/`PUT`/`PATCH`/`DELETE`-Requests.
+**Regel für Template-Autoren:** Diese globalen Handler müssen **nicht** in einzelnen Templates
+implementiert werden. Templates nutzen `apiFetch` statt `fetch` für alle POST/PUT/PATCH/DELETE-Requests.
 
 ### POST-Navigation für Datensatz-Navigation
 
-Die Navigations-Buttons (`#tb-nav`) werden gemäß `SWARCHITEKTUR.md` ADR-014 als `<form method="post">`-Elemente gerendert, **nicht** als vorberechnete `<a>`-Links. Der Design-System-Klassenname für Navigations-Buttons bleibt `tb-nav-btn`:
+Die Navigations-Buttons (`#tb-nav`) werden als `<form method="post">`-Elemente gerendert (ADR-014),
+**nicht** als vorberechnete `<a>`-Links. Der Server berechnet die Ziel-ID frisch aus der Datenbank.
+
+---
+
+## 29 Modul-Navigation (btn-row)
+
+Innerhalb von `#page` oder als direktes Kind von `<body>` (bei Chat-Seiten) wird eine horizontale
+Navigationsleiste aus `.btn-row` mit `.btn`-Elementen gebaut.
 
 ```html
-<!-- Korrekt: POST-Formular mit tb-nav-btn -->
-<div id="tb-nav">
-  <form method="post" action="/freiberufler/navigate" style="display:inline">
-    <input type="hidden" name="currentId" th:value="${freelancer.id}">
-    <input type="hidden" name="direction" value="first">
-    <button type="submit" class="tb-nav-btn" title="Erster">⏮</button>
-  </form>
-  <form method="post" action="/freiberufler/navigate" style="display:inline">
-    <input type="hidden" name="currentId" th:value="${freelancer.id}">
-    <input type="hidden" name="direction" value="prev">
-    <button type="submit" class="tb-nav-btn" title="Vorheriger">◀</button>
-  </form>
-  <input type="text" id="tb-id-input" placeholder="ID">
-  <form method="post" action="/freiberufler/navigate" style="display:inline">
-    <input type="hidden" name="currentId" th:value="${freelancer.id}">
-    <input type="hidden" name="direction" value="next">
-    <button type="submit" class="tb-nav-btn" title="Nächster">▶</button>
-  </form>
-  <form method="post" action="/freiberufler/navigate" style="display:inline">
-    <input type="hidden" name="currentId" th:value="${freelancer.id}">
-    <input type="hidden" name="direction" value="last">
-    <button type="submit" class="tb-nav-btn" title="Letzter">⏭</button>
-  </form>
+<!-- Innerhalb #page (Admin-Bereich) -->
+<div id="page">
+  <div class="btn-row mb-md">
+    <a class="btn btn-ghost" th:href="@{/admin/historientypen}">Historientypen</a>
+    <a class="btn btn-ghost" th:href="@{/admin/positionsstatus}">Positionsstatus</a>
+    <a class="btn btn-ghost" th:href="@{/admin/tags}">Tags</a>
+    <a class="btn btn-pri"   th:href="@{/admin/benutzer}">Benutzer</a>
+  </div>
+  …
+</div>
+
+<!-- Als body-Kind (Profilsuche, über #chat-page) -->
+<div class="btn-row mb-md">
+  <a href="/profilesearch/chat" class="btn btn-pri">Chat / interaktiver Modus</a>
+  <a href="/profilesearch/search" class="btn btn-ghost">Volltextsuche</a>
+</div>
+<div id="chat-page">…</div>
+```
+
+**CSS-Details:**
+- `.btn-row`: `display: flex; gap: 8px; margin-top: 12px`.
+- `body > .btn-row`: zusätzlich `max-width: 1400px; width: 100%; margin: 18px auto 0; padding: 10px 20px 18px 18px`.
+- Aktiver Eintrag erhält Klasse `.btn-pri` (statt `.btn-ghost`).
+
+---
+
+## 30 Datentabelle (data-table)
+
+Im Admin-Bereich und für einfache Listendarstellungen ohne QBE-Suchfilter wird `.data-table`
+innerhalb von `.tbl-wrap` verwendet (statt der anonymen `<table>`-Variante aus §16).
+
+```html
+<div class="tbl-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Benutzername</th>
+        <th>Aktiv</th>
+        <th>Aktionen</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>admin</td>
+        <td><span class="chip-add">✔ Aktiv</span></td>
+        <td>
+          <button class="ibtn" title="Bearbeiten">✎</button>
+          <button class="ibtn del" title="Löschen">🗑</button>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(items)}">
+        <td colspan="3" class="td-empty">Keine Einträge vorhanden.</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 ```
 
-Begründung: Vorberechnete `<a>`-Links würden auf einen möglicherweise zwischenzeitlich gelöschten Datensatz verweisen. Der Server berechnet die Ziel-ID erst zum Klick-Zeitpunkt frisch aus der Datenbank. Details: `SWARCHITEKTUR.md` ADR-014.
+**Unterschied zu §16:**
+- `.data-table` hat schwerere Kopfzeile: `font-size: .7rem`, `font-weight: 800`,
+  `letter-spacing: .06em`, `border-bottom: 2px solid var(--border)`.
+- `tbody tr.clickable` für optional klickbare Zeilen (Cursor: pointer).
+- `.td-empty`: zentrierte Leerzeilen-Zelle (`color: var(--text-3)`).
+- Keine `.srt`-Sortierklassen — Sortierung in Admin-Tabellen ist nicht vorgesehen.
+
+---
+
+## 31 Utility-Klassen
+
+Häufig verwendete Hilfsklassen aus `components2.css`:
+
+| Klasse             | Wirkung                                                          |
+|--------------------|------------------------------------------------------------------|
+| `.hidden`          | `display: none !important` — universelles Ausblenden            |
+| `.input-narrow`    | `max-width: 7rem` — schmales Eingabefeld (z. B. PLZ)            |
+| `.btn-row`         | Flex-Zeile, `gap: 8px`, `margin-top: 12px`                      |
+| `.btn-row-inline`  | Flex-Zeile, `gap: 8px`, kein margin-top (für `.list-hd`)        |
+| `.list-hd`         | Flex, `justify-content: flex-end`, `margin-bottom: .5rem`       |
+| `.text-muted`      | Italics, `color: var(--text-3)`, `.82rem`                       |
+| `.text-muted-block`| Wie `.text-muted` + `margin: 4px 6px` (für Listen-Leerzustände) |
+| `.flex-spacer`     | `flex: 1` — schiebt folgende Elemente an den rechten Rand       |
+| `.pt-label`        | `padding-top: 18px` — Ausrichtungshilfe neben Datumfeld         |
+| `.mt-md`           | `margin-top: 1rem`                                               |
+| `.mt-lg`           | `margin-top: 1.5rem`                                             |
+| `.mb-md`           | `margin-bottom: 1rem`                                            |
+| `.mb-lg`           | `margin-bottom: 1.5rem`                                          |
+| `.mb`              | `margin-bottom: 10px` (aus `base.css`)                          |
+| `form.inline`      | `display: inline` — Logout-Formular in Navigation               |
+| `.btn-logout`      | Unstyled Submit-Button, erbt Styling vom Eltern-Kontext         |
+| `.sort-btn`        | Unstyled Button in Tabellenkopf-Zellen, Text unterstrichen      |
 
 ---
 
