@@ -160,7 +160,7 @@ public class ProfileSearchQueryService {
         final String sql = String.format("""
                 SELECT f.id, f.code, f.name1, f.name2,
                        f.last_contact_date, f.salary_per_day_long,
-                       f.availability_as_date, f.contact_forbidden
+                       f.availability_as_date, f.contactforbidden
                 FROM freelancer f
                 ORDER BY %s
                 LIMIT :limit OFFSET :offset
