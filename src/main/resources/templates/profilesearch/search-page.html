@@ -91,10 +91,10 @@
           <!-- Semantische Suche -->
           <div class="mt-md">
             <label class="cbfield"
-                   th:classappend="${criteria == null or criteria.semanticSearch()} ? ' on' : ''"
+                   th:classappend="${criteria == null or criteria.semanticSearch() == null or criteria.isSemanticSearchActive()} ? ' on' : ''"
                    data-testid="cb-semantic-search">
               <input type="checkbox" name="semanticSearch" value="true"
-                     th:checked="${criteria == null or criteria.semanticSearch()}"/>
+                     th:checked="${criteria == null or criteria.semanticSearch() == null or criteria.isSemanticSearchActive()}"/>
               🔮 Semantische Suche
             </label>
           </div>
