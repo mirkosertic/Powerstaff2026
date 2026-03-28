@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -154,72 +153,32 @@ public class ProfileSearchQueryService {
     }
 
     public List<ProfileSearchResult> searchFreelancers(final ProfileSearchCriteria criteria, final int offset, final int limit) {
-        final var now = LocalDateTime.now();
-        final List<ProfileSearchResult> all = buildMockEntries(now);
-        final var filtered = applyFilters(all, criteria);
-        final var sorted = applySorting(filtered, criteria);
-        return sorted.stream()
-                .skip(offset)
-                .limit(limit)
+        record Row(Long id, String code, String name1, String name2,
+                   LocalDateTime lastContactDate, Long salaryPerDayLong,
+                   LocalDateTime availabilityAsDate, boolean contactForbidden) {}
+        return jdbcClient.sql("""
+                SELECT f.id, f.code, f.name1, f.name2,
+                       f.last_contact_date, f.salary_per_day_long,
+                       f.availability_as_date, f.contact_forbidden
+                FROM freelancer f
+                ORDER BY f.name1
+                LIMIT :limit OFFSET :offset
+                """)
+                .param("limit", limit)
+                .param("offset", offset)
+                .query(Row.class)
+                .list()
+                .stream()
+                .map(r -> new ProfileSearchResult(
+                        r.id(), r.code(), r.name1(), r.name2(),
+                        r.lastContactDate(), r.salaryPerDayLong(),
+                        r.availabilityAsDate(), r.contactForbidden(), List.of()))
                 .toList();
     }
 
     public long countSearchFreelancers(final ProfileSearchCriteria criteria) {
-        final var now = LocalDateTime.now();
-        final List<ProfileSearchResult> all = buildMockEntries(now);
-        return applyFilters(all, criteria).size();
-    }
-
-    private List<ProfileSearchResult> buildMockEntries(final LocalDateTime now) {
-        final List<ProfileSearchResult> entries = new ArrayList<>(50);
-        for (int i = 0; i < 50; i++) {
-            entries.add(new ProfileSearchResult(
-                    (long) (100 + i),
-                    "MOCK-" + (100 + i),
-                    "Mock Freelancer " + i,
-                    null,
-                    now,
-                    400L + ((long) i * 10),
-                    now,
-                    i % 7 == 0,
-                    List.of()
-            ));
-        }
-        return entries;
-    }
-
-    private List<ProfileSearchResult> applyFilters(final List<ProfileSearchResult> entries, final ProfileSearchCriteria criteria) {
-        return entries.stream()
-                .filter(e -> {
-                    if (criteria.searchTerm() != null && !criteria.searchTerm().isBlank()) {
-                        return e.name1() != null &&
-                               e.name1().toLowerCase().contains(criteria.searchTerm().toLowerCase());
-                    }
-                    return true;
-                })
-                .filter(e -> criteria.salaryPerDayFrom() == null || e.salaryPerDayLong() >= criteria.salaryPerDayFrom())
-                .filter(e -> criteria.salaryPerDayTo() == null || e.salaryPerDayLong() <= criteria.salaryPerDayTo())
-                .toList();
-    }
-
-    private List<ProfileSearchResult> applySorting(final List<ProfileSearchResult> entries, final ProfileSearchCriteria criteria) {
-        if (criteria.sortField() == null || criteria.sortField().isBlank()) {
-            return entries;
-        }
-        final boolean descending = "desc".equalsIgnoreCase(criteria.sortDir());
-        final Comparator<ProfileSearchResult> comparator = switch (criteria.sortField()) {
-            case "name1" -> Comparator.comparing(
-                    e -> e.name1() != null ? e.name1() : "",
-                    String.CASE_INSENSITIVE_ORDER);
-            case "salaryPerDayLong" -> Comparator.comparingLong(
-                    e -> e.salaryPerDayLong() != null ? e.salaryPerDayLong() : 0L);
-            default -> null;
-        };
-        if (comparator == null) {
-            return entries;
-        }
-        return entries.stream()
-                .sorted(descending ? comparator.reversed() : comparator)
-                .toList();
+        return jdbcClient.sql("SELECT COUNT(*) FROM freelancer")
+                .query(Long.class)
+                .single();
     }
 }

@@ -181,7 +181,7 @@ class ProfileSearchControllerSpec extends Specification {
 
         then:
         view == "profilesearch/search-page"
-        1 * model.addAttribute("validationError", true)
+        1 * model.addAttribute("validationError", _ as String)
         1 * model.addAttribute("results", [])
         1 * model.addAttribute("totalCount", 0L)
     }
@@ -199,7 +199,7 @@ class ProfileSearchControllerSpec extends Specification {
 
         then:
         view == "profilesearch/search-page"
-        1 * model.addAttribute("validationError", true)
+        1 * model.addAttribute("validationError", _ as String)
     }
 
     def "GET /profilesearch/search mit searchTerm ruft queryService auf und befuellt Ergebnisse"() {

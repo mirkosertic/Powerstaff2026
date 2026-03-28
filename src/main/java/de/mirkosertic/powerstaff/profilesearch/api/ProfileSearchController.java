@@ -88,7 +88,7 @@ public class ProfileSearchController {
                 && (criteria.tagIds() == null || criteria.tagIds().isBlank());
 
         if (empty) {
-            model.addAttribute("validationError", true);
+            model.addAttribute("validationError", "Bitte mindestens ein Suchkriterium angeben.");
             model.addAttribute("results", List.of());
             model.addAttribute("totalCount", 0L);
             model.addAttribute("criteria", criteria);
