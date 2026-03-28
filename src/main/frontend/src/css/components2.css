@@ -187,6 +187,20 @@
   background: var(--pri-l);
 }
 
+/* Ausgewählter Chip (Toggle-Zustand in Suchfiltern) */
+.chip.selected {
+  background: var(--pri);
+  color: white;
+  border-color: var(--pri-d);
+}
+
+/* Kontaktsperre-Tabellenzeile */
+.row-forbidden {
+  background: var(--danger-l) !important;
+  color: var(--danger) !important;
+}
+.row-forbidden td { color: var(--danger) !important; }
+
 /* Kleine Chips (für Tabellenzellen) */
 .chip-xs {
   display: inline-flex;

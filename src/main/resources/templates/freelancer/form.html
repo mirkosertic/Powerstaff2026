@@ -24,6 +24,11 @@
   <!-- Page Content -->
   <div id="page">
 
+    <!-- Zurück-Button zur Profilsuche -->
+    <div class="btn-row mb-md" th:if="${returnTo == 'profilesearch-search'}">
+      <a href="/profilesearch/search" class="btn btn-ghost">&#8592; Zur Profilsuche</a>
+    </div>
+
     <!-- Kontaktsperre-Banner -->
     <div class="banner banner-forbidden"
          th:if="${freelancer.contactForbidden}">

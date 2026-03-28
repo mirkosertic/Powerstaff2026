@@ -76,7 +76,7 @@ public class FreelancerQueryService {
     public List<FreelancerSearchResult> search(final FreelancerSearchCriteria criteria, final int offset, final int limit) {
         final var sql = new StringBuilder("""
                 SELECT id, code, name1, name2, company, city,
-                       availability_as_date, salary_long, salary_per_day_long, skills
+                       availability_as_date, salary_long, salary_per_day_long, skills, contactforbidden
                 FROM freelancer
                 WHERE 1=1
                 """);
@@ -91,6 +91,11 @@ public class FreelancerQueryService {
             final String pName = "p" + (params.size() + 1);
             sql.append(" AND salary_per_day_long <= :").append(pName);
             params.put(pName, criteria.salaryPerDayLongMax());
+        }
+        if (criteria.tagId() != null) {
+            final String pName = "p" + (params.size() + 1);
+            sql.append(" AND EXISTS (SELECT 1 FROM freelancer_tags WHERE freelancer_id = id AND tag_id = :").append(pName).append(")");
+            params.put(pName, criteria.tagId());
         }
         final String orderBy;
         if (criteria.sortField() != null && SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {
@@ -125,6 +130,11 @@ public class FreelancerQueryService {
             final String pName = "p" + (params.size() + 1);
             sql.append(" AND salary_per_day_long <= :").append(pName);
             params.put(pName, criteria.salaryPerDayLongMax());
+        }
+        if (criteria.tagId() != null) {
+            final String pName = "p" + (params.size() + 1);
+            sql.append(" AND EXISTS (SELECT 1 FROM freelancer_tags WHERE freelancer_id = id AND tag_id = :").append(pName).append(")");
+            params.put(pName, criteria.tagId());
         }
 
         var stmt = jdbcClient.sql(sql.toString());

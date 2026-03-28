@@ -17,7 +17,9 @@
   <div id="page">
 
     <div class="btn-row mb-md">
-      <a class="btn-ghost" th:href="${editSearchUrl}">&#8592; Suche bearbeiten</a>
+      <a class="btn btn-ghost" th:href="${editSearchUrl}">&#8592; Suche bearbeiten</a>
+      <a class="btn btn-ghost" th:if="${returnTo == 'profilesearch-search'}"
+         href="/profilesearch/search">&#8592; Zur Profilsuche</a>
       <span class="text-muted" th:text="${totalCount} + ' Treffer'"></span>
     </div>
 
@@ -214,7 +216,7 @@
         <tbody>
           <tr th:each="r : ${results}"
               th:attr="data-testid='freelancer-row-' + ${r.id()}"
-              th:onclick="|window.location='/freelancer/${r.id()}'|"
+              th:onclick="${returnTo != null} ? 'window.location=\'/freelancer/' + ${r.id()} + '?returnTo=' + ${returnTo} + '\'' : |window.location='/freelancer/${r.id()}'|"
               style="cursor:pointer">
             <td class="td-name" th:text="${r.name1()}"></td>
             <td th:text="${r.name2()}"></td>

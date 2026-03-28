@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('Profilsuche', 'profilesearch', ~{::body})}">
+<body>
+
+  <!-- Toolbar (analog form.html) -->
+  <div id="toolbar">
+  <div id="toolbar-inner">
+    <div id="tb-module">Profilsuche</div>
+
+    <!-- Gemerktes Projekt -->
+    <div id="tb-project" th:if="${rememberedProject != null}">
+      📌 <a th:href="@{/project/{id}(id=${rememberedProject.projectId()})}">
+        <strong th:text="${rememberedProject.projectNumber()}"></strong>
+        – <span th:text="${rememberedProject.shortDescription()}"></span>
+      </a>
+    </div>
+  </div><!-- /#toolbar-inner -->
+  </div>
+
+  <div id="page">
+
+    <!-- Tab-Navigation -->
+    <div class="tab-nav">
+      <a href="/profilesearch/chat" class="btn btn-ghost btn-sm" data-testid="tab-chat">Chat</a>
+      <a href="/profilesearch/search" class="btn btn-pri btn-sm" data-testid="tab-search">Suche</a>
+    </div>
+
+    <!-- Validierungsfehler -->
+    <div class="banner banner-error" th:if="${validationError != null}" data-testid="validation-error-banner">
+      <span th:text="${validationError}"></span>
+    </div>
+
+    <!-- Suchformular -->
+    <div class="fcard col-wide mt-md">
+      <div class="fcard-hd" onclick="toggleCard('fcard-search')">
+        <span class="fcard-title">Suchkriterien</span>
+        <span class="fcard-chv open">▾</span>
+      </div>
+      <div class="fcard-body" id="fcard-search">
+        <form method="get" action="/profilesearch/search" id="search-form">
+
+          <div class="fg3">
+            <!-- Suchbegriff -->
+            <div class="fg">
+              <label for="input-search-term">Suchbegriff</label>
+              <input type="text" id="input-search-term" name="searchTerm"
+                     data-testid="input-search-term"
+                     th:value="${criteria != null} ? ${criteria.searchTerm()} : ''"
+                     placeholder="Name, Skills, Kommentare …"/>
+            </div>
+
+            <!-- Tagessatz von -->
+            <div class="fg">
+              <label for="input-salary-from">Tagessatz von (€)</label>
+              <input type="number" id="input-salary-from" name="salaryPerDayFrom"
+                     data-testid="input-salary-from"
+                     th:value="${criteria != null} ? ${criteria.salaryPerDayFrom()} : ''"
+                     min="0" step="50"/>
+            </div>
+
+            <!-- Tagessatz bis -->
+            <div class="fg">
+              <label for="input-salary-to">Tagessatz bis (€)</label>
+              <input type="number" id="input-salary-to" name="salaryPerDayTo"
+                     data-testid="input-salary-to"
+                     th:value="${criteria != null} ? ${criteria.salaryPerDayTo()} : ''"
+                     min="0" step="50"/>
+            </div>
+          </div>
+
+          <!-- Tags als Chips -->
+          <div class="mt-md" th:if="${allTags != null and !#lists.isEmpty(allTags)}">
+            <div class="tg-label">Tags</div>
+            <div class="chip-row" id="tag-chip-container">
+              <th:block th:each="tag : ${allTags}">
+                <button type="button"
+                        class="chip"
+                        th:classappend="${criteria != null and criteria.tagIds() != null and #strings.contains(criteria.tagIds(), tag.id().toString())} ? ' selected' : ''"
+                        th:attr="data-tag-id=${tag.id()},data-testid='tag-chip-' + ${tag.id()}"
+                        th:text="${tag.tagname()}"
+                        onclick="toggleTagChip(this)">
+                </button>
+              </th:block>
+            </div>
+            <!-- Single hidden input für alle ausgewählten Tag-IDs (kommasepariert, per JS befüllt) -->
+            <input type="hidden" name="tagIds" id="tag-ids-input"
+                   th:value="${criteria != null} ? ${criteria.tagIds()} : ''"/>
+          </div>
+
+          <!-- Aktions-Buttons -->
+          <div class="btn-row mt-md">
+            <button type="submit" class="btn btn-pri" data-testid="btn-search">Suchen</button>
+            <a href="/profilesearch/search" class="btn btn-ghost" data-testid="btn-reset">Zurücksetzen</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- Ergebnisse -->
+    <div th:if="${results != null and !#lists.isEmpty(results)}" class="mt-md">
+
+      <p class="text-muted" th:text="${totalCount} + ' Treffer'"></p>
+
+      <div class="tbl-wrap">
+        <table data-testid="results-table">
+          <thead>
+            <tr>
+              <th class="srt"
+                  th:classappend="${sortField == 'name1'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='name1',
+                    sortDir=${sortField == 'name1' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Name 1</a>
+              </th>
+              <th class="srt"
+                  th:classappend="${sortField == 'name2'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='name2',
+                    sortDir=${sortField == 'name2' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Name 2</a>
+              </th>
+              <th class="srt"
+                  th:classappend="${sortField == 'lastContactDate'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='lastContactDate',
+                    sortDir=${sortField == 'lastContactDate' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Letzter Kontakt</a>
+              </th>
+              <th class="srt"
+                  th:classappend="${sortField == 'salaryPerDayLong'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='salaryPerDayLong',
+                    sortDir=${sortField == 'salaryPerDayLong' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Tagessatz</a>
+              </th>
+              <th class="srt"
+                  th:classappend="${sortField == 'availabilityAsDate'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='availabilityAsDate',
+                    sortDir=${sortField == 'availabilityAsDate' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Verfügbar ab</a>
+              </th>
+              <th class="srt"
+                  th:classappend="${sortField == 'code'} ? (${sortDir == 'asc'} ? ' srt-asc' : ' srt-desc') : ''">
+                <a th:href="@{/profilesearch/search(
+                    searchTerm=${criteria.searchTerm()},
+                    salaryPerDayFrom=${criteria.salaryPerDayFrom()},
+                    salaryPerDayTo=${criteria.salaryPerDayTo()},
+                    tagIds=${criteria.tagIds()},
+                    sortField='code',
+                    sortDir=${sortField == 'code' and sortDir == 'asc' ? 'desc' : 'asc'}
+                )}">Code</a>
+              </th>
+              <th>Tags</th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody">
+            <th:block th:replace="~{profilesearch/search-results :: results}"></th:block>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Infinite Scroll -->
+      <ps-infinite-scroll
+          th:if="${nextUrl != null}"
+          th:attr="data-next-url=${nextUrl}"
+          data-target="#results-tbody">
+      </ps-infinite-scroll>
+
+    </div>
+
+    <!-- Leer-Zustand nach Suche -->
+    <p th:if="${results != null and #lists.isEmpty(results)}"
+       class="text-muted mt-md">Keine Treffer gefunden.</p>
+
+  </div>
+
+  <script>
+    function toggleTagChip(btn) {
+      btn.classList.toggle('selected');
+      const tagId = btn.dataset.tagId;
+      const input = document.getElementById('tag-ids-input');
+      if (!input) return;
+      const current = input.value ? input.value.split(',').filter(Boolean) : [];
+      if (btn.classList.contains('selected')) {
+        if (!current.includes(tagId)) current.push(tagId);
+      } else {
+        const idx = current.indexOf(tagId);
+        if (idx !== -1) current.splice(idx, 1);
+      }
+      input.value = current.join(',');
+    }
+  </script>
+
+</body>
+</html>

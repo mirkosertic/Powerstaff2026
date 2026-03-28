@@ -11,16 +11,44 @@
 
 #chat-page {
   display: flex;
-  height: calc(100vh - var(--nav-h, 44px) - var(--toolbar-h, 52px) - 18px);
+  height: calc(100vh - var(--nav-h, 44px) - var(--toolbar-h, 52px) - 18px - 43px);
   overflow: hidden;
   max-width: 1400px;
   width: 100%;
-  margin: 18px auto 0;
+  margin: 0 auto 0;
   padding: 0;
   background: var(--surface);
   border: 1px solid var(--border-l);
-  border-radius: var(--r-l);
+  border-top: none;
+  border-radius: 0 0 var(--r-l) var(--r-l);
   box-shadow: var(--shadow-sm);
+}
+
+/* -----------------------------------------------------------------------------
+   Tab-Navigation (Chat / Suche)
+   ----------------------------------------------------------------------------- */
+
+/* Generic tab-nav (used in #page context) */
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-3);
+  flex-shrink: 0;
+  margin-bottom: 12px;
+}
+
+/* Tab-nav above #chat-page: full-width matching the chat panel */
+body > .tab-nav {
+  max-width: 1400px;
+  width: 100%;
+  margin: 18px auto 0;
+  padding: 8px 20px;
+  box-sizing: border-box;
+  border-radius: var(--r-l) var(--r-l) 0 0;
+  border: 1px solid var(--border-l);
+  border-bottom: 1px solid var(--border);
 }
 
 /* -----------------------------------------------------------------------------
@@ -162,7 +190,7 @@
 @media (max-width: 1023px) {
   #chat-sidebar {
     position: fixed;
-    top: calc(var(--nav-h, 44px) + var(--toolbar-h, 52px));
+    top: calc(var(--nav-h, 44px) + var(--toolbar-h, 52px) + 43px);
     left: 0;
     bottom: 0;
     width: 280px;

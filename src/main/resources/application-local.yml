@@ -16,7 +16,8 @@ spring:
 
   ai:
     model:
-      chat: "ollama"
+      #chat: "ollama"
+      chat: "openai"
 
     mcp:
       client:
@@ -25,15 +26,24 @@ spring:
             lucene-search:
              url: http://localhost:11000
              endpoint: /mcp/message
-    ollama:
-      base-url: http://localhost:11434
-      init:
-        pull-model-strategy: always
-        timeout: 60s
-        max-retries: 1
+
+    openai:
+      base-url: http://localhost:1234
+      api-key: "dummy"
       chat:
         options:
-          model: qwen3.5:4b
+          model: qwen/qwen3-14b
+          temperature: 0.7
+          stream-usage: true
+    #ollama:
+    #  base-url: http://localhost:11434
+    #  init:
+    #    pull-model-strategy: always
+    #    timeout: 60s
+    #    max-retries: 1
+    #  chat:
+    #    options:
+    #      model: qwen3.5:4b
 
 # Logging – Entwicklung
 logging:

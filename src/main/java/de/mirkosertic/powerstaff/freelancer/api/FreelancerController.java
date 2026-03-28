@@ -124,12 +124,17 @@ public class FreelancerController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/{id}")
-    public String show(@PathVariable final long id, final HttpServletResponse response, final Model model, final Principal principal) {
+    public String show(@PathVariable final long id,
+                       @RequestParam(required = false) final String returnTo,
+                       final HttpServletResponse response,
+                       final Model model,
+                       final Principal principal) {
         final var freelancer = commandService.findById(id).orElseThrow();
         final var cookie = new Cookie(COOKIE_LAST_FREELANCER_ID, String.valueOf(id));
         cookie.setPath("/freelancer");
         cookie.setMaxAge(COOKIE_MAX_AGE);
         response.addCookie(cookie);
+        model.addAttribute("returnTo", returnTo);
         populateModel(model, freelancer, id, principal);
         return "freelancer/form";
     }
@@ -262,6 +267,7 @@ public class FreelancerController {
     @GetMapping("/search")
     public String search(@ModelAttribute final FreelancerSearchCriteria criteria,
                          @RequestParam(required = false, defaultValue = "0") final int offset,
+                         @RequestParam(required = false) final String returnTo,
                          final Model model,
                          final HttpServletResponse response) {
         if (offset > 0) {
@@ -269,7 +275,7 @@ public class FreelancerController {
             final int nextOffset = offset + PAGE_SIZE;
             final long total = queryService.countSearch(criteria);
             if (nextOffset < total) {
-                response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
+                response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset, returnTo));
             }
             model.addAttribute("results", results);
             return "freelancer/search-results :: results";
@@ -286,7 +292,8 @@ public class FreelancerController {
         model.addAttribute("criteria", criteria);
         model.addAttribute("sortField", criteria.sortField());
         model.addAttribute("sortDir", criteria.sortDir());
-        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
+        model.addAttribute("returnTo", returnTo);
+        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE, returnTo) : null;
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("editSearchUrl", buildEditSearchUrl(criteria));
         return "freelancer/search-page";
@@ -314,6 +321,7 @@ public class FreelancerController {
         if (c.salaryPerDayLongMax() != null) b.queryParam("salaryPerDayLongMax", c.salaryPerDayLongMax());
         if (c.sortField()       != null) b.queryParam("sortField",       c.sortField());
         if (c.sortDir()         != null) b.queryParam("sortDir",         c.sortDir());
+        if (c.tagId()           != null) b.queryParam("tagId",           c.tagId());
     }
 
     private String buildEditSearchUrl(final FreelancerSearchCriteria c) {
@@ -322,9 +330,12 @@ public class FreelancerController {
         return b.encode().build().toUriString();
     }
 
-    private String buildSearchMoreUrl(final FreelancerSearchCriteria c, final int offset) {
+    private String buildSearchMoreUrl(final FreelancerSearchCriteria c, final int offset, final String returnTo) {
         final var b = UriComponentsBuilder.fromPath("/freelancer/search").queryParam("offset", offset);
         appendCriteriaParams(b, c);
+        if (returnTo != null) {
+            b.queryParam("returnTo", returnTo);
+        }
         return b.encode().build().toUriString();
     }
 

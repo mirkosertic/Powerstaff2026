@@ -12,6 +12,7 @@ public record FreelancerSearchResult(
         LocalDateTime availabilityAsDate,
         Long salaryLong,
         Long salaryPerDayLong,
-        String skills
+        String skills,
+        Boolean contactForbidden
 ) {
 }

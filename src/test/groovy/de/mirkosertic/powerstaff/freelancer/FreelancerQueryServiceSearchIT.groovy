@@ -52,7 +52,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch-Alpha", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null)
+                null, null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -67,7 +67,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 null, null, "Beispiel", null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null)
+                null, null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -82,7 +82,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch-Gamma", null, null, null, null, null, "München",
                 null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null)
+                null, null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -97,7 +97,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch-Alpha", null, null, null, null, null, "Hamburg",
                 null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null)
+                null, null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -111,7 +111,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 null, null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, "Java",
-                null, null, null, null)
+                null, null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -125,7 +125,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                700L, null, null, null)
+                700L, null, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -140,7 +140,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, 600L, null, null)
+                null, 600L, null, null, null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -154,7 +154,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null)
+                null, null, null, null, null)
 
         when:
         def page1 = queryService.search(criteria, 0, 2)
@@ -190,7 +190,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null, "name1", "asc")
+                null, null, "name1", "asc", null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -206,7 +206,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null, "name1", "desc")
+                null, null, "name1", "desc", null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -222,7 +222,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         def criteria = new FreelancerSearchCriteria(
                 "IT-Srch", null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null, 'INVALID_FIELD__$(rm -rf /)', "asc")
+                null, null, 'INVALID_FIELD__$(rm -rf /)', "asc", null)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -236,6 +236,6 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         new FreelancerSearchCriteria(
                 null, null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null)
+                null, null, null, null, null)
     }
 }

@@ -32,17 +32,17 @@ Siehe detaillierte Spezifikation in `specs/PROFILSUCHE.md` (Abschnitt "Klassisch
 
 ### Backend: Data Transfer Objects
 
-- [ ] `ProfileSearchCriteria` Record erstellen in `profilesearch.query` Package
+- [x] `ProfileSearchCriteria` Record erstellen in `profilesearch.query` Package
   - Felder: `searchTerm`, `salaryPerDayFrom`, `salaryPerDayTo`, `tagIds`, `sortField`, `sortDir`
   - Location: `src/main/java/de/mirkosertic/powerstaff/profilesearch/query/ProfileSearchCriteria.java`
 
-- [ ] `ProfileSearchResult` Record erstellen in `profilesearch.query` Package
+- [x] `ProfileSearchResult` Record erstellen in `profilesearch.query` Package
   - Felder: `id`, `code`, `name1`, `name2`, `lastContactDate`, `salaryPerDayLong`, `availabilityAsDate`, `contactForbidden`, `tags`
   - Location: `src/main/java/de/mirkosertic/powerstaff/profilesearch/query/ProfileSearchResult.java`
 
 ### Backend: Query Service erweitern
 
-- [ ] `ProfileSearchQueryService` um Mock-Suchmethoden erweitern
+- [x] `ProfileSearchQueryService` um Mock-Suchmethoden erweitern
   - Methode `searchFreelancers(criteria, offset, limit)` hinzufügen mit Mock-Daten
   - Methode `countSearchFreelancers(criteria)` hinzufügen
   - Mock simuliert grundlegende Filterung (Name, Tagessatz)
@@ -51,7 +51,7 @@ Siehe detaillierte Spezifikation in `specs/PROFILSUCHE.md` (Abschnitt "Klassisch
 
 ### Backend: Controller erweitern
 
-- [ ] `ProfileSearchController` um Such-Endpoints erweitern
+- [x] `ProfileSearchController` um Such-Endpoints erweitern
   - `index()` ändern: Redirect zu `/profilesearch/chat`
   - `chatIndex()` hinzufügen: Redirect zu neuester Chat-Sitzung
   - `search()` hinzufügen für klassische Suche
@@ -65,12 +65,12 @@ Siehe detaillierte Spezifikation in `specs/PROFILSUCHE.md` (Abschnitt "Klassisch
 
 ### Frontend: Templates
 
-- [ ] Chat-Template `form.html` um Tab-Navigation erweitern
+- [x] Chat-Template `form.html` um Tab-Navigation erweitern
   - Tab-Navigation am Anfang von `#chat-page` hinzufügen
   - Buttons: "Chat" (`.btn-pri`), "Suche" (`.btn-ghost`)
   - Location: `src/main/resources/templates/profilesearch/form.html`
 
-- [ ] `search-page.html` erstellen für klassische Suche
+- [x] `search-page.html` erstellen für klassische Suche
   - Toolbar mit Projekt-Pill
   - Tab-Navigation (Suche aktiv)
   - Suchformular in `.fcard` mit Feldern: searchTerm, salaryPerDayFrom/To, Tags (Chips)
@@ -80,7 +80,7 @@ Siehe detaillierte Spezifikation in `specs/PROFILSUCHE.md` (Abschnitt "Klassisch
   - Infinite Scroll Element
   - Location: `src/main/resources/templates/profilesearch/search-page.html`
 
-- [ ] `search-results.html` erstellen für Infinite Scroll Fragment
+- [x] `search-results.html` erstellen für Infinite Scroll Fragment
   - Fragment mit `<tr>` Elementen
   - Kontaktsperre-Markierung
   - Tag-Klick Navigation
@@ -88,57 +88,57 @@ Siehe detaillierte Spezifikation in `specs/PROFILSUCHE.md` (Abschnitt "Klassisch
 
 ### Frontend: CSS
 
-- [ ] `components2.css` um `.chip.selected` State erweitern
+- [x] `components2.css` um `.chip.selected` State erweitern
   - Ausgewählte Tags: blauer Hintergrund, weißer Text
   - Location: `src/main/frontend/src/css/components2.css`
 
 ### Freiberufler-Modul: Integration
 
-- [ ] `FreelancerSearchCriteria` um `tagId` Parameter erweitern
+- [x] `FreelancerSearchCriteria` um `tagId` Parameter erweitern
   - Location: `src/main/java/de/mirkosertic/powerstaff/freelancer/query/FreelancerSearchCriteria.java`
 
-- [ ] `FreelancerSearchResult` prüfen und ggf. um `contactForbidden` erweitern
+- [x] `FreelancerSearchResult` prüfen und ggf. um `contactForbidden` erweitern
   - Falls Feld fehlt: hinzufügen als `Boolean contactForbidden`
   - Location: `src/main/java/de/mirkosertic/powerstaff/freelancer/query/FreelancerSearchResult.java`
 
-- [ ] `FreelancerQueryService` um Tag-Filter erweitern
+- [x] `FreelancerQueryService` um Tag-Filter erweitern
   - In `search()` und `countSearch()`: Tag-Filter-SQL hinzufügen
   - In `search()`: `contactForbidden` Feld laden
   - Location: `src/main/java/de/mirkosertic/powerstaff/freelancer/query/FreelancerQueryService.java`
 
-- [ ] `FreelancerController` um `returnTo` Parameter erweitern
+- [x] `FreelancerController` um `returnTo` Parameter erweitern
   - `show(id, returnTo)`: Parameter hinzufügen, an Model übergeben
   - `search(criteria, returnTo)`: Parameter hinzufügen, an Model übergeben
   - Location: `src/main/java/de/mirkosertic/powerstaff/freelancer/api/FreelancerController.java`
 
-- [ ] Freiberufler-Template `search-page.html` erweitern
+- [x] Freiberufler-Template `search-page.html` erweitern
   - Zurück-Button: Conditional "Zurück zur Profilsuche" wenn `returnTo=profilesearch-search`
   - Location: `src/main/resources/templates/freelancer/search-page.html`
 
-- [ ] Freiberufler-Template `search-results.html` erweitern
+- [x] Freiberufler-Template `search-results.html` erweitern
   - Kontaktsperre-Markierung: Rote Zeilen für `contactForbidden=true`
   - `returnTo` Parameter in Navigation übergeben
   - Location: `src/main/resources/templates/freelancer/search-results.html`
 
-- [ ] Freiberufler-Template `form.html` erweitern
+- [x] Freiberufler-Template `form.html` erweitern
   - Toolbar: Conditional Zurück-Button wenn `returnTo=profilesearch-search`
   - Location: `src/main/resources/templates/freelancer/form.html`
 
 ### Tests
 
-- [ ] Unit-Tests für `ProfileSearchQueryService`
+- [x] Unit-Tests für `ProfileSearchQueryService`
   - Mock-Suche mit verschiedenen Kriterien testen
   - Filterung (Name, Tagessatz) verifizieren
   - Pagination testen
   - Location: `src/test/groovy/de/mirkosertic/powerstaff/profilesearch/query/ProfileSearchQueryServiceSpec.groovy`
 
-- [ ] Unit-Tests für `ProfileSearchController`
+- [x] Unit-Tests für `ProfileSearchController`
   - Routing testen (index, chat, search)
   - Validierung testen (mindestens ein Kriterium)
   - Model-Attribute verifizieren
   - Location: `src/test/groovy/de/mirkosertic/powerstaff/profilesearch/api/ProfileSearchControllerSpec.groovy`
 
-- [ ] E2E-Tests für klassische Suche
+- [x] E2E-Tests für klassische Suche
   - Tab-Navigation zwischen Chat und Suche
   - Suche ohne Kriterien → Validierungsfehler
   - Suche mit Suchbegriff → Ergebnisse anzeigen
@@ -148,18 +148,18 @@ Siehe detaillierte Spezifikation in `specs/PROFILSUCHE.md` (Abschnitt "Klassisch
   - Kontaktsperre-Markierung verifizieren
   - Tag-Klick → Freiberufler-QBE
   - Zurück-Navigation testen
-  - Location: `src/test/e2e/profilesearch-search.spec.ts`
+  - Location: `src/test/e2e/tests/profilesearch-search.spec.ts`
 
 ### Verifikation & Dokumentation
 
-- [ ] Manuelle Tests durchführen (siehe `velvet-honking-puffin-analysis.md` Abschnitt 7)
+- [x] Manuelle Tests durchführen (siehe `velvet-honking-puffin-analysis.md` Abschnitt 7)
   - Tab-Navigation
   - Suchformular
   - Suchergebnisse
   - Kontaktsperre
   - Navigation
 
-- [ ] `./mvnw clean verify` erfolgreich durchlaufen
+- [x] `./mvnw clean verify` erfolgreich durchlaufen
   - Alle Unit-Tests grün
   - Alle Integrationstests grün
 

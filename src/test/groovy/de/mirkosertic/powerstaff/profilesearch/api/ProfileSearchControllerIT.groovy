@@ -72,24 +72,31 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
                 .andExpect(redirectedUrl("/login"))
     }
 
-    def "GET /profilesearch mit vorhandenem Chat redirectet zu chat"() {
+    def "GET /profilesearch redirectet zu /profilesearch/chat"() {
+        expect:
+        mockMvc.perform(get("/profilesearch").with(user("testuser")))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/profilesearch/chat"))
+    }
+
+    def "GET /profilesearch/chat mit vorhandenem Chat redirectet zu chat"() {
         given:
         when(queryService.findLatestChatByUser("testuser")).thenReturn(Optional.of(42L))
 
         expect:
-        mockMvc.perform(get("/profilesearch").with(user("testuser")))
+        mockMvc.perform(get("/profilesearch/chat").with(user("testuser")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profilesearch/chat/42"))
     }
 
-    def "GET /profilesearch ohne Chat legt neuen Chat an und redirectet"() {
+    def "GET /profilesearch/chat ohne Chat legt neuen Chat an und redirectet"() {
         given:
         when(queryService.findLatestChatByUser("testuser")).thenReturn(Optional.empty())
         when(rememberedProjectService.get("testuser")).thenReturn(Optional.empty())
         when(commandService.createChat("testuser", null)).thenReturn(99L)
 
         expect:
-        mockMvc.perform(get("/profilesearch").with(user("testuser")))
+        mockMvc.perform(get("/profilesearch/chat").with(user("testuser")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profilesearch/chat/99"))
     }

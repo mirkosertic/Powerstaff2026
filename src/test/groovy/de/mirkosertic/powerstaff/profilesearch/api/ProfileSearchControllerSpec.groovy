@@ -3,9 +3,14 @@ package de.mirkosertic.powerstaff.profilesearch.api
 import de.mirkosertic.powerstaff.profilesearch.command.LlmService
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchCommandService
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchProperties
+import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchCriteria
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService
+import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchResult
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService
+import de.mirkosertic.powerstaff.shared.query.TagQueryService
+import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.HttpSession
+import org.springframework.ui.Model
 import spock.lang.Specification
 import spock.lang.Subject
 
@@ -18,10 +23,11 @@ class ProfileSearchControllerSpec extends Specification {
     LlmService llmService = Mock()
     RememberedProjectService rememberedProjectService = Mock()
     ProfileSearchProperties profileSearchProperties = new ProfileSearchProperties()
+    TagQueryService tagQueryService = Mock()
 
     @Subject
     ProfileSearchController controller = new ProfileSearchController(
-            commandService, queryService, llmService, rememberedProjectService, profileSearchProperties
+            commandService, queryService, llmService, rememberedProjectService, profileSearchProperties, tagQueryService
     )
 
     Principal principal = Mock() {
@@ -105,5 +111,174 @@ class ProfileSearchControllerSpec extends Specification {
         result.promptTokens() == 200
         result.completionTokens() == 75
         result.messages().size() == 3
+    }
+
+    // ── index ────────────────────────────────────────────────────────────────
+
+    def "GET /profilesearch leitet weiter zu /profilesearch/chat"() {
+        when:
+        def view = controller.index()
+
+        then:
+        view == "redirect:/profilesearch/chat"
+    }
+
+    // ── chatIndex ────────────────────────────────────────────────────────────
+
+    def "GET /profilesearch/chat leitet zu vorhandenem Chat weiter wenn einer existiert"() {
+        given:
+        def response = Mock(HttpServletResponse)
+        queryService.findLatestChatByUser("testuser") >> Optional.of(42L)
+
+        when:
+        controller.chatIndex(principal, response)
+
+        then:
+        1 * response.sendRedirect("/profilesearch/chat/42")
+    }
+
+    def "GET /profilesearch/chat erstellt neuen Chat und leitet weiter wenn kein Chat vorhanden"() {
+        given:
+        def response = Mock(HttpServletResponse)
+        queryService.findLatestChatByUser("testuser") >> Optional.empty()
+        rememberedProjectService.get("testuser") >> Optional.empty()
+        commandService.createChat("testuser", null) >> 99L
+
+        when:
+        controller.chatIndex(principal, response)
+
+        then:
+        1 * response.sendRedirect("/profilesearch/chat/99")
+    }
+
+    def "GET /profilesearch/chat uebergibt gemerktes Projekt beim Erstellen eines neuen Chats"() {
+        given:
+        def response = Mock(HttpServletResponse)
+        queryService.findLatestChatByUser("testuser") >> Optional.empty()
+        rememberedProjectService.get("testuser") >> Optional.of(77L)
+        commandService.createChat("testuser", 77L) >> 88L
+
+        when:
+        controller.chatIndex(principal, response)
+
+        then:
+        1 * commandService.createChat("testuser", 77L) >> 88L
+        1 * response.sendRedirect("/profilesearch/chat/88")
+    }
+
+    // ── search ───────────────────────────────────────────────────────────────
+
+    def "GET /profilesearch/search ohne Kriterien setzt validationError im Model"() {
+        given:
+        def model = Mock(Model)
+        def response = Mock(HttpServletResponse)
+        def criteria = new ProfileSearchCriteria(null, null, null, null, null, null)
+        tagQueryService.findAll() >> []
+        rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
+
+        when:
+        def view = controller.search(criteria, 0, principal, model, response)
+
+        then:
+        view == "profilesearch/search-page"
+        1 * model.addAttribute("validationError", true)
+        1 * model.addAttribute("results", [])
+        1 * model.addAttribute("totalCount", 0L)
+    }
+
+    def "GET /profilesearch/search mit leerem searchTerm setzt validationError"() {
+        given:
+        def model = Mock(Model)
+        def response = Mock(HttpServletResponse)
+        def criteria = new ProfileSearchCriteria("   ", null, null, null, null, null)
+        tagQueryService.findAll() >> []
+        rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
+
+        when:
+        def view = controller.search(criteria, 0, principal, model, response)
+
+        then:
+        view == "profilesearch/search-page"
+        1 * model.addAttribute("validationError", true)
+    }
+
+    def "GET /profilesearch/search mit searchTerm ruft queryService auf und befuellt Ergebnisse"() {
+        given:
+        def model = Mock(Model)
+        def response = Mock(HttpServletResponse)
+        def criteria = new ProfileSearchCriteria("Java", null, null, null, null, null)
+        def mockResults = [
+                new ProfileSearchResult(100L, "MOCK-100", "Mock Freelancer 0", null, null, 400L, null, false, []),
+                new ProfileSearchResult(101L, "MOCK-101", "Mock Freelancer 1", null, null, 410L, null, false, [])
+        ]
+        queryService.searchFreelancers(criteria, 0, 20) >> mockResults
+        queryService.countSearchFreelancers(criteria) >> 2L
+        tagQueryService.findAll() >> []
+        rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
+
+        when:
+        def view = controller.search(criteria, 0, principal, model, response)
+
+        then:
+        view == "profilesearch/search-page"
+        1 * model.addAttribute("results", mockResults)
+        1 * model.addAttribute("totalCount", 2L)
+        0 * model.addAttribute("validationError", _)
+    }
+
+    def "GET /profilesearch/search mit salaryPerDayFrom und offset=0 liefert vollstaendige Suchseite"() {
+        given:
+        def model = Mock(Model)
+        def response = Mock(HttpServletResponse)
+        def criteria = new ProfileSearchCriteria(null, 500L, null, null, null, null)
+        queryService.searchFreelancers(criteria, 0, 20) >> []
+        queryService.countSearchFreelancers(criteria) >> 0L
+        tagQueryService.findAll() >> []
+        rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
+
+        when:
+        def view = controller.search(criteria, 0, principal, model, response)
+
+        then:
+        view == "profilesearch/search-page"
+        0 * model.addAttribute("validationError", _)
+    }
+
+    def "GET /profilesearch/search mit offset > 0 liefert nur Fragment"() {
+        given:
+        def model = Mock(Model)
+        def response = Mock(HttpServletResponse)
+        def criteria = new ProfileSearchCriteria("Java", null, null, null, null, null)
+        queryService.searchFreelancers(criteria, 20, 20) >> []
+        queryService.countSearchFreelancers(criteria) >> 15L
+        rememberedProjectService.getRememberedProjectInfo(_) >> Optional.empty()
+
+        when:
+        def view = controller.search(criteria, 20, principal, model, response)
+
+        then:
+        view == "profilesearch/search-results :: results"
+        1 * model.addAttribute("results", _)
+    }
+
+    def "GET /profilesearch/search setzt X-Next-Url Header wenn weitere Ergebnisse vorhanden"() {
+        given:
+        def model = Mock(Model)
+        def response = Mock(HttpServletResponse)
+        def results = (1..20).collect { i ->
+            new ProfileSearchResult((long) i, "MOCK-$i", "Freelancer $i", null, null, 400L + i * 10L, null, false, [])
+        }
+        def criteria = new ProfileSearchCriteria("Mock", null, null, null, null, null)
+        queryService.searchFreelancers(criteria, 0, 20) >> results
+        queryService.countSearchFreelancers(criteria) >> 50L
+        tagQueryService.findAll() >> []
+        rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
+
+        when:
+        controller.search(criteria, 0, principal, model, response)
+
+        then:
+        // nextUrl must be set in model (not null) when results.size() == PAGE_SIZE
+        1 * model.addAttribute("nextUrl", { it != null })
     }
 }

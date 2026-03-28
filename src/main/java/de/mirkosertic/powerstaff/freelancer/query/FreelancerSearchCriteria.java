@@ -21,6 +21,7 @@ public record FreelancerSearchCriteria(
         Long salaryLongMax,
         Long salaryPerDayLongMax,
         String sortField,
-        String sortDir
+        String sortDir,
+        Long tagId
 ) {
 }

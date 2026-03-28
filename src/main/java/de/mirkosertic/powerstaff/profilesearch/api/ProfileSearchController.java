@@ -5,9 +5,11 @@ import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchCommandServi
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchProperties;
 import de.mirkosertic.powerstaff.profilesearch.query.ChatListView;
 import de.mirkosertic.powerstaff.profilesearch.query.MessageView;
+import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchCriteria;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
+import de.mirkosertic.powerstaff.shared.query.TagQueryService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.MediaType;
@@ -15,12 +17,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -38,21 +42,29 @@ public class ProfileSearchController {
     private final LlmService llmService;
     private final RememberedProjectService rememberedProjectService;
     private final ProfileSearchProperties profileSearchProperties;
+    private final TagQueryService tagQueryService;
 
     public ProfileSearchController(final ProfileSearchCommandService commandService,
                                    final ProfileSearchQueryService queryService,
                                    final LlmService llmService,
                                    final RememberedProjectService rememberedProjectService,
-                                   final ProfileSearchProperties profileSearchProperties) {
+                                   final ProfileSearchProperties profileSearchProperties,
+                                   final TagQueryService tagQueryService) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.llmService = llmService;
         this.rememberedProjectService = rememberedProjectService;
         this.profileSearchProperties = profileSearchProperties;
+        this.tagQueryService = tagQueryService;
     }
 
     @GetMapping
-    public void index(final Principal principal, final HttpServletResponse response) throws IOException {
+    public String index() {
+        return "redirect:/profilesearch/chat";
+    }
+
+    @GetMapping("/chat")
+    public void chatIndex(final Principal principal, final HttpServletResponse response) throws IOException {
         final String userId = principal.getName();
         final var latestChatId = queryService.findLatestChatByUser(userId);
         if (latestChatId.isPresent()) {
@@ -62,6 +74,83 @@ public class ProfileSearchController {
             final Long chatId = commandService.createChat(userId, projectId);
             response.sendRedirect("/profilesearch/chat/" + chatId);
         }
+    }
+
+    @GetMapping("/search")
+    public String search(@ModelAttribute final ProfileSearchCriteria criteria,
+                         @RequestParam(defaultValue = "0") final int offset,
+                         final Principal principal,
+                         final Model model,
+                         final HttpServletResponse response) {
+        final boolean empty = (criteria.searchTerm() == null || criteria.searchTerm().isBlank())
+                && criteria.salaryPerDayFrom() == null
+                && criteria.salaryPerDayTo() == null
+                && (criteria.tagIds() == null || criteria.tagIds().isBlank());
+
+        if (empty) {
+            model.addAttribute("validationError", true);
+            model.addAttribute("results", List.of());
+            model.addAttribute("totalCount", 0L);
+            model.addAttribute("criteria", criteria);
+            model.addAttribute("sortField", criteria.sortField());
+            model.addAttribute("sortDir", criteria.sortDir());
+            model.addAttribute("nextUrl", null);
+            model.addAttribute("allTags", tagQueryService.findAll());
+            model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
+            return "profilesearch/search-page";
+        }
+
+        if (offset > 0) {
+            final var results = queryService.searchFreelancers(criteria, offset, PAGE_SIZE);
+            final long total = queryService.countSearchFreelancers(criteria);
+            final int nextOffset = offset + PAGE_SIZE;
+            if (nextOffset < total) {
+                response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
+            }
+            model.addAttribute("results", results);
+            return "profilesearch/search-results :: results";
+        }
+
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+
+        final var results = queryService.searchFreelancers(criteria, 0, PAGE_SIZE);
+        final long total = queryService.countSearchFreelancers(criteria);
+        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
+
+        model.addAttribute("results", results);
+        model.addAttribute("totalCount", total);
+        model.addAttribute("criteria", criteria);
+        model.addAttribute("sortField", criteria.sortField());
+        model.addAttribute("sortDir", criteria.sortDir());
+        model.addAttribute("nextUrl", nextUrl);
+        model.addAttribute("allTags", tagQueryService.findAll());
+        model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
+        return "profilesearch/search-page";
+    }
+
+    private String buildSearchMoreUrl(final ProfileSearchCriteria c, final int offset) {
+        final var b = UriComponentsBuilder.fromPath("/profilesearch/search").queryParam("offset", offset);
+        if (c.searchTerm() != null && !c.searchTerm().isBlank()) {
+            b.queryParam("searchTerm", c.searchTerm());
+        }
+        if (c.salaryPerDayFrom() != null) {
+            b.queryParam("salaryPerDayFrom", c.salaryPerDayFrom());
+        }
+        if (c.salaryPerDayTo() != null) {
+            b.queryParam("salaryPerDayTo", c.salaryPerDayTo());
+        }
+        if (c.tagIds() != null && !c.tagIds().isBlank()) {
+            b.queryParam("tagIds", c.tagIds());
+        }
+        if (c.sortField() != null) {
+            b.queryParam("sortField", c.sortField());
+        }
+        if (c.sortDir() != null) {
+            b.queryParam("sortDir", c.sortDir());
+        }
+        return b.encode().build().toUriString();
     }
 
     @GetMapping("/chat/{chatId}")
