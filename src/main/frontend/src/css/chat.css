@@ -51,6 +51,16 @@ body > .tab-nav {
   border-bottom: 1px solid var(--border);
 }
 
+/* btn-row above #chat-page: same width/alignment as #page content (analog admin nav) */
+body > .btn-row {
+  max-width: 1400px;
+  width: 100%;
+  margin: 18px auto 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin-top: 12px;
+}
+
 /* -----------------------------------------------------------------------------
    §25 Sidebar (Sitzungsliste)
    Auf ≥1024px: fixiert sichtbar. Auf <1024px: als Overlay.

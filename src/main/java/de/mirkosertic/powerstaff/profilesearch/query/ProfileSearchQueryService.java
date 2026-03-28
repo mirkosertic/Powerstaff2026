@@ -157,15 +157,15 @@ public class ProfileSearchQueryService {
                    LocalDateTime lastContactDate, Long salaryPerDayLong,
                    LocalDateTime availabilityAsDate, boolean contactForbidden) {}
         final String orderBy = resolveOrderBy(criteria.sortField(), criteria.sortDir());
-        return jdbcClient.sql("""
+        final String sql = String.format("""
                 SELECT f.id, f.code, f.name1, f.name2,
                        f.last_contact_date, f.salary_per_day_long,
                        f.availability_as_date, f.contact_forbidden
                 FROM freelancer f
-                ORDER BY """ + orderBy + """
-
+                ORDER BY %s
                 LIMIT :limit OFFSET :offset
-                """)
+                """, orderBy);
+        return jdbcClient.sql(sql)
                 .param("limit", limit)
                 .param("offset", offset)
                 .query(Row.class)
