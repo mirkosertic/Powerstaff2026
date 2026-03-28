@@ -172,7 +172,7 @@ class ProfileSearchControllerSpec extends Specification {
         given:
         def model = Mock(Model)
         def response = Mock(HttpServletResponse)
-        def criteria = new ProfileSearchCriteria(null, null, null, null, null, null, false)
+        def criteria = ProfileSearchCriteria.empty()
         tagQueryService.findAll() >> []
         rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
 
@@ -190,7 +190,7 @@ class ProfileSearchControllerSpec extends Specification {
         given:
         def model = Mock(Model)
         def response = Mock(HttpServletResponse)
-        def criteria = new ProfileSearchCriteria("   ", null, null, null, null, null, false)
+        def criteria = ProfileSearchCriteria.empty().withSearchTerm("   ")
         tagQueryService.findAll() >> []
         rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
 
@@ -206,7 +206,7 @@ class ProfileSearchControllerSpec extends Specification {
         given:
         def model = Mock(Model)
         def response = Mock(HttpServletResponse)
-        def criteria = new ProfileSearchCriteria("Java", null, null, null, null, null, false)
+        def criteria = ProfileSearchCriteria.empty().withSearchTerm("Java")
         def mockResults = [
                 new ProfileSearchResult(100L, "MOCK-100", "Mock Freelancer 0", null, null, 400L, null, false, []),
                 new ProfileSearchResult(101L, "MOCK-101", "Mock Freelancer 1", null, null, 410L, null, false, [])
@@ -230,7 +230,7 @@ class ProfileSearchControllerSpec extends Specification {
         given:
         def model = Mock(Model)
         def response = Mock(HttpServletResponse)
-        def criteria = new ProfileSearchCriteria(null, 500L, null, null, null, null, false)
+        def criteria = ProfileSearchCriteria.empty().withSalaryPerDayFrom(500L)
         queryService.searchFreelancers(criteria, 0, 20) >> []
         queryService.countSearchFreelancers(criteria) >> 0L
         tagQueryService.findAll() >> []
@@ -248,7 +248,7 @@ class ProfileSearchControllerSpec extends Specification {
         given:
         def model = Mock(Model)
         def response = Mock(HttpServletResponse)
-        def criteria = new ProfileSearchCriteria("Java", null, null, null, null, null, false)
+        def criteria = ProfileSearchCriteria.empty().withSearchTerm("Java")
         queryService.searchFreelancers(criteria, 20, 20) >> []
         queryService.countSearchFreelancers(criteria) >> 15L
         rememberedProjectService.getRememberedProjectInfo(_) >> Optional.empty()
@@ -268,7 +268,7 @@ class ProfileSearchControllerSpec extends Specification {
         def results = (1..20).collect { i ->
             new ProfileSearchResult((long) i, "MOCK-$i", "Freelancer $i", null, null, 400L + i * 10L, null, false, [])
         }
-        def criteria = new ProfileSearchCriteria("Mock", null, null, null, null, null, false)
+        def criteria = ProfileSearchCriteria.empty().withSearchTerm("Mock")
         queryService.searchFreelancers(criteria, 0, 20) >> results
         queryService.countSearchFreelancers(criteria) >> 50L
         tagQueryService.findAll() >> []

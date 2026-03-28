@@ -37,7 +37,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria("Hamburg", null, null, null, null, null, null, null, null, null, null, null),
+            PartnerSearchCriteria.empty().withCompany("Hamburg"),
             0, 20
         )
 
@@ -52,7 +52,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria(null, null, null, null, null, null, "München", null, null, null, null, null),
+            PartnerSearchCriteria.empty().withCity("München"),
             0, 20
         )
 
@@ -68,7 +68,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria("IT-Qbe Multi", null, null, null, null, null, "Hamburg", null, null, null, null, null),
+            PartnerSearchCriteria.empty().withCompany("IT-Qbe Multi").withCity("Hamburg"),
             0, 20
         )
 
@@ -96,9 +96,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
         commandService.save(newPartner("IT-Qbe Count Y"))
 
         when:
-        def total = queryService.countSearch(
-            new PartnerSearchCriteria("IT-Qbe Count", null, null, null, null, null, null, null, null, null, null, null)
-        )
+        def total = queryService.countSearch(PartnerSearchCriteria.empty().withCompany("IT-Qbe Count"))
 
         then:
         total == 2L
@@ -107,7 +105,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
     def "search ohne Treffer liefert leere Liste"() {
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria("ZZZNOMATCH999", null, null, null, null, null, null, null, null, null, null, null),
+            PartnerSearchCriteria.empty().withCompany("ZZZNOMATCH999"),
             0, 20
         )
 
@@ -168,7 +166,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria("IT-Qbe Sort", null, null, null, null, null, null, null, null, null, "company", "asc"),
+            PartnerSearchCriteria.empty().withCompany("IT-Qbe Sort").withSortField("company").withSortDir("asc"),
             0, 20
         )
 
@@ -187,7 +185,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria("IT-Qbe Desc", null, null, null, null, null, null, null, null, null, "company", "desc"),
+            PartnerSearchCriteria.empty().withCompany("IT-Qbe Desc").withSortField("company").withSortDir("desc"),
             0, 20
         )
 
@@ -201,7 +199,7 @@ class PartnerQueryServiceSearchIT extends AbstractContainerBaseIT {
     def "search mit ungueltigem sortField faellt auf Default-Sortierung zurueck (keine Exception)"() {
         when:
         def results = queryService.search(
-            new PartnerSearchCriteria(null, null, null, null, null, null, null, null, null, null, 'DROP TABLE partner; --', "asc"),
+            PartnerSearchCriteria.empty().withSortField('DROP TABLE partner; --').withSortDir("asc"),
             0, 20
         )
 

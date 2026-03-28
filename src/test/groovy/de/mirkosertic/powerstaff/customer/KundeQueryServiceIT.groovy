@@ -126,10 +126,9 @@ class KundeQueryServiceIT extends AbstractContainerBaseIT {
         given:
         commandService.save(newKunde("IT-KQS Search A"))
         commandService.save(newKunde("IT-KQS Search B"))
-        def criteria = new KundeSearchCriteria(null, null, null, null, null, null, null, null, null, null, null, null)
 
         when:
-        def results = queryService.search(criteria, 0, 100)
+        def results = queryService.search(KundeSearchCriteria.empty(), 0, 100)
 
         then:
         results.size() >= 2
@@ -139,10 +138,9 @@ class KundeQueryServiceIT extends AbstractContainerBaseIT {
         given:
         commandService.save(newKunde("IT-KQS Alpha GmbH"))
         commandService.save(newKunde("IT-KQS Beta AG"))
-        def criteria = new KundeSearchCriteria("Alpha", null, null, null, null, null, null, null, null, null, null, null)
 
         when:
-        def results = queryService.search(criteria, 0, 100)
+        def results = queryService.search(KundeSearchCriteria.empty().withCompany("Alpha"), 0, 100)
 
         then:
         results.size() == 1
@@ -155,10 +153,9 @@ class KundeQueryServiceIT extends AbstractContainerBaseIT {
         k.name1 = "Meier"
         k.city = "Hamburg"
         commandService.save(k)
-        def criteria = new KundeSearchCriteria(null, "Meier", null, null, null, null, "Hamburg", null, null, null, null, null)
 
         when:
-        def results = queryService.search(criteria, 0, 100)
+        def results = queryService.search(KundeSearchCriteria.empty().withName1("Meier").withCity("Hamburg"), 0, 100)
 
         then:
         results.any { it.name1() == "Meier" }
@@ -168,10 +165,9 @@ class KundeQueryServiceIT extends AbstractContainerBaseIT {
         given:
         commandService.save(newKunde("IT-KQS Count A GmbH"))
         commandService.save(newKunde("IT-KQS Count B GmbH"))
-        def criteria = new KundeSearchCriteria("IT-KQS Count", null, null, null, null, null, null, null, null, null, null, null)
 
         when:
-        def count = queryService.countSearch(criteria)
+        def count = queryService.countSearch(KundeSearchCriteria.empty().withCompany("IT-KQS Count"))
 
         then:
         count == 2
@@ -179,7 +175,7 @@ class KundeQueryServiceIT extends AbstractContainerBaseIT {
 
     def "Suche ohne Treffer liefert leere Liste"() {
         given:
-        def criteria = new KundeSearchCriteria("XXXXXXX_NICHT_VORHANDEN", null, null, null, null, null, null, null, null, null, null, null)
+        def criteria = KundeSearchCriteria.empty().withCompany("XXXXXXX_NICHT_VORHANDEN")
 
         expect:
         queryService.search(criteria, 0, 100).isEmpty()
@@ -227,7 +223,7 @@ class KundeQueryServiceIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new KundeSearchCriteria("IT-KQS Sort", null, null, null, null, null, null, null, null, null, "company", "asc"),
+            KundeSearchCriteria.empty().withCompany("IT-KQS Sort").withSortField("company").withSortDir("asc"),
             0, 20
         )
 
@@ -246,7 +242,7 @@ class KundeQueryServiceIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new KundeSearchCriteria("IT-KQS SortDesc", null, null, null, null, null, null, null, null, null, "company", "desc"),
+            KundeSearchCriteria.empty().withCompany("IT-KQS SortDesc").withSortField("company").withSortDir("desc"),
             0, 20
         )
 
@@ -260,7 +256,7 @@ class KundeQueryServiceIT extends AbstractContainerBaseIT {
     def "Suche mit ungueltigem sortField faellt auf Default-Sortierung zurueck (keine Exception)"() {
         when:
         def results = queryService.search(
-            new KundeSearchCriteria(null, null, null, null, null, null, null, null, null, null, 'DROP TABLE kunde; --', "asc"),
+            KundeSearchCriteria.empty().withSortField('DROP TABLE kunde; --').withSortDir("asc"),
             0, 20
         )
 

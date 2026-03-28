@@ -106,10 +106,9 @@ class ProjectQueryServiceIT extends AbstractContainerBaseIT {
         given:
         commandService.save(newProject("IT-PQS-010"))
         commandService.save(newProject("IT-PQS-011"))
-        def criteria = new ProjectSearchCriteria(null, null, null, null, null, null, null, null, null, null, null)
 
         when:
-        def results = queryService.search(criteria, 0, 100)
+        def results = queryService.search(ProjectSearchCriteria.empty(), 0, 100)
 
         then:
         results.size() >= 2
@@ -119,10 +118,9 @@ class ProjectQueryServiceIT extends AbstractContainerBaseIT {
         given:
         commandService.save(newProject("IT-PQS-012-ALPHA"))
         commandService.save(newProject("IT-PQS-013-BETA"))
-        def criteria = new ProjectSearchCriteria("ALPHA", null, null, null, null, null, null, null, null, null, null)
 
         when:
-        def results = queryService.search(criteria, 0, 100)
+        def results = queryService.search(ProjectSearchCriteria.empty().withProjectNumber("ALPHA"), 0, 100)
 
         then:
         results.size() == 1
@@ -137,10 +135,9 @@ class ProjectQueryServiceIT extends AbstractContainerBaseIT {
         def p2 = newProject("IT-PQS-015")
         p2.status = 2
         commandService.save(p2)
-        def criteria = new ProjectSearchCriteria(null, null, null, null, null, null, 2, null, null, null, null)
 
         when:
-        def results = queryService.search(criteria, 0, 100)
+        def results = queryService.search(ProjectSearchCriteria.empty().withStatus(2), 0, 100)
 
         then:
         results.every { it.status() == 2 }
@@ -150,7 +147,7 @@ class ProjectQueryServiceIT extends AbstractContainerBaseIT {
 
     def "Suche ohne Treffer liefert leere Liste"() {
         given:
-        def criteria = new ProjectSearchCriteria("XXXXXXXX_NICHT_VORHANDEN", null, null, null, null, null, null, null, null, null, null)
+        def criteria = ProjectSearchCriteria.empty().withProjectNumber("XXXXXXXX_NICHT_VORHANDEN")
 
         expect:
         queryService.search(criteria, 0, 100).isEmpty()
@@ -161,10 +158,9 @@ class ProjectQueryServiceIT extends AbstractContainerBaseIT {
         given:
         commandService.save(newProject("IT-PQS-016"))
         commandService.save(newProject("IT-PQS-017"))
-        def criteria = new ProjectSearchCriteria("IT-PQS-01", null, null, null, null, null, null, null, null, null, null)
 
         when:
-        def count = queryService.countSearch(criteria)
+        def count = queryService.countSearch(ProjectSearchCriteria.empty().withProjectNumber("IT-PQS-01"))
 
         then:
         count >= 2
@@ -180,7 +176,7 @@ class ProjectQueryServiceIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new ProjectSearchCriteria("IT-PQS-SORT-", null, null, null, null, null, null, null, null, "project_number", "asc"),
+            ProjectSearchCriteria.empty().withProjectNumber("IT-PQS-SORT-").withSortField("project_number").withSortDir("asc"),
             0, 20
         )
 
@@ -199,7 +195,7 @@ class ProjectQueryServiceIT extends AbstractContainerBaseIT {
 
         when:
         def results = queryService.search(
-            new ProjectSearchCriteria("IT-PQS-DESC-", null, null, null, null, null, null, null, null, "project_number", "desc"),
+            ProjectSearchCriteria.empty().withProjectNumber("IT-PQS-DESC-").withSortField("project_number").withSortDir("desc"),
             0, 20
         )
 
@@ -213,7 +209,7 @@ class ProjectQueryServiceIT extends AbstractContainerBaseIT {
     def "Suche mit ungueltigem sortField faellt auf Default-Sortierung zurueck (keine Exception)"() {
         when:
         def results = queryService.search(
-            new ProjectSearchCriteria(null, null, null, null, null, null, null, null, null, 'INVALID; DROP TABLE project; --', "asc"),
+            ProjectSearchCriteria.empty().withSortField('INVALID; DROP TABLE project; --').withSortDir("asc"),
             0, 20
         )
 

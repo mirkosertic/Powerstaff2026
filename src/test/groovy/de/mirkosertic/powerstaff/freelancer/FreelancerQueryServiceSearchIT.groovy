@@ -35,12 +35,9 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
     }
 
     def "leere Kriterien liefern alle angelegten Datensätze"() {
-        given:
-        def criteria = emptyCriteria()
-
         when:
-        def results = queryService.search(criteria, 0, 100)
-        def count = queryService.countSearch(criteria)
+        def results = queryService.search(FreelancerSearchCriteria.empty(), 0, 100)
+        def count = queryService.countSearch(FreelancerSearchCriteria.empty())
 
         then:
         results.findAll { it.name1().startsWith("IT-Srch") }.size() == 3
@@ -49,10 +46,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Suche nach name1 liefert genau einen Treffer"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                "IT-Srch-Alpha", null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null, null)
+        def criteria = FreelancerSearchCriteria.empty().withName1("IT-Srch-Alpha")
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -64,10 +58,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Suche nach company liefert genau einen Treffer"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                null, null, "Beispiel", null, null, null, null,
-                null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null, null)
+        def criteria = FreelancerSearchCriteria.empty().withCompany("Beispiel")
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -79,10 +70,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Suche nach name1 UND city kombiniert AND-Logik"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                "IT-Srch-Gamma", null, null, null, null, null, "München",
-                null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null, null)
+        def criteria = FreelancerSearchCriteria.empty().withName1("IT-Srch-Gamma").withCity("München")
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -94,10 +82,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Suche nach name1 UND city ohne Schnittmenge liefert leere Liste"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                "IT-Srch-Alpha", null, null, null, null, null, "Hamburg",
-                null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null, null)
+        def criteria = FreelancerSearchCriteria.empty().withName1("IT-Srch-Alpha").withCity("Hamburg")
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -108,10 +93,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Suche nach skills (LIKE) trifft mehrere Treffer"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                null, null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null, null, "Java",
-                null, null, null, null, null)
+        def criteria = FreelancerSearchCriteria.empty().withSkills("Java")
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -122,10 +104,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Suche mit salaryLongMax filtert korrekt"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                "IT-Srch", null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null, null, null,
-                700L, null, null, null, null)
+        def criteria = FreelancerSearchCriteria.empty().withName1("IT-Srch").withSalaryLongMax(700L)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -137,10 +116,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Suche mit salaryPerDayLongMax filtert korrekt"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                "IT-Srch", null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null, null, null,
-                null, 600L, null, null, null)
+        def criteria = FreelancerSearchCriteria.empty().withName1("IT-Srch").withSalaryPerDayLongMax(600L)
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -151,10 +127,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Paginierung liefert korrekte Teilmenge"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                "IT-Srch", null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null, null)
+        def criteria = FreelancerSearchCriteria.empty().withName1("IT-Srch")
 
         when:
         def page1 = queryService.search(criteria, 0, 2)
@@ -187,10 +160,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Suche mit sortField=name1 asc liefert korrekte Reihenfolge"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                "IT-Srch", null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null, null, null,
-                null, null, "name1", "asc", null)
+        def criteria = FreelancerSearchCriteria.empty().withName1("IT-Srch").withSortField("name1").withSortDir("asc")
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -203,10 +173,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Suche mit sortField=name1 desc liefert absteigende Reihenfolge"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                "IT-Srch", null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null, null, null,
-                null, null, "name1", "desc", null)
+        def criteria = FreelancerSearchCriteria.empty().withName1("IT-Srch").withSortField("name1").withSortDir("desc")
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -219,10 +186,7 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
 
     def "Suche mit ungueltigem sortField faellt auf Default-Sortierung zurueck (keine Exception)"() {
         given:
-        def criteria = new FreelancerSearchCriteria(
-                "IT-Srch", null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null, null, null,
-                null, null, 'INVALID_FIELD__$(rm -rf /)', "asc", null)
+        def criteria = FreelancerSearchCriteria.empty().withName1("IT-Srch").withSortField('INVALID_FIELD__$(rm -rf /)').withSortDir("asc")
 
         when:
         def results = queryService.search(criteria, 0, 100)
@@ -230,12 +194,5 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         then:
         notThrown(Exception)
         results.findAll { it.name1().startsWith("IT-Srch") }.size() == 3
-    }
-
-    private static FreelancerSearchCriteria emptyCriteria() {
-        new FreelancerSearchCriteria(
-                null, null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null, null)
     }
 }

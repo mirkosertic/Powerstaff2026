@@ -13,7 +13,7 @@ class ProfileSearchQueryServiceSpec extends Specification {
 
     def "searchFreelancers delegiert an JdbcClient mit korrekten Parametern"() {
         given:
-        def criteria = new ProfileSearchCriteria(null, null, null, null, null, null, false)
+        def criteria = ProfileSearchCriteria.empty()
         def sqlSpec = Mock(JdbcClient.StatementSpec)
         def paramSpec = Mock(JdbcClient.StatementSpec)
         def paramSpec2 = Mock(JdbcClient.StatementSpec)
@@ -34,7 +34,7 @@ class ProfileSearchQueryServiceSpec extends Specification {
 
     def "countSearchFreelancers delegiert an JdbcClient"() {
         given:
-        def criteria = new ProfileSearchCriteria(null, null, null, null, null, null, false)
+        def criteria = ProfileSearchCriteria.empty()
         def sqlSpec = Mock(JdbcClient.StatementSpec)
         def mappedQuery = Mock(JdbcClient.MappedQuerySpec)
 

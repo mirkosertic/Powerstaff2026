@@ -9,4 +9,15 @@ public record ProfileSearchCriteria(
         String sortDir,
         boolean semanticSearch
 ) {
+    public static ProfileSearchCriteria empty() {
+        return new ProfileSearchCriteria(null, null, null, null, null, null, false);
+    }
+
+    public ProfileSearchCriteria withSearchTerm(String v) { return new ProfileSearchCriteria(v, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch); }
+    public ProfileSearchCriteria withSalaryPerDayFrom(Long v) { return new ProfileSearchCriteria(searchTerm, v, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch); }
+    public ProfileSearchCriteria withSalaryPerDayTo(Long v) { return new ProfileSearchCriteria(searchTerm, salaryPerDayFrom, v, tagIds, sortField, sortDir, semanticSearch); }
+    public ProfileSearchCriteria withTagIds(String v) { return new ProfileSearchCriteria(searchTerm, salaryPerDayFrom, salaryPerDayTo, v, sortField, sortDir, semanticSearch); }
+    public ProfileSearchCriteria withSortField(String v) { return new ProfileSearchCriteria(searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, v, sortDir, semanticSearch); }
+    public ProfileSearchCriteria withSortDir(String v) { return new ProfileSearchCriteria(searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, v, semanticSearch); }
+    public ProfileSearchCriteria withSemanticSearch(boolean v) { return new ProfileSearchCriteria(searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, v); }
 }
