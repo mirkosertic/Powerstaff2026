@@ -113,18 +113,14 @@ test.describe('Profilsuche – Klassische Suche', () => {
     // =========================================================================
 
     test('Kontaktgesperrte Freelancer haben die Klasse row-forbidden in der Ergebnistabelle', async ({ page }) => {
-        // Mock-Daten: i % 7 == 0 → contactForbidden; bei searchTerm=Mock (alle 50)
-        // Verbotene Zeilen: i=0,7,14,21,28,35,42 → 7 Stück (alle in ersten 20 Ergebnissen)
+        // Seed-Daten (V100__e2e_seed.sql): 4 Freelancer, davon 1 mit contactforbidden=TRUE (ID 1004, E2E-004)
         await page.goto('/profilesearch/search?searchTerm=Mock');
 
         await expect(page.locator('[data-testid="results-table"]')).toBeVisible();
 
-        // row-forbidden Zeilen existieren (min. 3 davon in den ersten 20 Ergebnissen: i=0,7,14)
+        // Genau 1 verbotene Zeile in den Ergebnissen (Freelancer 1004)
         const forbiddenRows = page.locator('[data-testid="results-table"] tbody tr.row-forbidden');
-        await expect(forbiddenRows.first()).toBeVisible();
-
-        // Anzahl der verbotenen Zeilen auf der ersten Seite (20 Ergebnisse, 3 verbotene: i=0,7,14)
-        await expect(forbiddenRows).toHaveCount(3);
+        await expect(forbiddenRows).toHaveCount(1);
     });
 
     // =========================================================================
