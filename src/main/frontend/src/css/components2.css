@@ -45,28 +45,28 @@
 
 /* Badge-Varianten */
 .cb-email {
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--badge-email-bg);
+  color: var(--badge-email-fg);
 }
 
 .cb-telefon {
-  background: #ede9fe;
-  color: #5b21b6;
+  background: var(--badge-telefon-bg);
+  color: var(--badge-telefon-fg);
 }
 
 .cb-web {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--badge-web-bg);
+  color: var(--badge-web-fg);
 }
 
 .cb-xing {
-  background: #cffafe;
-  color: #155e75;
+  background: var(--badge-xing-bg);
+  color: var(--badge-xing-fg);
 }
 
 .cb-gulp {
-  background: #fef9c3;
-  color: #713f12;
+  background: var(--badge-gulp-bg);
+  color: var(--badge-gulp-fg);
 }
 
 .cb-fax {
@@ -147,7 +147,7 @@
   font-weight: 500;
   color: var(--pri-d);
   background: var(--pri-l);
-  border: 1px solid #bfdbfe;
+  border: 1px solid var(--chip-border);
   border-radius: 20px;
   white-space: nowrap;
 }
@@ -413,7 +413,7 @@
 .mbk {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, .45);
+  background: var(--overlay-bg);
   backdrop-filter: blur(3px);
   z-index: 200;
   display: flex;
@@ -595,8 +595,8 @@
 }
 
 .badge-default {
-  --badge-bg: #d1fae5;
-  --badge-fg: #065f46;
+  --badge-bg: var(--ok-bg);
+  --badge-fg: var(--ok-text);
 }
 
 /* -----------------------------------------------------------------------------

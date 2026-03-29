@@ -14,8 +14,8 @@
   top: 0;
   z-index: 110;
   height: var(--nav-h);
-  background: #1e2a3a;
-  color: #fff;
+  background: var(--nav-bg);
+  color: var(--nav-text);
   overflow: hidden;
 }
 
@@ -95,14 +95,14 @@
 #nav-logo {
   font-size: .95rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--nav-text);
   white-space: nowrap;
   margin-right: 24px;
   letter-spacing: .01em;
   flex-shrink: 0;
 }
 #nav-logo span {
-  color: #60a5fa;
+  color: var(--nav-accent);
 }
 
 /* Menüpunkte */
@@ -113,7 +113,7 @@
   padding: 0 14px;
   font-size: .8rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, .75);
+  color: var(--nav-text-muted);
   cursor: pointer;
   white-space: nowrap;
   border-bottom: 2px solid transparent;
@@ -122,12 +122,22 @@
   flex-shrink: 0;
 }
 .menu-item:hover {
-  color: #fff;
+  color: var(--nav-text);
   text-decoration: none;
 }
 .menu-item.active {
-  color: #fff;
-  border-bottom-color: #60a5fa;
+  color: var(--nav-text);
+  border-bottom-color: var(--nav-accent);
+}
+
+/* Theme-Toggle-Button */
+#theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 10px;
+  font-size: 1rem;
+  line-height: 1;
 }
 
 /* -----------------------------------------------------------------------------
@@ -279,7 +289,7 @@
 .btn-danger {
   background: var(--danger-l);
   color: var(--danger);
-  border-color: #fca5a5;
+  border-color: var(--danger-border);
 }
 .btn-danger:hover {
   background: var(--danger);
@@ -332,7 +342,7 @@
 .ibtn.del:hover {
   background: var(--danger-l);
   color: var(--danger);
-  border-color: #fca5a5;
+  border-color: var(--danger-border);
 }
 
 /* Responsive: Audit-Info auf Tablets ausblenden */

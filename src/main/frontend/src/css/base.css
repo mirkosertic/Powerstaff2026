@@ -61,6 +61,109 @@ html {
   /* Dimensionen */
   --nav-h:     44px;
   --toolbar-h: 50px;
+
+  /* Navbar */
+  --nav-bg:         #1e2a3a;
+  --nav-text:       #ffffff;
+  --nav-text-muted: rgba(255, 255, 255, .75);
+  --nav-accent:     #60a5fa;
+
+  /* Danger-Rand (Buttons, Icons) */
+  --danger-border: #fca5a5;
+
+  /* Chip-Rand */
+  --chip-border: #bfdbfe;
+
+  /* Kontakt-Badges */
+  --badge-email-bg:   #dbeafe; --badge-email-fg:   #1e40af;
+  --badge-telefon-bg: #ede9fe; --badge-telefon-fg: #5b21b6;
+  --badge-web-bg:     #dcfce7; --badge-web-fg:     #166534;
+  --badge-xing-bg:    #cffafe; --badge-xing-fg:    #155e75;
+  --badge-gulp-bg:    #fef9c3; --badge-gulp-fg:    #713f12;
+
+  /* Overlay/Backdrop */
+  --overlay-bg: rgba(15, 23, 42, .45);
+}
+
+/* -----------------------------------------------------------------------------
+   Dark Mode – automatisch via prefers-color-scheme, manuell via data-theme="dark"
+   ----------------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:        #1a1f2e;
+    --surface:   #222836;
+    --surface-2: #1e2435;
+    --surface-3: #2a3247;
+    --border:    #3a4560;
+    --border-l:  #2f3a52;
+    --text:      #e2e8f0;
+    --text-2:    #94a3b8;
+    --text-3:    #64748b;
+    --pri:       #4a90d9;
+    --pri-d:     #3a7bc8;
+    --pri-l:     #1a3050;
+    --pri-ring:  rgba(74, 144, 217, .25);
+    --danger:    #f87171;
+    --danger-l:  #2d1515;
+    --danger-ring: rgba(248, 113, 113, .2);
+    --danger-border: #7f1d1d;
+    --warn-bg:   #2a1f0a;
+    --warn-border: #d97706;
+    --warn-text: #fbbf24;
+    --ok-bg:     #0a2015;
+    --ok-border: #22c55e;
+    --ok-text:   #86efac;
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, .2);
+    --shadow-sm: 0 1px 4px rgba(0, 0, 0, .3), 0 1px 2px rgba(0, 0, 0, .2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, .35);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, .5);
+    --nav-bg:    #0d1520;
+    --chip-border: #2a4a7f;
+    --badge-email-bg:   #1e3a6e; --badge-email-fg:   #93c5fd;
+    --badge-telefon-bg: #2e1a5e; --badge-telefon-fg: #c4b5fd;
+    --badge-web-bg:     #0a2e1a; --badge-web-fg:     #86efac;
+    --badge-xing-bg:    #0a2e35; --badge-xing-fg:    #67e8f9;
+    --badge-gulp-bg:    #2a1e0a; --badge-gulp-fg:    #fde68a;
+    --overlay-bg: rgba(0, 0, 0, .65);
+  }
+}
+
+html[data-theme="dark"] {
+  --bg:        #1a1f2e;
+  --surface:   #222836;
+  --surface-2: #1e2435;
+  --surface-3: #2a3247;
+  --border:    #3a4560;
+  --border-l:  #2f3a52;
+  --text:      #e2e8f0;
+  --text-2:    #94a3b8;
+  --text-3:    #64748b;
+  --pri:       #4a90d9;
+  --pri-d:     #3a7bc8;
+  --pri-l:     #1a3050;
+  --pri-ring:  rgba(74, 144, 217, .25);
+  --danger:    #f87171;
+  --danger-l:  #2d1515;
+  --danger-ring: rgba(248, 113, 113, .2);
+  --danger-border: #7f1d1d;
+  --warn-bg:   #2a1f0a;
+  --warn-border: #d97706;
+  --warn-text: #fbbf24;
+  --ok-bg:     #0a2015;
+  --ok-border: #22c55e;
+  --ok-text:   #86efac;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, .2);
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, .3), 0 1px 2px rgba(0, 0, 0, .2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, .35);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, .5);
+  --nav-bg:    #0d1520;
+  --chip-border: #2a4a7f;
+  --badge-email-bg:   #1e3a6e; --badge-email-fg:   #93c5fd;
+  --badge-telefon-bg: #2e1a5e; --badge-telefon-fg: #c4b5fd;
+  --badge-web-bg:     #0a2e1a; --badge-web-fg:     #86efac;
+  --badge-xing-bg:    #0a2e35; --badge-xing-fg:    #67e8f9;
+  --badge-gulp-bg:    #2a1e0a; --badge-gulp-fg:    #fde68a;
+  --overlay-bg: rgba(0, 0, 0, .65);
 }
 
 /* -----------------------------------------------------------------------------

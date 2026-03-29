@@ -9,6 +9,14 @@
   <meta name="csrf-token" th:content="${_csrf.token}">
   <title th:text="${title} + ' – Powerstaff 2026'">Powerstaff 2026</title>
   <link rel="stylesheet" th:href="@{/generated/app.css}">
+  <script>
+    (function() {
+      var saved = localStorage.getItem('ps-theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = saved || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 <body>
 
@@ -44,6 +52,12 @@
       <!-- Abstandhalter -->
       <span class="flex-spacer"></span>
 
+      <!-- Theme-Toggle -->
+      <button id="theme-toggle" class="menu-item" type="button"
+              aria-label="Farbschema wechseln" title="Dark/Light Mode">
+        <span id="theme-icon">◐</span>
+      </button>
+
       <!-- Logout -->
       <form th:action="@{/logout}" method="post" class="inline">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -58,6 +72,23 @@
        in connectedCallback. Functions called from event handlers (renderMarkdown,
        openModal etc.) are always available by then. -->
   <script th:src="@{/generated/app.js}" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var btn = document.getElementById('theme-toggle');
+      var icon = document.getElementById('theme-icon');
+      function updateIcon() {
+        icon.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '○' : '●';
+      }
+      updateIcon();
+      btn.addEventListener('click', function() {
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        var next = isDark ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('ps-theme', next);
+        updateIcon();
+      });
+    });
+  </script>
 
   <!-- Content-Slot -->
   <th:block th:replace="${content}"/>
