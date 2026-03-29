@@ -25,4 +25,8 @@ public interface ChatProgressCollector {
     default void reportUsage(final Integer promptTokens, final Integer completionTokens, final Integer totalTokens) {
 
     }
+
+    default String getAssistantThoughtsAndReset() {
+        return null;
+    }
 }

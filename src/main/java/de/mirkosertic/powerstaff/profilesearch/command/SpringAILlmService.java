@@ -15,7 +15,6 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.ToolResponseMessage;
 import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.metadata.ChatGenerationMetadata;
 import org.springframework.ai.chat.metadata.EmptyUsage;
 import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -57,6 +56,8 @@ public class SpringAILlmService implements LlmService {
 
         final var progressCollector = new ChatProgressCollector() {
 
+            final StringBuilder assistantThoughts = new StringBuilder();
+
             @Override
             public void toolInvocation(final String toolName, final String jsonPayload) {
             }
@@ -67,6 +68,7 @@ public class SpringAILlmService implements LlmService {
 
             @Override
             public void thinkingToken(final String token) {
+                assistantThoughts.append(token);
             }
 
             @Override
@@ -79,6 +81,16 @@ public class SpringAILlmService implements LlmService {
 
             @Override
             public void reportUsage(final Integer promptTokens, final Integer completionTokens, final Integer totalTokens) {
+            }
+
+            @Override
+            public String getAssistantThoughtsAndReset() {
+                if (!assistantThoughts.isEmpty()) {
+                    final String result = assistantThoughts.toString();
+                    assistantThoughts.setLength(0);
+                    return result;
+                }
+                return assistantThoughts.toString();
             }
         };
 
@@ -143,8 +155,8 @@ public class SpringAILlmService implements LlmService {
             final Usage usage = chatClientResponse.getMetadata().getUsage();
             if (usage != null) {
                 logger.info("Collected chat usage: {}", usage);
-                promptTokens = usage.getPromptTokens() != null ? usage.getPromptTokens().intValue() : 0;
-                completionTokens = usage.getCompletionTokens() != null ? usage.getCompletionTokens().intValue() : 0;
+                promptTokens = usage.getPromptTokens() != null ? usage.getPromptTokens() : 0;
+                completionTokens = usage.getCompletionTokens() != null ? usage.getCompletionTokens() : 0;
             }
         }
 

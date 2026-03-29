@@ -31,6 +31,12 @@ spring:
       embedding: "undefined"
       chat: "undefined"
 
+  web:
+    error:
+      include-exception: true
+      include-message: always
+      include-stacktrace: always
+
 # Server – Bind-Adresse und Session-Cookie-Flags
 server:
   address: 127.0.0.1
@@ -40,10 +46,6 @@ server:
         http-only: true
         secure: true
         same-site: strict
-  error:
-    include-stacktrace: always
-    include-message: always
-    include-exception: true
 
 # Actuator – separater Port, nur auf localhost erreichbar (SWARCHITEKTUR.md §7)
 management:

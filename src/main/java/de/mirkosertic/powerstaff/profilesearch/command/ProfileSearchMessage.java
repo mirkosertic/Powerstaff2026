@@ -31,6 +31,9 @@ public class ProfileSearchMessage {
     @Column("json_payload")
     private String jsonPayload;
 
+    @Column("assistant_thoughts")
+    private String assistantThoughts;
+
     public Long getId() { return id; }
     public void setId(final Long id) { this.id = id; }
 
@@ -51,4 +54,7 @@ public class ProfileSearchMessage {
 
     public String getJsonPayload() { return jsonPayload; }
     public void setJsonPayload(final String jsonPayload) { this.jsonPayload = jsonPayload; }
+
+    public String getAssistantThoughts() { return assistantThoughts; }
+    public void setAssistantThoughts(final String assistantThoughts) { this.assistantThoughts = assistantThoughts; }
 }

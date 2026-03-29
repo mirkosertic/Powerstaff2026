@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class SpringAIChatRepository implements ChatMemoryRepository {
@@ -114,11 +113,11 @@ public class SpringAIChatRepository implements ChatMemoryRepository {
 
                         final String jsonPayload = objectMapper.writeValueAsString(toolCallOptions);
 
-                        commandService.addMessage(Long.parseLong(s), LlmService.ROLE_TOOL_CALL, x.getText(), jsonPayload);
+                        commandService.addMessage(Long.parseLong(s), LlmService.ROLE_TOOL_CALL, x.getText(), jsonPayload, chatProgressCollector.getAssistantThoughtsAndReset());
 
                         chatProgressCollector.toolInvocation(x.getText(), jsonPayload);
                     } else {
-                        commandService.addMessage(Long.parseLong(s), LlmService.ROLE_ASSISTANT, x.getText());
+                        commandService.addMessage(Long.parseLong(s), LlmService.ROLE_ASSISTANT, x.getText(), null, chatProgressCollector.getAssistantThoughtsAndReset());
                     }
                     newMessages.add(message);
                 } else if (message instanceof final ToolResponseMessage x) {
@@ -136,7 +135,7 @@ public class SpringAIChatRepository implements ChatMemoryRepository {
                     final String toolnames = objectMapper.writeValueAsString(toolCallNames);
                     final String jsonPayload = objectMapper.writeValueAsString(toolCallOptions);
 
-                    commandService.addMessage(Long.parseLong(s), LlmService.ROLE_TOOL_RESULT, toolnames, jsonPayload);
+                    commandService.addMessage(Long.parseLong(s), LlmService.ROLE_TOOL_RESULT, toolnames, jsonPayload, null);
 
                     chatProgressCollector.toolResponses(toolnames, jsonPayload);
 
