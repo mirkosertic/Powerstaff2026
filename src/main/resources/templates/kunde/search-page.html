@@ -99,6 +99,7 @@
         </thead>
         <tbody>
           <tr th:each="r : ${results}"
+              th:classappend="${r.contactForbidden()} ? ' row-forbidden' : ''"
               th:attr="data-testid='kunde-row-' + ${r.id()}"
               th:onclick="|window.location='/kunde/${r.id()}'|"
               style="cursor:pointer">

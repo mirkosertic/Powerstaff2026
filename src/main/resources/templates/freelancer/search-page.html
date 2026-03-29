@@ -215,6 +215,7 @@
         </thead>
         <tbody>
           <tr th:each="r : ${results}"
+              th:classappend="${r.contactForbidden()} ? ' row-forbidden' : ''"
               th:attr="data-testid='freelancer-row-' + ${r.id()}"
               th:onclick="${returnTo != null} ? 'window.location=\'/freelancer/' + ${r.id()} + '?returnTo=' + ${returnTo} + '\'' : |window.location='/freelancer/${r.id()}'|"
               style="cursor:pointer">
