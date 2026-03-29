@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fehler – Powerstaff 2026</title>
+  <link rel="stylesheet" th:href="@{/generated/app.css}">
+</head>
+<body>
+
+  <!-- App-Navigation (statisch – kein Login/CSRF in Fehlersituationen) -->
+  <nav id="app-nav">
+    <div id="app-nav-inner">
+      <div id="nav-logo">Power<span>staff</span> 2026</div>
+      <a class="menu-item" href="/freelancer">Freiberufler</a>
+      <a class="menu-item" href="/partner">Partner</a>
+      <a class="menu-item" href="/kunde">Kunden</a>
+      <a class="menu-item" href="/project">Projekte</a>
+      <a class="menu-item" href="/profilesearch">Profilsuche</a>
+      <a class="menu-item" href="/admin">Administration</a>
+    </div>
+  </nav>
+
+  <div id="page">
+
+    <div class="banner banner-forbidden">
+      ✕ &nbsp;Ein Fehler ist aufgetreten
+    </div>
+
+    <div class="form-grid mt-lg">
+      <div class="fcard col-wide">
+        <div class="fcard-hd">
+          <span class="fcard-title"
+                th:text="'HTTP ' + ${status} + ' – ' + ${error}">Fehlerdetails</span>
+          <span class="fcard-chv open">▾</span>
+        </div>
+        <div class="fcard-body" id="error-details">
+
+          <div class="fg2 mb-md">
+            <div class="fg">
+              <label>HTTP-Status</label>
+              <input type="text" readonly
+                     th:value="${status} + ' ' + ${error}"
+                     style="background: var(--danger-l); color: var(--danger); border-color: #fca5a5;"/>
+            </div>
+            <div class="fg">
+              <label>Pfad</label>
+              <input type="text" readonly th:value="${path}"/>
+            </div>
+          </div>
+
+          <div class="fg mb-md">
+            <label>Fehlermeldung</label>
+            <input type="text" readonly th:value="${message}"/>
+          </div>
+
+          <div class="fg">
+            <label>Stack-Trace</label>
+            <pre th:text="${trace}"
+                 style="overflow-x: auto; white-space: pre-wrap; font-size: 0.75rem;
+                        background: var(--surface-2); border: 1px solid var(--border-l);
+                        border-radius: var(--r); padding: 10px; margin: 0;
+                        color: var(--text);">Kein Stack-Trace verfügbar.</pre>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row mt-md">
+      <button class="btn btn-ghost"
+              onclick="navigator.clipboard.writeText(document.getElementById('error-details').innerText)">
+        In Zwischenablage kopieren
+      </button>
+      <a class="btn btn-pri" href="/">Zur Startseite</a>
+    </div>
+
+  </div>
+
+</body>
+</html>

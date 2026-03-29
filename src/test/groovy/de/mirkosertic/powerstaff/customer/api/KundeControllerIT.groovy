@@ -92,7 +92,7 @@ class KundeControllerIT extends AbstractContainerBaseIT {
         when(queryService.findHistoryByKundeId(anyLong())).thenReturn([] as List<KundeHistoryView>)
         when(queryService.findProjectsByKundeId(anyLong(), any(), any())).thenReturn([] as List<KundeProjectListItem>)
         when(queryService.search(any(), anyInt(), anyInt())).thenReturn([
-                new KundeSearchResult(1L, "Test GmbH", null, null, "Berlin")
+                new KundeSearchResult(1L, "Test GmbH", null, null, "Berlin", false)
         ])
         when(queryService.countSearch(any())).thenReturn(1L)
 

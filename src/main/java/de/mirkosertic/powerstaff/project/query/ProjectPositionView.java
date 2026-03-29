@@ -12,6 +12,7 @@ public record ProjectPositionView(
         String statusColor,
         String statusColorText,
         String konditionen,
-        String kommentar
+        String kommentar,
+        Boolean contactForbidden
 ) {
 }

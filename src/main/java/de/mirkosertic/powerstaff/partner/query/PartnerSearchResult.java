@@ -5,6 +5,7 @@ public record PartnerSearchResult(
         String company,
         String name1,
         String name2,
-        String city
+        String city,
+        Boolean contactForbidden
 ) {
 }

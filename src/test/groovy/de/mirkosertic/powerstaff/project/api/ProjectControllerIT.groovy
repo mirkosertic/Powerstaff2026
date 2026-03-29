@@ -463,7 +463,7 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
     def "GET /project/{id}/positions liefert Positions-Liste als JSON (200)"() {
         given:
         def pos = new ProjectPositionView(1L, 0L, 10L, 'MK-01', 'Mustermann', 'Max',
-                1L, 'Offen', '#00aa00', '#ffffff', '500 EUR', 'Kommentar')
+                1L, 'Offen', '#00aa00', '#ffffff', '500 EUR', 'Kommentar', false)
         when(positionQueryService.findByProjectId(42L, null, null)).thenReturn([pos])
 
         when:
@@ -610,7 +610,7 @@ class ProjectControllerIT extends AbstractContainerBaseIT {
     def "GET /project/{id} rendert Positions-Buttons mit onclick"() {
         given:
         def pos = new ProjectPositionView(1L, 0L, 10L, 'MK-01', 'Mustermann', 'Max',
-                1L, 'Offen', '#00aa00', '#ffffff', '500 EUR', 'Kommentar')
+                1L, 'Offen', '#00aa00', '#ffffff', '500 EUR', 'Kommentar', false)
         when(positionQueryService.findByProjectId(42L, null, null)).thenReturn([pos])
 
         when:

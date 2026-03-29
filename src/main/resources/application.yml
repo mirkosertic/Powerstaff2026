@@ -40,6 +40,10 @@ server:
         http-only: true
         secure: true
         same-site: strict
+  error:
+    include-stacktrace: always
+    include-message: always
+    include-exception: true
 
 # Actuator – separater Port, nur auf localhost erreichbar (SWARCHITEKTUR.md §7)
 management:

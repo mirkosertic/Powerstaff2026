@@ -12,9 +12,9 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 
 ## Fehlerkorrekturen
 
-- [ ] Treffer in der Freiberufler, Partner und Kundensuche sollten bei Kontaktsperre
+- [x] Treffer in der Freiberufler, Partner und Kundensuche sollten bei Kontaktsperre
   rot markiert sein, analog den Treffern in der Vollltextsuche. Das muss noch korrigiert werden.
-- [ ] Ich erhalte bei nicht abgefangenen Applikationsfehlern die standard Spring Boot
+- [x] Ich erhalte bei nicht abgefangenen Applikationsfehlern die standard Spring Boot
   While Label Error Page. Ich möchte eine Error Page im Designsystem der Applikation
   mit einer Fehlermeldung und dem vollständigen Stacktrace, damit diese einfach z.B. via
   Copy-Paste dem Support übergeben werden kann. Die Fehlermeldung soll also mit

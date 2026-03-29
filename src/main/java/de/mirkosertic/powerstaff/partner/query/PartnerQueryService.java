@@ -69,10 +69,10 @@ public class PartnerQueryService {
      */
     public List<PartnerSearchResult> search(final PartnerSearchCriteria criteria, final int offset, final int limit) {
         final var sql = new StringBuilder("""
-                SELECT id, company, name1, name2, city
+                SELECT id, company, name1, name2, city, contactforbidden
                 FROM partner
                 WHERE 1=1
-                """);
+""");
         final Map<String, Object> params = new LinkedHashMap<>();
         appendCriteria(sql, params, criteria);
         final String orderBy;

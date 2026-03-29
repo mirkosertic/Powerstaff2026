@@ -96,7 +96,7 @@ class PartnerControllerIT extends AbstractContainerBaseIT {
         when(queryService.findFreelancersByPartner(anyLong())).thenReturn([] as List<PartnerFreelancerView>)
         when(queryService.findProjectsByPartner(anyLong())).thenReturn([] as List<PartnerProjectView>)
         when(queryService.search(any(), anyInt(), anyInt())).thenReturn([
-                new PartnerSearchResult(1L, "Test GmbH", null, null, "Berlin")
+                new PartnerSearchResult(1L, "Test GmbH", null, null, "Berlin", false)
         ])
         when(queryService.countSearch(any())).thenReturn(1L)
 

@@ -28,7 +28,7 @@ public class ProjectPositionQueryService {
         return jdbcClient.sql(
                 "SELECT pp.id, pp.db_version, pp.freelancer_id, f.code, f.name1, f.name2,"
                 + " pp.status_id, pps.description AS status_description, pps.color AS status_color, pps.color_text AS status_color_text,"
-                + " pp.konditionen, pp.kommentar"
+                + " pp.konditionen, pp.kommentar, f.contactforbidden"
                 + " FROM project_position pp"
                 + " JOIN freelancer f ON f.id = pp.freelancer_id"
                 + " JOIN project_position_status pps ON pps.id = pp.status_id"

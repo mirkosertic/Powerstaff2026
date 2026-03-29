@@ -98,3 +98,40 @@ INSERT IGNORE INTO freelancer_contact
 VALUES
     (7001, 1001, 'EMAIL', 'max.mustermann@e2e.test',
      NOW(), 'testuser', NOW(), 'testuser');
+
+-- Kontaktsperre-Testdaten für E2E-Tests
+INSERT IGNORE INTO freelancer
+    (id, db_version, name1, name2, company, street, country, plz, city,
+     code, contactforbidden, kontaktart,
+     creation_date, creation_user, changed_date, changed_user)
+VALUES
+    (1004, 0, 'Gesperrt', 'Franz', NULL, 'Sperrstr. 1', 'DEU', '12345', 'Berlin',
+     'E2E-004', TRUE, 'NL',
+     NOW(), 'testuser', NOW(), 'testuser')
+ON DUPLICATE KEY UPDATE db_version = db_version;
+
+INSERT IGNORE INTO partner
+    (id, db_version, name1, company, street, country, plz, city, contactforbidden,
+     creation_date, creation_user, changed_date, changed_user)
+VALUES
+    (2002, 0, 'Gesperrt', 'Gesperrt GmbH', 'Sperrweg 2', 'DEU', '50667', 'Köln', TRUE,
+     NOW(), 'testuser', NOW(), 'testuser')
+ON DUPLICATE KEY UPDATE db_version = db_version;
+
+INSERT IGNORE INTO kunde
+    (id, db_version, name1, company, street, country, plz, city, contactforbidden,
+     creation_date, creation_user, changed_date, changed_user)
+VALUES
+    (3002, 0, 'Gesperrt', 'Gesperrt AG', 'Sperrplatz 3', 'DEU', '70173', 'Stuttgart', TRUE,
+     NOW(), 'testuser', NOW(), 'testuser')
+ON DUPLICATE KEY UPDATE db_version = db_version;
+
+INSERT IGNORE INTO project_position
+    (id, db_version, project_id, freelancer_id, status_id, konditionen, kommentar,
+     creation_date, creation_user, changed_date, changed_user)
+VALUES
+    (5002, 0, 4001, 1004,
+     (SELECT id FROM project_position_status WHERE is_default = TRUE LIMIT 1),
+     '400 EUR/Tag', 'E2E Testposition Kontaktsperre',
+     NOW(), 'testuser', NOW(), 'testuser')
+ON DUPLICATE KEY UPDATE db_version = db_version;

@@ -8,6 +8,7 @@
 -->
 <div th:fragment="results" th:remove="tag">
   <tr th:each="r : ${results}"
+      th:classappend="${r.contactForbidden()} ? ' row-forbidden' : ''"
       th:attr="data-testid='partner-row-' + ${r.id()}"
       th:onclick="|window.location='/partner/${r.id()}'|"
       style="cursor:pointer">
