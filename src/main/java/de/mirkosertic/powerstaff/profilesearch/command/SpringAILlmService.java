@@ -56,12 +56,12 @@ public class SpringAILlmService implements LlmService {
             final AssistantMessage output = result.getOutput();
             if (output.getText() == null) {
                 final Object reasoningContent = output.getMetadata().get("reasoningContent");
-                if (reasoningContent != null) {
+                if (reasoningContent != null && !reasoningContent.toString().isEmpty()) {
                     collector.thinkingToken(reasoningContent.toString());
                 } else {
                     logger.debug("ChatResponse ohne Text und ohne reasoningContent – ignoriert");
                 }
-            } else {
+            } else if (!output.getText().isEmpty()) {
                 collector.assistantResponseToken(output.getText());
             }
             if (result.getMetadata().getFinishReason() != null && "STOP".equals(result.getMetadata().getFinishReason())) {

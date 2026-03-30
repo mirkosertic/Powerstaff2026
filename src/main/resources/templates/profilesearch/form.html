@@ -454,6 +454,7 @@
 
               switch (eventName) {
                 case 'thinking_token': {
+                  if (!payload.token) break;
                   ensureTypingCleared();
                   if (!currentThinkingDetails) {
                     const block = createThinkingBlock();
@@ -468,6 +469,7 @@
                 }
 
                 case 'content_token': {
+                  if (!payload.token) break;
                   ensureTypingCleared();
                   closeCurrentThinking();
                   rawContent += payload.token;
