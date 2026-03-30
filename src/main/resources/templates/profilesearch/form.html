@@ -97,6 +97,13 @@
         <!-- Nachrichten-Liste -->
         <th:block th:each="msg : ${messages}">
 
+          <!-- Thinking-Block vor assistant-Nachrichten (zugeklappt, wenn Gedanken vorhanden) -->
+          <details class="msg-thinking"
+                   th:if="${msg.role() == 'assistant' and msg.assistantThoughts() != null and !#strings.isEmpty(msg.assistantThoughts())}">
+            <summary class="msg-thinking-summary">Gedanken</summary>
+            <pre class="msg-thinking-content" th:text="${msg.assistantThoughts()}"></pre>
+          </details>
+
           <!-- user / assistant Nachrichten -->
           <div class="chat-msg"
                th:if="${msg.role() == 'user' or msg.role() == 'assistant'}"

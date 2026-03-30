@@ -144,7 +144,7 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
 
         when(queryService.buildLlmContext("testuser")).thenReturn(Optional.empty())
         when(queryService.findMessagesByChat(42L)).thenReturn([
-                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo", "")
+                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo", "", null)
         ])
         when(commandService.addMessage(anyLong(), anyString(), anyString())).thenReturn(savedMsg)
         when(llmService.sendMessage(any(), any(), any(), any(), anyString()))
@@ -194,8 +194,8 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
         when(queryService.findChatsByUser(anyString(), anyInt(), anyInt())).thenReturn([chatView])
         when(queryService.countChatsByUser(anyString())).thenReturn(1L)
         when(queryService.findMessagesByChat(42L)).thenReturn([
-                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo KI", "{}"),
-                new MessageView(2L, LocalDateTime.now(), 42L, "assistant", 2, "Antwort der KI", "{}")
+                new MessageView(1L, LocalDateTime.now(), 42L, "user", 1, "Hallo KI", "{}", null),
+                new MessageView(2L, LocalDateTime.now(), 42L, "assistant", 2, "Antwort der KI", "{}", null)
         ])
 
         expect:

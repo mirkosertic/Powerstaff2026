@@ -9,6 +9,7 @@ public record MessageView(
         String role,
         int sequence,
         String content,
-        String jsonPayload
+        String jsonPayload,
+        String assistantThoughts
 ) {
 }
