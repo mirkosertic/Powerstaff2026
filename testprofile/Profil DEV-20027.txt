@@ -1,0 +1,84 @@
+Profil DEV-20027 – SAP Basis Administrator und SAP Architekt
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+SAP-Basis-Experte mit über 20 Jahren Erfahrung in Administration, Optimierung und Architektur
+von SAP-Systemlandschaften. Umfassende Kenntnisse in SAP HANA, S/4HANA-Migrationen sowie
+dem Betrieb hochverfügbarer SAP-Systeme in heterogenen IT-Umgebungen. Begleitet S/4HANA-
+Transformationsprojekte sowohl als technischer Berater als auch als Projektverantwortlicher
+auf der Basis-Seite.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- SAP Basis Administration (NetWeaver, S/4HANA)
+- SAP HANA Administration, HANA Studio, HANA Cockpit
+- SAP S/4HANA-Migration (System Conversion, New Implementation)
+- SAP Solution Manager, ALM, Change Management
+- SAP BTP (Grundkenntnisse), Cloud Integration
+- Transport Management System (TMS), ChaRM
+- SAP Security, Berechtigungskonzepte, SU24, GRC
+- Hochverfügbarkeit (HSR, MCOS, MCOD), DR-Konzepte
+- Performance Tuning, HANA Sizing, HANA Cockpit
+- Linux (SLES, RHEL), AIX, SAP on Azure/AWS
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: S/4HANA System Conversion bei einem produzierenden Unternehmen
+Zeitraum: 2022 – laufend (ca. 24 Monate)
+Branche: Industrie / Produktion
+Rolle: SAP Basis Lead / Technischer Projektleiter
+
+Technische Gesamtverantwortung für die System Conversion von SAP ECC 6.0 auf S/4HANA 2023.
+Planung und Durchführung der HANA-Migration (Oracle auf HANA), Koordination der Basis-Aktivitäten
+im Rahmen des Migrationsprojekts (Systemkopie, Upgrade, SUM), Aufbau des HA-Konzepts
+mit HANA System Replication und Pacemaker-Cluster. Enge Zusammenarbeit mit der Infrastruktur-
+und Security-Abteilung.
+
+Eingesetzte Technologien: SAP S/4HANA 2023, SAP HANA, SUM, HANA System Replication,
+Pacemaker, SLES for SAP, SAP Solution Manager, TMS
+
+---
+
+Projekt 2: SAP-Betrieb und Optimierung für einen Pharmahersteller
+Zeitraum: 2019 – 2022 (30 Monate)
+Branche: Pharma / Life Sciences
+Rolle: SAP Basis Senior Administrator
+
+Verantwortlich für den stabilen Betrieb einer SAP-Landschaft mit über 30 Systemen (S/4HANA,
+ECC, BW, PI/PO, SolMan). Durchführung von HANA-Performance-Analysen, Implementierung
+von HANA-Alerting, Koordination von Systemkopien für Entwicklungs- und Testumgebungen.
+Vorbereitung und Begleitung des SAP-GxP-Audits für regulatorische Anforderungen.
+
+Eingesetzte Technologien: SAP S/4HANA, SAP ECC, SAP HANA, BW/4HANA, SAP PI/PO,
+Solution Manager, SLES, GxP-Dokumentation
+
+---
+
+Projekt 3: SAP-Sicherheitskonzept und GRC-Implementierung für eine Großbank
+Zeitraum: 2017 – 2019 (20 Monate)
+Branche: Banking / Financial Services
+Rolle: SAP Sicherheitsberater / Basis-Architekt
+
+Überarbeitung des SAP-Rollenkonzepts für eine Großbank (ca. 8.000 SAP-Nutzer). Einführung
+von SAP GRC Access Control für SoD-Prüfungen und Notfallzugangsmanagement (Firefighter).
+Bereinigung von über 600 veralteten Rollen, Schulung des Basis-Teams.
+
+Eingesetzte Technologien: SAP ECC, SAP GRC 10.1, SU24, PFCG, ChaRM,
+Solution Manager, ABAP (Auswertungen)
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 5 Monaten
+Tagessatz:          960 €/Tag (vor Ort)
+Stundensatz Remote: nicht ausgewiesen (SAP Basis überwiegend vor Ort)
+Arbeitsweise:       überwiegend vor Ort
+Einsatzort:         Berlin und Umgebung, deutschlandweit und europaweit
+Auslastung:         bis zu 5 Tage/Woche

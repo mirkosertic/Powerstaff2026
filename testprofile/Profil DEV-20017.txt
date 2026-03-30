@@ -1,0 +1,82 @@
+Profil DEV-20017 – Rust/Systems Developer, Embedded, High-Performance
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Systems Developer mit über 17 Jahren Erfahrung in systemnah programmierten Sprachen,
+davon die letzten 5 Jahre mit steigendem Schwerpunkt auf Rust. Spezialisiert auf
+hochperformante, sicherheitskritische Systeme: von Embedded-Linux über Kernel-nahe
+Komponenten bis hin zu WebAssembly-basierten Microservices. Legt größten Wert auf
+korrekte Speicherverwaltung, Determinismus und messbare Performance-Verbesserungen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Rust (stable + nightly, async/await, tokio, actix-web)
+- C, C++17/20, RAII, Metaprogrammierung
+- Embedded Systems: RTOS (FreeRTOS, Zephyr), ARM Cortex-M, no_std Rust
+- Linux Kernel: Kernel-Module, eBPF, Treiber-Entwicklung
+- WebAssembly (WASM), WASI, wasmtime, wasmer
+- Cross-Compilation, Build-Systeme (CMake, Cargo, Makefiles)
+- gRPC, Protocol Buffers, ZeroMQ, MQTT
+- Performance Profiling: perf, Flamegraph, Valgrind, cargo-flamegraph
+- Docker, CI/CD, Git, GitHub Actions
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Hochperformanter Netzwerk-Proxy in Rust (Telekommunikationsanbieter)
+Zeitraum: 2023 – laufend (ca. 14 Monate)
+Branche: Telekommunikation
+Rolle: Principal Software Engineer
+
+Entwicklung eines latenzoptimierten Layer-4/7-Proxys in Rust als Ablösung eines C-basierten
+Altsystems. Asynchrone I/O mit Tokio, TCP/UDP-Handling im Kernel-Bypass-Modus (io_uring).
+Umfassende Flamegraph-basierte Performance-Analyse. Latenz um 40% reduziert gegenüber
+dem Altsystem bei gleicher Fehlerquote.
+
+Eingesetzte Technologien: Rust, Tokio, io_uring, Linux, Prometheus (Metriken via Rust-Crate),
+Docker, GitHub Actions, Flamegraph
+
+---
+
+Projekt 2: Firmware-Entwicklung für industrielle Sensoreinheit (Maschinenbauunternehmen)
+Zeitraum: 2020 – 2023 (30 Monate)
+Branche: Industrie / Embedded Systems
+Rolle: Embedded Rust Developer
+
+Entwicklung der Firmware für eine neue Generation industrieller Sensor-Gateways auf Basis
+von ARM Cortex-M4, vollständig in Rust (no_std, embedded-hal Ecosystem). Implementierung
+von Echtzeitdatenverarbeitung, MQTT-Anbindung für Cloud-Backend, Over-the-Air-Update-
+Mechanismus. Signifikante Verbesserung der Speichersicherheit gegenüber dem C-Vorgänger.
+
+Eingesetzte Technologien: Rust (no_std), embedded-hal, Cortex-M4, FreeRTOS (teilweise),
+MQTT, CAN, Cross-Compilation (arm-unknown-none-eabihf), probe-rs
+
+---
+
+Projekt 3: WebAssembly Plugin-System für eine SaaS-Plattform (EdTech-Startup)
+Zeitraum: 2018 – 2020 (18 Monate)
+Branche: EdTech / SaaS
+Rolle: Systems Engineer
+
+Konzeption und Implementierung eines Plugin-Systems auf Basis von WebAssembly, das
+es Kunden erlaubt, eigene Transformationslogik sicher in einer sandboxed WASM-Runtime
+auszuführen. Implementierung der Host-Seite in Rust mit wasmtime, Plugin-SDK für
+Rust und C (Kundenseitig).
+
+Eingesetzte Technologien: Rust, WebAssembly, wasmtime, C, Linux, Docker, Cargo
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 5 Monaten
+Tagessatz:          1.040 €/Tag (vor Ort)
+Stundensatz Remote: 130 €/Std
+Arbeitsweise:       bevorzugt remote, Vor-Ort-Phasen möglich
+Einsatzort:         Frankfurt/Main und Umgebung, remote deutschlandweit
+Auslastung:         4–5 Tage/Woche

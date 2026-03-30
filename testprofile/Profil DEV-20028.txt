@@ -1,0 +1,84 @@
+Profil DEV-20028 – Python ML Engineer, Recommender Systems, MLOps, E-Commerce
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+ML Engineer mit rund 7 Jahren Erfahrung, spezialisiert auf Recommender Systems und die
+Operationalisierung von Machine-Learning-Modellen (MLOps). Verbindet ein solides Verständnis
+von Algorithmen (kollaboratives Filtern, Matrix Factorization, Two-Tower-Modelle) mit der
+Fähigkeit, Modelle zuverlässig in Produktionsumgebungen zu betreiben. Mehrjährige Erfahrung
+im E-Commerce-Umfeld mit hohem Datendurchsatz und A/B-Testing-Kulturen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Python, scikit-learn, TensorFlow, PyTorch, LightGBM, XGBoost
+- Recommender Systems: Collaborative Filtering, Content-Based Filtering,
+  Matrix Factorization (ALS, SVD), Two-Tower Neural Networks
+- MLflow (Experiment Tracking, Model Registry), Kubeflow Pipelines
+- AWS SageMaker (Training, Deployment, Feature Store)
+- Feature Stores (Feast, SageMaker Feature Store)
+- A/B Testing, Statistische Signifikanz, Uplift Modeling
+- Apache Spark, PySpark, SQL
+- Apache Airflow (DAG-Entwicklung)
+- Docker, Kubernetes, Git, GitHub Actions
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Personalisierungs-Engine für einen großen Online-Modehändler
+Zeitraum: 2023 – laufend (ca. 14 Monate)
+Branche: E-Commerce / Fashion
+Rolle: Lead ML Engineer
+
+Verantwortlich für den Aufbau und Betrieb einer zentralen Personalisierungs-Engine, die
+Produktempfehlungen für Homepage, Produktdetailseite und E-Mail-Kampagnen liefert.
+Two-Tower-Neural-Network-Modell für personalisiertes Ranking, trainiert auf AWS SageMaker,
+Serving über einen SageMaker-Endpoint mit P99-Latenz < 20ms. Feature Store mit Feast für
+Online- und Offline-Features. A/B-Tests zeigten +8% Klickrate auf Empfehlungsmodul.
+
+Eingesetzte Technologien: Python, PyTorch, SageMaker, Feast, MLflow, Spark,
+Airflow, Docker, GitHub Actions, A/B Testing
+
+---
+
+Projekt 2: Kundensegmentierungs- und Churn-Prediction-System (B2C-Versicherung)
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: Versicherungen
+Rolle: Senior Data Scientist / ML Engineer
+
+Aufbau eines Kundensegmentierungsmodells (k-Means + RFM-Analyse) und eines
+Churn-Prediction-Modells (XGBoost) für die Kundenbindungsstrategie. MLflow für
+Experiment-Tracking, SageMaker für Training und Batch-Inference, Kubeflow Pipelines
+für automatisiertes Retraining. Enge Zusammenarbeit mit CRM-Team für Kampagnen-Integration.
+
+Eingesetzte Technologien: Python, XGBoost, scikit-learn, MLflow, SageMaker,
+Kubeflow, Airflow, SQL, PySpark, Docker
+
+---
+
+Projekt 3: Echtzeit-Preisoptimierung für ein Reiseportal
+Zeitraum: 2019 – 2021 (18 Monate)
+Branche: Travel / E-Commerce
+Rolle: ML Engineer
+
+Entwicklung eines Preis-Scoring-Modells für dynamische Preisgestaltung bei Reiseangeboten.
+Gradient-Boosting-Modell (LightGBM) für Preis-Elastizitäts-Schätzung, Echtzeit-Feature-
+Anreicherung aus Redis, Integration in den Produktivbetrieb über REST-Microservice.
+
+Eingesetzte Technologien: Python, LightGBM, Redis, FastAPI, MLflow,
+Docker, AWS, SQL, Airflow
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          960 €/Tag (vor Ort)
+Stundensatz Remote: 120 €/Std
+Arbeitsweise:       remote-first
+Einsatzort:         Hamburg und Umgebung, remote deutschlandweit und europaweit
+Auslastung:         4–5 Tage/Woche

@@ -1,0 +1,57 @@
+FREIBERUFLER-PROFIL DEV-20049
+===============================
+
+PROFIL-ÜBERBLICK
+-----------------
+Erfahrener Spezialist für API-Management und Microservices-Architekturen mit tiefem Praxiswissen in der Konzeption, Implementierung und dem Betrieb von Enterprise-API-Plattformen. Der Freiberufler verfügt über langjährige Erfahrung mit führenden Gateway-Produkten und begleitet Unternehmen von der API-Strategie bis zur technischen Umsetzung inkl. Developer-Portal und Governance-Prozessen. Sein Ansatz verbindet technische Exzellenz mit einer klaren Ausrichtung auf Developer Experience und Betriebssicherheit.
+
+KERNKOMPETENZEN
+----------------
+- API-Gateway-Plattformen: Kong, Apigee, AWS API Gateway
+- API-Design: OpenAPI 3.x, AsyncAPI, API-First-Design, GraphQL, gRPC, REST
+- Sicherheit: OAuth2, JWT, mTLS, API Security, Rate Limiting, API Versioning
+- Service Mesh: Istio, Envoy
+- Container & Orchestrierung: Kubernetes, Docker
+- Backend-Sprachen: Java, Python, Node.js
+- Developer Portals & Governance: Backstage-Integration, Kong Developer Portal, API-Lifecycle-Management
+
+PROJEKTERFAHRUNG
+-----------------
+
+Projekt 1: Aufbau einer unternehmensweiten API-Plattform bei einem Telekommunikationskonzern (2023 – 2024, 16 Monate)
+Branche: Telekommunikation
+Rolle: Lead API Platform Architect
+Aufgaben:
+- Konzeption und Implementierung einer zentralen API-Plattform auf Basis von Kong Enterprise für ca. 120 interne und externe APIs
+- Einführung eines standardisierten API-First-Design-Prozesses mit OpenAPI 3.1 als Vertragsbasis zwischen Teams
+- Konfiguration von OAuth2-Flows, JWT-Validierung und Rate Limiting auf Gateway-Ebene; Anbindung an den unternehmensweiten Identity Provider
+- Aufbau eines Self-Service-Developer-Portals auf Basis des Kong Developer Portals; Integration von automatisierten API-Tests und Onboarding-Workflows
+Technologien: Kong Enterprise, Kubernetes (EKS), Terraform, OpenAPI 3.1, OAuth2, JWT, Python, GitHub Actions
+
+Projekt 2: API-Strategie und Apigee-Migration bei einer internationalen Versicherungsgruppe (2021 – 2023, 20 Monate)
+Branche: Versicherungen / Finanzdienstleistungen
+Rolle: Senior API Consultant
+Aufgaben:
+- Ablösung eines fragmentierten Legacy-ESB-Setups durch eine einheitliche Apigee-X-Plattform
+- Entwicklung von API-Proxies und Shared Flows für übergreifende Querschnittsthemen (Logging, Sicherheit, Error Handling)
+- Einführung von AsyncAPI-Spezifikationen für ereignisbasierte Schnittstellen über Apache Kafka
+- Schulung und Coaching von 6 internen Entwicklungsteams im API-First-Ansatz; Definition von API-Governance-Richtlinien
+Technologien: Apigee X, Apache Kafka, AsyncAPI, OAuth2, Java, Node.js, Terraform, GCP
+
+Projekt 3: Service Mesh und gRPC-Migration bei einem FinTech-Unternehmen (2020 – 2021, 12 Monate)
+Branche: FinTech / Zahlungsverkehr
+Rolle: Microservices & API Engineer
+Aufgaben:
+- Einführung von Istio als Service Mesh für rund 40 Microservices; Implementierung von mTLS für die Kommunikation zwischen Diensten
+- Migration kritischer synchroner REST-Schnittstellen auf gRPC mit Protocol Buffers; messbare Latenzsenkung um ~35 %
+- Implementierung zentraler Observability-Maßnahmen: verteiltes Tracing, API-Metriken-Dashboards in Grafana
+- Entwicklung eines internen API-Versionierungskonzepts mit klarem Deprecation-Prozess
+Technologien: Istio, gRPC, Protocol Buffers, Kubernetes, Prometheus, Grafana, Jaeger, Java, Python
+
+VERFÜGBARKEIT / RAHMENDATEN
+-----------------------------
+- Verfügbarkeit: ca. 3 Monate (ab Mitte 2026)
+- Tagessatz: 1.000 €/Tag
+- Remote-Satz: 125 €/Std
+- Einsatzgebiet: bundesweit, bevorzugt München und Remote
+- Bevorzugte Projekte: API-Strategien, Gateway-Implementierungen, Plattformprojekte in mittelgroßen bis großen Unternehmen

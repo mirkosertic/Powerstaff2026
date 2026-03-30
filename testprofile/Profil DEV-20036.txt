@@ -1,0 +1,85 @@
+Profil DEV-20036 – Test Automation Spezialistin, Cypress/Playwright
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Test-Automatisierungs-Expertin mit rund 8 Jahren Erfahrung in der Qualitätssicherung
+moderner Webanwendungen und Backend-Services. Spezialisiert auf den pragmatischen Aufbau
+von Testautomatisierungsframeworks, die tatsächlich gewartet und erweitert werden können.
+Versteht Testautomatisierung als Engineering-Disziplin: Clean Code, Abstraktion und
+Wartbarkeit gelten auch für Testcode. ISTQB CTFL Certified.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- E2E-Test-Automatisierung: Playwright, Cypress, Selenium WebDriver
+- API-Testing: Postman, RestAssured, Supertest, k6 (Performanztests)
+- Komponenten-Tests: Jest, React Testing Library, Vitest
+- Backend-Tests: JUnit 5, TestNG, Mockito, Testcontainers
+- BDD: Cucumber (Java und JavaScript), Gherkin
+- Performanztests: k6, JMeter, Gatling
+- CI/CD Integration: GitHub Actions, GitLab CI, Jenkins
+- Docker, Testcontainers, Docker Compose für Testumgebungen
+- Testmanagement: TestRail, Zephyr Scale (Jira)
+- ISTQB CTFL, agile QA-Prozesse
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Aufbau einer ganzheitlichen Test-Automatisierungs-Strategie (E-Commerce-Konzern)
+Zeitraum: 2023 – laufend (ca. 14 Monate)
+Branche: E-Commerce
+Rolle: Test Automation Lead
+
+Verantwortlich für den Aufbau einer unternehmensweiten Testautomatisierungs-Strategie für
+12 Entwicklungsteams. Einführung von Playwright als Standard für E2E-Tests, Page Object
+Model als Architekturmuster, Integration in GitHub Actions. Aufbau einer gemeinsamen
+Bibliothek von Testfixtures und Custom Matchers. Schulung von 20+ Entwicklerinnen und
+Entwicklern in Test-Best-Practices.
+
+Eingesetzte Technologien: Playwright, TypeScript, GitHub Actions, Docker, Jest,
+React Testing Library, k6 (Performance Baseline-Tests)
+
+---
+
+Projekt 2: BDD-Testframework für eine Banking-API (mittelgroße Direktbank)
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: Banking / FinTech
+Rolle: Test Engineer / QA Spezialistin
+
+Aufbau eines BDD-Testframeworks mit Cucumber und RestAssured für eine Banking-API-Plattform.
+Gherkin-Feature-Files in enger Zusammenarbeit mit Product Ownern und Business Analysts
+geschrieben. Testcontainer-basierte Integrationstests gegen echte PostgreSQL- und
+Kafka-Instanzen. Kontinuierliche Ausführung in GitLab CI mit übersichtlichen Allure-Reports.
+
+Eingesetzte Technologien: Cucumber, RestAssured, JUnit 5, Testcontainers,
+Mockito, GitLab CI, Allure Report, Docker, PostgreSQL
+
+---
+
+Projekt 3: Performance-Test-Programm für ein Streaming-Portal
+Zeitraum: 2019 – 2021 (18 Monate)
+Branche: Medien / Streaming
+Rolle: Performance Test Engineer
+
+Konzeption und Umsetzung eines Performanztestprogramms für eine Video-Streaming-Plattform.
+Lasttests mit JMeter und k6 für verschiedene Lastszenarien (Spike, Soak, Stress), Integration
+in CI/CD für automatisierte Performance-Regressionsdetektierung. Erstellung von SLA-
+Baselines und Performance-Monitoring-Dashboards in Grafana.
+
+Eingesetzte Technologien: k6, JMeter, Grafana, InfluxDB, Docker, Jenkins,
+Python (Auswertungsskripte)
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 3 Monaten
+Tagessatz:          760 €/Tag (vor Ort)
+Stundensatz Remote: 95 €/Std
+Arbeitsweise:       Hybrid (bevorzugt 3 Tage remote)
+Einsatzort:         München und Umgebung, remote deutschlandweit
+Auslastung:         4–5 Tage/Woche

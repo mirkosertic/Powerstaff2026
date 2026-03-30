@@ -1,0 +1,85 @@
+Profil DEV-20045 – TypeScript/Node.js Senior Developer, NestJS, Serverless
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Senior Backend-Entwickler mit über 15 Jahren Erfahrung, davon die letzten 7 Jahre mit
+starkem Fokus auf TypeScript und das Node.js-Ökosystem. Favorisiert NestJS als
+strukturiertes Framework für größere Backend-Applikationen und schätzt gleichzeitig
+die Einfachheit serverlosen Ansätzen für geeignete Anwendungsfälle. Versteht TypeScript
+als echten Qualitätsbringer, nicht nur als syntaktischen Zucker über JavaScript.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- TypeScript (strict mode, advanced Types), Node.js 20+
+- NestJS (Modules, Guards, Interceptors, Custom Decorators)
+- Express.js, Fastify (leichtgewichtige APIs)
+- AWS Lambda, Serverless Framework, AWS SAM, AWS CDK
+- REST APIs, GraphQL (Apollo Server, Nexus), gRPC (grpc-js)
+- PostgreSQL (TypeORM, Knex, pg), DynamoDB, Redis
+- Apache Kafka (kafkajs), SQS, SNS
+- Docker, Kubernetes, GitHub Actions
+- Jest, Supertest, Testcontainers (node), E2E-Tests
+- Clean Architecture, SOLID, Domain-Driven Design (Light)
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: API-Plattform für ein B2B-SaaS-Produkt (HR-Tech)
+Zeitraum: 2023 – laufend (ca. 14 Monate)
+Branche: HRTech / SaaS
+Rolle: Lead Backend Developer
+
+Aufbau des mehrmandantenfähigen API-Backends für eine HR-Plattform in NestJS/TypeScript.
+Domain-orientierte Modulstruktur, Custom NestJS-Guards für Multi-Tenancy-Context-Isolation,
+Event-Bus-Abstraktion über Kafka (kafkajs). PostgreSQL mit TypeORM, Datenbankmigrationen
+mit TypeORM Migrations. GraphQL-API (Apollo Server 4) für Frontend, REST für Partner-
+Integrationen. Vollständige Test-Coverage (Unit + Integration) mit Jest und Testcontainern.
+
+Eingesetzte Technologien: TypeScript, NestJS, GraphQL (Apollo), Kafka, PostgreSQL,
+TypeORM, Redis, Docker, Kubernetes, Jest, Testcontainers, GitHub Actions
+
+---
+
+Projekt 2: Serverlose Eventverarbeitungsplattform für einen Versicherungskonzern
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: Versicherungen
+Rolle: Senior Developer / Serverless Architect
+
+Konzeption und Implementierung einer AWS-Lambda-basierten Plattform für die Verarbeitung
+von Versicherungsereignissen. Serverless Framework für Deployment-Management, DynamoDB
+für zustandsbehaftete Workflows mit optimistischem Locking, SNS/SQS für Fan-Out-Muster.
+TypeScript-First-Ansatz mit stricten ESLint-Regeln und vollständiger Typisierung der
+DynamoDB-Zugriffe.
+
+Eingesetzte Technologien: TypeScript, AWS Lambda, DynamoDB, SNS, SQS, API Gateway,
+Serverless Framework, Jest, GitHub Actions, CDK
+
+---
+
+Projekt 3: Echtzeit-Collaboration-Backend für eine EdTech-Plattform
+Zeitraum: 2019 – 2021 (22 Monate)
+Branche: EdTech
+Rolle: Backend Developer
+
+Aufbau eines Echtzeit-Backends für kollaboratives Lernen. Node.js mit Socket.io für
+WebSocket-basierte Echtzeit-Kommunikation, Redis für Session- und Pub/Sub-Management
+in einem horizontally skalierten Cluster. REST-API für klassische CRUD-Operationen.
+
+Eingesetzte Technologien: Node.js, TypeScript, Socket.io, Redis, PostgreSQL,
+Express.js, Jest, Docker, GitHub Actions
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          920 €/Tag (vor Ort)
+Stundensatz Remote: 115 €/Std
+Arbeitsweise:       remote-first, gelegentliche Vor-Ort-Termine
+Einsatzort:         Berlin und Umgebung, remote deutschlandweit und europaweit
+Auslastung:         bis zu 5 Tage/Woche

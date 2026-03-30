@@ -1,0 +1,83 @@
+Profil DEV-20018 – Java Architektin, Domain-Driven Design, Hexagonale Architektur
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Java-Architektin mit knapp 10 Jahren Erfahrung, die sich auf die Anwendung von Domain-Driven
+Design und modernen Architekturmustern wie Hexagonaler Architektur, Event Sourcing und CQRS
+spezialisiert hat. Übersetzt komplexe fachliche Domänen in wartbare, evolvierbare Softwaredesigns
+und begleitet Teams beim Übergang von monolithischen Strukturen zu fachlich geschnittenen
+Microservices. Aktive Teilnehmerin der DDD Europe Community.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Java 17/21, Spring Boot 3, Spring Cloud, Quarkus
+- Domain-Driven Design: Bounded Contexts, Aggregates, Domain Events
+- Hexagonale Architektur, Clean Architecture, Ports & Adapters
+- Event Sourcing, CQRS, Outbox Pattern, Saga Pattern
+- Apache Kafka, RabbitMQ, Axon Framework
+- REST APIs, OpenAPI 3, AsyncAPI
+- Docker, Kubernetes, Helm
+- PostgreSQL, MongoDB, EventStoreDB
+- Architecture Decision Records, Arc42, C4 Model
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: DDD-basierte Microservices-Plattform für einen Logistikkonzern
+Zeitraum: 2023 – laufend (ca. 16 Monate)
+Branche: Logistik / Supply Chain
+Rolle: Software Architektin / Tech Lead
+
+Federführende Architektin bei der Konzeption und schrittweisen Umsetzung einer fachlich
+geschnittenen Microservices-Landschaft für Auftrags- und Sendungsmanagement. Event Storming
+mit Fachabteilungen zur Bounded-Context-Identifikation, Dokumentation in Arc42 und ADRs.
+Einführung des Outbox-Patterns für zuverlässige Event-Publikation auf Kafka, Hexagonale
+Architektur als Referenzarchitektur für alle neuen Services. Mentoring von vier Junior-Architekten.
+
+Eingesetzte Technologien: Java 21, Spring Boot 3, Kafka, PostgreSQL, Docker, Kubernetes,
+OpenAPI 3, Arc42, C4 Model, GitHub Actions
+
+---
+
+Projekt 2: Event-Sourcing-Plattform für eine Direktversicherung
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: Versicherungen
+Rolle: Architektin / Senior Developer
+
+Design und Implementierung eines Event-Sourcing-Systems für die Vertragsverwaltung einer
+Direktversicherung. Einführung von Axon Framework, EventStoreDB und CQRS-Schicht für
+leistungsfähige Abfrageseite. Besondere Herausforderung: Migration von Bestandsverträgen
+in das Event-Sourcing-System ohne Downtime.
+
+Eingesetzte Technologien: Java 17, Spring Boot, Axon Framework, EventStoreDB,
+PostgreSQL (Queryseite), Docker, Kubernetes, Kafka
+
+---
+
+Projekt 3: Modulith-Refactoring für eine SaaS-HR-Plattform
+Zeitraum: 2019 – 2021 (22 Monate)
+Branche: HRTech / SaaS
+Rolle: Software Architektin
+
+Strategisches Refactoring eines wachstumsgehemmten Monolithen hin zu einem Spring-Modulith.
+Durchführung von Bounded-Context-Analyse, Einführung klarer Modulgrenzen, Abbau zyklischer
+Abhängigkeiten. Definition von Intermodul-Schnittstellen über publizierte Domain Events.
+
+Eingesetzte Technologien: Java, Spring Boot, Spring Modulith, PostgreSQL, Kafka,
+Docker, Arc42, JUnit 5, ArchUnit
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 1 Monat
+Tagessatz:          1.120 €/Tag (vor Ort)
+Stundensatz Remote: 140 €/Std
+Arbeitsweise:       Hybrid, überwiegend remote
+Einsatzort:         Hamburg und Umgebung, remote deutschlandweit
+Auslastung:         bis zu 5 Tage/Woche

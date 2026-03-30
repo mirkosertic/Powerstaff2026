@@ -1,0 +1,86 @@
+Profil DEV-20044 – Kubernetes/OpenShift Plattform-Spezialistin
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Kubernetes- und OpenShift-Spezialistin mit rund 7 Jahren Erfahrung in der Konzeption und
+dem Betrieb containerisierter Produktionsplattformen. Hat Plattformen für kleine Startups
+ebenso betreut wie für Konzerne mit Hunderten von Workloads. Besondere Stärken liegen
+in der Härtung von Kubernetes-Clustern, der Operatoren-Entwicklung und dem Aufbau von
+GitOps-basierten Deployment-Prozessen. Leidet nicht darunter, wenn Dinge erstmals korrekt
+konfiguriert werden statt später gepatcht.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Kubernetes (EKS, GKE, AKS, On-Premise), OpenShift 4.x
+- Helm, Kustomize, Helmfile
+- Cluster API, Rancher, KubeVirt (Grundkenntnisse)
+- GitOps: ArgoCD, FluxCD
+- Operators: Operator SDK, controller-runtime (Go)
+- Velero (Backup/Restore), Cert-Manager, External-DNS
+- Ingress: nginx, Traefik, Istio Gateway
+- Network Policies, RBAC, OPA/Gatekeeper, Kyverno
+- Monitoring: Prometheus, Grafana, Alertmanager, Victoria Metrics
+- Go (für Tooling und Operators), Python, Shell
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Multi-Cluster-Kubernetes-Plattform für einen Versicherungskonzern
+Zeitraum: 2024 – laufend (ca. 10 Monate)
+Branche: Versicherungen
+Rolle: Kubernetes Platform Engineer
+
+Aufbau und Betrieb einer Multi-Cluster-Kubernetes-Umgebung (Prod, Non-Prod, DR) mit
+Cluster API für einheitliches Cluster-Lifecycle-Management. GitOps-Deployment aller
+Workloads über ArgoCD, zentrales Policy Enforcement mit Kyverno. Aufbau einer Disaster-
+Recovery-Strategie mit Velero und regelmäßigen DR-Tests. Hardenig gemäß CIS Kubernetes
+Benchmark.
+
+Eingesetzte Technologien: Kubernetes, Cluster API, ArgoCD, Kyverno, Velero,
+Prometheus, Grafana, Cert-Manager, Terraform, Go (Tooling)
+
+---
+
+Projekt 2: OpenShift-Plattform für eine deutsche Landesbank
+Zeitraum: 2021 – 2023 (22 Monate)
+Branche: Banking / Financial Services
+Rolle: OpenShift Platform Specialist
+
+Mitverantwortlich für Betrieb und Weiterentwicklung einer OpenShift-4.x-Plattform für
+ca. 80 Entwicklungsteams. Einführung von GitOps-Workflows mit FluxCD, Aufbau eines
+standardisierten Helm-Chart-Repositories, Implementierung von OPA/Gatekeeper-Policies
+für Compliance (z.B. kein Root-Container, Resource Limits Pflicht).
+
+Eingesetzte Technologien: OpenShift 4.x, Helm, FluxCD, OPA/Gatekeeper,
+Prometheus, Grafana, Cert-Manager, External Secrets, Terraform
+
+---
+
+Projekt 3: Kubernetes-Operator für Datenbank-Provisionierung (FinTech-Startup)
+Zeitraum: 2020 – 2021 (12 Monate)
+Branche: FinTech
+Rolle: Go-Entwicklerin / Platform Engineer
+
+Entwicklung eines custom Kubernetes Operators in Go zur automatisierten Provisionierung
+von PostgreSQL-Datenbankinstanzen für Entwicklungs- und Staging-Umgebungen. CRD-Design,
+Controller-Implementierung (controller-runtime), Vault-Integration für automatische
+Credentials-Generierung.
+
+Eingesetzte Technologien: Go, controller-runtime, Kubernetes CRDs, Vault,
+PostgreSQL Operator, GitHub Actions
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 1 Monat
+Tagessatz:          960 €/Tag (vor Ort)
+Stundensatz Remote: 120 €/Std
+Arbeitsweise:       remote-first, gelegentliche Vor-Ort-Präsenz
+Einsatzort:         Nürnberg und Umgebung, remote deutschlandweit
+Auslastung:         bis zu 5 Tage/Woche

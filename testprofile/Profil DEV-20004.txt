@@ -1,0 +1,85 @@
+Profil DEV-20004 – Data Engineer AWS/Apache Spark
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Data Engineer mit rund 8 Jahren Praxiserfahrung im Aufbau und Betrieb großer Datenpipelines
+auf AWS und Databricks. Vertieftes Know-how in der Verarbeitung von Massendaten mit Apache
+Spark und PySpark sowie in der Orchestrierung komplexer ELT-Workflows. Versteht Daten nicht
+nur als technische Aufgabe, sondern als strategischen Unternehmensgegenstand – und baut
+Pipelines, die auch von Daten-Analysten wartbar und erweiterbar sind.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Python, PySpark, Apache Spark (Batch und Streaming)
+- AWS Glue, AWS S3, AWS Redshift, AWS Lambda
+- Databricks, Delta Lake, Unity Catalog
+- Apache Kafka (Consumer/Producer, Streams)
+- Apache Airflow, dbt (Data Build Tool)
+- SQL, PostgreSQL, Parquet, Avro, JSON
+- Terraform, Docker, Git, CI/CD
+- ETL/ELT-Pipeline-Design und -Optimierung
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Aufbau einer zentralen Dataplattform für mittelgroßen Logistikdienstleister
+Zeitraum: 2023 – laufend (ca. 16 Monate)
+Branche: Logistik / Transport
+Rolle: Lead Data Engineer
+
+Konzeption und Implementierung einer modernen Lakehouse-Architektur auf Basis von Databricks
+und Delta Lake als Ablösung eines veralteten On-Premise-DWH. Ingestion von Daten aus über
+15 Quellsystemen (ERP, TMS, IoT-Sensoren), Transformation via dbt und PySpark-Jobs auf
+Databricks Workflows. Automatisierung der Infrastruktur mit Terraform, Datenkatalogisierung
+über Unity Catalog. Performance der analytischen Abfragen um Faktor 8 gegenüber Altsystem
+verbessert.
+
+Eingesetzte Technologien: Databricks, Delta Lake, PySpark, dbt, Terraform, AWS S3,
+Python, SQL, Apache Kafka, Unity Catalog, GitHub Actions
+
+---
+
+Projekt 2: Echtzeit-Datenpipeline für E-Commerce-Analyse (führender Onlinehändler)
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: E-Commerce
+Rolle: Senior Data Engineer
+
+Aufbau einer Echtzeit-Datenpipeline zur Verarbeitung von Klickstream-Daten und
+Transaktionsereignissen. Kafka als zentraler Event-Bus, Spark Structured Streaming zur
+Echtzeit-Aggregation, AWS Redshift als analytisches Endlager. Enge Zusammenarbeit mit
+Data Scientists bei der Feature-Erstellung für Empfehlungsmodelle. Einführung von Data Quality
+Checks mit Great Expectations.
+
+Eingesetzte Technologien: Apache Kafka, Spark Structured Streaming, AWS Redshift,
+AWS Glue, Python, PySpark, Great Expectations, Airflow, S3, Terraform
+
+---
+
+Projekt 3: Migration Datenpipeline-Infrastruktur auf AWS für Pharmaunternehmen
+Zeitraum: 2020 – 2021 (14 Monate)
+Branche: Pharma / Life Sciences
+Rolle: Data Engineer
+
+Verantwortlich für die Migration der Datenpipeline-Infrastruktur von einem On-Premise-Hadoop-
+Cluster auf AWS (S3, Glue, Redshift). Umstellung bestehender MapReduce-Jobs auf AWS Glue
+(Spark-basiert), Neugestaltung der Orchestrierung mit Apache Airflow auf EC2. Einhaltung
+strenger regulatorischer Anforderungen an Datenherkunft und Auditierbarkeit (GxP-Compliance).
+
+Eingesetzte Technologien: AWS Glue, AWS S3, AWS Redshift, Apache Airflow, Python,
+PySpark, SQL, Terraform, Docker
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 4 Monaten
+Tagessatz:          880 €/Tag (vor Ort)
+Stundensatz Remote: 110 €/Std
+Arbeitsweise:       remote-first, gelegentliche Vor-Ort-Termine möglich
+Einsatzort:         Halle/Saale, remote deutschlandweit und international
+Auslastung:         4–5 Tage/Woche

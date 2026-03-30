@@ -1,0 +1,85 @@
+Profil DEV-20034 – Datenbank-Expertin PostgreSQL und Oracle, Performance-Tuning
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Datenbank-Spezialistin mit knapp 10 Jahren Erfahrung in relationalen Datenbanksystemen,
+Schwerpunkt PostgreSQL und Oracle. Bekannt für ihr systematisches Vorgehen bei komplexen
+Performance-Problemen: von der Analyse von Execution Plans über Index-Strategien bis hin zu
+Architekturentscheidungen bei Partitionierung und Replikation. Begleitet Datenbankmigrationen
+(Oracle zu PostgreSQL, SQL Server zu PostgreSQL) und Modernisierungsprojekte.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- PostgreSQL 14/15/16: Administration, Performance, Replikation
+- Oracle 19c, AWR, ASH, EXPLAIN PLAN, SQL Tuning Advisor
+- MySQL 8.x / MariaDB, SQL Server (Kenntnisse)
+- Query Optimization, Execution Plan Analyse
+- Index-Strategien: B-Tree, GIN, GiST, Partial Indexes, Expression Indexes
+- Partitioning, Table Partitionierung, pg_partman
+- Replikation: Streaming Replication, Logical Replication, pglogical
+- Hochverfügbarkeit: Patroni, repmgr, Oracle Data Guard
+- Connection Pooling: pgBouncer, PgPool-II
+- Datenmigration, pg_dump, ora2pg, pgloader
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Oracle-zu-PostgreSQL-Migration für einen Finanzdienstleister
+Zeitraum: 2023 – laufend (ca. 14 Monate)
+Branche: Financial Services
+Rolle: Datenbank-Architektin / Migration Lead
+
+Technische Leitung der Migration von 12 Oracle-19c-Datenbanken auf PostgreSQL 15 für einen
+mittelgroßen Finanzdienstleister. Analyse und Umschreibung von PL/SQL-Prozeduren, Packages
+und Triggers nach PL/pgSQL. Performance-Benchmarking vor und nach Migration, Aufbau eines
+Patroni-Clusters für Hochverfügbarkeit. Reduktion der Lizenzkosten um ca. 800.000 €/Jahr.
+
+Eingesetzte Technologien: Oracle 19c, PostgreSQL 15, ora2pg, PL/pgSQL, Patroni,
+pgBouncer, AWS RDS, pg_stat_statements, EXPLAIN ANALYZE
+
+---
+
+Projekt 2: PostgreSQL-Performance-Optimierung bei einer E-Commerce-Plattform
+Zeitraum: 2021 – 2023 (18 Monate)
+Branche: E-Commerce
+Rolle: Datenbank-Spezialistin / Performance Engineer
+
+Systematische Performance-Analyse einer wachstumsgehemmten PostgreSQL-Installation
+(15 Millionen Produkte, Milliarden Transaktionen/Jahr). Identifikation und Behebung von
+N+1-Query-Problemen, Einführung von Partial Indexes, Table Partitioning (Range-Partitionierung
+nach Datum), Optimierung des Connection-Pool-Setups (pgBouncer). Abfragezeiten auf kritischen
+Report-Queries um Faktor 40 reduziert.
+
+Eingesetzte Technologien: PostgreSQL 14, pgBouncer, pg_stat_statements,
+EXPLAIN ANALYZE, auto_explain, Patroni, Linux
+
+---
+
+Projekt 3: Datenbankarchitektur für ein Healthcare-Datenregister
+Zeitraum: 2019 – 2021 (20 Monate)
+Branche: Healthcare / Medical Registry
+Rolle: Datenbankarchitektin
+
+Architektur und Implementierung einer PostgreSQL-basierten Datenbank für ein nationales
+medizinisches Qualitätsregister. Besondere Anforderungen: Datenschutz (Pseudonymisierung
+sensitiver Felder), Versionierung von Datensätzen (Temporal Tables mit eigener Logik),
+Audit-Trail, sehr lange Aufbewahrungsfristen.
+
+Eingesetzte Technologien: PostgreSQL 13, PL/pgSQL, pgcrypto, Row-Level Security,
+Replikation, pg_dump, Docker, Linux
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 5 Monaten
+Tagessatz:          920 €/Tag (vor Ort)
+Stundensatz Remote: 115 €/Std
+Arbeitsweise:       Hybrid (3 Tage remote)
+Einsatzort:         Hamburg und Umgebung, remote deutschlandweit
+Auslastung:         4–5 Tage/Woche

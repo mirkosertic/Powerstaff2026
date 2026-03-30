@@ -1,0 +1,82 @@
+Profil DEV-20046 – Junior-bis-Mid-Level React/TypeScript Entwicklerin, Startup-Umfeld
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Junge Frontend-Entwicklerin mit knapp 3 Jahren Berufserfahrung nach einem abgeschlossenen
+Informatikstudium (B.Sc.). Erste praktische Erfahrungen bereits während des Studiums durch
+Werkstudenten- und Praktikumsstellen gesammelt. Begeistert für modernes React-Ökosystem,
+sauber strukturierten Code und die enge Zusammenarbeit mit UX-Teams. Möchte in einem
+eingespielten Team wachsen und von erfahrenen Kolleginnen und Kollegen lernen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- React 18, TypeScript, JavaScript (ES2022)
+- Tailwind CSS, CSS Modules, SCSS
+- HTML5, semantisches Markup, Grundlagen Accessibility
+- Vite, Webpack (Konfiguration: grundlegend)
+- REST APIs (fetch, axios), grundlegendes API-Design-Verständnis
+- Storybook (Nutzung und einfache Stories)
+- Jest, React Testing Library
+- Git (Feature-Branch-Workflow, Pull Requests, Merge)
+- Figma (Design-to-Code-Handoff), Jira
+- Node.js (grundlegende Skripte), npm/pnpm
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Mitarbeit an einer Buchungs-App für ein PropTech-Startup
+Zeitraum: 2024 – laufend (ca. 8 Monate)
+Branche: PropTech / Real Estate
+Rolle: Junior Frontend Developer
+
+Entwicklung neuer Feature-Komponenten in einer bestehenden React/TypeScript-Codebase.
+Hauptaufgaben: Implementierung eines mehrstufigen Buchungs-Wizards (React Hook Form +
+Zod-Validierung), Entwicklung von Kalenderkomponenten für Verfügbarkeitsanzeige,
+Bugfixing und Refactoring älterer JavaScript-Komponenten auf TypeScript.
+
+Eingesetzte Technologien: React 18, TypeScript, React Hook Form, Zod,
+Tailwind CSS, Jest, React Testing Library, Vite, Git
+
+---
+
+Projekt 2: Entwicklung einer Onboarding-Komponente für ein HR-SaaS-Startup
+Zeitraum: 2023 (6 Monate, Werkstudentin)
+Branche: HRTech / SaaS
+Rolle: Werkstudentin Frontend
+
+Mitarbeit an einem mehrstufigen Onboarding-Flow für neue Nutzende. Enge Zusammenarbeit
+mit dem UX-Team anhand von Figma-Designs, Umsetzung in React-Komponenten, Integration
+in die bestehende Storybook-Komponenten-Library. Review-Feedback von Senior-Entwicklerinnen
+aktiv eingeholt und umgesetzt.
+
+Eingesetzte Technologien: React, TypeScript, Storybook, Tailwind CSS,
+REST APIs, Git, Jira
+
+---
+
+Projekt 3: Eigenprojekt – Portfolio-Website und Open-Source-Beitrag
+Zeitraum: 2022 (4 Monate, neben dem Studium)
+Branche: persönliches Projekt
+Rolle: Entwicklerin (Eigeninitiative)
+
+Erstellung einer eigenen Portfolio-Website mit Next.js und Tailwind CSS (deploy auf Vercel).
+Kleiner Open-Source-Beitrag zu einer React-Komponenten-Library (Bugfix + Dokumentations-
+Verbesserung, merged PR auf GitHub).
+
+Eingesetzte Technologien: Next.js 13, TypeScript, Tailwind CSS, Vercel, Git, GitHub
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          600 €/Tag (vor Ort)
+Stundensatz Remote: 75 €/Std
+Arbeitsweise:       bevorzugt Hybrid (Team-Zusammenarbeit und Lernatmosphäre wichtig)
+Einsatzort:         Hamburg und Umgebung, remote teilweise möglich
+Auslastung:         5 Tage/Woche (bevorzugt Vollzeit für kontinuierliches Lernen)

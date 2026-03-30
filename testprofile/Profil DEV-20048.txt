@@ -1,0 +1,54 @@
+FREIBERUFLER-PROFIL DEV-20048
+===============================
+
+PROFIL-ÜBERBLICK
+-----------------
+Erfahrene Cyber Security Engineerin mit fundiertem Wissen in offensiven und defensiven Sicherheitsdisziplinen. Die Freiberuflerin deckt das gesamte Spektrum von gezielten Penetrationstests und Red-Team-Operationen bis hin zum Aufbau von SIEM-Infrastrukturen und SOC-Prozessen ab. Ihre besondere Stärke liegt in der praxisnahen Verbindung von Angreifer- und Verteidiger-Perspektive, was eine realistische Bedrohungsanalyse und wirkungsvolle Gegenmaßnahmen ermöglicht.
+
+KERNKOMPETENZEN
+----------------
+- Offensive Security: Penetration Testing, Red Teaming, Exploit Development, Kali Linux, Metasploit, Burp Suite, Nmap, Wireshark
+- Defensive Security: Blue Teaming, SIEM (Splunk, Microsoft Sentinel), SOAR, Threat Intelligence, SOC-Betrieb
+- Analyse & Response: CVE-Analyse, Incident Response, digitale Forensik, Malware-Analyse
+- Scripting & Automatisierung: Python, PowerShell
+- Methoden: OWASP, MITRE ATT&CK Framework, Kill Chain-Analyse
+
+PROJEKTERFAHRUNG
+-----------------
+
+Projekt 1: Red-Team-Assessment bei einer europäischen Großbank (2023 – 2024, 14 Monate)
+Branche: Finanzdienstleistungen
+Rolle: Lead Red Team Engineer
+Aufgaben:
+- Planung und Durchführung mehrwöchiger Red-Team-Übungen mit realistischen Angriffsszenarios (Advanced Persistent Threat Simulation)
+- Exploitation von Schwachstellen in internen Web-Applikationen mittels Burp Suite und selbst entwickelter Python-Scripts
+- Lateral Movement innerhalb des Active Directory; Eskalation von Benutzerrechten bis hin zu Domain-Admin-Rechten unter kontrollierten Bedingungen
+- Nachvollziehbare Dokumentation der Angriffswege und Ableitung konkreter Abhilfemaßnahmen (Remediation Roadmap)
+Technologien: Metasploit, Burp Suite, BloodHound, Cobalt Strike (autorisiert), PowerShell, Kali Linux, Python
+
+Projekt 2: SIEM-Aufbau und SOC-Etablierung bei einem Energieversorger (2021 – 2023, 22 Monate)
+Branche: Kritische Infrastruktur / Energie
+Rolle: Senior Security Engineer (Blue Team)
+Aufgaben:
+- Konzeption und Implementierung einer unternehmensweiten SIEM-Lösung auf Basis von Microsoft Sentinel
+- Entwicklung von Detection Rules, Playbooks und automatisierten Response-Workflows via SOAR-Integration
+- Aufbau eines 24/7-fähigen SOC-Betriebs inkl. Eskalationsprozesse und Incident-Response-Handbücher
+- Regelmäßige Threat-Intelligence-Briefings für das Management sowie technische Schulungen für das interne Security-Team
+Technologien: Microsoft Sentinel, SOAR (Logic Apps), KQL, Threat Intelligence Feeds, PowerShell, Python
+
+Projekt 3: Schwachstellenmanagement und Forensik bei einem mittelständischen Maschinenbauer (2020 – 2021, 10 Monate)
+Branche: Industrieunternehmen / Maschinenbau
+Rolle: Cyber Security Consultant
+Aufgaben:
+- Strukturierte Schwachstellenscans und -bewertungen nach CVSS; Priorisierung anhand Geschäftsrisiko
+- Forensische Untersuchung eines Ransomware-Vorfalls: Ursachenanalyse, Schadensermittlung, Wiederherstellungsplanung
+- Entwicklung eines Patch-Management-Prozesses und Einführung eines Vulnerability-Tracking-Tools
+Technologien: Nmap, Tenable Nessus, Wireshark, Volatility (Memory Forensics), Python, Splunk
+
+VERFÜGBARKEIT / RAHMENDATEN
+-----------------------------
+- Verfügbarkeit: ca. 5 Monate (ab Mitte 2026)
+- Tagessatz: 1.040 €/Tag
+- Remote-Satz: 130 €/Std
+- Einsatzgebiet: bundesweit, bevorzugt Karlsruhe / Rhein-Neckar-Region sowie Remote
+- Bevorzugte Projekte: Banken, kritische Infrastruktur, Behörden, Unternehmen mit regulatorischen Anforderungen

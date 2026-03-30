@@ -1,0 +1,84 @@
+Profil DEV-20026 – React Native Developer, Cross-Platform Mobile Apps
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+React-Native-Entwickler mit knapp 8 Jahren Erfahrung in der Cross-Platform-Mobilentwicklung.
+Hat eine Vielzahl von Consumer-Apps in verschiedenen Branchen vom ersten Commit bis zum
+App-Store-Release begleitet. Versteht die Eigenheiten beider Plattformen (iOS und Android)
+auch in einem React-Native-Kontext und liefert Apps, die sich nativ anfühlen. Legt Wert auf
+strukturierten Testansatz und automatisierte Release-Prozesse.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- React Native (CLI und Expo), TypeScript, JavaScript
+- Redux Toolkit, Zustand, React Query (TanStack Query)
+- React Navigation, Deep Linking, Universal Links
+- Firebase (Auth, Firestore, Analytics, Crashlytics, Push)
+- REST APIs, GraphQL (Apollo Client)
+- Push Notifications (APNs, FCM), In-App-Purchases (RevenueCat)
+- App Store Connect, Google Play Console, Expo EAS
+- CI/CD: Fastlane, GitHub Actions, EAS Build
+- Testing: Jest, React Native Testing Library, Detox (E2E)
+- Native Module Bridging (iOS/Android)
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Loyalty-App für eine große Einzelhandelskette
+Zeitraum: 2023 – laufend (ca. 13 Monate)
+Branche: Handel / Retail
+Rolle: Lead React Native Developer
+
+Neuentwicklung der Kundenbindungs-App für eine große Einzelhandelskette (Zielgruppe: 2 Mio.+
+Nutzerinnen und Nutzer). React Native mit Expo (Managed Workflow), TypeScript, Redux Toolkit
+für Zustandsmanagement, Barcode-Scanning für Kassenkopplung. Performance-Optimierung durch
+FlatList-Virtualisierung, Lazy Loading und Hermes-Engine-Nutzung. Automatisiertes Deployment
+über EAS Build und Fastlane.
+
+Eingesetzte Technologien: React Native, Expo, TypeScript, Redux Toolkit, Firebase,
+Barcode-Scanning, EAS Build, Fastlane, GitHub Actions, Jest, Detox
+
+---
+
+Projekt 2: Telematikmobilitäts-App für einen Automobilhersteller
+Zeitraum: 2021 – 2023 (18 Monate)
+Branche: Automotive / Mobility
+Rolle: Senior React Native Developer
+
+Entwicklung einer Fahrzeug-Companion-App mit Fernzugriff auf Fahrzeugdaten (Ladezustand,
+Standort, Klimatisierung) via REST-API-Integration. Native Module für Bluetooth-Low-Energy-
+Kommunikation mit Fahrzeugschlüsseln. Deep Linking für Weiterleitung aus Push-Notifications
+und externen URLs. Rollout auf iOS und Android mit staggered Release-Strategie.
+
+Eingesetzte Technologien: React Native CLI, TypeScript, BLE (Native Module),
+React Navigation, Firebase, Redux Toolkit, Jest, GitHub Actions, App Store/Play Console
+
+---
+
+Projekt 3: Fitness-App für ein HealthTech-Startup
+Zeitraum: 2019 – 2021 (16 Monate)
+Branche: Healthcare / FitnessApp
+Rolle: React Native Developer
+
+Entwicklung einer Fitness-Tracking-App mit personalisierten Trainingsplänen. Integration von
+HealthKit (iOS) und Google Fit (Android) über React Native-Health-Bibliothek, Animations-
+intensive UI mit Reanimated 2, Abonnement-Verwaltung über RevenueCat.
+
+Eingesetzte Technologien: React Native, TypeScript, Reanimated 2, HealthKit,
+Google Fit, RevenueCat, Firebase, Jest, React Native Testing Library
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 4 Monaten
+Tagessatz:          800 €/Tag (vor Ort)
+Stundensatz Remote: 100 €/Std
+Arbeitsweise:       remote-first, gelegentliche Vor-Ort-Termine
+Einsatzort:         Berlin und Umgebung, remote deutschlandweit und europaweit
+Auslastung:         4–5 Tage/Woche

@@ -1,0 +1,84 @@
+Profil DEV-20037 – Platform Engineer, Internal Developer Platform (IDP)
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Platform Engineer mit über 15 Jahren Infrastruktur- und Entwicklungserfahrung, seit mehreren
+Jahren spezialisiert auf den Aufbau von Internal Developer Platforms (IDP). Überzeugt, dass
+eine gute Plattform das Fundament für schnelle, sichere Softwareentwicklung ist. Bringt sowohl
+die technische Tiefe (Kubernetes, Go, Terraform) als auch das Verständnis für Developer
+Experience mit, das nötig ist, um Plattformen zu bauen, die Teams wirklich nutzen wollen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Platform Engineering, Developer Experience (DevEx)
+- Backstage (Spotify) – Portal-Setup, Custom Plugins, TechDocs
+- Crossplane – Infrastructure as Code via Kubernetes CRDs
+- Kubernetes, Helm, ArgoCD, Flux CD
+- HashiCorp Vault, External Secrets Operator
+- Terraform, OpenTofu, Terragrunt
+- GitHub Actions, GitLab CI/CD (Template Engineering)
+- Go (für Kubernetes Operators und Tooling), Python, Shell
+- Service Catalog, API-Gateway, Developer Portal
+- Observability: Prometheus, Grafana, OpenTelemetry
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Internal Developer Platform für einen internationalen Logistikkonzern
+Zeitraum: 2023 – laufend (ca. 16 Monate)
+Branche: Logistik / Transport
+Rolle: Lead Platform Engineer
+
+Aufbau einer Internal Developer Platform auf Basis von Backstage für ca. 200 Entwicklerinnen
+und Entwickler. Software-Katalog mit automatischer Service-Discovery via Kubernetes-Labels,
+Software-Templates für Self-Service-Provisionierung neuer Services (Repo, CI/CD, Namespace,
+Vault-Secrets in einem Klick). Crossplane-basierte Infrastrukturprovisionierung, Custom
+Backstage-Plugin für Deployment-Status.
+
+Eingesetzte Technologien: Backstage, Crossplane, Kubernetes, ArgoCD, Vault,
+External Secrets, GitHub Actions, Go (Backstage-Plugin), Terraform, Python
+
+---
+
+Projekt 2: Self-Service-Platform für ein mittelständisches Softwareunternehmen
+Zeitraum: 2021 – 2023 (22 Monate)
+Branche: Software / SaaS
+Rolle: Platform Engineer / DevOps Lead
+
+Aufbau einer Entwicklerplattform auf Basis von GitLab CI/CD mit standardisierten
+Pipeline-Templates, einer Helm-Chart-Library für alle internen Services sowie Vault-Integration
+für Secrets Management. Dokumentierte Self-Service-Workflows reduzierten Plattform-Team-
+Bottlenecks und verkürzten die Onboarding-Zeit für neue Services von 2 Wochen auf 2 Stunden.
+
+Eingesetzte Technologien: GitLab CI/CD, Helm, Vault, Kubernetes, ArgoCD,
+Terraform, Python, Go (internes CLI-Tooling)
+
+---
+
+Projekt 3: Kubernetes-Operator-Entwicklung für eine Cloud-Plattform (Telekommunikation)
+Zeitraum: 2019 – 2021 (18 Monate)
+Branche: Telekommunikation
+Rolle: Platform Engineer / Go Developer
+
+Entwicklung von custom Kubernetes Operatoren in Go zur Automatisierung von
+Netzwerkkonfigurationsaufgaben. CRD-Design, Controller-Implementierung mit
+controller-runtime, Integration-Tests mit envtest. Ablösung manueller kubectl-Workflows.
+
+Eingesetzte Technologien: Go, Kubernetes, controller-runtime, Helm, ArgoCD,
+Prometheus, GitHub Actions, Docker
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          1.040 €/Tag (vor Ort)
+Stundensatz Remote: 130 €/Std
+Arbeitsweise:       remote-first, Workshop-Präsenz möglich
+Einsatzort:         Frankfurt/Main und Umgebung, remote deutschlandweit
+Auslastung:         bis zu 5 Tage/Woche

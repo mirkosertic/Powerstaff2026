@@ -1,0 +1,84 @@
+Profil DEV-20009 – IT-Security-Experte, Penetration Testing, SIEM
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Erfahrener IT-Security-Spezialist mit über 16 Jahren Berufserfahrung in der Informationssicherheit.
+Abdeckung des gesamten Security-Spektrums: von offensiven Tätigkeiten (Penetration Testing,
+Red Teaming) bis hin zu defensiven Maßnahmen (SIEM, SOC-Aufbau, Incident Response).
+Fundiertes Wissen in regulatorischen Anforderungen (ISO 27001, BSI IT-Grundschutz) und
+Erfahrung als Berater auf C-Level. Hält die Dinge pragmatisch: Sicherheit muss funktionieren,
+nicht nur auf dem Papier bestehen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Penetration Testing (Web, Netzwerk, Active Directory), Red Teaming
+- SIEM: Splunk, IBM QRadar, Microsoft Sentinel
+- ISO 27001 Lead Auditor, BSI IT-Grundschutz
+- Vulnerability Assessment, Threat Modeling (STRIDE, PASTA)
+- SOC-Aufbau, Incident Response, Digital Forensik
+- Netzwerksicherheit, Firewall (pf, Fortinet, Palo Alto), VPN, PKI
+- Kali Linux, Burp Suite, Metasploit, Nmap, OWASP ZAP
+- DSGVO, NIS2, DORA – Compliance-Beratung
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Aufbau eines SOC für eine große öffentliche Einrichtung
+Zeitraum: 2022 – laufend (ca. 2 Jahre)
+Branche: Öffentliche Verwaltung / Behörden
+Rolle: Security Architect / SOC Lead
+
+Konzeption und Aufbau eines Security Operations Centers (SOC) von Grund auf für eine
+Bundesbehörde mit mehreren tausend Arbeitsplätzen. Auswahl und Implementierung von IBM QRadar
+als SIEM-Plattform, Entwicklung von Korrelationsregeln und Use-Cases nach BSI-Grundschutz-
+Anforderungen. Aufbau von Eskalations- und Incident-Response-Prozessen, Training des internen
+SOC-Teams. Erste externe Penetrationstests koordiniert und ausgewertet.
+
+Eingesetzte Technologien: IBM QRadar, Splunk, Kali Linux, Python (Automatisierung), BSI
+IT-Grundschutz, ISO 27001, Nessus, Tenable.sc
+
+---
+
+Projekt 2: Red-Team-Engagement bei einem europäischen Finanzdienstleister
+Zeitraum: 2021 (6 Monate)
+Branche: Financial Services / Banking
+Rolle: Lead Penetration Tester / Red Team Lead
+
+Durchführung eines umfassenden Red-Team-Engagements (TIBER-EU-konform) gegen eine
+Zahlungsverkehrsinfrastruktur. Reconnaissance, Spear-Phishing-Kampagnen, Exploitation von
+Schwachstellen in der internen Webinfrastruktur sowie Privilege Escalation in Active Directory.
+Abschlussbericht mit priorisierten Handlungsempfehlungen für das Management-Board.
+
+Eingesetzte Technologien: Kali Linux, Metasploit, Burp Suite Pro, BloodHound, Cobalt Strike,
+OSINT-Tools, Active Directory Angriffstechniken
+
+---
+
+Projekt 3: ISO-27001-Zertifizierungsbegleitung für IT-Dienstleister
+Zeitraum: 2019 – 2021 (20 Monate)
+Branche: IT-Dienstleistungen
+Rolle: Information Security Consultant / Lead Auditor
+
+Begleitung eines mittelständischen IT-Dienstleisters von der Initialgap-Analyse bis zur
+erfolgreichen ISO-27001-Erstzertifizierung. Erstellung und Pflege aller ISMS-Dokumente,
+Durchführung interner Audits, Schulung von Mitarbeitern und Führungskräften. Koordination
+mit dem externen Zertifizierungsauditor.
+
+Eingesetzte Werkzeuge/Methoden: ISO 27001, Risk Assessment, ISMS-Dokumentation,
+interne Audits, Awareness-Schulungen, Business Impact Analysis
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 5 Monaten
+Tagessatz:          1.080 €/Tag (vor Ort)
+Stundensatz Remote: nicht ausgewiesen (projektabhängig)
+Arbeitsweise:       überwiegend vor Ort (sicherheitskritische Projekte), remote nach Absprache
+Einsatzort:         Berlin und Umgebung, deutschlandweit und europaweit
+Auslastung:         bis zu 5 Tage/Woche

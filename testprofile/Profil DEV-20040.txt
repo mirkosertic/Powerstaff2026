@@ -1,0 +1,84 @@
+Profil DEV-20040 – Data Analyst und BI-Entwicklerin, Power BI, Tableau
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Data Analyst und BI-Entwicklerin mit rund 8 Jahren Erfahrung in der Aufbereitung und
+Visualisierung von Unternehmensdaten. Versteht Daten nicht nur als Rohmaterial, sondern
+als Entscheidungsgrundlage: Dashboards werden für Menschen gebaut, die Handlungen ableiten
+wollen – nicht für Datenliebhaber. Erfahrung sowohl in operativem Reporting als auch in
+strategischem Management-Reporting.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Power BI (Desktop, Service, Premium), DAX, Power Query (M)
+- Tableau Desktop, Tableau Server, Tableau Prep
+- Qlik Sense, QlikView
+- SQL (PostgreSQL, SQL Server, BigQuery, Snowflake, Azure Synapse)
+- Python (Pandas, NumPy, matplotlib, seaborn) für Datenanalyse
+- Data Modeling: Star Schema, Snowflake Schema, Data Vault (Grundkenntnisse)
+- Azure Synapse Analytics, Snowflake, Data Lakehouse-Konzepte
+- ETL/ELT-Grundkenntnisse (Azure Data Factory, dbt)
+- Stakeholder-Kommunikation, Data Storytelling
+- Agile BI-Entwicklung, Requirements-Workshops
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Management-Reporting-Plattform für einen Einzelhandelskonzern
+Zeitraum: 2023 – laufend (ca. 13 Monate)
+Branche: Handel / Retail
+Rolle: Lead BI-Entwicklerin
+
+Aufbau einer zentralen Management-Reporting-Plattform in Power BI auf Basis von Azure Synapse.
+Entwicklung von 25+ Dashboards für Vertrieb, Einkauf, Logistik und Finanzen. DAX-Measures
+für komplexe Zeitreihenvergleiche (YTD, Vorjahresvergleiche, rollierende 12 Monate), Row-Level
+Security für mandantenbasierte Datenzugriffssteuerung. Data-Storytelling-Workshops für
+Führungskräfte zur optimalen Nutzung der Dashboards.
+
+Eingesetzte Technologien: Power BI (Premium), DAX, Power Query, Azure Synapse,
+SQL Server, Azure DevOps (Pipeline für Power BI-Deployment)
+
+---
+
+Projekt 2: Vertriebsanalyse-Dashboard für ein Pharmaunternehmen (Tableau)
+Zeitraum: 2021 – 2023 (18 Monate)
+Branche: Pharma / Life Sciences
+Rolle: Data Analyst / BI Developer
+
+Entwicklung eines Tableau-Dashboard-Portfolios für die globale Vertriebssteuerung.
+Tableau Prep für Datenvorbereitung, Tableau Server für Deployment und Governance.
+Besondere Herausforderung: Integration von Salesforce-, SAP- und Marktdaten in ein
+einheitliches analytisches Datenmodell (Snowflake DWH).
+
+Eingesetzte Technologien: Tableau Desktop/Server, Tableau Prep, Snowflake,
+SQL, Salesforce (als Datenquelle), Python (Pandas)
+
+---
+
+Projekt 3: KPI-Dashboard für einen mittelständischen Logistikdienstleister
+Zeitraum: 2019 – 2021 (18 Monate)
+Branche: Logistik
+Rolle: Data Analyst
+
+Konzeption und Aufbau eines operativen KPI-Dashboards für Transportleitstand und Geschäftsführung.
+Direktanbindung von PostgreSQL- und ERP-Daten, Automatisierung von täglichen Datenloads
+mit Python-Skripten. Stakeholder-Workshops zur Definition der wichtigsten Kennzahlen.
+
+Eingesetzte Technologien: Power BI, Python, Pandas, PostgreSQL, SQL,
+Microsoft Azure (grundlegend), Excel (für Legacy-Reports)
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 4 Monaten
+Tagessatz:          760 €/Tag (vor Ort)
+Stundensatz Remote: 95 €/Std
+Arbeitsweise:       Hybrid (3 Tage remote bevorzugt)
+Einsatzort:         Berlin und Umgebung, remote deutschlandweit
+Auslastung:         4–5 Tage/Woche

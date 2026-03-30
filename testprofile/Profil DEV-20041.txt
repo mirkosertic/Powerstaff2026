@@ -1,0 +1,86 @@
+Profil DEV-20041 – CISO-Berater und Security Architekt, Regulatorik, Banken
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Erfahrener Sicherheitsberater auf Führungsebene mit über 19 Jahren Erfahrung in der
+IT-Sicherheit, davon die letzten acht Jahre in CISO-Advisory- und Security-Architektur-
+Rollen. Spezialisiert auf die Anforderungen regulierter Branchen (Banken, Versicherungen),
+insbesondere DORA, NIS2, BAIT und ISO 27001. Verbindet tiefes technisches Verständnis
+mit der Fähigkeit, Sicherheitsstrategien verständlich für Vorstände und Aufsichtsgremien
+aufzubereiten.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- CISO Advisory, IT-Sicherheitsarchitektur, Security Governance
+- Regulatorik: DORA, NIS2, BAIT, MaRisk, ISO 27001, TISAX
+- ISMS-Aufbau und -Betrieb, Risikoanalyse (ISO 27005)
+- Zero Trust Architecture, Network Segmentation
+- Cloud Security (AWS Security Architecture, Azure Defender)
+- IAM: Active Directory, Azure AD/Entra ID, PAM (CyberArk, BeyondTrust)
+- SIEM (Splunk Enterprise Security, Microsoft Sentinel), SOC-Aufbau
+- Threat Modeling, Red Team Koordination, TIBER-EU
+- Incident Response, Forensik, Business Continuity Management
+- Pentesting (Koordination extern), Vulnerability Management
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: DORA-Compliance-Programm für eine mittelgroße Privatbank
+Zeitraum: 2023 – laufend (ca. 16 Monate)
+Branche: Banking / Private Banking
+Rolle: CISO Berater / Lead Security Architect
+
+Verantwortlich für die Analyse des DORA-Compliance-Gaps und die Konzeption des
+Umsetzungsprogramms. Aufbau eines IKT-Risikomanagements nach DORA-Anforderungen,
+Definition von Resilience-Testing-Prozessen, Überarbeitung der Drittparteiensteuerung.
+Koordination des TIBER-EU-Assessments. Regelmäßige Berichterstattung an Vorstand
+und Aufsichtsrat.
+
+Eingesetzte Methoden/Werkzeuge: DORA, NIS2, ISO 27001/27005, TIBER-EU,
+Risk Assessment, BIA, ISMS-Dokumentation, Executive Reporting
+
+---
+
+Projekt 2: Zero-Trust-Architektur für eine europäische Versicherungsgruppe
+Zeitraum: 2020 – 2023 (30 Monate)
+Branche: Versicherungen
+Rolle: Security Architect
+
+Konzeption und stufenweise Implementierung einer Zero-Trust-Netzwerkarchitektur.
+Ablösung flacher Netzwerksegmentierung, Einführung von Microsegmentation mit NSX-T,
+Azure Conditional Access Policies, CyberArk für Privileged Access Management.
+Aufbau eines zentralen SOC mit Microsoft Sentinel als SIEM.
+
+Eingesetzte Technologien: Azure AD/Entra ID, CyberArk, NSX-T, Microsoft Sentinel,
+Defender for Cloud, ISO 27001, PAM, SIEM
+
+---
+
+Projekt 3: ISMS-Aufbau und ISO-27001-Zertifizierung für eine Investmentgesellschaft
+Zeitraum: 2018 – 2020 (22 Monate)
+Branche: Asset Management
+Rolle: Information Security Consultant / CISO Interim
+
+Aufbau eines vollständigen ISMS von Grund auf für eine Investmentgesellschaft. Gap-Analyse,
+Risikobehandlungsplan, Erstellung aller Richtlinien und Verfahrensanweisungen, interne
+Audits, erfolgreiche ISO-27001-Erstzertifizierung. Koordination mit den Fachbereichen
+Compliance, Legal und IT.
+
+Eingesetzte Methoden/Werkzeuge: ISO 27001, ISO 27005, ISMS, interne Audits,
+Awareness-Training, Business Impact Analysis
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 7 Monaten
+Tagessatz:          1.280 €/Tag (vor Ort)
+Stundensatz Remote: 160 €/Std
+Arbeitsweise:       überwiegend vor Ort in strategischen Projektphasen
+Einsatzort:         München und Umgebung, deutschlandweit und europaweit
+Auslastung:         3–5 Tage/Woche

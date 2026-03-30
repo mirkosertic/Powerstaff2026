@@ -1,0 +1,83 @@
+Profil DEV-20021 – Azure Cloud Architect und DevOps Engineer, Microsoft-Stack
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Azure-Spezialist mit über 14 Jahren Erfahrung im Microsoft-Ökosystem, davon 7 Jahre als
+Cloud Architect mit Fokus auf Azure. Microsoft Certified Azure Solutions Architect Expert
+und DevOps Engineer Expert. Begleitet Kunden von der Cloud-Strategie über die Migration bis
+zum laufenden Betrieb. Besondere Stärke in der Kombination von technischer Tiefe und
+verständlicher Kommunikation auf Entscheidungsebene.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Azure: AKS, Azure Functions, Service Bus, Cosmos DB, Azure SQL
+- Azure DevOps (Pipelines, Repos, Boards, Artifacts)
+- Terraform, Bicep, ARM Templates
+- .NET, C#, PowerShell-Automatisierung
+- GitHub Actions, Azure Container Registry
+- Monitoring: Azure Monitor, Application Insights, Log Analytics
+- Azure Security Center, Microsoft Defender for Cloud
+- Azure Active Directory, Entra ID, Managed Identities
+- Cost Optimization, FinOps, Well-Architected Review
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Azure-Gesamtmigration für ein mittelständisches Pharmaunternehmen
+Zeitraum: 2023 – laufend (ca. 16 Monate)
+Branche: Pharma / Life Sciences
+Rolle: Lead Cloud Architect
+
+Verantwortlich für die Konzeption und Durchführung einer Lift-and-Shift- plus Modernisierungs-
+Migration von On-Premise-Workloads auf Azure. Aufbau einer Landing-Zone-Architektur nach
+Microsoft CAF (Cloud Adoption Framework), IaC vollständig in Terraform und Bicep. Einführung
+von Azure Policies für Compliance, Microsoft Defender for Cloud für Security-Posture-Management.
+Kostenreduktion gegenüber On-Premise um ca. 35% erreicht.
+
+Eingesetzte Technologien: Azure Landing Zones, Terraform, Bicep, AKS, Azure DevOps,
+Azure Policy, Microsoft Defender for Cloud, Log Analytics, Application Insights
+
+---
+
+Projekt 2: Microservices-Plattform auf AKS für einen Personaldienstleister
+Zeitraum: 2021 – 2023 (18 Monate)
+Branche: HR / Personaldienstleistung
+Rolle: Azure DevOps Engineer / Plattform-Architekt
+
+Aufbau einer AKS-basierten Deployment-Plattform für ein Microservices-Portfolio. Azure DevOps
+Multi-Stage-Pipelines mit Blue-Green-Deployment-Strategie, Helm für Service-Packaging.
+Integration von Azure Service Bus für asynchrone Kommunikation, Azure Cosmos DB für
+geo-redundante Datenhaltung. Application Insights für end-to-end Distributed Tracing.
+
+Eingesetzte Technologien: AKS, Azure DevOps, Helm, Azure Service Bus, Cosmos DB,
+Application Insights, Terraform, .NET, C#
+
+---
+
+Projekt 3: Azure-basiertes Data-Warehouse für ein Handelsunternehmen
+Zeitraum: 2019 – 2021 (20 Monate)
+Branche: Handel / Retail
+Rolle: Cloud Architect / Data Engineer
+
+Aufbau eines modernen Cloud-Data-Warehouse auf Azure Synapse Analytics als Ablösung eines
+On-Premise-SQL-Server-DWH. ETL-Pipelines in Azure Data Factory, Orchestrierung mit
+Azure Synapse Pipelines. PowerShell-Automatisierung für Deployment-Prozesse.
+
+Eingesetzte Technologien: Azure Synapse Analytics, Azure Data Factory, Azure Data Lake
+Storage Gen2, Power BI, Terraform, PowerShell, Azure DevOps
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 3 Monaten
+Tagessatz:          1.040 €/Tag (vor Ort)
+Stundensatz Remote: 130 €/Std
+Arbeitsweise:       Hybrid (2 Tage remote, 3 Tage vor Ort in Projektanfangsphase)
+Einsatzort:         München und Umgebung, deutschlandweit
+Auslastung:         bis zu 5 Tage/Woche

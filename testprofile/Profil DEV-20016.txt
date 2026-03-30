@@ -1,0 +1,85 @@
+Profil DEV-20016 – UX/UI Designerin mit Frontend-Kenntnissen, FinTech/E-Commerce
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+UX/UI Designerin mit rund 8 Jahren Berufserfahrung und einem starken Standbein in der
+Frontend-Implementierung. Verbindet nutzerzentriertes Designdenken mit dem technischen
+Verständnis, das nötig ist, um Designs nicht nur schön, sondern auch umsetzbar und
+wartbar zu machen. Branchenschwerpunkte liegen in FinTech und E-Commerce. Versteht
+Accessibility nicht als Pflichtübung, sondern als Qualitätsmerkmal.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- UX Design: User Research, Personas, Journey Maps, Wireframing
+- UI Design: Figma (Expert), Sketch, Adobe XD, Prototyping
+- Design Systems, Component Libraries, Token-basiertes Design
+- Usability Testing, A/B Testing, Heuristische Evaluation
+- HTML5, CSS3, JavaScript (Grundlagen), React (Grundkenntnisse)
+- Accessibility: WCAG 2.1, ARIA, Screen-Reader-Testing
+- Information Architecture, Content Strategy
+- Zusammenarbeit mit Entwicklung via Dev-Handoff (Zeplin, Figma)
+- Agile/Scrum, Design Sprints
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Redesign der Trading-App für ein Berliner FinTech
+Zeitraum: 2023 – laufend (ca. 17 Monate)
+Branche: FinTech / Investment
+Rolle: Lead UX/UI Designerin
+
+Verantwortlich für das komplette UX- und UI-Redesign einer Investment-App, die von ca. 400.000
+aktiven Nutzern täglich verwendet wird. Durchführung qualitativer Nutzertests (20+ Interviews),
+Definition einer neuen Informationsarchitektur, Erstellung eines umfassenden Design Systems
+in Figma (130+ Komponenten, Light/Dark Mode). Enge Zusammenarbeit mit React-Entwicklerinnen
+zur Umsetzung des Design Systems als Component Library. Messbarer Impact: Onboarding-
+Konversionsrate um 18% gesteigert.
+
+Eingesetzte Werkzeuge/Methoden: Figma, Prototyping, User Testing, Design System,
+A/B Testing, WCAG 2.1, HTML/CSS-Review
+
+---
+
+Projekt 2: Checkout-Optimierung für einen mittelgroßen Online-Modehändler
+Zeitraum: 2021 – 2023 (18 Monate)
+Branche: E-Commerce / Mode
+Rolle: UX Designer / Interaction Designer
+
+Analyse und Neugestaltung des Checkout-Funnels auf Basis von Heatmap-Analyse (Hotjar),
+A/B-Tests (Optimizely) und Nutzerbefragungen. Wireframing und High-Fidelity-Prototyping
+in Figma, Usability-Tests in verschiedenen Nutzersegmenten. Frontend-Unterstützung bei
+der Implementierung (HTML/CSS). Cart-Abandonment-Rate um 12% reduziert.
+
+Eingesetzte Werkzeuge/Methoden: Figma, Hotjar, Optimizely, User Testing,
+HTML, CSS, Accessibility-Check
+
+---
+
+Projekt 3: Design System Aufbau für ein deutsches Versicherungsunternehmen
+Zeitraum: 2019 – 2021 (20 Monate)
+Branche: Versicherungen
+Rolle: UX/UI Designerin / Design-System-Verantwortliche
+
+Aufbau eines unternehmensweiten Design Systems als Single Source of Truth für acht
+Produktteams. Token-basiertes Farbsystem, Typografie, Spacing, über 90 Basiskomponenten
+in Figma dokumentiert und mit Storybook synchronisiert. Schulung und Coaching der
+Entwicklungsteams im Umgang mit dem Design System.
+
+Eingesetzte Werkzeuge/Methoden: Figma, Storybook, Design Tokens, Dokumentation,
+Workshops, WCAG 2.1
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 3 Monaten
+Tagessatz:          720 €/Tag (vor Ort)
+Stundensatz Remote: 90 €/Std
+Arbeitsweise:       Hybrid (3 Tage remote bevorzugt)
+Einsatzort:         Düsseldorf und Umgebung, NRW, deutschlandweit nach Absprache
+Auslastung:         4–5 Tage/Woche

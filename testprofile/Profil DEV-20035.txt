@@ -1,0 +1,85 @@
+Profil DEV-20035 – Integration Architect, MuleSoft, Apache Camel
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Integration Architect mit über 13 Jahren Erfahrung in der Systemintegration und
+Middleware-Entwicklung. MuleSoft-Certified Developer (Level 2) und Anypoint-Platform-Experte.
+Kennt die Herausforderungen heterogener IT-Landschaften aus eigener Projekterfahrung und
+entwirft Integrationsarchitekturen, die beherrschbar, testbar und erweiterbar sind.
+Erfahrung mit SAP-Integrationsszenarien, klassischen EDI-Anbindungen und modernen API-First-Ansätzen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- MuleSoft Anypoint Platform (Design Center, Exchange, Runtime Manager)
+- Apache Camel (Spring Boot, Camel K auf Kubernetes)
+- Spring Integration, Spring Batch
+- IBM MQ, Apache Kafka, RabbitMQ
+- REST APIs, SOAP/WSDL, EDI (EDIFACT, ANSI X12)
+- SAP Integration: SAP PI/PO, SAP Integration Suite
+- API Management: Apigee, Kong, AWS API Gateway
+- OAuth2, JWT, API Security, Rate Limiting
+- XML, JSON, XSLT, JSONata, DataWeave
+- OpenAPI, AsyncAPI, Avro
+- Enterprise Integration Patterns (EIP, Hohpe/Woolf)
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Zentrales API-Gateway und Integration-Hub für einen Versicherungskonzern
+Zeitraum: 2022 – laufend (ca. 20 Monate)
+Branche: Versicherungen
+Rolle: Lead Integration Architect
+
+Aufbau einer zentralen Integrationsplattform auf MuleSoft Anypoint Platform als Ablösung
+von 40+ Point-to-Point-Integrationen. Einführung des API-Led-Connectivity-Musters (Experience-,
+Process-, System-Layer), Onboarding von 15 Systemen. API-Management über Anypoint API
+Manager mit OAuth2-Authentifizierung, Rate Limiting und SLA-Monitoring.
+
+Eingesetzte Technologien: MuleSoft Anypoint Platform, DataWeave 2.0, Apache Kafka,
+IBM MQ, REST APIs, OAuth2, SAP PI (Quellsystem)
+
+---
+
+Projekt 2: SAP-zu-Non-SAP-Integrationsprojekte bei einem Automobilzulieferer
+Zeitraum: 2020 – 2022 (24 Monate)
+Branche: Automotive
+Rolle: Integration Developer / Berater
+
+Entwicklung und Wartung von Integrationen zwischen SAP ECC/S/4HANA und externen Systemen
+(CRM, PLM, Logistikdienstleister, Lieferantenportale) über Apache Camel. Anbindung von
+EDI-Nachrichtenströmen (EDIFACT ORDERS, DESADV, INVOIC) über einen AS2-Adapter.
+Ablösung von Legacy-ABAP-Schnittstellen durch moderne API-Integrationen.
+
+Eingesetzte Technologien: Apache Camel, Spring Boot, IBM MQ, SAP BAPI/IDoc,
+EDIFACT, AS2, REST APIs, Docker, Kubernetes
+
+---
+
+Projekt 3: Echtzeit-Datenintegration für ein Retail-Unternehmen
+Zeitraum: 2018 – 2020 (22 Monate)
+Branche: Handel / Retail
+Rolle: Integration Specialist
+
+Aufbau einer ereignisgetriebenen Integrationsarchitektur für die Echtzeit-Synchronisation
+von Bestandsdaten zwischen ERP (SAP), Webshop und Lagerverwaltungssystem. Kafka als
+zentraler Event-Bus, Apache Camel für Routing und Transformation, Monitoring-Dashboard
+für Integrationsfehler.
+
+Eingesetzte Technologien: Apache Camel, Kafka, REST APIs, SAP IDoc,
+Docker, Prometheus, Grafana, Spring Boot
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 3 Monaten
+Tagessatz:          1.000 €/Tag (vor Ort)
+Stundensatz Remote: 125 €/Std
+Arbeitsweise:       Hybrid (2–3 Tage vor Ort, Rest remote)
+Einsatzort:         Köln/Bonn und Umgebung, deutschlandweit
+Auslastung:         bis zu 5 Tage/Woche

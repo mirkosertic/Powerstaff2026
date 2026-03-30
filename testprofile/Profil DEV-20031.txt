@@ -1,0 +1,84 @@
+Profil DEV-20031 – LLM/KI-Entwickler, RAG, Fine-Tuning, Agents
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+KI-Entwickler mit 6 Jahren Erfahrung im Bereich Applied AI, seit der Verfügbarkeit großer
+Sprachmodelle fokussiert auf den produktiven Einsatz von LLMs in Unternehmensanwendungen.
+Tiefer Einblick in RAG-Architekturen, Agent-Frameworks und das Fine-Tuning von Modellen für
+domänenspezifische Aufgaben. Verbindet Forschungsorientierung mit pragmatischer Engineering-
+Perspektive – Hauptziel ist immer der produktive, zuverlässige und kostenbewusste Einsatz.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Python, FastAPI, Docker, Kubernetes
+- LangChain, LlamaIndex, Semantic Kernel
+- OpenAI API, Azure OpenAI, Anthropic API, Google Gemini API
+- RAG-Architekturen, Hybrid Search, Reranking
+- Vektordatenbanken: Pinecone, Weaviate, ChromaDB, pgvector
+- LLM Fine-Tuning: LoRA, QLoRA, PEFT (Hugging Face)
+- Prompt Engineering, Chain-of-Thought, Structured Outputs
+- LLM-Evaluierung: RAGAS, TruLens, Evals-Frameworks
+- Agents, Tool Use, Function Calling, Multi-Agent-Systeme (CrewAI, AutoGen)
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Unternehmensinterner KI-Assistent für ein mittelständisches Beratungsunternehmen
+Zeitraum: 2024 – laufend (ca. 10 Monate)
+Branche: Unternehmensberatung / Professional Services
+Rolle: Lead KI-Entwickler
+
+Konzeption und Implementierung eines RAG-basierten Wissensassistenten, der auf internen
+Dokumenten (Projektberichte, Methodik-Bibliothek, Kundenangebote) operiert. Hybride Suche
+(Dense + Sparse Retrieval mit Reranking via Cohere), Azure OpenAI als LLM-Backend,
+pgvector in PostgreSQL als Vektorspeicher. LLM-Evaluierungspipeline mit RAGAS für
+kontinuierliches Qualitätsmonitoring. FastAPI-Backend, React-Chat-Interface.
+
+Eingesetzte Technologien: Python, LangChain, Azure OpenAI, pgvector, PostgreSQL,
+FastAPI, RAGAS, Docker, Kubernetes, GitHub Actions
+
+---
+
+Projekt 2: Automatisierter Dokumenten-Analyse-Agent für eine Anwaltskanzlei
+Zeitraum: 2023 (8 Monate)
+Branche: Legal Tech
+Rolle: KI-Entwickler / Architekt
+
+Aufbau eines Multi-Agent-Systems zur Analyse und Zusammenfassung juristischer Dokumente
+(Verträge, Gerichtsurteile). LlamaIndex für Document-Parsing und Indexierung, GPT-4 für
+Analyse, spezialisierter Fine-Tuned-Classifier für Dokumenttyp-Erkennung (LoRA auf
+Mistral-7B). LLM-as-Judge-Evaluierung für Qualitätssicherung der Ausgaben.
+
+Eingesetzte Technologien: Python, LlamaIndex, OpenAI API, Hugging Face, LoRA/PEFT,
+ChromaDB, FastAPI, Docker
+
+---
+
+Projekt 3: RAG-basiertes Produkt-FAQ-System für E-Commerce-Plattform
+Zeitraum: 2022 – 2023 (12 Monate)
+Branche: E-Commerce
+Rolle: ML Engineer / LLM Developer
+
+Implementierung eines Echtzeit-FAQ-Systems auf Basis von RAG, das Kundenfragen zu
+Produkten, Versand und Retouren beantwortet. Experimentelle Evaluation verschiedener
+Embedding-Modelle (text-embedding-ada-002, E5-large, GTE), A/B-Tests zur Retrieval-
+Qualität. Integration in bestehende Helpdesk-Software über REST-API.
+
+Eingesetzte Technologien: Python, OpenAI API, LangChain, Pinecone, FastAPI,
+Embedding-Modelle, Docker, GitHub Actions
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 1 Monat
+Tagessatz:          1.160 €/Tag (vor Ort)
+Stundensatz Remote: 145 €/Std
+Arbeitsweise:       remote-first, gelegentliche Workshops vor Ort
+Einsatzort:         München und Umgebung, remote deutschlandweit und europaweit
+Auslastung:         bis zu 5 Tage/Woche

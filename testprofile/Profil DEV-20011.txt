@@ -1,0 +1,82 @@
+Profil DEV-20011 – Angular/Vue.js Frontend-Entwicklerin
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Frontend-Entwicklerin mit knapp 9 Jahren Erfahrung im Enterprise-Umfeld, spezialisiert auf
+Angular und Vue.js. Vertraut mit dem gesamten Entwicklungszyklus komplexer Single-Page-
+Applications von der Komponentenarchitektur über State Management bis hin zu Performance-
+Optimierung und Testabdeckung. Arbeitet strukturiert und dokumentationsfreudig, kommuniziert
+klar mit Backends und UX.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Angular 17, TypeScript, RxJS, NgRx, Angular Material, PrimeNG
+- Vue.js 3, Pinia, Vue Router, Vuetify
+- Vite, Webpack, SCSS/Sass, CSS Custom Properties
+- REST APIs, OpenAPI-Codegenerierung, GraphQL
+- Testing: Karma, Jest, Playwright, Testing Library
+- Git, GitLab CI/CD, Jira, Confluence
+- Agile/Scrum, enge Zusammenarbeit mit UX-Teams
+- Accessibility (WCAG 2.1), i18n/l10n
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Versicherungsportal-Frontend-Modernisierung (Regional-Versicherungsgruppe)
+Zeitraum: 2023 – laufend (ca. 16 Monate)
+Branche: Versicherungen
+Rolle: Lead Angular Developer
+
+Verantwortlich für die technische Umstellung des Kundenportals von AngularJS auf Angular 17.
+Inkrementelle Migration mittels AngularJS/Angular-Hybrid-Modus, Einführung von NgRx für
+zentrales State Management, Aufbau einer eigenen Component-Library auf Angular Material-Basis.
+Besonderer Fokus auf Accessibility (WCAG 2.1 AA) und Performance (Core Web Vitals).
+
+Eingesetzte Technologien: Angular 17, TypeScript, RxJS, NgRx, Angular Material,
+SCSS, Playwright, Jest, GitLab CI/CD
+
+---
+
+Projekt 2: B2B-Einkaufsplattform Frontend (mittelständischer Industriekonzern)
+Zeitraum: 2021 – 2023 (18 Monate)
+Branche: Industrie / Procurement
+Rolle: Senior Frontend Developer
+
+Neuentwicklung des Frontend für eine interne B2B-Beschaffungsplattform mit Vue.js 3.
+Komplexes State Management mit Pinia, Integration von SAP-Backendsystemen über REST-APIs.
+Aufbau eines Storybook-basierten Komponentenkatalogs. Einführung von Playwright für
+automatisierte E2E-Tests in der CI/CD-Pipeline.
+
+Eingesetzte Technologien: Vue.js 3, TypeScript, Pinia, Vite, Vuetify, Storybook,
+Playwright, REST APIs (SAP-Integration), GitLab CI/CD
+
+---
+
+Projekt 3: HR-Self-Service-App für ein öffentliches Versorgungsunternehmen
+Zeitraum: 2019 – 2021 (20 Monate)
+Branche: Energie / Versorgung
+Rolle: Angular Developer
+
+Entwicklung und Betreuung einer HR-Self-Service-Applikation für ca. 5.000 Mitarbeitende.
+Angular-basiertes Frontend, Anbindung an SAP HCM über REST-Schnittstellen. Umsetzung
+von Mehrsprachigkeit (i18n), Formular-Management mit reaktiven Angular-Forms und
+Unit-Tests mit Karma und Jasmine.
+
+Eingesetzte Technologien: Angular 10/12, TypeScript, RxJS, SCSS, REST APIs,
+Karma, Jasmine, Git
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 1 Monat
+Tagessatz:          760 €/Tag (vor Ort)
+Stundensatz Remote: 95 €/Std
+Arbeitsweise:       Hybrid (2–3 Tage remote)
+Einsatzort:         Essen/Ruhrgebiet, NRW-weit, deutschlandweit nach Absprache
+Auslastung:         bis zu 5 Tage/Woche

@@ -1,0 +1,84 @@
+Profil DEV-20029 – Enterprise Architekt, TOGAF, Microservices-Transformation
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Enterprise Architekt mit über 16 Jahren Erfahrung in der IT-Architektur großer Unternehmen.
+TOGAF 9.2 Certified, erfahren in der Entwicklung und Kommunikation von IT-Zielarchitekturen,
+Technologie-Roadmaps und der Begleitung von Transformationen von monolithischen Altsystemen
+hin zu modernen, cloud-nativen Architekturen. Verbindet IT-Architektur eng mit Unternehmens-
+strategie und spricht die Sprache des Managements ebenso wie die der Entwicklerinnen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Enterprise Architecture: TOGAF 9.2, ArchiMate 3.1, ADM
+- Microservices-Architektur, Event-Driven Architecture
+- Domain-Driven Design, Bounded Contexts, Context Mapping
+- API Management, API-Strategie (REST, GraphQL, gRPC, AsyncAPI)
+- Integration Patterns: ESB, Message Broker, Event Streaming
+- Cloud-Strategie (AWS, Azure, GCP), Multi-Cloud
+- IT-Governance, Architecture Review Boards
+- Technologiebewertung, Build-vs.-Buy-Analyse
+- Roadmap-Planung, Stakeholder-Management, C-Level-Kommunikation
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Digitale Transformation bei einem europäischen Versicherungskonzern
+Zeitraum: 2022 – laufend (ca. 22 Monate)
+Branche: Versicherungen
+Rolle: Lead Enterprise Architect
+
+Entwicklung der mehrjährigen IT-Zielarchitektur für einen europäischen Versicherungskonzern
+mit über 5.000 IT-Mitarbeitenden. Definition der Microservices-Strategie, Ablöseplanung für
+ca. 40 Altsysteme, Aufbau eines Architecture Review Boards. Modellierung der Zielarchitektur
+in ArchiMate, Kommunikation auf Vorstandsebene. Besonderer Schwerpunkt auf der API-Management-
+Strategie mit Apigee als zentraler Gateway-Komponente.
+
+Eingesetzte Methoden/Technologien: TOGAF ADM, ArchiMate 3.1, API Management (Apigee),
+Microservices, Event-Driven Architecture (Kafka), C4 Model, Architecture Decision Records
+
+---
+
+Projekt 2: Microservices-Transition bei einem Telekommunikationsanbieter
+Zeitraum: 2019 – 2022 (30 Monate)
+Branche: Telekommunikation
+Rolle: Enterprise Architect / Solution Architect
+
+Strategische Beratung und Architekturführung bei der schrittweisen Ablösung eines
+OSS/BSS-Monolithen durch domänenbezogene Microservices. Bounded-Context-Kartierung der
+Telco-Domain (Order Management, Provisioning, Billing, Customer Management), Definition
+von Interoperabilitätsstandards und Event-Kontrakt-Guidelines.
+
+Eingesetzte Methoden/Technologien: DDD, Context Mapping, AsyncAPI, Apache Kafka,
+REST APIs, TOGAF, ArchiMate, Arc42
+
+---
+
+Projekt 3: Cloud-Strategie für ein Pharmaunternehmen
+Zeitraum: 2017 – 2019 (24 Monate)
+Branche: Pharma
+Rolle: Enterprise Architect / Cloud Stratege
+
+Entwicklung einer umfassenden Cloud-Migrationsstrategie inklusive Workload-Klassifizierung
+(Cloud-ready, Cloud-friendly, Cloud-native Rebuild), Anbieterbewertung (AWS vs. Azure vs.
+GCP), Sicherheits- und Compliance-Anforderungsanalyse. Erstellung und Präsentation der
+Cloud-Roadmap für das Top-Management.
+
+Eingesetzte Methoden/Technologien: TOGAF, Cloud Adoption Framework,
+ArchiMate, Workload-Assessment, Governance-Framework
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 8 Monaten
+Tagessatz:          1.240 €/Tag (vor Ort)
+Stundensatz Remote: 155 €/Std
+Arbeitsweise:       Hybrid (überwiegend vor Ort in strategischen Phasen)
+Einsatzort:         Berlin und Umgebung, deutschlandweit und europaweit
+Auslastung:         4–5 Tage/Woche

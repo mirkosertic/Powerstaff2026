@@ -1,0 +1,83 @@
+Profil DEV-20039 – Java/Spring Cloud Developer, Event-Driven Architecture, Finanzsektor
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Senior Java-Entwickler mit über 11 Jahren Erfahrung, davon die letzten 5 Jahre mit starkem
+Fokus auf ereignisgetriebene Architekturen und Spring Cloud im Finanzsektor. Kennt die
+besonderen Anforderungen von Finanzanwendungen aus eigener Erfahrung: Ausfallsicherheit,
+Idempotenz, exakte Konsistenz und Auditierbarkeit. Arbeitet gerne im Team und bringt sein
+Wissen aktiv in Code Reviews, Architektur-Diskussionen und Team-Schulungen ein.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Java 17/21, Spring Boot 3, Spring Cloud (Gateway, Config, Eureka, Circuit Breaker)
+- Spring Security, OAuth2, JWT, Keycloak
+- Apache Kafka, RabbitMQ, Spring Kafka, Spring AMQP
+- Event-Driven Architecture, Saga Pattern (Choreography + Orchestration)
+- CQRS, Event Sourcing, Transactional Outbox
+- Docker, Kubernetes, Helm, OpenShift
+- Prometheus, Grafana, Micrometer, Spring Actuator
+- PostgreSQL, MongoDB (für Event Stores)
+- OpenAPI 3, REST APIs, GraphQL (Spring for GraphQL)
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Echtzeit-Zahlungsverarbeitungssystem für eine Direktbank
+Zeitraum: 2022 – laufend (ca. 22 Monate)
+Branche: Banking / FinTech
+Rolle: Senior Java Developer / Softwarearchitekt
+
+Mitverantwortlicher Architekt für ein neues Echtzeit-Zahlungsverarbeitungssystem (SEPA Instant
+Credit Transfer). Event-Driven Architecture auf Basis von Kafka, Saga-Orchestrierung für
+mehrstufige Zahlungsabläufe (Autorisierung, Buchung, Benachrichtigung), Transactional Outbox
+Pattern für garantierte Event-Veröffentlichung. Vollständige Audit-Trail-Implementierung
+in einem append-only Event Store (MongoDB). Latenzanforderungen: < 100ms P99.
+
+Eingesetzte Technologien: Java 21, Spring Boot 3, Spring Kafka, Apache Kafka,
+MongoDB, PostgreSQL, Kubernetes, Prometheus, Grafana, Micrometer
+
+---
+
+Projekt 2: API-Gateway und Microservices-Mesh für eine Versicherungsgesellschaft
+Zeitraum: 2020 – 2022 (24 Monate)
+Branche: Versicherungen
+Rolle: Java Developer / Spring Cloud Spezialist
+
+Aufbau und Betrieb eines Spring Cloud-basierten Microservices-Verbunds für eine Versicherungsgesellschaft.
+Spring Cloud Gateway als zentraler Eintrittspunkt mit Routing, Rate Limiting und Token-
+Relay. Resilience4j für Circuit Breaking und Retry-Logik, Spring Cloud Config für
+zentrales Konfigurationsmanagement, Keycloak als Identity Provider.
+
+Eingesetzte Technologien: Spring Cloud, Spring Boot, Keycloak, Resilience4j,
+Spring Cloud Gateway, Kafka, RabbitMQ, Docker, Kubernetes, OpenShift
+
+---
+
+Projekt 3: Eventbasiertes Portfolio-Management-System für einen Vermögensverwalter
+Zeitraum: 2018 – 2020 (22 Monate)
+Branche: Asset Management / Banking
+Rolle: Senior Java Developer
+
+Implementierung eines CQRS/Event-Sourcing-Systems für die Portfolioverwaltung. Trennscharf
+separate Write- und Read-Modelle, Axon Framework für Event Sourcing, PostgreSQL für
+Queryseite (denormalisierte Views), RabbitMQ für Integration mit Drittanbietersystemen.
+
+Eingesetzte Technologien: Java, Spring Boot, Axon Framework, PostgreSQL,
+RabbitMQ, Docker, JUnit 5, Testcontainers
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          960 €/Tag (vor Ort)
+Stundensatz Remote: 120 €/Std
+Arbeitsweise:       Hybrid (2 Tage vor Ort bevorzugt)
+Einsatzort:         Bad Homburg/Frankfurt und Umgebung, Rhein-Main-Gebiet
+Auslastung:         bis zu 5 Tage/Woche

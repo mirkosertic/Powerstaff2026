@@ -1,0 +1,85 @@
+Profil DEV-20022 – Android/Kotlin Entwicklerin
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Android-Entwicklerin mit knapp 10 Jahren Erfahrung, die den Wandel des Android-Ökosystems
+von klassischem Java/XML bis hin zu modernem Kotlin und Jetpack Compose mitgestaltet hat.
+Vertraut mit allen Ebenen der Android-Entwicklung: von der Architektur bis hin zu Play-Store-
+Deployment-Prozessen und CI/CD-Automatisierung. Legt großen Wert auf saubere MVVM-
+Architekturen und eine hohe Testabdeckung.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Android, Kotlin, Jetpack Compose (UI)
+- MVVM, MVI, Clean Architecture
+- Room (SQLite), DataStore, Shared Preferences
+- Hilt (Dependency Injection), Koin
+- Retrofit, OkHttp, Coroutines, Flow
+- Firebase (Auth, Firestore, Crashlytics, Analytics, Remote Config)
+- Google Maps SDK, Location Services
+- Push Notifications (FCM), Deep Linking
+- CI/CD: Fastlane, GitHub Actions, Bitrise
+- Testing: JUnit 5, Espresso, MockK, Robolectric
+- Gradle KTS, Git, Play Console
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Kundenapp für einen regionalen Energieversorger
+Zeitraum: 2022 – laufend (ca. 22 Monate)
+Branche: Energie / Utilities
+Rolle: Lead Android Developer
+
+Vollständige Neuentwicklung der Android-Kundenapp für einen regionalen Energieversorger
+(ca. 200.000 aktive Nutzer). Architektur als Multi-Module-App in Kotlin mit Jetpack Compose,
+MVVM mit StateFlow, Hilt für DI, Retrofit für REST-API-Kommunikation. Implementierung
+eines Verbrauchsdaten-Dashboards mit Custom Compose-Charts, Benachrichtigungssystem über
+FCM. Automatisiertes Beta-Deployment über Fastlane und Firebase App Distribution.
+
+Eingesetzte Technologien: Kotlin, Jetpack Compose, MVVM, Hilt, Retrofit, Coroutines,
+Flow, Firebase, FCM, Room, Fastlane, GitHub Actions, JUnit, MockK
+
+---
+
+Projekt 2: Außendienst-App für einen Versicherungskonzern
+Zeitraum: 2020 – 2022 (20 Monate)
+Branche: Versicherungen
+Rolle: Senior Android Developer
+
+Entwicklung einer Offline-fähigen Außendienst-App für Versicherungsvertreter. Besondere
+Anforderungen: robuste Offline-Datenhaltung in Room mit Synchronisierungslogik bei
+Netzwerkverfügbarkeit, Unterschriften-Capture, PDF-Generierung und sichere lokale Datenspeicherung
+nach DSGVO-Anforderungen.
+
+Eingesetzte Technologien: Android, Kotlin, Room, WorkManager, Retrofit, OkHttp,
+Coroutines, Hilt, Fastlane, Espresso
+
+---
+
+Projekt 3: Android-App für Flottenmanagement (Logistikdienstleister)
+Zeitraum: 2018 – 2020 (18 Monate)
+Branche: Logistik
+Rolle: Android Developer
+
+Entwicklung einer Fahrerapp zur Routenführung und Auftragsbearbeitung für LKW-Fahrer.
+Google Maps SDK für Routenplanung und Echtzeit-Tracking, Background Location Services
+für kontinuierliche Positionsübertragung, BLE-Integration für Scanngeräte.
+
+Eingesetzte Technologien: Android, Kotlin, Google Maps SDK, Background Location,
+BLE, Retrofit, WorkManager, JUnit
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 10 Monaten
+Tagessatz:          840 €/Tag (vor Ort)
+Stundensatz Remote: 105 €/Std
+Arbeitsweise:       remote-first bevorzugt
+Einsatzort:         Karlsruhe und Umgebung, remote deutschlandweit
+Auslastung:         4–5 Tage/Woche

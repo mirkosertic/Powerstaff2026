@@ -1,0 +1,83 @@
+Profil DEV-20013 – Blockchain Developer Ethereum/Solidity, DeFi
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Blockchain-Entwickler mit knapp 7 Jahren Erfahrung im Web3-Bereich, spezialisiert auf
+Ethereum-basierte Smart Contracts (Solidity) und DeFi-Protokolle. Tiefer Einblick in
+Sicherheitsaspekte von Smart Contracts und Erfahrung im formalen Smart-Contract-Auditing.
+Arbeitet regelmäßig mit Layer-2-Lösungen (Polygon, Arbitrum) zur Kostensenkung.
+Breites TypeScript-Ökosystem-Know-how für Web3-Frontend-Integration.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Ethereum, Solidity (0.8.x), EVM-Tiefenwissen
+- Hardhat, Foundry (Forge, Cast, Anvil)
+- DeFi-Protokolle (AMM, Lending, Yield Farming)
+- ERC-20, ERC-721, ERC-1155, ERC-4626, EIP-2612
+- Smart Contract Auditing, Reentrancy, Flash Loan Attacks
+- Web3.js, ethers.js v6, wagmi, viem
+- Layer 2: Polygon, Arbitrum, Optimism
+- IPFS, Arweave (dezentrale Datenhaltung)
+- Rust (Grundkenntnisse Solana / Anchor)
+- TypeScript, Node.js, React (für DApp-Frontends)
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: DeFi-Lending-Protokoll für institutionelle Kunden (Crypto-Startup, Zug)
+Zeitraum: 2023 – laufend (ca. 14 Monate)
+Branche: DeFi / Crypto / Financial Services
+Rolle: Lead Smart Contract Developer
+
+Architektur und Implementierung eines permissioned Lending-Protokolls auf Ethereum
+(Mainnet + Arbitrum L2) für institutionelle Kreditgeber und -nehmer. Entwicklung von
+Solidity-Smart-Contracts mit upgradeable Proxy-Pattern (OpenZeppelin UUPS), On-Chain-Oracle-
+Integration (Chainlink), Implementierung eines Risk-Scoring-Moduls. Sicherheitsreview durch
+externen Auditor (Certik) vorbereitet und Findings behoben.
+
+Eingesetzte Technologien: Solidity 0.8.24, Hardhat, Foundry, OpenZeppelin, Chainlink,
+Arbitrum, ethers.js, TypeScript, Node.js, The Graph (Subgraph)
+
+---
+
+Projekt 2: NFT-Marktplatz und Token-Infrastruktur (Digital-Art-Plattform)
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: Digital Art / NFT
+Rolle: Blockchain Developer / Full Stack Web3
+
+Entwicklung der gesamten Blockchain-Infrastruktur eines NFT-Marktplatzes auf Polygon.
+ERC-721/ERC-1155-Contracts, Royalty-Mechanismus (EIP-2981), Lazy-Minting, IPFS-Integration
+für Metadaten. DApp-Frontend in React mit wagmi/ethers.js-Anbindung.
+
+Eingesetzte Technologien: Solidity, Hardhat, ERC-721, ERC-1155, IPFS, Polygon,
+React, wagmi, ethers.js, TypeScript
+
+---
+
+Projekt 3: Smart-Contract-Audit für eine dezentrale Exchange
+Zeitraum: 2020 – 2021 (8 Monate)
+Branche: DeFi / DEX
+Rolle: Smart Contract Auditor
+
+Durchführung eines unabhängigen Sicherheitsaudits für eine AMM-basierte dezentrale Exchange.
+Analyse auf gängige Angriffsvektoren (Reentrancy, Integer Overflow, Front-Running, Flash-Loan-
+Exploits), Erstellung eines strukturierten Audit-Reports mit Severity-Einstufungen und
+Remediationsempfehlungen.
+
+Eingesetzte Technologien: Solidity, Hardhat, Slither, Echidna, Mythril, Foundry (Fuzzing)
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 7 Monaten
+Tagessatz:          1.120 €/Tag (vor Ort)
+Stundensatz Remote: 140 €/Std
+Arbeitsweise:       bevorzugt remote (internationale Web3-Community)
+Einsatzort:         Köln und Umgebung, remote weltweit
+Auslastung:         4–5 Tage/Woche

@@ -1,0 +1,84 @@
+Profil DEV-20003 – SAP ABAP Entwickler, S/4HANA-Experte
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+SAP-Entwickler mit über 15 Jahren Erfahrung in der ABAP-Entwicklung, seit vielen Jahren mit
+Schwerpunkt auf S/4HANA-Transformationen. Tiefes Verständnis der Finanzbuchhaltungs- und
+Controllingprozesse (FI/CO) sowie umfangreiche Erfahrung in der Integration von SAP- und
+Non-SAP-Systemen über BAPIs, IDocs und OData-Services. Begleitet Kunden von der ersten
+Analyse bis zum produktiven Go-live.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- SAP ABAP (klassisch und OO), CDS Views, AMDP
+- SAP S/4HANA (On-Premise und Cloud), SAP BTP
+- SAP Fiori, SAPUI5, OData v2/v4
+- FI/CO, MM, SD Module
+- BADI, BTE, User-Exits, Enhancement Spots
+- ALV Grid, SMARTFORMS, SAPScript, Adobe Forms
+- RFC, BAPI, IDoc, ALE/EDI
+- SAP Business Application Studio (BAS)
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: S/4HANA-Umstieg bei einem großen Handelsunternehmen
+Zeitraum: 2022 – laufend (ca. 2 Jahre)
+Branche: Handel / Retail
+Rolle: Senior ABAP-Entwickler / Technischer Berater
+
+Verantwortlich für die technische Umsetzung der ABAP-seitigen Anpassungen im Rahmen einer
+S/4HANA-Greenfield-Implementierung. Hauptaufgaben waren die Umstellung bestehender klassischer
+Dynpro-Reports auf moderne CDS-View-basierte Analysen, die Entwicklung von OData-Services
+für neue Fiori-Apps sowie die Migration von SMARTFORMS auf SAP Forms im S/4HANA-Kontext.
+Enge Abstimmung mit dem Basis-Team bei Performance-Tuning im HANA-Kontext (EXPLAIN PLAN,
+Index-Optimierung, AMDP für komplexe Logik).
+
+Eingesetzte Technologien: SAP S/4HANA 2022, ABAP OO, CDS Views, AMDP, OData v4,
+SAP Fiori Elements, SAPUI5, FI/CO, BTP Business Application Studio
+
+---
+
+Projekt 2: Entwicklung einer Fiori-App-Suite für Rechnungsworkflow (Versicherungskonzern)
+Zeitraum: 2020 – 2022 (18 Monate)
+Branche: Versicherungen
+Rolle: Lead ABAP/Fiori-Entwickler
+
+Neuentwicklung eines mehrstufigen Rechnungsgenehmigungsworkflows als SAP Fiori-Applikation
+auf SAP ECC/BTP-Basis. Implementierung des Backends über ABAP OO und OData-Services,
+Frontend in SAPUI5 mit eigenem Freestyle-Ansatz. Anbindung an das FI-Modul über BAPIs
+sowie Integration mit einem externen Dokumenten-Management-System über RFC-Schnittstellen.
+
+Eingesetzte Technologien: SAP ECC 6.0 EhP8, SAP BTP, ABAP OO, OData v2, SAPUI5,
+BAPIs, RFC, FI-Modul, Workflow
+
+---
+
+Projekt 3: IDOC-Schnittstellen-Konsolidierung für Automobilzulieferer
+Zeitraum: 2018 – 2020 (22 Monate)
+Branche: Automotive
+Rolle: Senior SAP-Entwickler
+
+Analyse, Dokumentation und Neuimplementierung von über 40 bestehenden IDoc-Schnittstellen
+im Bereich SD und MM. Reduktion von Fehlermeldungen durch verbesserte Fehlerbehandlung,
+automatische Wiederanlauf-Logik sowie strukturiertes Monitoring-Cockpit in ALV. Entwicklung
+von BADI-Erweiterungen zur Abbildung kundenspezifischer Geschäftsprozesse ohne Modifikation
+des SAP-Standards.
+
+Eingesetzte Technologien: SAP ECC 6.0, ABAP OO, IDocs, ALE, BADI, ALV Grid, MM, SD
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 3 Monaten
+Tagessatz:          1.040 €/Tag (vor Ort)
+Stundensatz Remote: nicht ausgewiesen (projektabhängig)
+Arbeitsweise:       überwiegend vor Ort, 1–2 Tage remote nach Absprache
+Einsatzort:         Frankfurt/Main und Umgebung, Rhein-Main-Gebiet
+Auslastung:         bis zu 5 Tage/Woche

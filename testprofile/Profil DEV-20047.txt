@@ -1,0 +1,84 @@
+Profil DEV-20047 – SAP Project Manager, PMO
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Erfahrener SAP-Projektmanager mit über 25 Jahren Erfahrung in SAP-Projekten verschiedenster
+Komplexität und Größenordnung. Hat SAP-Projekte von der initialen Machbarkeitsstudie bis zum
+Go-live und Hypercare begleitet und verantwortet – sowohl als externer Berater als auch in
+interimistischen PMO-Rollen. Kennt die typischen Fallstricke großer SAP-Transformations-
+projekte und weiß, wie man sie navigiert.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- SAP-Projektmanagement (global, multi-site, multi-stream)
+- SAP Activate Methodology, ASAP
+- PMO-Aufbau und -Betrieb, Projektcontrolling
+- Budgetverantwortung (bis 50 Mio. € Projektvolumen)
+- Ressourcenplanung, Lieferantensteuerung, Offshore-Koordination
+- Risikomanagement, Eskalationsmanagement
+- S/4HANA-Migrationsprojekte (Greenfield und System Conversion)
+- Change Management, Stakeholder-Management bis Vorstandsebene
+- Agile (SAFe, Scrum) im SAP-Kontext
+- MS Project, Jira, Confluence, SAP Solution Manager
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: S/4HANA-Greenfield-Einführung für einen europäischen Chemiekonzern
+Zeitraum: 2021 – laufend (ca. 5 Jahre Gesamtprojektlaufzeit, 2 davon bisher)
+Branche: Chemie / Spezialchemie
+Rolle: SAP-Gesamtprojektleiter
+
+Gesamtverantwortung für ein SAP-S/4HANA-Greenfield-Einführungsprojekt mit einem Budget
+von ca. 35 Millionen Euro und 12 nationalen sowie internationalen Projektstandorten.
+Steuerung von 8 Fachstreams (FI, CO, MM, SD, PP, PM, QM, WM) mit insgesamt über 100
+Beraterinnen und Beratern. Einführung eines robusten Risiko- und Issue-Managementprozesses,
+monatliche Steering-Committee-Präsentationen auf Vorstandsebene.
+
+Eingesetzte Methoden/Werkzeuge: SAP Activate, MS Project, Jira, Confluence,
+SAP Solution Manager, PMO-Framework, Risikoregister, Changeregister
+
+---
+
+Projekt 2: SAP-System-Conversion ECC auf S/4HANA für einen Maschinenbaukonzern
+Zeitraum: 2018 – 2021 (32 Monate)
+Branche: Maschinenbau / Industrie
+Rolle: SAP-Projektleiter / Program Manager
+
+Verantwortung für die technische und fachliche Migrationsplanung und -durchführung bei einem
+mittelgroßen Maschinenbauunternehmen. Steuerung der externen Basis- und Entwicklungspartner,
+Aufbau eines Change-Request-Prozesses, Koordination der Testphasen (SIT, UAT, Performance),
+Vorbereitung und Durchführung des Cutovers (Wochenendmigration ohne Produktionsstopp).
+
+Eingesetzte Methoden/Werkzeuge: SAP Activate, MS Project, SAP Solution Manager,
+Cutover-Plan, Risikomanagement, PMO
+
+---
+
+Projekt 3: SAP-PMO-Aufbau für ein Pharmaunternehmen
+Zeitraum: 2016 – 2018 (20 Monate)
+Branche: Pharma
+Rolle: PMO Lead / Program Manager
+
+Aufbau und Betrieb eines zentralen SAP-PMOs für die Koordination von 12 gleichzeitig
+laufenden SAP-Projekten (Roll-outs, Upgrades, Sonderentwicklungen). Einführung einheitlicher
+Projektstandards, Template-Bibliothek, regelmäßiges Portfolio-Reporting für IT-Leitung.
+
+Eingesetzte Methoden/Werkzeuge: PMO-Framework, MS Project, SAP Solution Manager,
+Projekt-Portfolio-Management, Confluence, Risikomanagement
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 12 Monaten
+Tagessatz:          1.200 €/Tag (vor Ort)
+Stundensatz Remote: nicht ausgewiesen
+Arbeitsweise:       überwiegend vor Ort (Projektsteuerung erfordert Präsenz)
+Einsatzort:         Düsseldorf und Umgebung, deutschlandweit und europaweit
+Auslastung:         5 Tage/Woche

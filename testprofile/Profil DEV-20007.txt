@@ -1,0 +1,83 @@
+Profil DEV-20007 – .NET/C# Senior Developer, Azure
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Senior .NET-Entwickler mit über 11 Jahren Erfahrung im Microsoft-Ökosystem, spezialisiert auf
+die Entwicklung moderner, cloud-nativer Applikationen mit .NET 8 und ASP.NET Core. Tiefe
+Kenntnisse in Clean Architecture, CQRS-Mustern und dem Einsatz von Azure-Diensten für
+skalierbare Backends. Legt großen Wert auf Testbarkeit, Code-Qualität und die enge Zusammenarbeit
+mit anderen Disziplinen im Team.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- .NET 8, C# 12, ASP.NET Core, Minimal APIs
+- CQRS, MediatR, Event Sourcing, Clean Architecture
+- Entity Framework Core, Dapper, SQL Server, PostgreSQL
+- Azure DevOps, Azure Functions, Azure Service Bus, Azure Cosmos DB
+- SignalR (Echtzeit-Kommunikation), Identity Server, OAuth2/OIDC
+- REST APIs, gRPC, OpenAPI
+- xUnit, Moq, FluentAssertions, Testcontainers
+- Docker, Kubernetes (AKS), GitHub Actions
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Plattform für digitale Versicherungsprodukte (mittelständischer Versicherungskonzern)
+Zeitraum: 2023 – laufend (ca. 18 Monate)
+Branche: Versicherungen
+Rolle: Lead .NET Developer / Softwarearchitekt
+
+Verantwortlich für die Architektur und Implementierung einer neuen Policenverwaltungsplattform
+als Cloud-native .NET-Applikation. Umsetzung eines CQRS-Musters mit MediatR und dem
+Outbox-Pattern für zuverlässige Event-Publikation auf Azure Service Bus. Einführung von
+Identity Server 6 für OAuth2/OIDC-basiertes Identity Management. Code-Qualitätssicherung
+durch TDD, SonarQube und verpflichtende Architecture Fitness Functions.
+
+Eingesetzte Technologien: .NET 8, C#, ASP.NET Core, MediatR, Entity Framework Core,
+Azure Service Bus, Azure DevOps, SQL Server, Docker, Kubernetes (AKS), xUnit
+
+---
+
+Projekt 2: Echtzeit-Kollaborationsplattform für SaaS-Startup (Legal Tech)
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: Legal Tech / SaaS
+Rolle: Senior .NET Developer
+
+Mitarbeit an einem mehrmandantenfähigen SaaS-Produkt für kollaborative Dokumentenbearbeitung.
+Implementierung der Echtzeit-Kommunikationsschicht mit SignalR und Azure SignalR Service.
+Aufbau des Multi-Tenant-Datenzugriffsmodells mit EF Core und Row-Level-Security auf
+SQL Server. Entwicklung von Azure Functions für asynchrone Hintergrundverarbeitung.
+
+Eingesetzte Technologien: .NET 6/7, C#, ASP.NET Core, SignalR, Azure Functions,
+Entity Framework Core, SQL Server, Azure Blob Storage, xUnit, Moq
+
+---
+
+Projekt 3: API-Modernisierung bei einem Logistikdienstleister
+Zeitraum: 2019 – 2021 (22 Monate)
+Branche: Logistik
+Rolle: Senior Developer / API Architect
+
+Migration einer SOAP-basierten Legacy-API-Landschaft auf moderne REST-APIs und vereinzelt
+gRPC für interne Services. Einführung von API-Versionierung, standardisierten Error-Responses
+und einer OpenAPI-Dokumentation. Schrittweise Einführung von Testcontainern für echte
+Integrationstests gegen SQL Server.
+
+Eingesetzte Technologien: .NET 5/6, C#, ASP.NET Core, gRPC, REST, PostgreSQL,
+Testcontainers, Docker, Azure DevOps
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          840 €/Tag (vor Ort)
+Stundensatz Remote: 105 €/Std
+Arbeitsweise:       Hybrid (3 Tage remote, 2 Tage vor Ort bevorzugt)
+Einsatzort:         Köln/Bonn und Umgebung, deutschlandweit nach Absprache
+Auslastung:         bis zu 5 Tage/Woche

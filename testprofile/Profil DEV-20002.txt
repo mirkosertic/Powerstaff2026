@@ -1,0 +1,84 @@
+Profil DEV-20002 – React/TypeScript Frontend-Spezialistin mit UX-Kenntnissen
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Frontend-Entwicklerin mit rund 10 Jahren Berufserfahrung und einem ausgeprägten Gespür für
+Benutzerfreundlichkeit und visuelles Design. Spezialisiert auf React-basierte Single-Page-Applications
+und Component-Libraries mit TypeScript. Verbindet technische Exzellenz mit UX-Denken: von der
+ersten Wireframe-Skizze bis zur barrierefreien, performanten Umsetzung im Browser.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- React 18, TypeScript, JavaScript (ES2022+), Next.js 14
+- Redux Toolkit, Zustand, React Query
+- CSS-in-JS (Emotion, styled-components), Tailwind CSS
+- Figma, Design Systems, Storybook
+- Jest, React Testing Library, Cypress, Playwright
+- Vite, Webpack, Build-Optimierung
+- Node.js (für BFF/Middleware), GraphQL, REST APIs
+- UX-Design-Grundlagen, Accessibility (WCAG 2.1), User Research
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Kundenselfservice-Portal für großen deutschen Telekommunikationsanbieter
+Zeitraum: Q2 2023 – Q1 2025 (20 Monate)
+Branche: Telekommunikation
+Rolle: Senior Frontend Developer / UX Lead
+
+Verantwortlich für den kompletten Neuaufbau des Kundenselfservice-Portals mit React 18 und
+TypeScript. Entwicklung einer wiederverwendbaren Component-Library in Storybook, die von
+drei verschiedenen Produktteams genutzt wird. Enge Zusammenarbeit mit UX-Designern in Figma
+zur Übersetzung von Designs in barrierefreie, responsives HTML/CSS. Einführung von End-to-End-Tests
+mit Cypress für kritische User Journeys. Das überarbeitete Portal führte zu einer nachweisbaren
+Reduktion der Support-Anfragen um ca. 30%.
+
+Eingesetzte Technologien: React 18, TypeScript, Redux Toolkit, Tailwind CSS, Storybook,
+Jest, Cypress, Vite, GraphQL, Node.js (BFF)
+
+---
+
+Projekt 2: Investment-Dashboard für Berliner FinTech-Startup
+Zeitraum: 2021 – Q1 2023 (18 Monate)
+Branche: FinTech / Financial Services
+Rolle: Lead Frontend Developer
+
+Aufbau eines komplexen Echtzeit-Dashboards für Portfoliodaten und Handelsaktivitäten.
+Herausforderung: hohe Datenfrequenz, Live-Updates per WebSocket, komplexe Diagramme
+(Recharts, D3.js) und strikte Performance-Anforderungen. Implementierung einer Next.js-Architektur
+mit SSR für kritische SEO-Seiten sowie einer optimierten Client-Side-Rendering-Strategie
+für das interaktive Dashboard. Vollständige Typsicherheit durch TypeScript und strikte ESLint-Regeln.
+
+Eingesetzte Technologien: Next.js 13, TypeScript, React Query, Recharts, D3.js, Tailwind CSS,
+Jest, React Testing Library, WebSockets, REST APIs
+
+---
+
+Projekt 3: Onboarding-Flow-Redesign für E-Commerce-Plattform
+Zeitraum: 2020 – 2021 (12 Monate)
+Branche: E-Commerce
+Rolle: Frontend Developer / UX Designer
+
+Komplette Überarbeitung des mehrstufigen Onboarding-Prozesses auf Basis von Nutzerfeedback
+und A/B-Test-Ergebnissen. Durchführung von Usability-Tests mit echten Nutzern, Erstellung von
+Prototypen in Figma, Implementierung der finalisierten Designs in React. Die überarbeitete
+User Journey steigerte die Konversionsrate des Onboarding-Flows signifikant.
+
+Eingesetzte Technologien: React 17, JavaScript, CSS Modules, Figma, Optimizely (A/B-Testing),
+Jest, Webpack
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 1 Monat
+Tagessatz:          800 €/Tag (vor Ort)
+Stundensatz Remote: 100 €/Std
+Arbeitsweise:       bevorzugt remote, gelegentliche Vor-Ort-Termine möglich
+Einsatzort:         Berlin und Umgebung, remote deutschlandweit
+Auslastung:         4–5 Tage/Woche

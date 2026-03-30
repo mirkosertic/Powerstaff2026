@@ -1,0 +1,84 @@
+Profil DEV-20001 – Senior Backend Developer Java/Spring
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Erfahrener Senior Backend Developer mit über 15 Jahren Berufserfahrung in der Entwicklung von
+unternehmenskritischen Java-Anwendungen. Schwerpunkt liegt auf der Konzeption und Umsetzung
+skalierbarer Microservices-Architekturen im Spring-Ökosystem. Besonderes Interesse an
+Clean Code, testgetriebener Entwicklung und der nachhaltigen Gestaltung von Softwarearchitekturen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Java (11, 17, 21), Spring Boot 3.x, Spring Security, Spring Data JPA
+- REST APIs, Microservices, API-Design (OpenAPI 3)
+- JPA/Hibernate, PostgreSQL, MySQL, Datenbankmodellierung
+- Docker, Kubernetes, Helm, Container-Orchestrierung
+- Maven, Git, CI/CD-Pipelines
+- TDD, Clean Code, SOLID-Prinzipien
+- Agile/Scrum, Code Reviews, Mentoring
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Microservices-Plattform für europäischen Versicherungskonzern
+Zeitraum: 2023 – laufend (ca. 18 Monate)
+Branche: Versicherungen
+Rolle: Lead Backend Developer
+
+Verantwortlich für den Entwurf und die Implementierung einer neuen Microservices-Plattform zur
+Ablösung eines monolithischen Altsystems. Die Plattform verarbeitet täglich mehrere hunderttausend
+Versicherungsanträge und -änderungen. Im Team von 8 Entwicklerinnen und Entwicklern übernahm die
+Fachkraft die technische Führung sowie die Architekturentscheidungen. Einführung von Spring Boot 3.2,
+Spring Security mit OAuth2/JWT, PostgreSQL mit Flyway-Migrationen sowie vollständige Containerisierung
+mit Docker und Kubernetes. Test Coverage > 85% durch konsequentes TDD mit JUnit 5 und Mockito.
+
+Eingesetzte Technologien: Java 21, Spring Boot 3.2, Spring Security, JPA/Hibernate, PostgreSQL,
+Docker, Kubernetes, Maven, Git, GitHub Actions
+
+---
+
+Projekt 2: REST-API-Backend für E-Commerce-Plattform (mittelständischer Onlinehändler)
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: E-Commerce
+Rolle: Senior Backend Developer
+
+Entwicklung und Betreuung des Kernbackends einer E-Commerce-Plattform mit hohem
+Transaktionsvolumen. Schwerpunkt auf Performance-Optimierung von Datenbankabfragen,
+Implementierung von Caching-Strategien mit Redis sowie Absicherung der APIs gegen gängige
+Sicherheitslücken (OWASP Top 10). Mitverantwortlich für die Einführung von Consumer-Driven
+Contract Tests mit Pact. Enge Zusammenarbeit mit dem Frontend-Team zur Abstimmung von
+API-Contracts und deren OpenAPI-Dokumentation.
+
+Eingesetzte Technologien: Java 17, Spring Boot 2.7/3.0, Spring Security, MySQL, Redis,
+Docker, Nginx, Maven, JUnit 5, Pact, REST-assured
+
+---
+
+Projekt 3: Behördenportal für digitale Verwaltungsdienstleistungen
+Zeitraum: 2019 – 2021 (24 Monate)
+Branche: Öffentliche Verwaltung
+Rolle: Senior Developer / Technischer Berater
+
+Mitarbeit an einem Digitalisierungsprojekt für eine Bundesbehörde zur Online-Abwicklung von
+Verwaltungsvorgängen. Besonders sensibles Thema: Datenschutz und Compliance gemäß DSGVO.
+Implementierung eines rollenbasierten Zugriffssystems sowie einer revisionssicheren Protokollierung.
+Das System wurde erfolgreich für mehrere zehntausend Nutzer ausgerollt.
+
+Eingesetzte Technologien: Java 11, Spring Boot 2.5, Spring Security, PostgreSQL, Docker,
+Keycloak, REST APIs, Maven, JUnit 5, Testcontainers
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          920 €/Tag (vor Ort)
+Stundensatz Remote: 105 €/Std
+Arbeitsweise:       Hybrid bevorzugt (2–3 Tage remote, 2–3 Tage vor Ort)
+Einsatzort:         München und Umgebung, deutschlandweit nach Absprache
+Auslastung:         bis zu 5 Tage/Woche

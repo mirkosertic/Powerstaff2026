@@ -1,0 +1,83 @@
+Profil DEV-20025 – Interim CTO / Lead Developer, Teamaufbau und Architektur
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Erfahrener Technologieführer mit über 14 Jahren Erfahrung als Entwickler und Architekt, davon
+die letzten 5 Jahre in Interim-CTO- und Tech-Lead-Rollen. Verbindet strategisches Denken mit
+Hands-on-Fähigkeiten: schreibt immer noch Code, aber weiß auch, wann Architekturentscheidungen
+gemacht und Teams aufgebaut werden müssen. Hat mehrere Unternehmen aus technischen Krisen
+geführt und Entwicklungsorganisationen von 3 auf 25+ Köpfe skaliert.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Interim CTO, VP Engineering, Tech Lead, Engineering Manager
+- Software-Architektur: Microservices, Cloud-native, Modulare Monolithen
+- Teamaufbau, Hiring, Onboarding, Mentoring
+- Technologie-Auswahl, Build-vs.-Buy-Entscheidungen
+- Java, Python, Go (operative Tiefe je nach Projektkonstellation)
+- AWS, Kubernetes, DevOps-Kultur, CI/CD
+- OKR, agile Organisations- und Prozessgestaltung
+- Investoren-Kommunikation, technisches Due Diligence
+- Architecture Decision Records, Tech Roadmap
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Interim CTO bei einem wachstumsstarken HealthTech-Startup (Serie B)
+Zeitraum: 2023 – laufend (ca. 14 Monate)
+Branche: Healthcare / HealthTech
+Rolle: Interim CTO
+
+Übernahme der technischen Gesamtverantwortung eines HealthTech-Startups nach dem Abgang
+des bisherigen CTO. Schnelle Lageanalyse und Priorisierung kritischer technischer Schulden.
+Aufbau eines strukturierten Hiring-Prozesses (8 neue Entwicklerinnen und Entwickler in 6 Monaten),
+Einführung von Architektur-Reviews und ADR-Prozessen. Modernisierung der CI/CD-Infrastruktur
+auf AWS/Kubernetes, Vorbereitung der technischen Due-Diligence für Series-C-Fundraising.
+
+Eingesetzte Technologien/Methoden: AWS, Kubernetes, GitHub Actions, Terraform, Python,
+Go, OKR, ADR, Hiring & Onboarding, Tech Due Diligence
+
+---
+
+Projekt 2: Technische Sanierung und Skalierung bei einem E-Commerce-Scale-up
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: E-Commerce
+Rolle: Lead Developer / Head of Engineering
+
+Verantwortlich für die technische Roadmap eines schnell wachsenden E-Commerce-Unternehmens.
+Ablösung eines PHP-Monolithen durch ein Java/Node.js-Microservices-Backend (Strangler-Fig-
+Muster), schrittweise Einführung von AWS-Cloud-Infrastruktur. Führung und Entwicklung
+eines 12-köpfigen Entwicklungsteams.
+
+Eingesetzte Technologien/Methoden: Java, Node.js, AWS, Kubernetes, Terraform,
+CI/CD, Scrum, Tech Leadership, Mentoring
+
+---
+
+Projekt 3: Technische Beratung für ein PropTech-Startup (Pre-Seed bis Serie A)
+Zeitraum: 2019 – 2021 (24 Monate)
+Branche: PropTech / Real Estate
+Rolle: Technical Advisor / Fractional CTO
+
+Technischer Berater vom MVP-Stadium bis zur Series-A-Finanzierung. Unterstützung bei der
+Auswahl des Tech-Stacks, Aufbau des ersten Entwicklungsteams, Code-Reviews und
+Architekturentscheidungen. Vorbereitung der technischen Unterlagen für zwei Finanzierungsrunden.
+
+Eingesetzte Technologien/Methoden: Python, React, AWS, Architekturberatung,
+Tech Roadmap, Investor-Kommunikation
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 1 Monat
+Tagessatz:          1.400 €/Tag (vor Ort)
+Stundensatz Remote: 175 €/Std
+Arbeitsweise:       flexibel (remote und vor Ort nach Projekterfordernissen)
+Einsatzort:         Frankfurt/Main und Umgebung, deutschlandweit und europaweit
+Auslastung:         3–5 Tage/Woche (auch Fractional-Modelle möglich)

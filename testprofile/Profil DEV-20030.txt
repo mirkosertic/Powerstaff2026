@@ -1,0 +1,84 @@
+Profil DEV-20030 – Kotlin Backend Entwicklerin
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Backend-Entwicklerin mit rund 9 Jahren Erfahrung, die von Java auf Kotlin umgestiegen ist und
+seitdem keine andere JVM-Sprache für Backend-Projekte wählen würde. Begeistert von
+Kotlins Typsystem, Coroutines und der ausdrucksstarken Syntax für domänennahen Code.
+Erfahrung sowohl mit Spring-Boot-basierten APIs als auch mit dem leichtgewichtigeren
+Ktor-Framework für Cloud-native Microservices.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Kotlin (JVM, seit 1.4), Coroutines, Flows, Extension Functions
+- Spring Boot 3.x mit Kotlin, Spring Data JDBC/JPA
+- Ktor (Server), KTor Client, Exposed (SQL-Framework)
+- PostgreSQL, Redis, Apache Kafka
+- REST APIs, GraphQL (graphql-kotlin)
+- Docker, Kubernetes, Helm
+- Testing: JUnit 5, MockK, Testcontainers, Kotest
+- Gradle KTS, Git, GitHub Actions
+- Clean Code, Domain-Driven Design
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Microservices-Backend für ein FinTech-Kreditportal
+Zeitraum: 2023 – laufend (ca. 13 Monate)
+Branche: FinTech / Lending
+Rolle: Senior Kotlin Backend Developer
+
+Mitentwicklung des Kern-Backends für eine digitale Kreditplattform. Mehrere Kotlin-Spring-
+Boot-Microservices für Antragsprüfung, Bonitätsbewertung (Scoring-Engine) und
+Vertragsgenerierung. Coroutines für parallele, nicht-blockierende API-Aufrufe zu
+Auskunfteien. Kafka für asynchrone Statusbenachrichtigungen. Vollständige Testabdeckung
+mit Testcontainern (echte PostgreSQL-Instanzen in Tests).
+
+Eingesetzte Technologien: Kotlin, Spring Boot 3, Coroutines, Kafka, PostgreSQL,
+Testcontainers, MockK, Docker, Kubernetes, GitHub Actions
+
+---
+
+Projekt 2: GraphQL-API für ein E-Commerce-Startup
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: E-Commerce
+Rolle: Kotlin Backend Developer
+
+Aufbau einer GraphQL-API-Schicht als zentraler Datenaccesspunkt für mehrere Frontend-
+Clients (Web, iOS, Android) eines E-Commerce-Startups. graphql-kotlin mit Kotlin-
+Suspend-Functions für nicht-blockierenden Datenbankzugriff. DDD-basiertes Domain-Modell
+mit klarer Trennung von Domain Layer und Infrastrukturschicht.
+
+Eingesetzte Technologien: Kotlin, graphql-kotlin, Spring Boot, PostgreSQL, Redis,
+Coroutines, Kotest, Testcontainers, Docker, AWS
+
+---
+
+Projekt 3: REST-Backend-Modernisierung für ein Medizingeräteunternehmen
+Zeitraum: 2019 – 2021 (18 Monate)
+Branche: Medical Devices / Healthcare
+Rolle: Backend Developer (Java zu Kotlin Migration)
+
+Schrittweise Migration eines Java-8-Spring-Boot-Backends auf Kotlin. Einführung von
+Kotlin-idiomatischem Code (Data Classes, Sealed Classes für Ergebnis-Typen, Extension
+Functions), Verbesserung der Typsicherheit durch Nullability-Handling. Erstellung
+von Testcontainer-basierten Integrationstests für alle Datenbankzugriffe.
+
+Eingesetzte Technologien: Kotlin, Java (Legacy), Spring Boot, PostgreSQL,
+Testcontainers, JUnit 5, MockK, Gradle KTS, GitHub Actions
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 11 Monaten
+Tagessatz:          840 €/Tag (vor Ort)
+Stundensatz Remote: 105 €/Std
+Arbeitsweise:       remote-first
+Einsatzort:         Potsdam/Berlin und Umgebung, remote deutschlandweit
+Auslastung:         4–5 Tage/Woche

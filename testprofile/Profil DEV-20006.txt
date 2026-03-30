@@ -1,0 +1,82 @@
+Profil DEV-20006 – Scrum Master / Agile Coach, SAFe, LeSS
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Zertifizierter Scrum Master und Agile Coach mit über 12 Jahren Erfahrung in der agilen
+Transformation von Unternehmen verschiedenster Größen und Branchen. Besondere Stärke in der
+Skalierung agiler Frameworks (SAFe, LeSS) auf Programm- und Portfolioebene sowie in der
+Moderation komplexer Multi-Team-Events. Verbindet pragmatische Prozessgestaltung mit einem
+tiefen Verständnis für Organisations- und Teamdynamiken.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Scrum, Kanban, SAFe 5/6, LeSS, Nexus
+- Agile Coaching, Teamentwicklung, Retrospektiven
+- PI Planning, Program Increment, ART-Koordination
+- OKR-Einführung und -Begleitung
+- Jira, Confluence, Miro, Mural
+- Stakeholder-Management, Executive Coaching
+- Change Management, Organisationsentwicklung
+- Workshop-Design und -Moderation
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: SAFe-Transformation bei einem mittelgroßen Versicherungsunternehmen
+Zeitraum: 2022 – laufend (ca. 22 Monate)
+Branche: Versicherungen
+Rolle: Release Train Engineer / Agile Coach
+
+Begleitung der agilen Transformation von ca. 120 Mitarbeiterinnen und Mitarbeitern in fünf
+Entwicklungsteams und einem Business-Bereich. Einführung von SAFe 5.1, später Upgrade auf
+SAFe 6.0. Aufbau eines Agile Release Trains, Moderation von vier quartalsweisen PI-Plannings
+sowie laufendes Coaching der Scrum Master und Product Owner. Erhebliche Verkürzung der
+Time-to-Market durch verbesserte Priorisierungsprozesse.
+
+Eingesetzte Werkzeuge/Methoden: SAFe 6.0, PI Planning, ART, Jira Align, Confluence, Miro,
+OKR, Coaching-Formate (1:1, Team, Leadership)
+
+---
+
+Projekt 2: LeSS-Implementierung bei einem deutschen Softwarehersteller (B2B-SaaS)
+Zeitraum: 2020 – 2022 (18 Monate)
+Branche: Software / SaaS
+Rolle: Agile Coach / LeSS Coach
+
+Einführung von Large-Scale Scrum (LeSS) für drei miteinander verzahnte Produktteams.
+Begleitung der Umstrukturierung von funktionalen in cross-funktionale Feature-Teams.
+Coaching der Product Owner in der gemeinsamen Backlog-Pflege und Priorisierung. Etablierung
+von wöchentlichen Communities of Practice für Entwicklung, Testing und Design.
+
+Eingesetzte Werkzeuge/Methoden: LeSS, Scrum, Feature Teams, CoP, Jira, Confluence, Miro
+
+---
+
+Projekt 3: Scrum-Einführung bei einer Bundesbehörde
+Zeitraum: 2018 – 2020 (24 Monate)
+Branche: Öffentliche Verwaltung
+Rolle: Scrum Master / Agile Coach
+
+Pilotierung agiler Arbeitsmethoden in einem Umfeld mit starken hierarchischen Strukturen und
+Compliance-Anforderungen. Einfache Scrum-Implementierung für zwei Entwicklungsteams mit
+schrittweiser Ausweitung auf weitere Teams. Schulung und Befähigung interner Scrum Master.
+Besondere Herausforderung: Vereinbarkeit von agilen Prinzipien mit Vergaberecht und
+ITIL-Prozessen.
+
+Eingesetzte Werkzeuge/Methoden: Scrum, Kanban, Jira, Confluence, Training und Workshops
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 6 Monaten
+Tagessatz:          760 €/Tag (vor Ort)
+Stundensatz Remote: nicht ausgewiesen
+Arbeitsweise:       überwiegend vor Ort in den ersten Monaten, danach Hybrid
+Einsatzort:         Hannover und Umgebung, deutschlandweit nach Absprache
+Auslastung:         4–5 Tage/Woche

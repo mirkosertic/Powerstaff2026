@@ -1,0 +1,84 @@
+Profil DEV-20012 – ML Engineer und Data Scientist, NLP, LLMs
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Machine Learning Engineer und Data Scientist mit über 12 Jahren Erfahrung, davon die letzten
+drei Jahre mit starkem Fokus auf Large Language Models, NLP-Applikationen und RAG-Architekturen.
+Verbindet wissenschaftliche Exzellenz (Promotionshintergrund in Computerlinguistik) mit
+pragmatischer Ingenieurspraxis: Modelle kommen produktiv zum Einsatz, nicht nur ins Notebook.
+Erfahrung in Branchen von E-Commerce über Versicherungen bis hin zu Medizintechnik.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Python, PyTorch, TensorFlow, Keras
+- Hugging Face Transformers, Sentence-Transformers, PEFT/LoRA
+- LangChain, LlamaIndex, OpenAI API, Azure OpenAI
+- RAG-Architekturen, Fine-Tuning von LLMs, Prompt Engineering
+- Vektordatenbanken: Pinecone, Weaviate, ChromaDB
+- MLflow, Kubeflow, AWS SageMaker, Azure ML
+- Pandas, NumPy, scikit-learn, Matplotlib, Seaborn
+- Computer Vision: OpenCV, YOLO, detectron2
+- Docker, Kubernetes, FastAPI, Git
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Intelligente Dokumentenanalyse für eine Versicherungsgruppe
+Zeitraum: 2023 – laufend (ca. 15 Monate)
+Branche: Versicherungen
+Rolle: Lead ML Engineer
+
+Entwicklung eines KI-Systems zur automatisierten Klassifizierung und Informationsextraktion aus
+eingehenden Versicherungsdokumenten (Schadensmeldungen, Anträge, ärztliche Gutachten).
+Einsatz von Fine-Tuned BERT-Modellen (HuggingFace) für Dokumentenklassifikation,
+GPT-4-basiertes RAG-System für semantische Suche im Dokumentenarchiv. MLflow für
+Experiment-Tracking und Modellregistry. Reduktion der manuellen Bearbeitungszeit um ca. 65%.
+
+Eingesetzte Technologien: Python, PyTorch, Hugging Face Transformers, OpenAI API,
+LangChain, ChromaDB, MLflow, FastAPI, Docker, Kubernetes, AWS S3
+
+---
+
+Projekt 2: Produktempfehlungssystem für großen deutschen Online-Retailer
+Zeitraum: 2021 – 2023 (22 Monate)
+Branche: E-Commerce
+Rolle: Senior Data Scientist / ML Engineer
+
+Entwicklung und Betrieb eines produktiven Empfehlungssystems auf Basis von kollaborativem
+Filtern (Matrix Factorization) und Content-Based-Embedding (Sentence-Transformers). A/B-Tests
+zur Bewertung von Modellvarianten, automatisiertes Retraining via Kubeflow Pipelines.
+Integration in die Produktionsinfrastruktur über AWS SageMaker Endpoints.
+
+Eingesetzte Technologien: Python, PyTorch, Sentence-Transformers, scikit-learn,
+Kubeflow, AWS SageMaker, Pandas, NumPy, Redis, SQL, Docker
+
+---
+
+Projekt 3: Computer-Vision-System für Qualitätskontrolle (Maschinenbauunternehmen)
+Zeitraum: 2019 – 2021 (20 Monate)
+Branche: Industrie / Manufacturing
+Rolle: ML Engineer
+
+Aufbau eines automatisierten Qualitätskontrollsystems für Produktionslinien mittels
+Computer Vision. Einsatz von YOLO v5 für Echtzeit-Defekterkennung auf Kamerabildern.
+Aufbau einer Trainingsdatenpipeline inklusive Datenannotation, Data Augmentation und
+automatisiertem Retraining bei Modelldrift.
+
+Eingesetzte Technologien: Python, PyTorch, YOLO v5, OpenCV, NumPy,
+MLflow, TensorRT (Edge-Deployment), Docker
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 4 Monaten
+Tagessatz:          1.040 €/Tag (vor Ort)
+Stundensatz Remote: 130 €/Std
+Arbeitsweise:       remote-first, Vor-Ort-Workshops nach Absprache
+Einsatzort:         Stuttgart und Umgebung, remote deutschlandweit und europaweit
+Auslastung:         4–5 Tage/Woche

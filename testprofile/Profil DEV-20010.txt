@@ -1,0 +1,83 @@
+Profil DEV-20010 – Go/Golang Backend Developer, gRPC, Microservices
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Golang-Entwickler mit rund 10 Jahren Gesamterfahrung in der Backend-Entwicklung, davon
+6 Jahre fokussiert auf Go in Startup- und Scale-up-Umgebungen. Spezialisiert auf
+hochperformante, verteilte Systeme mit gRPC und Microservices-Architekturen. Kennt die
+Herausforderungen von schnell wachsenden Systemen und legt Wert auf Observability,
+saubere APIs und beherrschbare Komplexität.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Go (Golang), Standard Library, Generics (seit Go 1.18)
+- gRPC, Protocol Buffers (Proto3), REST APIs
+- Microservices, Domain-Driven Design, Hexagonale Architektur
+- PostgreSQL, Redis, Apache Kafka
+- Docker, Kubernetes, Helm
+- Prometheus, Grafana, OpenTelemetry, Jaeger
+- Terraform, GitHub Actions, Linux
+- Testing: go test, testify, gomock, Testcontainers for Go
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Zahlungsabwicklungs-Backend für europäisches FinTech
+Zeitraum: 2022 – laufend (ca. 22 Monate)
+Branche: FinTech / Payments
+Rolle: Senior Go Developer / Tech Lead
+
+Technische Verantwortung für ein hochverfügbares Zahlungsabwicklungs-Backend, das täglich
+über eine Million Transaktionen verarbeitet. Architektur als Ensemble von Go-Microservices,
+die über gRPC miteinander kommunizieren und via Kafka asynchrone Workflows abwickeln.
+Besonderer Fokus auf Exactly-Once-Semantik bei Zahlungsvorgängen, umfassendes Distributed
+Tracing mit OpenTelemetry und automatisiertem Load Testing.
+
+Eingesetzte Technologien: Go 1.22, gRPC, Protocol Buffers, Kafka, PostgreSQL, Redis,
+Kubernetes, Prometheus, Grafana, OpenTelemetry, Terraform, GitHub Actions
+
+---
+
+Projekt 2: Echtzeit-Datenverarbeitungs-Backend für IoT-Plattform (Industrie 4.0)
+Zeitraum: 2020 – 2022 (20 Monate)
+Branche: Industrie / Manufacturing
+Rolle: Backend Developer (Go)
+
+Entwicklung des zentralen Ingestion- und Processing-Backends für eine industrielle IoT-Plattform.
+Empfang von Sensor-Telemetriedaten über MQTT und Kafka, Verarbeitung in Go-Services,
+Speicherung in TimescaleDB und PostgreSQL. Aufbau einer gRPC-API für den Zugriff durch
+Frontend-Applikationen und externe Analysesysteme.
+
+Eingesetzte Technologien: Go, MQTT, Apache Kafka, gRPC, PostgreSQL, TimescaleDB,
+Docker, Kubernetes, Prometheus, Grafana
+
+---
+
+Projekt 3: Developer-Tool für Cloud-Cost-Optimierung (B2B-SaaS-Startup)
+Zeitraum: 2018 – 2020 (18 Monate)
+Branche: Cloud / SaaS
+Rolle: Go Developer / Co-Founder (Tech)
+
+Mitgründer und technisch Verantwortlicher für ein Tool zur automatisierten Erkennung von
+Cloud-Kostenoptimierungspotenzialen auf AWS. Backend vollständig in Go, REST API,
+Jobs für asynchrone AWS-API-Abfragen. Einführung einer PostgreSQL-basierten
+Job-Queue als Alternative zu externen Message-Brokern in der Frühphase.
+
+Eingesetzte Technologien: Go, AWS SDK, REST APIs, PostgreSQL, Docker, Terraform,
+GitHub Actions, Redis
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          960 €/Tag (vor Ort)
+Stundensatz Remote: 120 €/Std
+Arbeitsweise:       remote-first, regelmäßige Vor-Ort-Termine nach Absprache
+Einsatzort:         München und Umgebung, remote deutschlandweit
+Auslastung:         bis zu 5 Tage/Woche

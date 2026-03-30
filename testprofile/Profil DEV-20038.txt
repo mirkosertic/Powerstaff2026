@@ -1,0 +1,83 @@
+Profil DEV-20038 – Vue.js/Nuxt.js Frontend-Entwicklerin
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Frontend-Entwicklerin mit knapp 8 Jahren Erfahrung, spezialisiert auf das Vue.js-Ökosystem.
+Hat sowohl einfache Vue-SPAs als auch komplexe Nuxt.js-Anwendungen mit SSR, ISR und
+Edge-Rendering konzipiert und umgesetzt. Legt Wert auf eine klare Komponentenarchitektur,
+zugängliche Benutzeroberflächen und einen effizienten Developer Workflow. Erfahrung sowohl
+in Startups als auch in mittelständischen Unternehmen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Vue.js 3 (Composition API, Script Setup), TypeScript
+- Nuxt.js 3 (SSR, SSG, ISR, Hybrid Rendering)
+- Pinia (State Management), Vue Router 4
+- Vite, Vitest, Vue Test Utils
+- Tailwind CSS, Vuetify 3, PrimeVue
+- Playwright (E2E-Tests), Testing Library
+- GraphQL (Apollo Client, urql), REST APIs
+- Storybook (für Vue), Component Documentation
+- Docker, Git, GitHub Actions, Jira, Figma
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Content-Management-Frontend für einen deutschen Verlag (Nuxt.js 3)
+Zeitraum: 2023 – laufend (ca. 14 Monate)
+Branche: Medien / Publishing
+Rolle: Lead Frontend Developer
+
+Neuentwicklung des Editor-Frontends für ein digitales Content-Management-System eines
+deutschen Fachverlags. Nuxt.js 3 mit hybridem Rendering (SSR für öffentliche Seiten, CSR
+für das Editor-Interface). Pinia für komplexen Redaktions-State (Dokument-Lock, Collaboration-
+Hints), Tiptap als Basis für den Rich-Text-Editor, Tailwind CSS für das Design-System.
+Storybook-basierte Komponentendokumentation.
+
+Eingesetzte Technologien: Nuxt.js 3, Vue.js 3, TypeScript, Pinia, Tiptap, Tailwind CSS,
+Storybook, Playwright, GraphQL, Docker, GitHub Actions
+
+---
+
+Projekt 2: Kunden-Self-Service-Portal für ein Energieversorgungsunternehmen
+Zeitraum: 2021 – 2023 (18 Monate)
+Branche: Energie / Utilities
+Rolle: Senior Vue.js Entwicklerin
+
+Aufbau eines Kundenselfservice-Portals für Vertrags- und Zählerdatenverwaltung. Vue.js 3
+SPA mit TypeScript, Vuetify 3 als UI-Komponentenbibliothek, REST-API-Integration über
+axios mit eigenem API-Layer. Umfangreiche Formularvalidierung (VeeValidate + Zod),
+Accessibility-Audit und WCAG-2.1-Konformität.
+
+Eingesetzte Technologien: Vue.js 3, TypeScript, Vuetify 3, Pinia, VeeValidate, Zod,
+Vitest, Playwright, REST APIs, Docker, GitLab CI/CD
+
+---
+
+Projekt 3: Marktplatz-Frontend für eine regionale Handwerkerplattform
+Zeitraum: 2020 – 2021 (12 Monate)
+Branche: Dienstleistungen / Local Services
+Rolle: Vue.js Entwicklerin
+
+Entwicklung des Frontend für eine Matching-Plattform zwischen Handwerkern und Privatkunden
+mit Vue.js 2 (später Migration auf Vue 3). Kartenintegration mit Leaflet.js, Echtzeit-
+Benachrichtigungen über WebSockets, Multi-Step-Onboarding-Formulare.
+
+Eingesetzte Technologien: Vue.js 2/3, Vuex/Pinia, Leaflet.js, WebSockets,
+Tailwind CSS, Vite, Jest, REST APIs
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 12 Monaten
+Tagessatz:          760 €/Tag (vor Ort)
+Stundensatz Remote: 95 €/Std
+Arbeitsweise:       remote-first
+Einsatzort:         Erfurt und Umgebung, remote deutschlandweit
+Auslastung:         4–5 Tage/Woche

@@ -1,0 +1,83 @@
+Profil DEV-20020 – SAP Fiori/SAPUI5 Entwicklerin, BTP Cloud Foundry
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+SAP-Entwicklerin mit rund 10 Jahren Erfahrung, spezialisiert auf SAP Fiori, SAPUI5 und die
+BTP-Plattform. Bewegt sich sicher sowohl im ABAP-Backend als auch im JavaScript/TypeScript-
+Frontend von SAP-Applikationen. Kennt die Eigenheiten des SAP-Ökosystems und kann dennoch
+moderne Web-Entwicklungsstandards in SAP-Projekte einbringen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- SAP Fiori (Freestyle und Fiori Elements), SAPUI5
+- SAP BTP (Cloud Foundry, Kyma), BTP Launchpad
+- SAP CAP (Cloud Application Programming Model), CDS
+- OData v2/v4, Service Builder, Annotations
+- ABAP OO, CDS Views, AMDP, BADI
+- SAP Business Application Studio
+- JavaScript, TypeScript (im SAP-Kontext)
+- Workflow (SAP Build Process Automation)
+- SAP S/4HANA (On-Premise und Cloud)
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Self-Service-App-Suite auf SAP BTP für ein Handelsunternehmen
+Zeitraum: 2023 – laufend (ca. 17 Monate)
+Branche: Handel / Retail
+Rolle: SAP BTP / CAP Entwicklerin
+
+Entwicklung von sechs Self-Service-Fiori-Applikationen auf SAP BTP Cloud Foundry unter
+Nutzung des SAP Cloud Application Programming Models (CAP). CDS-basiertes Datenmodell,
+OData v4-Services, Fiori Elements-basierte UIs mit umfangreichem Annotations-Engineering.
+Integration mit SAP S/4HANA On-Premise über API Management. Deployment-Automatisierung
+über BTP CI/CD Service und GitHub Actions.
+
+Eingesetzte Technologien: SAP BTP (Cloud Foundry), SAP CAP, CDS, OData v4,
+Fiori Elements, SAPUI5, SAP API Management, GitHub Actions, SAP Business Application Studio
+
+---
+
+Projekt 2: Custom Fiori-App für Produktionsplanung (Maschinenbauunternehmen)
+Zeitraum: 2021 – 2023 (18 Monate)
+Branche: Maschinenbau / Produktion
+Rolle: SAP Fiori / ABAP Entwicklerin
+
+Entwicklung einer maßgeschneiderten Fiori-App für Produktionsplaner zur Visualisierung
+und Bearbeitung von Fertigungsaufträgen. Freestyle SAPUI5-App mit komplexen Custom-
+Controls (Gantt-Chart-Darstellung), OData-Backend auf SAP S/4HANA, ABAP-seitige
+Serviceimplementierung mit CDS Views und BADI-Erweiterungen.
+
+Eingesetzte Technologien: SAPUI5, SAP Fiori (Freestyle), OData v2, CDS Views,
+ABAP OO, BADI, SAP S/4HANA, PP-Modul
+
+---
+
+Projekt 3: Berechtigungskonzept und Fiori-App-Katalog für eine Großbank
+Zeitraum: 2019 – 2021 (20 Monate)
+Branche: Banking / Financial Services
+Rolle: SAP Fiori Entwicklerin / Berechtigungsberaterin
+
+Aufbau eines strukturierten Fiori-App-Katalogs und Überarbeitung des Fiori-Launchpad-
+Berechtigungskonzepts für über 3.000 Nutzerinnen und Nutzer. Entwicklung von Custom-
+Tiles und Zielgruppen-Steuerung im BTP Launchpad. Beratung zum rollenbasierten
+Zugriffsmodell im SAP-Umfeld (SAP GRC).
+
+Eingesetzte Technologien: SAP Fiori Launchpad, SAP BTP, SAPUI5, SAP GRC,
+ABAP, Berechtigungsobjekte, SU24
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          920 €/Tag (vor Ort)
+Stundensatz Remote: 115 €/Std
+Arbeitsweise:       Hybrid (3 Tage remote, 2 Tage vor Ort)
+Einsatzort:         Leipzig und Umgebung, deutschlandweit nach Absprache
+Auslastung:         bis zu 5 Tage/Woche

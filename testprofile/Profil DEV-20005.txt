@@ -1,0 +1,84 @@
+Profil DEV-20005 – Cloud Architect AWS/Azure/GCP, Kubernetes-Experte
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Erfahrener Cloud Architect mit über 12 Jahren Erfahrung in der Konzeption und dem Aufbau
+cloud-nativer Plattformen bei allen drei großen Hyperscalern. Zertifiziert auf AWS, Azure und GCP,
+mit besonderem Schwerpunkt auf Kubernetes-basierten Workloads, GitOps-Prozessen und dem
+Aufbau sicherer, kosteneffizienter Multi-Cloud-Strategien. Arbeitet sowohl auf der strategischen
+Ebene mit Management und Architektur-Boards als auch operativ im Team.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- AWS (Solutions Architect Professional), Azure (Expert-Level), GCP
+- Kubernetes, Helm, Kustomize, Cluster-Administration
+- Terraform, Ansible, Infrastructure as Code
+- CI/CD: GitLab CI, GitHub Actions, ArgoCD, Flux CD
+- Service Mesh: Istio, Linkerd
+- Observability: Prometheus, Grafana, ELK Stack, Jaeger
+- Docker, Container-Security, Image-Scanning (Trivy)
+- Microservices-Architektur, Security Best Practices, Zero Trust
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Aufbau einer Multi-Cloud-Plattform für internationalen Medienkonzern
+Zeitraum: 2023 – laufend (ca. 15 Monate)
+Branche: Medien / Publishing
+Rolle: Lead Cloud Architect
+
+Konzeption und Implementierung einer unternehmensweiten Cloud-Plattform, die Workloads
+auf AWS und Azure verteilt. Zentrales Element ist ein Kubernetes-basierter Application-Layer
+(EKS + AKS) mit einheitlichem GitOps-Workflow über ArgoCD. Implementierung eines
+Infrastructure-as-Code-Monorepos mit Terraform Modules. Service-to-Service-Kommunikation
+über Istio Service Mesh mit mTLS. Aufbau eines zentralen Observability-Stacks mit Prometheus,
+Grafana und Loki.
+
+Eingesetzte Technologien: AWS EKS, Azure AKS, Terraform, ArgoCD, Istio, Prometheus,
+Grafana, Loki, Helm, GitHub Actions, Docker
+
+---
+
+Projekt 2: Kubernetes-Migration bei deutschem Automobilhersteller (Cloud Center of Excellence)
+Zeitraum: 2021 – 2023 (22 Monate)
+Branche: Automotive
+Rolle: Cloud Platform Engineer / Berater
+
+Mitarbeit im neu gegründeten Cloud Center of Excellence. Aufgabe: Migration von ca. 200
+Microservices von VM-basierten Deployments auf Kubernetes (GKE). Entwicklung von Helm-Charts
+und standardisierten CI/CD-Templates für Entwicklungsteams. Aufbau einer Plattform-Self-Service-
+Lösung, die Teams eigenständiges Deployment ohne Plattform-Team-Bottleneck ermöglichte.
+
+Eingesetzte Technologien: GCP GKE, Helm, Kustomize, Flux CD, Terraform, GitLab CI/CD,
+Prometheus, Grafana, Docker, Python (Tooling)
+
+---
+
+Projekt 3: Sicherheitsarchitektur für FinTech-Cloud-Infrastruktur (AWS)
+Zeitraum: 2019 – 2021 (20 Monate)
+Branche: FinTech
+Rolle: Cloud Security Architect
+
+Bewertung und Neugestaltung der Cloud-Sicherheitsarchitektur einer Zahlungsplattform auf AWS.
+Implementierung eines Zero-Trust-Netzwerkmodells, Einführung von AWS ControlTower für
+Multi-Account-Governance, IAM-Konzept nach Least-Privilege-Prinzip, Secrets-Management mit
+HashiCorp Vault. Vorbereitung auf PCI-DSS-Zertifizierung.
+
+Eingesetzte Technologien: AWS (ControlTower, GuardDuty, SecurityHub, Config, VPC), HashiCorp
+Vault, Terraform, Kubernetes, Trivy, Falco
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 1 Monat
+Tagessatz:          1.120 €/Tag (vor Ort)
+Stundensatz Remote: 140 €/Std
+Arbeitsweise:       überwiegend remote, Vor-Ort-Workshops nach Vereinbarung
+Einsatzort:         Berlin und Umgebung, remote deutschlandweit und europaweit
+Auslastung:         bis zu 5 Tage/Woche

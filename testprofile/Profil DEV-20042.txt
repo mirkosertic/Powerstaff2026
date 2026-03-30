@@ -1,0 +1,85 @@
+Profil DEV-20042 – Embedded C/C++ Entwicklerin, Automotive, AUTOSAR
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Embedded-Software-Entwicklerin mit knapp 10 Jahren Erfahrung in der Automotive-Branche,
+spezialisiert auf AUTOSAR (Classic und Adaptive) und die Entwicklung sicherheitskritischer
+Steuergerätesoftware. Vertraut mit den gesamten Fahrzeugentwicklungsprozessen von DOORS-
+basierten Anforderungen bis hin zu INCA-gestütztem Parameterieren. Kennt den Unterschied
+zwischen Softwareentwicklung nach Lehrbuch und der Realität in eingebetteten Systemen
+mit harten Echtzeitanforderungen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- C (C99, MISRA-C:2012), C++ (C++14, Embedded)
+- AUTOSAR Classic (BSW, RTE, MCAL), AUTOSAR Adaptive (ARA)
+- Embedded Linux, Yocto Project, RTOS (FreeRTOS, OSEK)
+- Fahrzeugbusse: CAN, CAN FD, LIN, FlexRay, Automotive Ethernet
+- UDS (ISO 14229), OBD-II, XCP
+- CMake, Jenkins, Git, Jira
+- DOORS (Anforderungsmanagement), Enterprise Architect (UML)
+- Model-Based Design: Matlab/Simulink, Embedded Coder
+- Test: dSPACE HiL, INCA (ETAS), CANalyzer, CANoe, GoogleTest
+- Funktionale Sicherheit: ISO 26262 (Kenntnisse), ASPICE
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Steuergerätesoftware für Hochvolt-Batteriemanagementsystem (führender OEM)
+Zeitraum: 2023 – laufend (ca. 14 Monate)
+Branche: Automotive / Elektromobilität
+Rolle: Software Developer / Integration Engineer (AUTOSAR Classic)
+
+Entwicklung und Integration von Softwarekomponenten für das Batteriemanagementsystem
+eines Elektrofahrzeugs auf AUTOSAR-Classic-Basis (Laufzeitsystem: AUTOSAR BSW auf
+Infineon AURIX). Implementierung von SWCs für Zelloverwachung, SOC-Berechnung und
+Balancing-Logik in C, Integration über RTE, CAN-Kommunikationsmatrizen in CANdb++.
+Validierung am Hardware-in-the-Loop-Prüfstand (dSPACE HIL).
+
+Eingesetzte Technologien: C (MISRA-C), AUTOSAR Classic, AURIX TC397,
+CANalyzer, CANoe, dSPACE HiL, Jira, DOORS, Git
+
+---
+
+Projekt 2: Adaptive-AUTOSAR-Plattform für ein Fahrerassistenzsystem (Tier-1-Zulieferer)
+Zeitraum: 2021 – 2023 (18 Monate)
+Branche: Automotive / ADAS
+Rolle: Senior Embedded Developer (AUTOSAR Adaptive)
+
+Mitarbeit an der Entwicklung einer AUTOSAR-Adaptive-basierten Middleware-Schicht für ein
+Kamerasystem zur Spurhalteassistenz. Service-orientierte Kommunikation über vsomeip,
+Implementierung von ara::com-Serviceinterfaces in C++14, Embedded Linux (Yocto) als
+Betriebssystemgrundlage.
+
+Eingesetzte Technologien: C++14, AUTOSAR Adaptive, vsomeip, Embedded Linux,
+Yocto, CMake, Jenkins, Git, GoogleTest, CANoe
+
+---
+
+Projekt 3: CAN/LIN-Schnittstellen-Entwicklung für Karosserie-Steuergeräte
+Zeitraum: 2019 – 2021 (20 Monate)
+Branche: Automotive
+Rolle: Embedded Developer
+
+Entwicklung und Test von CAN- und LIN-Kommunikationsschichten für Karosserie-Steuergeräte
+(Türsteuergerät, Spiegelsteuergerät). Implementierung nach AUTOSAR-Communication-Stack,
+Diagnose-Implementierung nach UDS (ISO 14229). Restbussimulation mit CANoe für HIL-Tests.
+
+Eingesetzte Technologien: C (MISRA-C), AUTOSAR Classic, CAN, LIN, UDS,
+CANalyzer, CANoe, INCA, dSPACE, Jenkins
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 3 Monaten
+Tagessatz:          920 €/Tag (vor Ort)
+Stundensatz Remote: 115 €/Std
+Arbeitsweise:       überwiegend vor Ort (Laborzugang erforderlich), remote in Designphasen
+Einsatzort:         Darmstadt und Umgebung, Rhein-Main-Gebiet, deutschlandweit
+Auslastung:         bis zu 5 Tage/Woche

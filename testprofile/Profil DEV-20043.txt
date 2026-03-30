@@ -1,0 +1,84 @@
+Profil DEV-20043 – SAP MM/WM/EWM Berater, Logistik und Supply Chain
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+SAP-Logistikberater mit über 18 Jahren Erfahrung in den Modulen MM, WM, EWM, SD und TM.
+Begleitet Unternehmen von der Prozessanalyse über das Business Blueprint bis zum produktiven
+Go-live und der Hypercare-Phase. Besondere Stärke liegt in der Verbindung von tiefem SAP-
+Customizing-Wissen mit einem echten Verständnis für die logistischen Prozesse der Kunden.
+Hat sowohl Greenfield-Implementierungen als auch aufwendige Rollouts verantwortet.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- SAP ERP/S/4HANA: MM (Einkauf, Lagerverwaltung, Rechnungsprüfung)
+- SAP WM (classic), SAP EWM (extended), SAP TM (Transportation Management)
+- SAP SD: Verkauf, Versand, Faktura, Logistikintegration
+- SAP LE (Logistics Execution), Versand, Transportabwicklung
+- ABAP-Kenntnisse: BADI, User Exits, kleine Eigenentwicklungen
+- Customizing, Business Blueprint, Fit-Gap-Analyse
+- Go-live-Support, Key User Schulungen, Change Management
+- SAP Activate Methodology
+- Integration MM/SD/PP/FI/CO
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: SAP EWM-Einführung bei einem Großhändler mit drei Standorten
+Zeitraum: 2022 – laufend (ca. 22 Monate)
+Branche: Handel / Großhandel
+Rolle: SAP EWM Lead Consultant
+
+Verantwortlicher Berater für die Einführung von SAP S/4HANA EWM als Ablösung eines
+WM-Systems und eines externen WMS. Steuerung des Projekts von der Prozessaufnahme
+(To-Be-Konzept) über die Realisierungsphase bis zum mehrstufigen Go-live (3 Standorte).
+Abbildung komplexer Lagerstrukturen (Hochregal, Kommissionier-Bereich, Kühlzone),
+Anbindung an Fördertechnik via SAP MFS.
+
+Eingesetzte Technologien: SAP S/4HANA, EWM, RF-Framework, SAP MFS,
+SAP SD, MM, Customizing, SAP Activate
+
+---
+
+Projekt 2: S/4HANA-Roll-out MM/WM/SD für ein produzierendes Unternehmen (Europa)
+Zeitraum: 2019 – 2022 (36 Monate)
+Branche: Industrie / Produktion
+Rolle: SAP MM/SD Seniorberater / Projektleiter Logistik
+
+Fachliche Leitung des Logistikstreams im Rahmen eines S/4HANA-Roll-outs auf acht
+europäische Gesellschaften. Harmonisierung von Einkaufs- und Lagerprozessen über alle
+Länder, Durchführung von Fit-Gap-Workshops, Key-User-Schulungen und Hypercare.
+Enge Zusammenarbeit mit ABAP-Entwicklern für Eigenentwicklungen.
+
+Eingesetzte Technologien: SAP S/4HANA, MM, SD, WM, PP-Integration,
+Customizing, SAP Activate, LSMW/LTMC
+
+---
+
+Projekt 3: SAP MM-Optimierung und Einkaufsprozesse bei einem Pharmaunternehmen
+Zeitraum: 2017 – 2019 (24 Monate)
+Branche: Pharma / Life Sciences
+Rolle: SAP MM Berater
+
+Optimierung der Einkaufs- und Rechnungsprüfungsprozesse in SAP MM. Einführung
+automatisierter Rechnungsprüfung (LIV), Optimierung des Bestellanforderungsprozesses,
+Einführung von Einkaufsrahmenverträgen. Einhaltung GxP-relevanter Anforderungen
+(Change Control, Validierung von SAP-Konfigurationsänderungen).
+
+Eingesetzte Technologien: SAP ECC 6.0, MM (Einkauf, LIV, Rechnungsprüfung),
+WM, GxP-Validierung, Customizing
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 6 Monaten
+Tagessatz:          1.000 €/Tag (vor Ort)
+Stundensatz Remote: nicht ausgewiesen
+Arbeitsweise:       überwiegend vor Ort
+Einsatzort:         Mannheim/Rhein-Neckar und Umgebung, deutschlandweit und europaweit
+Auslastung:         bis zu 5 Tage/Woche

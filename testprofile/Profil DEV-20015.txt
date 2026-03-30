@@ -1,0 +1,83 @@
+Profil DEV-20015 – DevOps Engineer und SRE, GitOps, Platform Engineering
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+DevOps Engineer und Site Reliability Engineer mit über 13 Jahren Erfahrung im Aufbau und
+Betrieb cloud-nativer Infrastrukturen. Leidenschaftlich für GitOps, Platform Engineering und
+die Frage, wie Plattformen Entwicklungsteams wirklich schneller machen – nicht nur bürokratischer.
+Praktische Erfahrung als SRE: Incident Management, SLO-Definition, Fehlerbudget-Steuerung
+und Post-Mortem-Kultur.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Kubernetes, Helm, Flux CD, ArgoCD, Cluster API
+- Terraform, Ansible, OpenTofu, Pulumi
+- CI/CD: Jenkins, GitLab CI/CD, GitHub Actions
+- Observability: Prometheus, Grafana, Loki, Jaeger, OpenTelemetry
+- AWS, GCP (Certified Professional), Azure
+- Linux Administration, Shell-Scripting (Bash/Zsh), Python, Go
+- SRE-Praktiken: SLI/SLO/Error Budget, Incident Management, Post-Mortems
+- Sicherheit: RBAC, Network Policies, OPA/Gatekeeper, Falco
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: SRE-Programm für eine Streaming-Plattform (MediaTech-Unternehmen)
+Zeitraum: 2023 – laufend (ca. 16 Monate)
+Branche: Medien / Streaming
+Rolle: Site Reliability Engineer / SRE Lead
+
+Aufbau und Leitung des SRE-Programms für eine Video-Streaming-Plattform mit mehreren Millionen
+aktiven Nutzerinnen und Nutzern. Definition von SLIs und SLOs für alle kritischen Services,
+Implementierung eines Error-Budget-Dashboards in Grafana. Aufbau eines strukturierten
+Incident-Management-Prozesses mit PagerDuty, Einführung von blameless Post-Mortems.
+Reduktion der mittleren Wiederherstellungszeit (MTTR) um 55%.
+
+Eingesetzte Technologien: Kubernetes (GKE), Prometheus, Grafana, Loki, PagerDuty,
+Terraform, ArgoCD, GitHub Actions, Python, Go
+
+---
+
+Projekt 2: GitOps-Plattform für einen Finanzdienstleister
+Zeitraum: 2021 – 2023 (22 Monate)
+Branche: Financial Services
+Rolle: Platform Engineer / DevOps Lead
+
+Konzeption und Aufbau einer GitOps-basierten Deployment-Plattform für 15 Entwicklungsteams.
+Flux CD als GitOps-Controller, Terraform für Infrastrukturprovisionierung, Vault für
+Secrets Management. Einführung von OPA/Gatekeeper für Policy Enforcement auf Kubernetes,
+Developer-Onboarding mit Self-Service-Templates in einem internen Portal.
+
+Eingesetzte Technologien: Kubernetes (AKS), Flux CD, Terraform, Vault, OPA/Gatekeeper,
+Helm, Azure DevOps, Python, Bash
+
+---
+
+Projekt 3: CI/CD-Pipeline-Modernisierung für einen E-Commerce-Konzern
+Zeitraum: 2019 – 2021 (20 Monate)
+Branche: E-Commerce
+Rolle: DevOps Engineer
+
+Migration von Jenkins-Pipelines auf GitLab CI/CD mit Containerisierung aller Build-Schritte.
+Aufbau einer gemeinsamen CI/CD-Template-Library für über 80 Repositories. Implementierung
+automatisierter Security-Scans (SAST, Container-Scanning) in der Pipeline. Reduktion der
+durchschnittlichen Build-Zeiten um 40% durch parallelisierte Stages und Caching.
+
+Eingesetzte Technologien: GitLab CI/CD, Docker, Kubernetes, Trivy, SonarQube,
+Helm, Terraform, AWS, Bash, Python
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          1.000 €/Tag (vor Ort)
+Stundensatz Remote: 125 €/Std
+Arbeitsweise:       remote-first, Vor-Ort nach Absprache
+Einsatzort:         München und Umgebung, remote deutschlandweit
+Auslastung:         bis zu 5 Tage/Woche

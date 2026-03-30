@@ -1,0 +1,83 @@
+Profil DEV-20008 – Mobile Entwicklerin iOS/Swift und Flutter
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Mobile-Entwicklerin mit rund 8 Jahren Erfahrung in der nativen iOS-Entwicklung (Swift, SwiftUI)
+sowie zunehmend in der Cross-Platform-Entwicklung mit Flutter. Arbeitet gerne in cross-funktionalen
+Teams, bringt ein gutes Gespür für UX und Nutzerzufriedenheit mit und kennt den gesamten
+App-Lifecycle von der Architektur bis zum App-Store-Deployment. Erfahrung in mehreren Branchen
+von FinTech bis Healthcare.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- iOS, Swift 5.x, SwiftUI, UIKit, Combine
+- Flutter 3.x, Dart, Riverpod, BLoC
+- Android (Grundkenntnisse), Kotlin, Jetpack Compose
+- Firebase (Auth, Firestore, Crashlytics, Remote Config)
+- REST APIs, GraphQL, CoreData, Room
+- Push Notifications (APNs, FCM)
+- App Store Connect, Google Play Console, TestFlight
+- CI/CD: Fastlane, GitHub Actions, Bitrise
+- TDD: XCTest, flutter_test, Quick/Nimble
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Gesundheits-App für Chroniker-Management (Healthtech-Startup)
+Zeitraum: 2023 – laufend (ca. 14 Monate)
+Branche: Healthcare / Digital Health
+Rolle: Lead Mobile Developer (iOS & Flutter)
+
+Verantwortlich für die Neuentwicklung einer Gesundheitsbegleit-App zur Unterstützung von
+Menschen mit chronischen Erkrankungen. iOS-App nativ in SwiftUI mit MVVM-Architektur,
+parallel eine Flutter-Version für Android für die zweite Markteinführungsphase. Integration von
+HealthKit (iOS), Bluetooth Low Energy für Messgeräte sowie einem Healthcare-Backend über
+FHIR-kompatible REST-APIs. Sicherstellung von DSGVO- und mHealth-Richtlinienkonformität.
+
+Eingesetzte Technologien: Swift, SwiftUI, Combine, HealthKit, CoreBluetooth, Flutter, Dart,
+Firebase, REST APIs (FHIR), Fastlane, GitHub Actions, XCTest
+
+---
+
+Projekt 2: Banking-App Redesign für eine Regionalbank
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: Banking / FinTech
+Rolle: Senior iOS Developer
+
+Technische Überarbeitung einer bestehenden iOS-Banking-App: Ablösung von UIKit durch SwiftUI
+in neuen Features, Einführung einer Clean-Architecture, Verbesserung der App-Performance
+(Launch Time, Netzwerklatenz) sowie Einführung eines umfassenden Unit- und UI-Test-Frameworks.
+Koordination mit Backend-Team zur Einführung neuer GraphQL-Endpunkte.
+
+Eingesetzte Technologien: iOS, Swift 5, SwiftUI, UIKit, Combine, GraphQL (Apollo iOS),
+Keychain, XCTest, Fastlane, App Store Connect
+
+---
+
+Projekt 3: Logistik-App für Paketboten (großer Paketdienstleister)
+Zeitraum: 2019 – 2021 (18 Monate)
+Branche: Logistik / Transport
+Rolle: iOS Developer
+
+Entwicklung einer Offline-fähigen Scan- und Routenplanungs-App für Auslieferungsfahrer.
+Besondere Herausforderung: robuste Datensynchronisation bei instabiler Netzwerkverbindung
+(CoreData + CloudKit), Barcode-Scanning via AVFoundation sowie Kartenintegration mit MapKit.
+
+Eingesetzte Technologien: iOS, Swift, UIKit, CoreData, CloudKit, AVFoundation, MapKit,
+REST APIs, TestFlight, Fastlane
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 3 Monaten
+Tagessatz:          840 €/Tag (vor Ort)
+Stundensatz Remote: 105 €/Std
+Arbeitsweise:       bevorzugt remote, Vor-Ort-Termine möglich
+Einsatzort:         Leipzig und Umgebung, remote deutschlandweit
+Auslastung:         4–5 Tage/Woche

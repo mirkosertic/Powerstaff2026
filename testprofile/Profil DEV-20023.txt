@@ -1,0 +1,83 @@
+Profil DEV-20023 – Fullstack Java/React Developer, SaaS-Erfahrung
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Fullstack-Entwickler mit über 12 Jahren Erfahrung, der sich durch tiefe Kenntnisse sowohl
+im Java-Backend (Spring Boot, Microservices) als auch im React-basierten Frontend auszeichnet.
+Langjährige Erfahrung in der Entwicklung von SaaS-Plattformen mit Mehrmandantenfähigkeit,
+hohen Anforderungen an Skalierbarkeit und laufendem Betrieb. Kann als technische Brücke
+zwischen Frontend- und Backend-Teams fungieren.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Java 17/21, Spring Boot 3, Spring Security, Spring Data JDBC/JPA
+- REST APIs, GraphQL (Spring for GraphQL, Apollo)
+- React 18, TypeScript, Redux Toolkit, React Query
+- PostgreSQL, Redis, Apache Kafka
+- Microservices, Domain-Driven Design, Event-Driven Architecture
+- Docker, Kubernetes, Terraform, AWS
+- Flyway, Testcontainers, JUnit 5, Jest, Cypress
+- CI/CD: GitHub Actions, GitLab CI/CD
+- Agile/Scrum, Code Reviews, Pair Programming
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Mehrmandantenfähige HR-SaaS-Plattform (HR-Tech-Startup)
+Zeitraum: 2022 – laufend (ca. 22 Monate)
+Branche: HRTech / SaaS
+Rolle: Senior Fullstack Developer / Tech Lead
+
+Einer der Kernentwickler einer HR-SaaS-Plattform für mittelständische Unternehmen.
+Backend: Spring Boot 3 Microservices-Architektur mit tenant-isolierten Datenbanken (PostgreSQL,
+Flyway-Migrationen pro Tenant), Spring Security für Multitenancy. Frontend: React 18 mit TypeScript,
+Redux Toolkit für globalen State. Kafka für asynchrone Benachrichtigungen und
+Reporting-Pipelines. Kubernetes auf AWS als Betriebsplattform.
+
+Eingesetzte Technologien: Java 21, Spring Boot 3, Spring Security, PostgreSQL, Kafka, Redis,
+React 18, TypeScript, Redux Toolkit, Docker, Kubernetes, AWS, Terraform, Flyway
+
+---
+
+Projekt 2: E-Commerce-Plattform-Backend-Rewrite (mittelgroßer Onlinehändler)
+Zeitraum: 2020 – 2022 (22 Monate)
+Branche: E-Commerce
+Rolle: Senior Fullstack Developer
+
+Schrittweise Ablösung eines PHP-Monolithen durch ein Spring-Boot-Microservices-Backend.
+Strangler-Fig-Pattern für risikoarme Migration, GraphQL-Unified-API als Fassade für
+Frontend und mobile Apps. React-basiertes Admin-Dashboard als Ersatz für das Legacy-Backend.
+
+Eingesetzte Technologien: Java, Spring Boot, GraphQL, PostgreSQL, Redis, React, TypeScript,
+Docker, GitHub Actions, Testcontainers
+
+---
+
+Projekt 3: Kollaborationstool für Unternehmensberatung (B2B-SaaS)
+Zeitraum: 2018 – 2020 (20 Monate)
+Branche: Unternehmensberatung / SaaS
+Rolle: Fullstack Developer
+
+Entwicklung eines kollaborativen Projekt- und Dokumenten-Management-Tools. Echtzeit-
+Kollaboration über WebSockets (Spring WebSocket + STOMP), React-Frontend mit
+Drag-and-Drop-Interfaces (react-dnd). Striktes TDD sowohl im Frontend (Jest, RTL)
+als auch im Backend (JUnit 5, Testcontainers).
+
+Eingesetzte Technologien: Java, Spring Boot, WebSocket, STOMP, PostgreSQL, React,
+TypeScript, Jest, React Testing Library, JUnit 5, Testcontainers
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          880 €/Tag (vor Ort)
+Stundensatz Remote: 110 €/Std
+Arbeitsweise:       Hybrid (2–3 Tage remote)
+Einsatzort:         Köln und Umgebung, NRW, deutschlandweit nach Absprache
+Auslastung:         bis zu 5 Tage/Woche

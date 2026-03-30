@@ -1,0 +1,83 @@
+Profil DEV-20019 – Python Backend und Automatisierung, Django/FastAPI
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Python-Backend-Entwickler mit über 11 Jahren Erfahrung, spezialisiert auf Django und FastAPI
+für Web-Backends sowie auf Automatisierungslösungen für komplexe Geschäftsprozesse. Versteht
+Python nicht nur als Scripting-Sprache, sondern als ernstzunehmendes Backend-Ökosystem mit
+Typsicherheit (mypy, Pydantic) und umfassender Test-Infrastruktur. Erfahrung sowohl in
+Startups als auch in konservativen Enterprise-Umgebungen.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Python 3.11/3.12, Django 5.x, FastAPI, Flask
+- Pydantic v2, SQLAlchemy 2.0, Alembic, Django ORM
+- Celery, Redis, RabbitMQ (Asynchrone Aufgaben)
+- PostgreSQL, MySQL, MongoDB
+- Docker, Kubernetes, AWS Lambda, Serverless
+- Terraform, Ansible
+- Pytest, mypy, ruff, pre-commit
+- REST APIs, OpenAPI, GraphQL (Strawberry)
+- Linux, Shell-Scripting (Bash), CI/CD
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Automatisierungsplattform für ein Logistikunternehmen
+Zeitraum: 2023 – laufend (ca. 15 Monate)
+Branche: Logistik / Transport
+Rolle: Senior Python Developer / Tech Lead
+
+Entwicklung einer Plattform zur Automatisierung von Auftragseingang, Routenoptimierung und
+Sendungsverfolgung. FastAPI-basiertes Backend mit Pydantic v2 für strikte Schema-Validierung,
+Celery für asynchrone Verarbeitung von Routing-Algorithmen, PostgreSQL als primäre Datenbasis.
+Vollständige IaC mit Terraform auf AWS, Deployment via Kubernetes. Testabdeckung > 90% durch
+konsequenten Einsatz von pytest und Testcontainern.
+
+Eingesetzte Technologien: Python 3.12, FastAPI, Pydantic v2, Celery, PostgreSQL, Redis,
+Docker, Kubernetes, Terraform, AWS, pytest, mypy
+
+---
+
+Projekt 2: E-Commerce-Backend-Modernisierung (mittelständischer Onlinehändler)
+Zeitraum: 2021 – 2023 (22 Monate)
+Branche: E-Commerce
+Rolle: Python Backend Developer
+
+Migration eines veralteten PHP-Backends auf ein modernes Django-REST-Framework-Backend.
+Einführung von Django Rest Framework (DRF), GraphQL-Endpunkte für das Frontend,
+umfangreiche Datenmigrationsskripte für den Altdaten-Übertrag. Etablierung von mypy,
+ruff und automatisierten pre-commit-Hooks als Qualitätssicherungsmaßnahmen.
+
+Eingesetzte Technologien: Python, Django 4.x, DRF, GraphQL (Strawberry), PostgreSQL,
+Redis, Docker, GitLab CI/CD, mypy, pytest
+
+---
+
+Projekt 3: Behörden-Automatisierungstool für Dokumentenverarbeitung
+Zeitraum: 2019 – 2021 (18 Monate)
+Branche: Öffentliche Verwaltung
+Rolle: Python Developer / Automatisierungsspezialist
+
+Entwicklung von Python-basierten Automatisierungsskripten zur Verarbeitung und Klassifizierung
+eingehender Verwaltungsdokumente. Integration mit einem Legacy-Dokumenten-Management-System
+über SOAP-Schnittstellen. Datenqualitätsprüfungen, Protokollierung und Eskalations-Workflows.
+
+Eingesetzte Technologien: Python, Flask, Celery, PostgreSQL, Zeep (SOAP),
+Docker, Linux, Shell-Scripting, pytest
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 4 Monaten
+Tagessatz:          880 €/Tag (vor Ort)
+Stundensatz Remote: 110 €/Std
+Arbeitsweise:       bevorzugt remote
+Einsatzort:         Stuttgart und Umgebung, remote deutschlandweit
+Auslastung:         4–5 Tage/Woche

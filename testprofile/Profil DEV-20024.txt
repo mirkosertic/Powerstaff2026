@@ -1,0 +1,83 @@
+Profil DEV-20024 – GCP Data Engineer, BigQuery-Experte
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Data Engineer mit rund 8 Jahren Erfahrung, spezialisiert auf die Google Cloud Platform und
+insbesondere BigQuery als analytische Kerntechnologie. Aufbau und Betrieb von komplexen
+Datenpipelines mit Apache Beam, Dataflow und dbt. Zunehmend auch im Bereich MLOps und
+Vertex AI für die Operationalisierung von ML-Modellen tätig. Denkt in Datenprodukten und
+bringt Data-Governance-Bewusstsein in jedes Projekt mit.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Google Cloud Platform: BigQuery, Dataflow, Composer, Pub/Sub, GCS
+- Apache Beam (Python und Java SDK), Dataflow
+- dbt (Data Build Tool), dbt Cloud, dbt Core
+- Python, SQL (BigQuery SQL, Standard SQL)
+- Cloud Composer (managed Airflow), DAG-Entwicklung
+- Vertex AI, BigQuery ML, Dataproc (Spark)
+- Looker (LookML), Looker Studio
+- Terraform, Cloud Build, GitHub Actions
+- Data Mesh-Konzepte, Data Governance, Datenkatalog (Dataplex)
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Aufbau einer Data Mesh-Plattform für einen Medienkonzern
+Zeitraum: 2023 – laufend (ca. 16 Monate)
+Branche: Medien / Publishing
+Rolle: Lead Data Engineer
+
+Konzeption und schrittweise Implementierung einer Data-Mesh-Architektur auf GCP für einen
+großen deutschen Medienkonzern. Etablierung von Datendomänen (Subscription, Advertising,
+Content, Reader), je mit eigenem BigQuery-Datensatz als Data Product. Zentrales Data Catalog
+und Data Lineage via Dataplex. dbt als Transformationsschicht, Cloud Composer für Orchestrierung.
+
+Eingesetzte Technologien: GCP BigQuery, Dataflow, Cloud Composer, Pub/Sub,
+dbt Core, Dataplex, Terraform, Python, SQL, Looker Studio
+
+---
+
+Projekt 2: Echtzeit-Analytics-Plattform für einen großen E-Commerce-Händler
+Zeitraum: 2021 – 2023 (22 Monate)
+Branche: E-Commerce
+Rolle: Senior Data Engineer
+
+Aufbau einer Echtzeit-Analyseplattform für Klickstream- und Transaktionsdaten.
+Pub/Sub als Event-Bus, Apache Beam auf Dataflow für Echtzeit-Transformation,
+BigQuery als analytisches Endlager mit optimierter Partitionierungs- und Clustering-Strategie.
+Looker für Self-Service-Analytics der Business-Teams.
+
+Eingesetzte Technologien: GCP (Pub/Sub, Dataflow, BigQuery), Apache Beam (Python),
+Looker, dbt, Terraform, Cloud Build, Python
+
+---
+
+Projekt 3: Aufbau eines BI-Berichtswesens für ein Pharmaunternehmen
+Zeitraum: 2019 – 2021 (18 Monate)
+Branche: Pharma / Life Sciences
+Rolle: Data Engineer / BI Developer
+
+Migration des Berichtswesens von einer lokalen SSAS/SSRS-Umgebung auf GCP BigQuery
+und Looker. Aufbau der ELT-Pipelines mit dbt, Implementierung von Datentests (dbt-test)
+für Qualitätssicherung, Erstellung von Looker-Dashboards für regulatorisches Reporting.
+Einhaltung von GxP-Anforderungen an Datenherkunft und Änderungsdokumentation.
+
+Eingesetzte Technologien: GCP BigQuery, dbt, Looker, Python, SQL, Terraform,
+Cloud Build, GitHub Actions
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 3 Monaten
+Tagessatz:          920 €/Tag (vor Ort)
+Stundensatz Remote: 115 €/Std
+Arbeitsweise:       bevorzugt remote
+Einsatzort:         Düsseldorf und Umgebung, remote deutschlandweit und europaweit
+Auslastung:         4–5 Tage/Woche

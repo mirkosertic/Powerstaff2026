@@ -1,0 +1,84 @@
+Profil DEV-20033 – AWS Solutions Architect, Well-Architected Framework
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+AWS-Spezialist mit über 10 Jahren Cloud-Erfahrung, davon 7 Jahre fokussiert auf AWS.
+AWS Certified Solutions Architect Professional und Security Specialty. Begleitet Kunden
+von der ersten Cloud-Strategie über die Architekturgestaltung bis zur laufenden Optimierung.
+Besondere Stärken: Multi-Account-Strategien, serverlose Architekturen, Kostenoptimierung
+und die Bewertung bestehender Architekturen nach dem AWS Well-Architected Framework.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- AWS: EC2, ECS/Fargate, EKS, Lambda, API Gateway
+- AWS: S3, RDS, Aurora, DynamoDB, ElastiCache
+- AWS: SQS, SNS, Kinesis, EventBridge, Step Functions
+- AWS: CloudFormation, CDK (TypeScript, Python), Terraform
+- AWS: IAM, Organizations, Control Tower, SCPs
+- AWS: WAF, Shield, GuardDuty, SecurityHub, Macie
+- Well-Architected Framework Reviews, Cost Optimization (FinOps)
+- Multi-Account-Strategie, Landing Zones, AWS CAF
+- CI/CD auf AWS (CodePipeline, CodeBuild, CodeDeploy)
+- Kubernetes (EKS), Docker, Python, TypeScript
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: AWS-Landing-Zone und Multi-Account-Strategie für einen Finanzdienstleister
+Zeitraum: 2023 – laufend (ca. 15 Monate)
+Branche: Financial Services / Vermögensverwaltung
+Rolle: Lead AWS Solutions Architect
+
+Konzeption und Implementierung einer AWS-Landing-Zone für ca. 30 AWS-Konten nach dem
+AWS Control Tower Framework. Einführung von Service Control Policies für Compliance,
+AWS Config Rules für kontinuierliches Compliance-Monitoring, AWS Security Hub als
+zentrales Sicherheits-Dashboard. Well-Architected Framework Reviews für alle kritischen
+Workloads. Kostenreduktion durch Reserved Instances und Compute Savings Plans: -28%.
+
+Eingesetzte Technologien: AWS Control Tower, AWS Organizations, SCPs, AWS Config,
+Security Hub, CloudFormation, Terraform, IAM, GuardDuty
+
+---
+
+Projekt 2: Serverlose Event-Processing-Plattform für ein InsurTech-Startup
+Zeitraum: 2021 – 2023 (20 Monate)
+Branche: InsurTech / Versicherungen
+Rolle: AWS Architect / Developer
+
+Aufbau einer vollständig serverlosen Plattform für die Verarbeitung von Versicherungsereignissen.
+AWS Lambda für Geschäftslogik, DynamoDB für niedriglatenzen Datenzugriff, EventBridge für
+event-getriebene Orchestrierung, Step Functions für langlebige Workflows (Schadenabwicklung).
+AWS CDK (TypeScript) als IaC-Tool.
+
+Eingesetzte Technologien: AWS Lambda, DynamoDB, API Gateway, EventBridge, Step Functions,
+SQS, CDK (TypeScript), Python, CloudWatch, X-Ray
+
+---
+
+Projekt 3: AWS-Migration für einen E-Commerce-Konzern
+Zeitraum: 2019 – 2021 (22 Monate)
+Branche: E-Commerce
+Rolle: AWS Solutions Architect
+
+Migration von ca. 50 Workloads von On-Premise (VMware) auf AWS. Migration-Factory-Ansatz
+mit 6R-Klassifizierung (Retain, Retire, Rehost, Replatform, Refactor, Repurchase). AWS
+Application Migration Service (MGN) für Rehost-Workloads, Containerisierung für Replatform.
+
+Eingesetzte Technologien: AWS MGN, EC2, RDS, ECS/Fargate, CloudFormation, Terraform,
+IAM, Direct Connect
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 2 Monaten
+Tagessatz:          1.080 €/Tag (vor Ort)
+Stundensatz Remote: 135 €/Std
+Arbeitsweise:       Hybrid (überwiegend remote)
+Einsatzort:         Karlsruhe und Umgebung, remote deutschlandweit
+Auslastung:         bis zu 5 Tage/Woche

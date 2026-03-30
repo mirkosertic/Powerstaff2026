@@ -1,0 +1,85 @@
+Profil DEV-20014 – Product Owner / Business Analyst
+
+========================================================
+PROFIL-ÜBERBLICK
+========================================================
+
+Erfahrener Product Owner und Business Analyst mit über 15 Jahren Erfahrung an der
+Schnittstelle von Fachbereich und IT. Versteht Stakeholder-Bedürfnisse, übersetzt sie in
+präzise Anforderungen und sorgt dafür, dass Entwicklungsteams stets am wertvollsten
+Backlog-Item arbeiten. Starke Moderations- und Kommunikationskompetenz, auch in
+schwierigen Stakeholder-Konstellationen. Branchenerfahrung in Versicherungen, Banking
+und öffentlicher Verwaltung.
+
+========================================================
+KERNKOMPETENZEN
+========================================================
+
+- Product Owner (Zertifiziert: CSPO, SAFe PO/PM)
+- Business Analyse, Anforderungserhebung und -dokumentation
+- User Stories, Epics, Akzeptanzkriterien, Definition of Done/Ready
+- Backlog-Management, Priorisierung (MoSCoW, Kano, WSJF)
+- Jira, Confluence, Miro, Trello, Azure DevOps
+- UML, BPMN 2.0, Use Cases, Sequenzdiagramme
+- Workshop-Moderation, Event Storming, User Story Mapping
+- Stakeholder-Management bis C-Level, Change Communication
+- Scrum, Kanban, SAFe
+
+========================================================
+PROJEKTERFAHRUNG
+========================================================
+
+Projekt 1: Digitales Bestandskundenportal für einen Lebensversicherer
+Zeitraum: 2022 – laufend (ca. 24 Monate)
+Branche: Versicherungen
+Rolle: Product Owner (agiles Produktteam)
+
+Produktverantwortung für ein neues Kundenselfservice-Portal für Lebensversicherungsprodukte.
+Erhebung und Konsolidierung von Anforderungen aus sechs Stakeholder-Gruppen (Vertrieb, Aktuariat,
+IT, Compliance, Recht, Kundenservice). Aufbau und kontinuierliche Pflege des Produkt-Backlogs
+in Jira, Leitung der Sprint-Reviews und enger Austausch mit dem Entwicklungsteam in täglichen
+Stand-ups. Einführung von OKRs zur strategischen Steuerung des Produktteams.
+
+Eingesetzte Werkzeuge/Methoden: Jira, Confluence, Miro, SAFe PO/PM, OKR, User Story
+Mapping, Event Storming, BPMN, Workshop-Moderation
+
+---
+
+Projekt 2: Core-Banking-Modernisierung (mittelgroße Regionalbank)
+Zeitraum: 2020 – 2022 (20 Monate)
+Branche: Banking / Financial Services
+Rolle: Business Analyst / Product Owner
+
+Anforderungsanalyse und Fachspezifikation im Rahmen der Ablösung eines Core-Banking-Systems.
+Durchführung von As-Is/To-Be-Prozessanalysen (BPMN), Ableitung von User Stories aus
+Fachprozessen, Mitarbeit in Architecture Decision Reviews. Koordination externer Systemlieferanten
+sowie interner IT- und Fachabteilungen.
+
+Eingesetzte Werkzeuge/Methoden: BPMN, UML, Jira, Confluence, Workshop-Moderation,
+Business Process Reengineering, Stakeholder-Interviews
+
+---
+
+Projekt 3: E-Government-Portal für eine Kommunalverwaltung
+Zeitraum: 2018 – 2020 (18 Monate)
+Branche: Öffentliche Verwaltung
+Rolle: Business Analyst / Requirements Engineer
+
+Anforderungsaufnahme und Fachkonzeption für ein kommunales Bürgerportal zur Online-Abwicklung
+von Verwaltungsleistungen. Moderation von Anforderungsworkshops mit Bürgerinnen und Bürgern
+sowie internen Sachbearbeitern. Dokumentation in Confluence, Erstellung von UML-Use-Case-
+Diagrammen und BPMN-Prozessmodellen.
+
+Eingesetzte Werkzeuge/Methoden: UML, BPMN, Confluence, Workshop-Moderation,
+Interview-Techniken, Requirements Traceability Matrix
+
+========================================================
+VERFÜGBARKEIT / RAHMENDATEN
+========================================================
+
+Verfügbarkeit:      in ca. 9 Monaten
+Tagessatz:          760 €/Tag (vor Ort)
+Stundensatz Remote: nicht ausgewiesen
+Arbeitsweise:       überwiegend vor Ort in der Anfangsphase, danach Hybrid
+Einsatzort:         Hamburg und Umgebung, norddeutschlandweit
+Auslastung:         4–5 Tage/Woche

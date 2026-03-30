@@ -1,0 +1,56 @@
+FREIBERUFLER-PROFIL DEV-20050
+===============================
+
+PROFIL-ÜBERBLICK
+-----------------
+Data Scientist mit Schwerpunkt auf quantitativer Finanzanalyse, Prognosemodellen und regulatorischer Analytik im Banken- und Versicherungsbereich. Die Freiberuflerin verbindet solide mathematisch-statistische Fundamente mit pragmatischer Implementierungskompetenz und begleitet Projekte von der Explorationsdatenanalyse bis zur produktiven ML-Pipeline. Ihr Profil ist besonders gefragt in regulierten Branchen, wo Modellnachvollziehbarkeit und aufsichtsrechtliche Compliance ebenso zählen wie Vorhersagegenauigkeit.
+
+KERNKOMPETENZEN
+----------------
+- Sprachen & Frameworks: Python, R, SQL, Pandas, NumPy, scikit-learn, XGBoost, LightGBM
+- Zeitreihenanalyse: ARIMA, SARIMA, Prophet, LSTM-basierte Forecasting-Modelle
+- ML-Lifecycle: MLflow, Jupyter, Docker, Git, Spark
+- Datenhaltung & BI: PostgreSQL, Tableau, Power BI
+- Fachdomäne: Financial Modeling, Risk Analytics, Kreditrisikomodelle, Churn-Vorhersage, Basel III/IV-Grundkenntnisse
+- Cloud: AWS (SageMaker, S3), grundlegende GCP-Kenntnisse
+
+PROJEKTERFAHRUNG
+-----------------
+
+Projekt 1: Kreditrisiko-Scoring und Modellvalidierung bei einer Regionalbank (2023 – 2024, 15 Monate)
+Branche: Bankwesen / Kreditwirtschaft
+Rolle: Senior Data Scientist
+Aufgaben:
+- Neuentwicklung eines internen Kreditscoring-Modells auf Basis von XGBoost und LightGBM zur Ablösung eines veralteten regelbasierten Systems; Verbesserung des Gini-Koeffizienten um 12 Prozentpunkte
+- Implementierung eines Modellvalidierungsframeworks gemäß EBA-Leitlinien (Backtesting, Stabilitätsanalysen, Champion-Challenger-Tests)
+- Aufbau eines reproduzierbaren ML-Workflows mit MLflow (Experiment Tracking, Model Registry, Deployment-Vorbereitung)
+- Erstellung von Erklärbarkeitsberichten (SHAP-Werte) für das Risiko-Management und die Bankenaufsicht
+Technologien: Python, XGBoost, LightGBM, scikit-learn, MLflow, SHAP, PostgreSQL, Jupyter, Docker
+
+Projekt 2: Liquiditätsforecasting und Treasury Analytics bei einem internationalen Versicherungskonzern (2021 – 2023, 18 Monate)
+Branche: Versicherungen / Asset Management
+Rolle: Quantitative Analyst / Data Scientist
+Aufgaben:
+- Entwicklung von Zeitreihenmodellen (SARIMA, Prophet, LSTM) zur kurzfristigen und mittelfristigen Liquiditätsprognose für das Treasury; Einbindung makroökonomischer Einflussfaktoren
+- Aufbau automatisierter Datenpipelines zur täglichen Modell-Aktualisierung mit Apache Spark und Airflow
+- Visualisierung von Forecast-Unsicherheiten und Szenarien in interaktiven Power-BI-Dashboards für das CFO-Berichtswesen
+- Enge Zusammenarbeit mit Aktuaren zur Abstimmung von Modellannahmen auf Solvency-II-Anforderungen
+Technologien: Python, R, Prophet, Spark, Airflow, Power BI, PostgreSQL, AWS S3, Docker
+
+Projekt 3: Churn-Prognose und Kundenwertanalyse bei einem Direktbank-Startup (2020 – 2021, 10 Monate)
+Branche: FinTech / Direktbanking
+Rolle: Data Scientist
+Aufgaben:
+- Entwicklung eines Churn-Prädiktionsmodells für Privatkunden auf Basis von Verhaltens- und Transaktionsdaten; Recall für High-Value-Kunden über 80 %
+- Erstellung von Customer-Lifetime-Value-Modellen zur Segmentierung und gezielten Retention-Kampagnen
+- Explorative Datenanalysen und Feature Engineering auf einem 3-Jahre-Transaktions-Datensatz (~50 Mio. Zeilen) mit Pandas und Spark
+- Deployment des Scoring-Modells als REST-API via FastAPI; Integration in das CRM-System des Kunden
+Technologien: Python, scikit-learn, Pandas, Spark, FastAPI, Tableau, Git, Docker
+
+VERFÜGBARKEIT / RAHMENDATEN
+-----------------------------
+- Verfügbarkeit: ca. 2 Monate (ab Ende Mai 2026)
+- Tagessatz: 920 €/Tag
+- Remote-Satz: 115 €/Std
+- Einsatzgebiet: bundesweit, Schwerpunkt Dresden / Mitteldeutschland und Remote
+- Bevorzugte Projekte: Banking, Versicherungen, Asset Management – überall dort, wo Datenqualität und regulatorische Nachvollziehbarkeit eine Rolle spielen
