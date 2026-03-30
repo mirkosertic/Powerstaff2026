@@ -541,3 +541,45 @@ ps-chat-input {
   max-height: 300px;
   overflow-y: auto;
 }
+
+/* -----------------------------------------------------------------------------
+   §29 Thinking / Reasoning Block
+   Erscheint vor Tool-Calls und vor der finalen Assistant-Antwort.
+   Klappt automatisch zu, sobald Content-Tokens eintreffen.
+   ----------------------------------------------------------------------------- */
+
+.msg-thinking {
+  align-self: flex-start;
+  max-width: 72%;
+  margin-bottom: 4px;
+  border: 1px solid var(--border-l);
+  border-radius: var(--r);
+  background: var(--surface-2);
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.msg-thinking-summary {
+  padding: 4px 10px;
+  cursor: pointer;
+  font-style: italic;
+  list-style: none;
+  user-select: none;
+}
+
+.msg-thinking-summary::-webkit-details-marker { display: none; }
+.msg-thinking[open] .msg-thinking-summary::before { content: '▾ '; }
+.msg-thinking:not([open]) .msg-thinking-summary::before { content: '▸ '; }
+
+.msg-thinking-content {
+  margin: 0;
+  padding: 6px 10px 8px;
+  border-top: 1px solid var(--border-l);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 240px;
+  overflow-y: auto;
+}

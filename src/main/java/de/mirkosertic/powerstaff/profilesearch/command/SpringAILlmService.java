@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class SpringAILlmService implements LlmService {
 
@@ -45,42 +46,45 @@ public class SpringAILlmService implements LlmService {
         this.userQueryService = userQueryService;
     }
 
+    // package-private für Tests: Routing von ChatResponse-Tokens auf ChatProgressCollector-Callbacks
+    void routeTokenToCollector(final org.springframework.ai.chat.model.ChatResponse response, final ChatProgressCollector collector) {
+        final Usage usage = response.getMetadata().getUsage();
+        if (!(usage instanceof EmptyUsage)) {
+            collector.reportUsage(usage.getPromptTokens(), usage.getCompletionTokens(), usage.getTotalTokens());
+        }
+        for (final var result : response.getResults()) {
+            final AssistantMessage output = result.getOutput();
+            if (output.getText() == null) {
+                final Object reasoningContent = output.getMetadata().get("reasoningContent");
+                if (reasoningContent != null) {
+                    collector.thinkingToken(reasoningContent.toString());
+                } else {
+                    logger.debug("ChatResponse ohne Text und ohne reasoningContent – ignoriert");
+                }
+            } else {
+                collector.assistantResponseToken(output.getText());
+            }
+            if (result.getMetadata().getFinishReason() != null && "STOP".equals(result.getMetadata().getFinishReason())) {
+                collector.stopped();
+            }
+        }
+    }
+
+    private String resolveSystemPrompt(final Principal principal) {
+        final var template = userQueryService.findByUsername(principal.getName())
+                .flatMap(u -> Optional.ofNullable(u.profileSearchSystemPrompt()))
+                .orElse(PsUser.DEFAULT_SYSTEM_PROMPT);
+        return new PromptTemplate(template).render(Map.of("user", principal.getName()));
+    }
+
     @Override
     public List<Reply> sendMessage(final Principal principal, final String sessionId, final String conversationId, final Optional<LlmProjectContext> context, final String userMessage) {
-        final var loggingAdvisor = new SimpleLoggerAdvisor();
-
-        final var toolCallAdvisor = ToolCallAdvisor.builder()
-                .disableInternalConversationHistory()
-                .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)
-                .build();
-
         final var progressCollector = new ChatProgressCollector() {
-
             final StringBuilder assistantThoughts = new StringBuilder();
-
-            @Override
-            public void toolInvocation(final String toolName, final String jsonPayload) {
-            }
-
-            @Override
-            public void toolResponses(final String toolNames, final String jsonPayload) {
-            }
 
             @Override
             public void thinkingToken(final String token) {
                 assistantThoughts.append(token);
-            }
-
-            @Override
-            public void assistantResponseToken(final String token) {
-            }
-
-            @Override
-            public void stopped() {
-            }
-
-            @Override
-            public void reportUsage(final Integer promptTokens, final Integer completionTokens, final Integer totalTokens) {
             }
 
             @Override
@@ -90,68 +94,40 @@ public class SpringAILlmService implements LlmService {
                     assistantThoughts.setLength(0);
                     return result;
                 }
-                return assistantThoughts.toString();
+                return "";
             }
         };
 
         final var chatRepository = new SpringAIChatRepository(conversationId, queryService, commandService, objectMapper, progressCollector);
 
-        final var chatMemory = MessageWindowChatMemory.builder()
-                .maxMessages(10)
-                .chatMemoryRepository(chatRepository)
-                .build();
-
-        final var chatMemoryAdvisor = MessageChatMemoryAdvisor.builder(chatMemory)
-                .conversationId(conversationId)
-                .build();
-
-        final var systemPromptTemplate = userQueryService.findByUsername(principal.getName())
-                .flatMap(u -> Optional.ofNullable(u.profileSearchSystemPrompt()))
-                .orElse(PsUser.DEFAULT_SYSTEM_PROMPT);
-        final var systemPrompt = new PromptTemplate(systemPromptTemplate).render(Map.of("user", principal.getName()));
         final var chatClientResponse = chatClient.prompt()
                 .advisors(
-                        toolCallAdvisor,
-                        chatMemoryAdvisor,
-                        loggingAdvisor
+                        ToolCallAdvisor.builder()
+                                .disableInternalConversationHistory()
+                                .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)
+                                .build(),
+                        MessageChatMemoryAdvisor.builder(
+                                MessageWindowChatMemory.builder()
+                                        .maxMessages(10)
+                                        .chatMemoryRepository(chatRepository)
+                                        .build())
+                                .conversationId(conversationId)
+                                .build(),
+                        new SimpleLoggerAdvisor()
                 )
-                .system(systemPrompt)
+                .system(resolveSystemPrompt(principal))
                 .user(userMessage)
                 .stream()
                 .chatResponse()
                 .filter(t -> {
-
-                    final Usage usage = t.getMetadata().getUsage();
-                    if (!(usage instanceof EmptyUsage)) {
-                        progressCollector.reportUsage(usage.getPromptTokens(), usage.getCompletionTokens(), usage.getTotalTokens());
-                    }
-
-                    for (final var result : t.getResults()) {
-                        final AssistantMessage output = result.getOutput();
-                        final Map<String, Object> metadata = output.getMetadata();
-                        if (output.getText() == null) {
-                            // No Response from Assistant, maybe it is thinking?
-                            final Object reasoningContent = metadata.get("reasoningContent");
-                            if (reasoningContent != null) {
-                                progressCollector.thinkingToken(reasoningContent.toString());
-                            } else {
-                                System.out.println("Dont know what to do ....");
-                            }
-                        } else {
-                            progressCollector.assistantResponseToken(output.getText());
-                        }
-                        if (result.getMetadata().getFinishReason() != null && "STOP".equals(result.getMetadata().getFinishReason())) {
-                            progressCollector.stopped();
-                        }
-                    }
+                    routeTokenToCollector(t, progressCollector);
                     return true;
                 })
                 .blockLast();
 
         int promptTokens = 0;
         int completionTokens = 0;
-
-        if (chatClientResponse.getMetadata() != null) {
+        if (chatClientResponse != null && chatClientResponse.getMetadata() != null) {
             final Usage usage = chatClientResponse.getMetadata().getUsage();
             if (usage != null) {
                 logger.info("Collected chat usage: {}", usage);
@@ -162,10 +138,9 @@ public class SpringAILlmService implements LlmService {
 
         final List<Message> persistedMessages = chatRepository.getNewMessages();
         final List<Reply> replies = new ArrayList<>();
-        // Skip the first message, as we already have it on frontend side, but it was persisted by the repository.
+        // Skip the first message (index 0 = user message, already shown on frontend)
         for (int i = 1; i < persistedMessages.size(); i++) {
             final var message = persistedMessages.get(i);
-
             if (message instanceof final UserMessage msg) {
                 replies.add(new Reply(-1, LlmService.ROLE_USER, msg.getText(), null, null, null));
             } else if (message instanceof final AssistantMessage msg) {
@@ -200,5 +175,96 @@ public class SpringAILlmService implements LlmService {
             }
         }
         return replies;
+    }
+
+    @Override
+    public void sendMessageStreaming(final Principal principal, final String sessionId, final String conversationId,
+            final Optional<LlmProjectContext> context, final String userMessage,
+            final Consumer<LlmService.ChatStreamEvent> eventSink) {
+
+        final var progressCollector = new StreamingChatProgressCollector(eventSink);
+        final var chatRepository = new SpringAIChatRepository(conversationId, queryService, commandService, objectMapper, progressCollector);
+
+        final var chatClientResponse = chatClient.prompt()
+                .advisors(
+                        ToolCallAdvisor.builder()
+                                .disableInternalConversationHistory()
+                                .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)
+                                .build(),
+                        MessageChatMemoryAdvisor.builder(
+                                MessageWindowChatMemory.builder()
+                                        .maxMessages(10)
+                                        .chatMemoryRepository(chatRepository)
+                                        .build())
+                                .conversationId(conversationId)
+                                .build(),
+                        new SimpleLoggerAdvisor()
+                )
+                .system(resolveSystemPrompt(principal))
+                .user(userMessage)
+                .stream()
+                .chatResponse()
+                .filter(t -> {
+                    routeTokenToCollector(t, progressCollector);
+                    return true;
+                })
+                .blockLast();
+
+        int promptTokens = 0;
+        int completionTokens = 0;
+        if (chatClientResponse != null && chatClientResponse.getMetadata() != null) {
+            final Usage usage = chatClientResponse.getMetadata().getUsage();
+            if (usage != null) {
+                logger.info("Collected streaming chat usage: {}", usage);
+                promptTokens = usage.getPromptTokens() != null ? usage.getPromptTokens() : 0;
+                completionTokens = usage.getCompletionTokens() != null ? usage.getCompletionTokens() : 0;
+            }
+        }
+
+        // maxContextTokens wird vom Controller ergänzt (er kennt ProfileSearchProperties)
+        eventSink.accept(new LlmService.ChatStreamEvent.MessageComplete(
+                chatRepository.getLastAssistantMessageId(), promptTokens, completionTokens, 0));
+    }
+
+    // package-private für Tests
+    static final class StreamingChatProgressCollector implements ChatProgressCollector {
+
+        private final Consumer<LlmService.ChatStreamEvent> eventSink;
+        private final StringBuilder assistantThoughts = new StringBuilder();
+
+        StreamingChatProgressCollector(final Consumer<LlmService.ChatStreamEvent> eventSink) {
+            this.eventSink = eventSink;
+        }
+
+        @Override
+        public void thinkingToken(final String token) {
+            assistantThoughts.append(token);
+            eventSink.accept(new LlmService.ChatStreamEvent.ThinkingToken(token));
+        }
+
+        @Override
+        public void assistantResponseToken(final String token) {
+            eventSink.accept(new LlmService.ChatStreamEvent.ContentToken(token));
+        }
+
+        @Override
+        public void toolInvocation(final String toolName, final String jsonPayload) {
+            eventSink.accept(new LlmService.ChatStreamEvent.ToolCall(toolName, jsonPayload));
+        }
+
+        @Override
+        public void toolResponses(final String toolNames, final String jsonPayload) {
+            eventSink.accept(new LlmService.ChatStreamEvent.ToolResult(toolNames, jsonPayload));
+        }
+
+        @Override
+        public String getAssistantThoughtsAndReset() {
+            if (!assistantThoughts.isEmpty()) {
+                final String result = assistantThoughts.toString();
+                assistantThoughts.setLength(0);
+                return result;
+            }
+            return "";
+        }
     }
 }

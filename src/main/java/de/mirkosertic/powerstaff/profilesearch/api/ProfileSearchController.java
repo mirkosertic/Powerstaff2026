@@ -24,12 +24,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.util.UriComponentsBuilder;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 @RequestMapping("/profilesearch")
@@ -43,19 +47,22 @@ public class ProfileSearchController {
     private final RememberedProjectService rememberedProjectService;
     private final ProfileSearchProperties profileSearchProperties;
     private final TagQueryService tagQueryService;
+    private final ObjectMapper objectMapper;
 
     public ProfileSearchController(final ProfileSearchCommandService commandService,
                                    final ProfileSearchQueryService queryService,
                                    final LlmService llmService,
                                    final RememberedProjectService rememberedProjectService,
                                    final ProfileSearchProperties profileSearchProperties,
-                                   final TagQueryService tagQueryService) {
+                                   final TagQueryService tagQueryService,
+                                   final ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.llmService = llmService;
         this.rememberedProjectService = rememberedProjectService;
         this.profileSearchProperties = profileSearchProperties;
         this.tagQueryService = tagQueryService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
@@ -213,6 +220,84 @@ public class ProfileSearchController {
     record SendResponse(Long id, String role, String content, String jsonPayload) {}
 
     record SendResponseWrapper(List<SendResponse> messages, int promptTokens, int completionTokens, int maxContextTokens) {}
+
+    @PostMapping(value = "/chat/{chatId}/stream",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @ResponseBody
+    public SseEmitter streamMessage(@PathVariable final Long chatId,
+                                    @RequestBody final SendRequest request,
+                                    final Principal principal,
+                                    final HttpSession session) {
+        final SseEmitter emitter = new SseEmitter(180_000L);
+        final AtomicReference<Thread> threadRef = new AtomicReference<>();
+
+        final Runnable cancelStream = () -> {
+            final Thread t = threadRef.get();
+            if (t != null) {
+                t.interrupt();
+            }
+        };
+        emitter.onCompletion(cancelStream);
+        emitter.onTimeout(cancelStream);
+        emitter.onError(e -> cancelStream.run());
+
+        final Thread thread = Thread.ofVirtual().unstarted(() -> {
+            try {
+                final var context = queryService.buildLlmContext(principal.getName());
+                final int maxCtx = profileSearchProperties.getMaxContextTokens();
+
+                llmService.sendMessageStreaming(principal, session.getId(),
+                        chatId.toString(), context, request.message(),
+                        event -> {
+                            try {
+                                // Enrich MessageComplete with maxContextTokens (known only in controller)
+                                final LlmService.ChatStreamEvent enriched = switch (event) {
+                                    case LlmService.ChatStreamEvent.MessageComplete m ->
+                                            new LlmService.ChatStreamEvent.MessageComplete(
+                                                    m.id(), m.promptTokens(), m.completionTokens(), maxCtx);
+                                    default -> event;
+                                };
+                                final String eventName = switch (enriched) {
+                                    case LlmService.ChatStreamEvent.ThinkingToken t   -> "thinking_token";
+                                    case LlmService.ChatStreamEvent.ContentToken c    -> "content_token";
+                                    case LlmService.ChatStreamEvent.ToolCall tc       -> "tool_call";
+                                    case LlmService.ChatStreamEvent.ToolResult tr     -> "tool_result";
+                                    case LlmService.ChatStreamEvent.MessageComplete m -> "message_complete";
+                                    case LlmService.ChatStreamEvent.StreamError e     -> "error";
+                                };
+                                emitter.send(SseEmitter.event()
+                                        .name(eventName)
+                                        .data(objectMapper.writeValueAsString(enriched)));
+                            } catch (final IOException ex) {
+                                throw new UncheckedIOException(ex);
+                            }
+                        });
+
+                emitter.send(SseEmitter.event().name("done").data("{}"));
+                emitter.complete();
+            } catch (final UncheckedIOException ignored) {
+                // Client hat Verbindung getrennt (IOException beim emitter.send())
+            } catch (final RuntimeException ex) {
+                // blockLast() wirft RuntimeException(InterruptedException) bei Thread-Interrupt
+                if (ex.getCause() instanceof InterruptedException || Thread.currentThread().isInterrupted()) {
+                    return;
+                }
+                try {
+                    emitter.send(SseEmitter.event().name("error")
+                            .data("{\"message\":\"" + ex.getMessage() + "\"}"));
+                } catch (final IOException ignored) {
+                    // ignore
+                }
+                emitter.completeWithError(ex);
+            } catch (final IOException ex) {
+                emitter.completeWithError(ex);
+            }
+        });
+        threadRef.set(thread);
+        thread.start();
+        return emitter;
+    }
 
     @PostMapping(value = "/chat/{chatId}/send", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

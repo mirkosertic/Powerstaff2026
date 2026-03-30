@@ -340,63 +340,201 @@
 
     let currentAbortCtrl = null;
 
+    // ── SSE-Parsing ──────────────────────────────────────────────────────────
+    // Parst SSE-Frames aus einem ReadableStream-Puffer.
+    // Gibt den unvollständigen Rest zurück.
+    function parseSseChunk(buffer, onEvent) {
+      const frames = buffer.split('\n\n');
+      for (let i = 0; i < frames.length - 1; i++) {
+        let eventName = 'message';
+        let data = '';
+        for (const line of frames[i].split('\n')) {
+          if (line.startsWith('event:')) eventName = line.slice(6).trim();
+          else if (line.startsWith('data:')) data = line.slice(5).trim();
+        }
+        if (data) onEvent(eventName, data);
+      }
+      return frames[frames.length - 1];
+    }
+
+    // ── Thinking-Block erstellen ─────────────────────────────────────────────
+    function createThinkingBlock() {
+      const details = document.createElement('details');
+      details.className = 'msg-thinking';
+      details.open = true;
+      const summary = document.createElement('summary');
+      summary.className = 'msg-thinking-summary';
+      summary.textContent = 'Überlegung …';
+      const pre = document.createElement('pre');
+      pre.className = 'msg-thinking-content';
+      details.appendChild(summary);
+      details.appendChild(pre);
+      return { details, pre };
+    }
+
     // Wait for custom element to be defined before attaching event listeners
     customElements.whenDefined('ps-chat-input').then(() => {
       const inputEl = document.getElementById('ps-chat-input-el');
       if (!inputEl) return;
 
-      inputEl.addEventListener('ps-send', function(e) {
+      inputEl.addEventListener('ps-send', async function(e) {
+        // Guard: kein zweiter Request während ein laufender aktiv ist
+        if (currentAbortCtrl) return;
+
         const text = e.detail.text;
         if (!text) return;
 
-        // Show user message immediately
         appendMsg('user', text, null);
 
-        // Show typing indicator
-        const typingEl = appendMsg('assistant', '', null);
-        typingEl.classList.add('chat-typing');
-        typingEl.querySelector('.msg-bubble').innerHTML =
-          '<div class="typing-dots"><span></span><span></span><span></span></div>';
+        // Leere Assistant-Wrapper-Struktur mit Typing-Indicator anlegen
+        const assistantWrapper = document.createElement('div');
+        assistantWrapper.className = 'chat-msg assistant';
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+        bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+        const msgMeta = document.createElement('div');
+        msgMeta.className = 'msg-meta';
+        msgMeta.textContent = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+        assistantWrapper.appendChild(bubble);
+        assistantWrapper.appendChild(msgMeta);
+        const emptyChat = msgArea.querySelector('.empty-chat');
+        if (emptyChat) emptyChat.remove();
+        msgArea.appendChild(assistantWrapper);
+        scrollToBottom();
 
-        // Disable input, show stop button
         currentAbortCtrl = new AbortController();
         inputEl.setAttribute('pending', '');
 
-        fetch('/profilesearch/chat/' + CHAT_ID + '/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getCsrfToken() },
-          body: JSON.stringify({ message: text }),
-          signal: currentAbortCtrl.signal
-        })
-        .then(r => r.json())
-        .then(data => {
-          typingEl.remove();
-          if (Array.isArray(data.messages)) {
-            data.messages.forEach(m => appendMsg(m.role, m.content, m.id, m.jsonPayload));
+        // State-Machine für Streaming
+        let currentThinkingDetails = null;
+        let currentThinkingPre = null;
+        let rawContent = '';
+        let typingIndicatorRemoved = false;
+
+        function ensureTypingCleared() {
+          if (!typingIndicatorRemoved) {
+            bubble.innerHTML = '';
+            typingIndicatorRemoved = true;
+          }
+        }
+
+        function closeCurrentThinking() {
+          if (currentThinkingDetails) {
+            currentThinkingDetails.open = false;
+            currentThinkingDetails = null;
+            currentThinkingPre = null;
+          }
+        }
+
+        try {
+          const resp = await fetch('/profilesearch/chat/' + CHAT_ID + '/stream', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'text/event-stream',
+              'X-XSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify({ message: text }),
+            signal: currentAbortCtrl.signal
+          });
+
+          if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+          const reader = resp.body.getReader();
+          const decoder = new TextDecoder('utf-8');
+          let buffer = '';
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            buffer = parseSseChunk(buffer, function(eventName, rawData) {
+              let payload;
+              try { payload = JSON.parse(rawData); } catch { return; }
+
+              switch (eventName) {
+                case 'thinking_token': {
+                  ensureTypingCleared();
+                  if (!currentThinkingDetails) {
+                    const block = createThinkingBlock();
+                    currentThinkingDetails = block.details;
+                    currentThinkingPre = block.pre;
+                    // Vor dem assistantWrapper einfügen
+                    msgArea.insertBefore(currentThinkingDetails, assistantWrapper);
+                  }
+                  currentThinkingPre.textContent += payload.token;
+                  scrollToBottom();
+                  break;
+                }
+
+                case 'content_token': {
+                  ensureTypingCleared();
+                  closeCurrentThinking();
+                  rawContent += payload.token;
+                  bubble.innerHTML = renderAssistantContent(rawContent);
+                  scrollToBottom();
+                  break;
+                }
+
+                case 'tool_call': {
+                  closeCurrentThinking();
+                  // Tool-Call-Block vor dem assistantWrapper einfügen
+                  const toolEl = appendMsg('tool_call', payload.name, null, payload.jsonPayload);
+                  msgArea.removeChild(toolEl);
+                  msgArea.insertBefore(toolEl, assistantWrapper);
+                  scrollToBottom();
+                  break;
+                }
+
+                case 'tool_result': {
+                  // Tool-Result-Block vor dem assistantWrapper einfügen
+                  const toolEl = appendMsg('tool_result', payload.names, null, payload.jsonPayload);
+                  msgArea.removeChild(toolEl);
+                  msgArea.insertBefore(toolEl, assistantWrapper);
+                  scrollToBottom();
+                  break;
+                }
+
+                case 'message_complete': {
+                  ensureTypingCleared();
+                  closeCurrentThinking();
+                  bubble.innerHTML = renderAssistantContent(rawContent);
+                  if (payload.id && payload.id > 0) {
+                    assistantWrapper.dataset.msgId = payload.id;
+                  }
+                  if (payload.maxContextTokens && payload.maxContextTokens > 0) {
+                    const used = (payload.promptTokens || 0) + (payload.completionTokens || 0);
+                    const max = payload.maxContextTokens;
+                    const pct = Math.round(used / max * 100);
+                    const ctxEl = document.getElementById('ctx-usage');
+                    ctxEl.textContent = used.toLocaleString('de-DE') + '\u202f/\u202f'
+                      + max.toLocaleString('de-DE') + '\u202fTokens\u202f(' + pct + '\u202f%)';
+                    ctxEl.removeAttribute('hidden');
+                  }
+                  scrollToBottom();
+                  break;
+                }
+
+                case 'error': {
+                  ensureTypingCleared();
+                  bubble.textContent = 'Fehler: ' + (payload.message || 'Unbekannter Fehler');
+                  break;
+                }
+              }
+            });
+          }
+        } catch (err) {
+          if (err && err.name === 'AbortError') {
+            // Nutzer hat Stop gedrückt oder zur anderen Seite navigiert
+            assistantWrapper.remove();
           } else {
-            appendMsg(data.role || 'assistant', data.content, data.id, data.jsonPayload);
+            ensureTypingCleared();
+            bubble.textContent = 'Fehler beim Senden. Bitte erneut versuchen.';
           }
-          if (data.maxContextTokens && data.maxContextTokens > 0) {
-            const used = (data.promptTokens || 0) + (data.completionTokens || 0);
-            const max = data.maxContextTokens;
-            const pct = Math.round(used / max * 100);
-            const usedFmt = used.toLocaleString('de-DE');
-            const maxFmt = max.toLocaleString('de-DE');
-            const ctxEl = document.getElementById('ctx-usage');
-            ctxEl.textContent = usedFmt + '\u202f/\u202f' + maxFmt + '\u202fTokens\u202f(' + pct + '\u202f%)';
-            ctxEl.removeAttribute('hidden');
-          }
-        })
-        .catch((err) => {
-          typingEl.remove();
-          if (err && err.name !== 'AbortError') {
-            appendMsg('assistant', 'Fehler beim Senden. Bitte erneut versuchen.', null);
-          }
-        })
-        .finally(() => {
+        } finally {
           currentAbortCtrl = null;
           inputEl.removeAttribute('pending');
-        });
+        }
       });
 
       inputEl.addEventListener('ps-stop', function() {
@@ -405,6 +543,14 @@
           currentAbortCtrl = null;
         }
         inputEl.removeAttribute('pending');
+      });
+
+      // Laufende Requests beim Seitenwechsel abbrechen
+      window.addEventListener('pagehide', function() {
+        if (currentAbortCtrl) {
+          currentAbortCtrl.abort();
+          currentAbortCtrl = null;
+        }
       });
 
       // bfcache handler

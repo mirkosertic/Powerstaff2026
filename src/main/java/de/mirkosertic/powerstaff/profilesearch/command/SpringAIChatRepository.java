@@ -117,7 +117,8 @@ public class SpringAIChatRepository implements ChatMemoryRepository {
 
                         chatProgressCollector.toolInvocation(x.getText(), jsonPayload);
                     } else {
-                        commandService.addMessage(Long.parseLong(s), LlmService.ROLE_ASSISTANT, x.getText(), null, chatProgressCollector.getAssistantThoughtsAndReset());
+                        final var saved = commandService.addMessage(Long.parseLong(s), LlmService.ROLE_ASSISTANT, x.getText(), null, chatProgressCollector.getAssistantThoughtsAndReset());
+                        lastAssistantMessageId = saved.getId();
                     }
                     newMessages.add(message);
                 } else if (message instanceof final ToolResponseMessage x) {
@@ -155,4 +156,10 @@ public class SpringAIChatRepository implements ChatMemoryRepository {
     public List<Message> getNewMessages() {
         return newMessages;
     }
+
+    public long getLastAssistantMessageId() {
+        return lastAssistantMessageId;
+    }
+
+    private long lastAssistantMessageId = -1;
 }

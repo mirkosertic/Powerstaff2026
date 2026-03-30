@@ -24,10 +24,11 @@ class ProfileSearchControllerSpec extends Specification {
     RememberedProjectService rememberedProjectService = Mock()
     ProfileSearchProperties profileSearchProperties = new ProfileSearchProperties()
     TagQueryService tagQueryService = Mock()
+    tools.jackson.databind.ObjectMapper objectMapper = new tools.jackson.databind.ObjectMapper()
 
     @Subject
     ProfileSearchController controller = new ProfileSearchController(
-            commandService, queryService, llmService, rememberedProjectService, profileSearchProperties, tagQueryService
+            commandService, queryService, llmService, rememberedProjectService, profileSearchProperties, tagQueryService, objectMapper
     )
 
     Principal principal = Mock() {

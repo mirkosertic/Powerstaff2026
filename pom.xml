@@ -242,8 +242,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <!-- @{...} = late binding: JaCoCo setzt jacocoArgLine erst in initialize -->
-                    <!-- Java 21+: Dynamic Agent Loading explizit erlauben (Mockito/ByteBuddy) -->
-                    <argLine>@{jacocoArgLine} -Djdk.attach.allowAttachSelf=true -XX:+EnableDynamicAgentLoading</argLine>
+                    <!-- JDK 25: Mockito-Agent vorab laden (kein dynamisches Attach nötig) -->
+                    <argLine>@{jacocoArgLine} -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar -Djdk.attach.allowAttachSelf=true -XX:+EnableDynamicAgentLoading</argLine>
                     <includes>
                         <include>**/*Spec.class</include>
                     </includes>
@@ -255,7 +255,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <argLine>@{jacocoItArgLine} -Djdk.attach.allowAttachSelf=true -XX:+EnableDynamicAgentLoading</argLine>
+                    <argLine>@{jacocoItArgLine} -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar -Djdk.attach.allowAttachSelf=true -XX:+EnableDynamicAgentLoading</argLine>
                     <includes>
                         <include>**/*IT.class</include>
                     </includes>
