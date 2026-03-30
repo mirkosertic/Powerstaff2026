@@ -1,7 +1,6 @@
 package de.mirkosertic.powerstaff.profilesearch.query;
 
 import de.mirkosertic.powerstaff.shared.ProjectStatus;
-import de.mirkosertic.powerstaff.shared.query.TagView;
 import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
@@ -9,9 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,10 +27,12 @@ public class ProfileSearchQueryService {
 
     private final JdbcClient jdbcClient;
     private final List<McpSyncClient> mcpClients;
+    private final ObjectMapper objectMapper;
 
-    public ProfileSearchQueryService(final JdbcClient jdbcClient, final List<McpSyncClient> mcpClients) {
+    public ProfileSearchQueryService(final JdbcClient jdbcClient, final List<McpSyncClient> mcpClients, final ObjectMapper objectMapper) {
         this.jdbcClient = jdbcClient;
         this.mcpClients = mcpClients;
+        this.objectMapper = objectMapper;
     }
 
     public List<ChatListView> findChatsByUser(final String userId, final int offset, final int limit) {
@@ -165,10 +168,10 @@ public class ProfileSearchQueryService {
 
     public List<ProfileSearchResult> searchFreelancers(final ProfileSearchCriteria criteria, final int offset, final int limit) {
         final Optional<McpSyncClient> mcpClient = findMcpClientWithSearchTool();
-        if (mcpClient.isPresent()) {
+        /*if (mcpClient.isPresent()) {
             logger.debug("MCP '{}'-Tool gefunden – delegiere Suche an MCP-Server", MCP_SEARCH_TOOL_NAME);
             return searchFreelancersViaMcp(mcpClient.get(), criteria, offset, limit);
-        }
+        }*/
         logger.debug("Kein MCP '{}'-Tool verfügbar – Suche über DB", MCP_SEARCH_TOOL_NAME);
         return searchFreelancersViaDb(criteria, offset, limit);
     }
@@ -208,11 +211,17 @@ public class ProfileSearchQueryService {
 
     /**
      * Baut die Argument-Map für das MCP-Search-Tool aus den Suchkriterien.
-     * TODO: Implementierung der Parameter-Generierung
      */
     private Map<String, Object> buildMcpSearchArguments(final ProfileSearchCriteria criteria,
                                                           final int offset, final int limit) {
-        throw new UnsupportedOperationException("buildMcpSearchArguments: noch nicht implementiert");
+
+        final Map<String, Object> arguments = new HashMap<>();
+        arguments.put("query", criteria.searchTerm());
+        arguments.put("sortBy", "_score");
+        arguments.put("pageSize", limit);
+        arguments.put("page", 0); //
+        arguments.put("useVectorSearch", criteria.semanticSearch() != null ? criteria.semanticSearch() : true);
+        return arguments;
     }
 
     /**
@@ -220,7 +229,88 @@ public class ProfileSearchQueryService {
      * TODO: Implementierung der Ergebnis-Interpretation
      */
     private List<ProfileSearchResult> parseMcpSearchResult(final McpSchema.CallToolResult toolResult) {
-        throw new UnsupportedOperationException("parseMcpSearchResult: noch nicht implementiert");
+        record Passage(
+                String text,
+                double score,
+                List<String> matchedTerms,
+                double termCoverage,
+                double position
+        ) {
+        }
+
+        record VectorMatchInfo(
+                boolean matchedViaVector,
+                int matchedChunkIndex,
+                String matchedChunkText,
+                float vectorScore
+        ) {
+        }
+
+        record SearchDocument(
+                double score,
+                String filePath,
+                String fileName,
+                String title,
+                String author,
+                String creator,
+                String subject,
+                String language,
+                String fileExtension,
+                String fileType,
+                Long fileSize,
+                Long createdDate,
+                Long modifiedDate,
+                Long indexedDate,
+                List<Passage> passages,
+                VectorMatchInfo vectorMatchInfo
+        ) {
+        }
+
+        record FacetValue(String value, long count) {
+        }
+
+        record ActiveFilter(
+                String field,
+                String operator,
+                String value,
+                List<String> values,
+                String from,
+                String to,
+                String addedAt,
+                long matchCount
+        ) {
+        }
+
+        record SearchResponse(
+                boolean success,
+                List<SearchDocument> documents,
+                long totalHits,
+                int page,
+                int pageSize,
+                int totalPages,
+                boolean hasNextPage,
+                boolean hasPreviousPage,
+                Map<String, List<FacetValue>> facets,
+                List<ActiveFilter> activeFilters,
+                long searchTimeMs,
+                String contentNote,
+                String error
+        ) {}
+
+        final List<ProfileSearchResult> results = new ArrayList<>();
+        for (final McpSchema.Content content : toolResult.content()) {
+            if (content instanceof final McpSchema.TextContent textContent) {
+                final SearchResponse response = objectMapper.readValue(textContent.text(), SearchResponse.class);
+                if (response.success()) {
+
+                } else {
+                    logger.error("MCP-Search-Tool meldete einen Fehler: {}", response.error());
+                }
+            } else {
+                logger.warn("Nicht unterstützter Content-Typ: {} in MCP-Antwort", content.getClass().getSimpleName());
+            }
+        }
+        return results;
     }
 
     // ── DB-Pfad (bisherige Implementierung) ───────────────────────────────────

@@ -3,13 +3,14 @@ package de.mirkosertic.powerstaff.profilesearch.query
 import org.springframework.jdbc.core.simple.JdbcClient
 import spock.lang.Specification
 import spock.lang.Subject
+import tools.jackson.databind.ObjectMapper
 
 class ProfileSearchQueryServiceSpec extends Specification {
 
     JdbcClient jdbcClient = Mock()
 
     @Subject
-    ProfileSearchQueryService service = new ProfileSearchQueryService(jdbcClient, [])
+    ProfileSearchQueryService service = new ProfileSearchQueryService(jdbcClient, [], new ObjectMapper())
 
     def "searchFreelancers delegiert an JdbcClient mit korrekten Parametern"() {
         given:

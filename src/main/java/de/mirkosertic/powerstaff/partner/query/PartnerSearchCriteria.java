@@ -18,16 +18,16 @@ public record PartnerSearchCriteria(
         return new PartnerSearchCriteria(null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
-    public PartnerSearchCriteria withCompany(String v) { return new PartnerSearchCriteria(v, name1, name2, street, country, plz, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
-    public PartnerSearchCriteria withName1(String v) { return new PartnerSearchCriteria(company, v, name2, street, country, plz, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
-    public PartnerSearchCriteria withName2(String v) { return new PartnerSearchCriteria(company, name1, v, street, country, plz, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
-    public PartnerSearchCriteria withStreet(String v) { return new PartnerSearchCriteria(company, name1, name2, v, country, plz, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
-    public PartnerSearchCriteria withCountry(String v) { return new PartnerSearchCriteria(company, name1, name2, street, v, plz, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
-    public PartnerSearchCriteria withPlz(String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, v, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
-    public PartnerSearchCriteria withCity(String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, v, comments, debitorNr, kreditorNr, sortField, sortDir); }
-    public PartnerSearchCriteria withComments(String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, city, v, debitorNr, kreditorNr, sortField, sortDir); }
-    public PartnerSearchCriteria withDebitorNr(String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, city, comments, v, kreditorNr, sortField, sortDir); }
-    public PartnerSearchCriteria withKreditorNr(String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, city, comments, debitorNr, v, sortField, sortDir); }
-    public PartnerSearchCriteria withSortField(String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, city, comments, debitorNr, kreditorNr, v, sortDir); }
-    public PartnerSearchCriteria withSortDir(String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, city, comments, debitorNr, kreditorNr, sortField, v); }
+    public PartnerSearchCriteria withCompany(final String v) { return new PartnerSearchCriteria(v, name1, name2, street, country, plz, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
+    public PartnerSearchCriteria withName1(final String v) { return new PartnerSearchCriteria(company, v, name2, street, country, plz, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
+    public PartnerSearchCriteria withName2(final String v) { return new PartnerSearchCriteria(company, name1, v, street, country, plz, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
+    public PartnerSearchCriteria withStreet(final String v) { return new PartnerSearchCriteria(company, name1, name2, v, country, plz, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
+    public PartnerSearchCriteria withCountry(final String v) { return new PartnerSearchCriteria(company, name1, name2, street, v, plz, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
+    public PartnerSearchCriteria withPlz(final String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, v, city, comments, debitorNr, kreditorNr, sortField, sortDir); }
+    public PartnerSearchCriteria withCity(final String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, v, comments, debitorNr, kreditorNr, sortField, sortDir); }
+    public PartnerSearchCriteria withComments(final String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, city, v, debitorNr, kreditorNr, sortField, sortDir); }
+    public PartnerSearchCriteria withDebitorNr(final String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, city, comments, v, kreditorNr, sortField, sortDir); }
+    public PartnerSearchCriteria withKreditorNr(final String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, city, comments, debitorNr, v, sortField, sortDir); }
+    public PartnerSearchCriteria withSortField(final String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, city, comments, debitorNr, kreditorNr, v, sortDir); }
+    public PartnerSearchCriteria withSortDir(final String v) { return new PartnerSearchCriteria(company, name1, name2, street, country, plz, city, comments, debitorNr, kreditorNr, sortField, v); }
 }

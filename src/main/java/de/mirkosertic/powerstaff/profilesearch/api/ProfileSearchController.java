@@ -253,18 +253,18 @@ public class ProfileSearchController {
                             try {
                                 // Enrich MessageComplete with maxContextTokens (known only in controller)
                                 final LlmService.ChatStreamEvent enriched = switch (event) {
-                                    case LlmService.ChatStreamEvent.MessageComplete m ->
+                                    case final LlmService.ChatStreamEvent.MessageComplete m ->
                                             new LlmService.ChatStreamEvent.MessageComplete(
                                                     m.id(), m.promptTokens(), m.completionTokens(), maxCtx);
                                     default -> event;
                                 };
                                 final String eventName = switch (enriched) {
-                                    case LlmService.ChatStreamEvent.ThinkingToken t   -> "thinking_token";
-                                    case LlmService.ChatStreamEvent.ContentToken c    -> "content_token";
-                                    case LlmService.ChatStreamEvent.ToolCall tc       -> "tool_call";
-                                    case LlmService.ChatStreamEvent.ToolResult tr     -> "tool_result";
-                                    case LlmService.ChatStreamEvent.MessageComplete m -> "message_complete";
-                                    case LlmService.ChatStreamEvent.StreamError e     -> "error";
+                                    case final LlmService.ChatStreamEvent.ThinkingToken t   -> "thinking_token";
+                                    case final LlmService.ChatStreamEvent.ContentToken c    -> "content_token";
+                                    case final LlmService.ChatStreamEvent.ToolCall tc       -> "tool_call";
+                                    case final LlmService.ChatStreamEvent.ToolResult tr     -> "tool_result";
+                                    case final LlmService.ChatStreamEvent.MessageComplete m -> "message_complete";
+                                    case final LlmService.ChatStreamEvent.StreamError e     -> "error";
                                 };
                                 emitter.send(SseEmitter.event()
                                         .name(eventName)

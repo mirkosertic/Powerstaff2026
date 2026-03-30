@@ -18,16 +18,16 @@ public record KundeSearchCriteria(
         return new KundeSearchCriteria(null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
-    public KundeSearchCriteria withCompany(String v) { return new KundeSearchCriteria(v, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
-    public KundeSearchCriteria withName1(String v) { return new KundeSearchCriteria(company, v, name2, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
-    public KundeSearchCriteria withName2(String v) { return new KundeSearchCriteria(company, name1, v, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
-    public KundeSearchCriteria withStreet(String v) { return new KundeSearchCriteria(company, name1, name2, v, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
-    public KundeSearchCriteria withCountry(String v) { return new KundeSearchCriteria(company, name1, name2, street, v, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
-    public KundeSearchCriteria withPlz(String v) { return new KundeSearchCriteria(company, name1, name2, street, country, v, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
-    public KundeSearchCriteria withCity(String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, v, comments, kreditorNr, debitorNr, sortField, sortDir); }
-    public KundeSearchCriteria withComments(String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, v, kreditorNr, debitorNr, sortField, sortDir); }
-    public KundeSearchCriteria withKreditorNr(String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, v, debitorNr, sortField, sortDir); }
-    public KundeSearchCriteria withDebitorNr(String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, kreditorNr, v, sortField, sortDir); }
-    public KundeSearchCriteria withSortField(String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr, v, sortDir); }
-    public KundeSearchCriteria withSortDir(String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, v); }
+    public KundeSearchCriteria withCompany(final String v) { return new KundeSearchCriteria(v, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
+    public KundeSearchCriteria withName1(final String v) { return new KundeSearchCriteria(company, v, name2, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
+    public KundeSearchCriteria withName2(final String v) { return new KundeSearchCriteria(company, name1, v, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
+    public KundeSearchCriteria withStreet(final String v) { return new KundeSearchCriteria(company, name1, name2, v, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
+    public KundeSearchCriteria withCountry(final String v) { return new KundeSearchCriteria(company, name1, name2, street, v, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
+    public KundeSearchCriteria withPlz(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, v, city, comments, kreditorNr, debitorNr, sortField, sortDir); }
+    public KundeSearchCriteria withCity(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, v, comments, kreditorNr, debitorNr, sortField, sortDir); }
+    public KundeSearchCriteria withComments(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, v, kreditorNr, debitorNr, sortField, sortDir); }
+    public KundeSearchCriteria withKreditorNr(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, v, debitorNr, sortField, sortDir); }
+    public KundeSearchCriteria withDebitorNr(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, kreditorNr, v, sortField, sortDir); }
+    public KundeSearchCriteria withSortField(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr, v, sortDir); }
+    public KundeSearchCriteria withSortDir(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, v); }
 }
