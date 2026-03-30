@@ -9,7 +9,7 @@ class ProfileSearchQueryServiceSpec extends Specification {
     JdbcClient jdbcClient = Mock()
 
     @Subject
-    ProfileSearchQueryService service = new ProfileSearchQueryService(jdbcClient)
+    ProfileSearchQueryService service = new ProfileSearchQueryService(jdbcClient, [])
 
     def "searchFreelancers delegiert an JdbcClient mit korrekten Parametern"() {
         given:

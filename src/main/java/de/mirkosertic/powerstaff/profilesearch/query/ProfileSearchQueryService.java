@@ -2,6 +2,10 @@ package de.mirkosertic.powerstaff.profilesearch.query;
 
 import de.mirkosertic.powerstaff.shared.ProjectStatus;
 import de.mirkosertic.powerstaff.shared.query.TagView;
+import io.modelcontextprotocol.client.McpSyncClient;
+import io.modelcontextprotocol.spec.McpSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,16 +13,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
 public class ProfileSearchQueryService {
 
-    private final JdbcClient jdbcClient;
+    private static final Logger logger = LoggerFactory.getLogger(ProfileSearchQueryService.class);
 
-    public ProfileSearchQueryService(final JdbcClient jdbcClient) {
+    static final String MCP_SEARCH_TOOL_NAME = "search";
+
+    private final JdbcClient jdbcClient;
+    private final List<McpSyncClient> mcpClients;
+
+    public ProfileSearchQueryService(final JdbcClient jdbcClient, final List<McpSyncClient> mcpClients) {
         this.jdbcClient = jdbcClient;
+        this.mcpClients = mcpClients;
     }
 
     public List<ChatListView> findChatsByUser(final String userId, final int offset, final int limit) {
@@ -153,6 +164,69 @@ public class ProfileSearchQueryService {
     }
 
     public List<ProfileSearchResult> searchFreelancers(final ProfileSearchCriteria criteria, final int offset, final int limit) {
+        final Optional<McpSyncClient> mcpClient = findMcpClientWithSearchTool();
+        if (mcpClient.isPresent()) {
+            logger.debug("MCP '{}'-Tool gefunden – delegiere Suche an MCP-Server", MCP_SEARCH_TOOL_NAME);
+            return searchFreelancersViaMcp(mcpClient.get(), criteria, offset, limit);
+        }
+        logger.debug("Kein MCP '{}'-Tool verfügbar – Suche über DB", MCP_SEARCH_TOOL_NAME);
+        return searchFreelancersViaDb(criteria, offset, limit);
+    }
+
+    // ── MCP-Pfad ──────────────────────────────────────────────────────────────
+
+    /** Sucht den ersten MCP-Client, der ein Tool mit dem Namen {@value #MCP_SEARCH_TOOL_NAME} anbietet. */
+    private Optional<McpSyncClient> findMcpClientWithSearchTool() {
+        for (final McpSyncClient client : mcpClients) {
+            try {
+                final McpSchema.ListToolsResult result = client.listTools();
+                final boolean hasSearch = result.tools().stream()
+                        .anyMatch(t -> MCP_SEARCH_TOOL_NAME.equals(t.name()));
+                if (hasSearch) {
+                    return Optional.of(client);
+                }
+            } catch (final Exception e) {
+                logger.warn("Fehler beim Abfragen der Tools von MCP-Client {}: {}", client, e.getMessage());
+            }
+        }
+        return Optional.empty();
+    }
+
+    /** Ruft das MCP-Search-Tool auf und konvertiert das Ergebnis in {@link ProfileSearchResult}-Objekte. */
+    private List<ProfileSearchResult> searchFreelancersViaMcp(final McpSyncClient client,
+                                                               final ProfileSearchCriteria criteria,
+                                                               final int offset, final int limit) {
+        final Map<String, Object> arguments = buildMcpSearchArguments(criteria, offset, limit);
+        final McpSchema.CallToolResult toolResult = client.callTool(
+                new McpSchema.CallToolRequest(MCP_SEARCH_TOOL_NAME, arguments));
+        if (Boolean.TRUE.equals(toolResult.isError())) {
+            logger.error("MCP '{}'-Tool meldete einen Fehler: {}", MCP_SEARCH_TOOL_NAME, toolResult.content());
+            return List.of();
+        }
+        return parseMcpSearchResult(toolResult);
+    }
+
+    /**
+     * Baut die Argument-Map für das MCP-Search-Tool aus den Suchkriterien.
+     * TODO: Implementierung der Parameter-Generierung
+     */
+    private Map<String, Object> buildMcpSearchArguments(final ProfileSearchCriteria criteria,
+                                                          final int offset, final int limit) {
+        throw new UnsupportedOperationException("buildMcpSearchArguments: noch nicht implementiert");
+    }
+
+    /**
+     * Konvertiert das Ergebnis des MCP-Search-Tools in eine Liste von {@link ProfileSearchResult}.
+     * TODO: Implementierung der Ergebnis-Interpretation
+     */
+    private List<ProfileSearchResult> parseMcpSearchResult(final McpSchema.CallToolResult toolResult) {
+        throw new UnsupportedOperationException("parseMcpSearchResult: noch nicht implementiert");
+    }
+
+    // ── DB-Pfad (bisherige Implementierung) ───────────────────────────────────
+
+    private List<ProfileSearchResult> searchFreelancersViaDb(final ProfileSearchCriteria criteria,
+                                                              final int offset, final int limit) {
         record Row(Long id, String code, String name1, String name2,
                    LocalDateTime lastContactDate, Long salaryPerDayLong,
                    LocalDateTime availabilityAsDate, boolean contactForbidden) {}
