@@ -2,6 +2,7 @@ package de.mirkosertic.powerstaff.profilesearch.command;
 
 import de.mirkosertic.powerstaff.auth.UserQueryService;
 import de.mirkosertic.powerstaff.auth.PsUser;
+import de.mirkosertic.powerstaff.profilesearch.query.LlmFreelancerContext;
 import de.mirkosertic.powerstaff.profilesearch.query.LlmProjectContext;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.springframework.ai.chat.messages.ToolResponseMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.metadata.EmptyUsage;
 import org.springframework.ai.chat.metadata.Usage;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import tools.jackson.databind.ObjectMapper;
 
@@ -47,7 +49,7 @@ public class SpringAILlmService implements LlmService {
     }
 
     // package-private für Tests: Routing von ChatResponse-Tokens auf ChatProgressCollector-Callbacks
-    void routeTokenToCollector(final org.springframework.ai.chat.model.ChatResponse response, final ChatProgressCollector collector) {
+    void routeTokenToCollector(final ChatResponse response, final ChatProgressCollector collector) {
         final Usage usage = response.getMetadata().getUsage();
         if (!(usage instanceof EmptyUsage)) {
             collector.reportUsage(usage.getPromptTokens(), usage.getCompletionTokens(), usage.getTotalTokens());
@@ -70,11 +72,40 @@ public class SpringAILlmService implements LlmService {
         }
     }
 
-    private String resolveSystemPrompt(final Principal principal) {
+    private static void nullsafeAttributeAppend(final String attribute, final String value, final StringBuilder sb) {
+        sb.append(attribute).append(": ").append(value != null ? value : "--Unbekannt--").append("\n");
+    }
+
+    private String resolveSystemPrompt(final Principal principal, final Optional<LlmProjectContext> context) {
         final var template = userQueryService.findByUsername(principal.getName())
                 .flatMap(u -> Optional.ofNullable(u.profileSearchSystemPrompt()))
                 .orElse(PsUser.DEFAULT_SYSTEM_PROMPT);
-        return new PromptTemplate(template).render(Map.of("user", principal.getName()));
+
+        final StringBuilder result = new StringBuilder(new PromptTemplate(template).render(Map.of("user", principal.getName())));
+        result.append("\nWenn Du nach Freiberuflern oder Kandidaten suchst, kannst Du im Lucene Index suchen!\n");
+        if (context.isPresent()) {
+            final LlmProjectContext project = context.get();
+            result.append("\nDas aktuelle Projekt ist:\n");
+            nullsafeAttributeAppend("**Projektnummer**", project.projectNumber(), result);
+            nullsafeAttributeAppend("**Kurzbeschreibung**", project.descriptionShort(), result);
+            nullsafeAttributeAppend("**Beschreibung**", project.descriptionLong(), result);
+            nullsafeAttributeAppend("**Einsatzort**", project.workplace(), result);
+            nullsafeAttributeAppend("**Benötigte Skills**", project.skills(), result);
+            nullsafeAttributeAppend("**Dauer**", project.duration(), result);
+
+            if (project.positions() != null && !project.positions().isEmpty()) {
+                result.append("\n\nBereits dem aktuellen Projekt zugewiesen\n");
+                for (final LlmFreelancerContext position : project.positions()) {
+                    result.append(" - ");
+                    nullsafeAttributeAppend("**Kodierung bzw. Dateiname**", position.code(), result);
+                    result.append("   ");
+                    nullsafeAttributeAppend("**Status**", position.positionStatus(), result);
+                    result.append("   ");
+                    nullsafeAttributeAppend("**Skills**", position.skills(), result);
+                }
+            }
+        }
+        return result.toString();
     }
 
     @Override
@@ -115,7 +146,7 @@ public class SpringAILlmService implements LlmService {
                                 .build(),
                         new SimpleLoggerAdvisor()
                 )
-                .system(resolveSystemPrompt(principal))
+                .system(resolveSystemPrompt(principal, context))
                 .user(userMessage)
                 .stream()
                 .chatResponse()
@@ -200,7 +231,7 @@ public class SpringAILlmService implements LlmService {
                                 .build(),
                         new SimpleLoggerAdvisor()
                 )
-                .system(resolveSystemPrompt(principal))
+                .system(resolveSystemPrompt(principal, context))
                 .user(userMessage)
                 .stream()
                 .chatResponse()

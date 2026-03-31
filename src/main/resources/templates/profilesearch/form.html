@@ -253,7 +253,7 @@
       text = (text || '').replace(/\[freelancer:(\d+):([^\]]+)\]/g,
         (_, id, label) => `[${label}](/freelancer/${id})`);
       // Convert "Profil XX-123" pattern to freelancer search links
-      text = text.replace(/Profil ([A-Za-z0-9]{2,}-\d+)/g, function(match, code) {
+      text = text.replace(/(?:Profil )?([A-Za-z0-9]{2,}-\d+)/g, function(match, code) {
         const url = '/freelancer/search?code=' + encodeURIComponent(code)
           + '&returnTo=profilesearch-chat-' + CHAT_ID;
         return '[' + match + '](' + url + ')';
