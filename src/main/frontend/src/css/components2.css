@@ -201,6 +201,38 @@
 }
 .row-forbidden td { color: var(--danger) !important; }
 
+/* Tabellenzeile ohne DB-Übereinstimmung (MCP-Treffer ohne Freiberufler-ID) */
+.row-unresolved {
+  background: var(--warn-bg) !important;
+  cursor: default !important;
+}
+.row-unresolved td { color: var(--warn-text) !important; }
+.row-unresolved:hover td { background: var(--warn-bg) !important; }
+
+/* SERP-Zeile (zweite Zeile pro Freiberufler-Treffer) */
+.serp-row td {
+  padding: 2px 10px 8px 10px;
+  background: var(--surface);
+}
+.serp-row:hover td {
+  background: var(--pri-l);
+}
+.row-forbidden.serp-row td {
+  background: var(--danger-l) !important;
+}
+.row-unresolved.serp-row td {
+  background: var(--warn-bg) !important;
+}
+
+.serp-text {
+  font-size: .82rem;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+.serp-text p { margin: 0; }
+.serp-text strong { color: var(--text); font-weight: 600; }
+.serp-text em { color: var(--text); }
+
 /* Kleine Chips (für Tabellenzellen) */
 .chip-xs {
   display: inline-flex;

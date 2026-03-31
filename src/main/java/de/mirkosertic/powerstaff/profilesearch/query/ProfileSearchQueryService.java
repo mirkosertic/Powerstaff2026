@@ -1,6 +1,7 @@
 package de.mirkosertic.powerstaff.profilesearch.query;
 
 import de.mirkosertic.powerstaff.shared.ProjectStatus;
+import de.mirkosertic.powerstaff.shared.query.TagView;
 import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -168,10 +170,10 @@ public class ProfileSearchQueryService {
 
     public List<ProfileSearchResult> searchFreelancers(final ProfileSearchCriteria criteria, final int offset, final int limit) {
         final Optional<McpSyncClient> mcpClient = findMcpClientWithSearchTool();
-        /*if (mcpClient.isPresent()) {
+        if (mcpClient.isPresent()) {
             logger.debug("MCP '{}'-Tool gefunden – delegiere Suche an MCP-Server", MCP_SEARCH_TOOL_NAME);
             return searchFreelancersViaMcp(mcpClient.get(), criteria, offset, limit);
-        }*/
+        }
         logger.debug("Kein MCP '{}'-Tool verfügbar – Suche über DB", MCP_SEARCH_TOOL_NAME);
         return searchFreelancersViaDb(criteria, offset, limit);
     }
@@ -220,13 +222,12 @@ public class ProfileSearchQueryService {
         arguments.put("sortBy", "_score");
         arguments.put("pageSize", limit);
         arguments.put("page", 0); //
-        arguments.put("useVectorSearch", criteria.semanticSearch() != null ? criteria.semanticSearch() : true);
+        arguments.put("useVectorSearch", criteria.semanticSearch() != null ? criteria.semanticSearch() : false);
         return arguments;
     }
 
     /**
      * Konvertiert das Ergebnis des MCP-Search-Tools in eine Liste von {@link ProfileSearchResult}.
-     * TODO: Implementierung der Ergebnis-Interpretation
      */
     private List<ProfileSearchResult> parseMcpSearchResult(final McpSchema.CallToolResult toolResult) {
         record Passage(
@@ -297,12 +298,29 @@ public class ProfileSearchQueryService {
                 String error
         ) {}
 
-        final List<ProfileSearchResult> results = new ArrayList<>();
+        record DocumentEntry(String code, String serp) {}
+
+        final List<DocumentEntry> entries = new ArrayList<>();
         for (final McpSchema.Content content : toolResult.content()) {
             if (content instanceof final McpSchema.TextContent textContent) {
                 final SearchResponse response = objectMapper.readValue(textContent.text(), SearchResponse.class);
                 if (response.success()) {
+                    for (final SearchDocument document : response.documents()) {
+                        String code = document.fileName();
+                        if (code.indexOf("Profil ") == 0) {
+                            code = code.substring("Profil ".length());
+                        }
+                        final int p = code.indexOf(".");
+                        if (p > 0) {
+                            code = code.substring(0, p);
+                        }
 
+                        final StringBuilder serp = new StringBuilder();
+                        for (final Passage passage : document.passages()) {
+                            serp.append(passage.text()).append(" ");
+                        }
+                        entries.add(new DocumentEntry(code, serp.toString()));
+                    }
                 } else {
                     logger.error("MCP-Search-Tool meldete einen Fehler: {}", response.error());
                 }
@@ -310,7 +328,83 @@ public class ProfileSearchQueryService {
                 logger.warn("Nicht unterstützter Content-Typ: {} in MCP-Antwort", content.getClass().getSimpleName());
             }
         }
+
+        if (entries.isEmpty()) {
+            return List.of();
+        }
+
+        // Batch-Load: alle Freiberuflerdaten und Tags in je einem SELECT statt n Einzelabfragen
+        final List<String> codes = entries.stream().map(DocumentEntry::code).toList();
+        final Map<String, FreelancerBatchRow> freelancerByCode = findFreelancersByCodesInBatch(codes);
+
+        final List<Long> freelancerIds = freelancerByCode.values().stream()
+                .map(FreelancerBatchRow::id)
+                .toList();
+        final Map<Long, List<TagView>> tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);
+
+        final List<ProfileSearchResult> results = new ArrayList<>();
+        for (final DocumentEntry entry : entries) {
+            final FreelancerBatchRow freelancer = freelancerByCode.get(entry.code());
+            if (freelancer == null) {
+                logger.warn("Kein Freiberufler mit Code '{}' gefunden – MCP-Treffer wird ohne DB-Daten übernommen", entry.code());
+                results.add(new ProfileSearchResult(null, entry.code(), null, null, null, null, null, false, List.of(), entry.serp()));
+            } else {
+                final List<TagView> tags = tagsByFreelancerId.getOrDefault(freelancer.id(), List.of());
+                results.add(new ProfileSearchResult(
+                        freelancer.id(), entry.code(), freelancer.name1(), freelancer.name2(),
+                        freelancer.lastContactDate(), freelancer.salaryPerDayLong(),
+                        freelancer.availabilityAsDate(), freelancer.contactForbidden(),
+                        tags, entry.serp()));
+            }
+        }
         return results;
+    }
+
+    /**
+     * Lädt Freiberuflerdaten für eine Liste von Codes in einer einzigen DB-Abfrage.
+     * Package-private für Tests.
+     */
+    Map<String, FreelancerBatchRow> findFreelancersByCodesInBatch(final List<String> codes) {
+        if (codes.isEmpty()) {
+            return Map.of();
+        }
+        return jdbcClient.sql("""
+                SELECT id, code, name1, name2,
+                       last_contact_date, salary_per_day_long,
+                       availability_as_date, contactforbidden
+                FROM freelancer
+                WHERE code IN (:codes)
+                """)
+                .param("codes", codes)
+                .query(FreelancerBatchRow.class)
+                .list()
+                .stream()
+                .collect(Collectors.toMap(FreelancerBatchRow::code, r -> r));
+    }
+
+    /**
+     * Lädt Tags für eine Liste von Freiberufler-IDs in einer einzigen DB-Abfrage.
+     * Package-private für Tests.
+     */
+    Map<Long, List<TagView>> findTagsByFreelancerIdsInBatch(final List<Long> ids) {
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+        record TagRow(Long freelancerId, Long tagId, String tagname, String type) {}
+        return jdbcClient.sql("""
+                SELECT ft.freelancer_id, t.id AS tag_id, t.tagname, t.type
+                FROM freelancer_tags ft
+                JOIN tags t ON t.id = ft.tag_id
+                WHERE ft.freelancer_id IN (:ids)
+                ORDER BY t.tagname
+                """)
+                .param("ids", ids)
+                .query(TagRow.class)
+                .list()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        TagRow::freelancerId,
+                        Collectors.mapping(r -> new TagView(r.tagId(), r.tagname(), r.type()), Collectors.toList())));
     }
 
     // ── DB-Pfad (bisherige Implementierung) ───────────────────────────────────
@@ -335,10 +429,16 @@ public class ProfileSearchQueryService {
                 .query(Row.class)
                 .list()
                 .stream()
-                .map(r -> new ProfileSearchResult(
-                        r.id(), r.code(), r.name1(), r.name2(),
-                        r.lastContactDate(), r.salaryPerDayLong(),
-                        r.availabilityAsDate(), r.contactForbidden(), List.of()))
+                .map(r -> {
+                    final String term = criteria.searchTerm() != null && !criteria.searchTerm().isBlank()
+                            ? " – Suche: **" + criteria.searchTerm() + "**"
+                            : "";
+                    final String serp = "**" + r.name1() + " " + r.name2() + "**" + term;
+                    return new ProfileSearchResult(
+                            r.id(), r.code(), r.name1(), r.name2(),
+                            r.lastContactDate(), r.salaryPerDayLong(),
+                            r.availabilityAsDate(), r.contactForbidden(), List.of(), serp);
+                })
                 .toList();
     }
 

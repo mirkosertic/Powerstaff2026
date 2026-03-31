@@ -91,10 +91,10 @@
           <!-- Semantische Suche -->
           <div class="mt-md">
             <label class="cbfield"
-                   th:classappend="${criteria == null or criteria.semanticSearch() == null or criteria.isSemanticSearchActive()} ? ' on' : ''"
+                   th:classappend="${criteria != null and criteria.isSemanticSearchActive()} ? ' on' : ''"
                    data-testid="cb-semantic-search">
               <input type="checkbox" name="semanticSearch" value="true"
-                     th:checked="${criteria == null or criteria.semanticSearch() == null or criteria.isSemanticSearchActive()}"/>
+                     th:checked="${criteria != null and criteria.isSemanticSearchActive()}"/>
               🔮 Semantische Suche
             </label>
           </div>
@@ -209,6 +209,13 @@
   </div>
 
   <script>
+    function psNavigateToFreelancer(id) {
+      location.href = '/freelancer/' + id + '?returnTo=' + encodeURIComponent(location.pathname + location.search);
+    }
+    function psNavigateToFreelancerSearch(queryString) {
+      location.href = '/freelancer/search' + queryString + '&returnTo=' + encodeURIComponent(location.pathname + location.search);
+    }
+
     function toggleTagChip(btn) {
       btn.classList.toggle('selected');
       const tagId = btn.dataset.tagId;
@@ -223,6 +230,23 @@
       }
       input.value = current.join(',');
     }
+
+    function renderSerpMarkdown(root) {
+      root.querySelectorAll('.serp-text[data-markdown]').forEach(el => {
+        el.innerHTML = window.renderMarkdown(el.dataset.markdown);
+        el.removeAttribute('data-markdown');
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      renderSerpMarkdown(document);
+
+      const serpTbody = document.getElementById('results-tbody');
+      if (serpTbody) {
+        new MutationObserver(() => renderSerpMarkdown(serpTbody))
+          .observe(serpTbody, { childList: true });
+      }
+    });
   </script>
 
 </body>

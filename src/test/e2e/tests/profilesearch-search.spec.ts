@@ -118,9 +118,9 @@ test.describe('Profilsuche – Klassische Suche', () => {
 
         await expect(page.locator('[data-testid="results-table"]')).toBeVisible();
 
-        // Genau 1 verbotene Zeile in den Ergebnissen (Freelancer 1004)
-        const forbiddenRows = page.locator('[data-testid="results-table"] tbody tr.row-forbidden');
-        await expect(forbiddenRows).toHaveCount(1);
+        // Freelancer 1004 hat contactforbidden=TRUE → Hauptzeile trägt row-forbidden
+        // (SERP-Zeilen desselben Freelancers können ebenfalls row-forbidden haben)
+        await expect(page.locator('[data-testid="result-row-1004"]')).toHaveClass(/row-forbidden/);
     });
 
     // =========================================================================
@@ -176,20 +176,23 @@ test.describe('Profilsuche – Klassische Suche', () => {
     // Szenario 7: Zeile anklicken öffnet Freiberufler mit returnTo-Parameter
     // =========================================================================
 
-    test('Klick auf Ergebnis-Zeile öffnet Freiberufler-Formular mit returnTo=profilesearch-search', async ({ page }) => {
+    test('Klick auf Ergebnis-Zeile öffnet Freiberufler-Formular mit returnTo zur Suchergebnisseite', async ({ page }) => {
         // Suchseite mit Ergebnissen laden
         await page.goto('/profilesearch/search?searchTerm=Mock');
         await expect(page.locator('[data-testid="results-table"]')).toBeVisible();
 
-        // Erste Zeile anklicken (Mock Freelancer 0, ID 100)
-        const firstRow = page.locator('[data-testid="results-table"] tbody tr').first();
+        // Erste Zeile anklicken (nicht-SERP-Zeile)
+        const firstRow = page.locator('[data-testid="results-table"] tbody tr:not(.serp-row)').first();
         await firstRow.click();
 
-        // Warten auf Freelancer-Formular mit returnTo-Parameter
-        await page.waitForURL(/\/freelancer\/\d+\?returnTo=profilesearch-search/);
+        // Warten auf Freelancer-Formular – returnTo enthält die kodierte Profilsuche-URL
+        await page.waitForURL(/\/freelancer\/\d+\?returnTo=%2Fprofilesearch/);
 
-        // URL enthält returnTo=profilesearch-search
-        await expect(page).toHaveURL(/returnTo=profilesearch-search/);
+        // URL enthält returnTo mit der profilesearch-Suchadresse
+        await expect(page).toHaveURL(/returnTo=%2Fprofilesearch%2Fsearch/);
+
+        // Zurück-Button zur Profilsuche ist sichtbar
+        await expect(page.locator('a:has-text("Zur Profilsuche")')).toBeVisible();
     });
 
 });

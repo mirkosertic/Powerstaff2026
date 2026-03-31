@@ -9,8 +9,9 @@
 <div th:fragment="results" th:remove="tag">
   <tr th:each="r : ${results}"
       th:classappend="${r.contactForbidden()} ? ' row-forbidden' : ''"
-      th:attr="data-testid='freelancer-row-' + ${r.id()}"
-      th:onclick="${returnTo != null} ? 'window.location=\'/freelancer/' + ${r.id()} + '?returnTo=' + ${returnTo} + '\'' : 'window.location=\'/freelancer/' + ${r.id()} + '\''">
+      th:attr="data-testid='freelancer-row-' + ${r.id()}, data-fl-id=${r.id()}, data-return-to=${returnTo}"
+      onclick="flNavigateToFreelancer(this)"
+      style="cursor:pointer">
     <td class="td-name" th:text="${r.name1()}"></td>
     <td th:text="${r.name2()}"></td>
     <td th:text="${r.company()}"></td>

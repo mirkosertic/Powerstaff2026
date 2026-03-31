@@ -252,6 +252,12 @@
       // Convert [freelancer:<id>:<label>] to Markdown links so marked processes them natively
       text = (text || '').replace(/\[freelancer:(\d+):([^\]]+)\]/g,
         (_, id, label) => `[${label}](/freelancer/${id})`);
+      // Convert "Profil XX-123" pattern to freelancer search links
+      text = text.replace(/Profil ([A-Za-z0-9]{2,}-\d+)/g, function(match, code) {
+        const url = '/freelancer/search?code=' + encodeURIComponent(code)
+          + '&returnTo=profilesearch-chat-' + CHAT_ID;
+        return '[' + match + '](' + url + ')';
+      });
       return renderMarkdown(text);
     }
 
@@ -344,6 +350,20 @@
       scrollToBottom();
       return wrapper;
     }
+
+    // Click delegation: Warn before navigating away from an active chat via Profil-Links
+    msgArea.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href*="/freelancer/search"]');
+      if (!link || !link.href.includes('returnTo=profilesearch-chat-')) return;
+      if (currentAbortCtrl) {
+        e.preventDefault();
+        if (confirm('Der aktuelle Chat wird dadurch abgebrochen. Möchten Sie fortfahren?')) {
+          currentAbortCtrl.abort();
+          currentAbortCtrl = null;
+          location.href = link.href;
+        }
+      }
+    });
 
     let currentAbortCtrl = null;
 
@@ -462,7 +482,10 @@
               switch (eventName) {
                 case 'thinking_token': {
                   if (!payload.token) break;
-                  ensureTypingCleared();
+                  // Typing-Dots entfernen und Wrapper ausblenden
+                  bubble.innerHTML = '';
+                  typingIndicatorRemoved = true;
+                  assistantWrapper.style.display = 'none';
                   if (!currentThinkingDetails) {
                     const block = createThinkingBlock();
                     currentThinkingDetails = block.details;
@@ -477,7 +500,12 @@
 
                 case 'content_token': {
                   if (!payload.token) break;
-                  ensureTypingCleared();
+                  // Bubble leeren (Dots entfernen), Wrapper einblenden
+                  if (!typingIndicatorRemoved) {
+                    bubble.innerHTML = '';
+                    typingIndicatorRemoved = true;
+                  }
+                  assistantWrapper.style.display = '';
                   closeCurrentThinking();
                   rawContent += payload.token;
                   bubble.innerHTML = renderAssistantContent(rawContent);
@@ -491,6 +519,10 @@
                   const toolEl = appendMsg('tool_call', payload.name, null, payload.jsonPayload);
                   msgArea.removeChild(toolEl);
                   msgArea.insertBefore(toolEl, assistantWrapper);
+                  // Ladeindikator während Tool-Ausführung (deckt Lücke zwischen tool_call und tool_result)
+                  bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+                  assistantWrapper.style.display = '';
+                  typingIndicatorRemoved = false;
                   scrollToBottom();
                   break;
                 }
@@ -500,12 +532,17 @@
                   const toolEl = appendMsg('tool_result', payload.names, null, payload.jsonPayload);
                   msgArea.removeChild(toolEl);
                   msgArea.insertBefore(toolEl, assistantWrapper);
+                  // Immer Ladeindikator anzeigen – Modell verarbeitet das Tool-Ergebnis
+                  bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+                  assistantWrapper.style.display = '';
+                  typingIndicatorRemoved = false;
                   scrollToBottom();
                   break;
                 }
 
                 case 'message_complete': {
-                  ensureTypingCleared();
+                  typingIndicatorRemoved = true;
+                  assistantWrapper.style.display = '';
                   closeCurrentThinking();
                   bubble.innerHTML = renderAssistantContent(rawContent);
                   if (payload.id && payload.id > 0) {
@@ -525,7 +562,7 @@
                 }
 
                 case 'error': {
-                  ensureTypingCleared();
+                  assistantWrapper.style.display = '';
                   bubble.textContent = 'Fehler: ' + (payload.message || 'Unbekannter Fehler');
                   break;
                 }
@@ -537,7 +574,7 @@
             // Nutzer hat Stop gedrückt oder zur anderen Seite navigiert
             assistantWrapper.remove();
           } else {
-            ensureTypingCleared();
+            assistantWrapper.style.display = '';
             bubble.textContent = 'Fehler beim Senden. Bitte erneut versuchen.';
           }
         } finally {

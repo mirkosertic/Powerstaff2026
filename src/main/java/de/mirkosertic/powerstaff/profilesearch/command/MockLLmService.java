@@ -21,7 +21,7 @@ public class MockLLmService implements LlmService {
     public void sendMessageStreaming(final Principal principal, final String sessionId,
             final String conversationId, final Optional<LlmProjectContext> context,
             final String userMessage, final Consumer<ChatStreamEvent> eventSink) {
-        for (final String word : "Mock streaming response Nummer 0".split(" ")) {
+        for (final String word : "Mock streaming response Nummer 0. Profil E2E-001 wurde als Kandidat identifiziert.".split(" ")) {
             eventSink.accept(new ChatStreamEvent.ContentToken(word + " "));
         }
         eventSink.accept(new ChatStreamEvent.MessageComplete(10L, 150, 50, 0));

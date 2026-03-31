@@ -18,8 +18,12 @@
 
     <div class="btn-row mb-md">
       <a class="btn btn-ghost" th:href="${editSearchUrl}">&#8592; Suche bearbeiten</a>
-      <a class="btn btn-ghost" th:if="${returnTo == 'profilesearch-search'}"
-         href="/profilesearch/search">&#8592; Zur Profilsuche</a>
+      <a class="btn btn-ghost"
+         th:if="${returnTo != null and #strings.startsWith(returnTo, '/profilesearch/')}"
+         th:href="${returnTo}">&#8592; Zur Profilsuche</a>
+      <a class="btn btn-ghost"
+         th:if="${returnTo != null and #strings.startsWith(returnTo, 'profilesearch-chat-')}"
+         th:href="${'/profilesearch/chat/' + #strings.substringAfter(returnTo, 'profilesearch-chat-')}">&#8592; Zum Chat</a>
       <span class="text-muted" th:text="${totalCount} + ' Treffer'"></span>
     </div>
 
@@ -216,8 +220,8 @@
         <tbody>
           <tr th:each="r : ${results}"
               th:classappend="${r.contactForbidden()} ? ' row-forbidden' : ''"
-              th:attr="data-testid='freelancer-row-' + ${r.id()}"
-              th:onclick="${returnTo != null} ? 'window.location=\'/freelancer/' + ${r.id()} + '?returnTo=' + ${returnTo} + '\'' : |window.location='/freelancer/${r.id()}'|"
+              th:attr="data-testid='freelancer-row-' + ${r.id()}, data-fl-id=${r.id()}, data-return-to=${returnTo}"
+              onclick="flNavigateToFreelancer(this)"
               style="cursor:pointer">
             <td class="td-name" th:text="${r.name1()}"></td>
             <td th:text="${r.name2()}"></td>
@@ -238,6 +242,14 @@
     </ps-infinite-scroll>
 
   </div>
+
+<script>
+  function flNavigateToFreelancer(row) {
+    const id = row.dataset.flId;
+    const returnTo = row.dataset.returnTo;
+    location.href = '/freelancer/' + id + (returnTo ? '?returnTo=' + encodeURIComponent(returnTo) : '');
+  }
+</script>
 
 </body>
 </html>

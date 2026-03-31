@@ -1,11 +1,12 @@
 package de.mirkosertic.powerstaff.profilesearch.query;
 
-import de.mirkosertic.powerstaff.shared.query.TagView;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
-public record ProfileSearchResult(
+/**
+ * Projektion für den Batch-Load von Freiberuflerdaten anhand einer Code-Liste.
+ * Wird von {@link ProfileSearchQueryService#findFreelancersByCodesInBatch(java.util.List)} zurückgegeben.
+ */
+record FreelancerBatchRow(
         Long id,
         String code,
         String name1,
@@ -13,8 +14,6 @@ public record ProfileSearchResult(
         LocalDateTime lastContactDate,
         Long salaryPerDayLong,
         LocalDateTime availabilityAsDate,
-        boolean contactForbidden,
-        List<TagView> tags,
-        String serp
+        boolean contactForbidden
 ) {
 }

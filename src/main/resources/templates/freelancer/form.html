@@ -24,9 +24,16 @@
   <!-- Page Content -->
   <div id="page">
 
-    <!-- Zurück-Button zur Profilsuche -->
-    <div class="btn-row mb-md" th:if="${returnTo == 'profilesearch-search'}">
-      <a href="/profilesearch/search" class="btn btn-ghost">&#8592; Zur Profilsuche</a>
+    <!-- Zurück-Button (URL-basiertes returnTo aus Profilsuche) -->
+    <div class="btn-row mb-md"
+         th:if="${returnTo != null and #strings.startsWith(returnTo, '/profilesearch/')}">
+      <a class="btn btn-ghost" th:href="${returnTo}">&#8592; Zur Profilsuche</a>
+    </div>
+    <!-- Zurück-Button zum Chat (Profil-Link aus Chat-Antwort) -->
+    <div class="btn-row mb-md"
+         th:if="${returnTo != null and #strings.startsWith(returnTo, 'profilesearch-chat-')}">
+      <a class="btn btn-ghost"
+         th:href="${'/profilesearch/chat/' + #strings.substringAfter(returnTo, 'profilesearch-chat-')}">&#8592; Zum Chat</a>
     </div>
 
     <!-- Kontaktsperre-Banner -->
