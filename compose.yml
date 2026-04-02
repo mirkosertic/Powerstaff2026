@@ -17,22 +17,24 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-  lucene-mcp:
-    image: mirkosertic42/mcpluceneserver:main
-    container_name: powerstaff-lucenemcp
-    ports:
-      - "11000:9000"
-    volumes:
-      - ./lucene_mcp_data:/userdata:rw
-  ollama:
-    image: ollama/ollama
-    container_name: powerstaff-ollama
-    environment:
-      OLLAMA_MODELS: /opt/ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - ./ollama_data:/opt/ollama:rw
+  #lucene-mcp:
+  #  image: mirkosertic42/mcpluceneserver
+  #  container_name: powerstaff-lucenemcp
+  #  ports:
+  #    - "11000:9000"
+  #  volumes:
+  #    - ./lucene_mcp_data:/userdata:rw
+  #  environment:
+  #    SPRING_PROFILES_ACTIVE: "deployed,vectorsearch"
+
+  #ollama:
+  #  image: ollama/ollama
+  #  container_name: powerstaff-ollama
+  #  ports:
+  #    - "11434:11434"
+  #  volumes:
+  #    - ./ollama_data:/root/.ollama:rw
+
     # deploy:
     #   resources:
     #     reservations:
@@ -42,3 +44,14 @@ services:
     #           capabilities: [gpu]
     # Hinweis: macOS (Docker Desktop) unterstützt kein GPU-Passthrough –
     # für Metal-Beschleunigung Ollama nativ (außerhalb Docker) betreiben.
+
+  #open-webui:
+  #  image: ghcr.io/open-webui/open-webui:main
+  #  container_name: open-webui
+  #  ports:
+  #    - "3000:8080"
+  #  volumes:
+  #    - ./open-webui_data:/app/backend/data:rw
+  #  environment:
+  #    - "OLLAMA_BASE_URL=http://ollama:11434"
+  #  restart: unless-stopped

@@ -99,7 +99,7 @@
 
           <!-- Thinking-Block vor assistant-Nachrichten (zugeklappt, wenn Gedanken vorhanden) -->
           <details class="msg-thinking"
-                   th:if="${msg.role() == 'assistant' and msg.assistantThoughts() != null and !#strings.isEmpty(msg.assistantThoughts())}">
+                   th:if="${(msg.role() == 'assistant' or msg.role() == 'tool_call') and msg.assistantThoughts() != null and !#strings.isEmpty(msg.assistantThoughts())}">
             <summary class="msg-thinking-summary">Gedanken</summary>
             <pre class="msg-thinking-content" th:text="${msg.assistantThoughts()}"></pre>
           </details>
@@ -253,7 +253,7 @@
       text = (text || '').replace(/\[freelancer:(\d+):([^\]]+)\]/g,
         (_, id, label) => `[${label}](/freelancer/${id})`);
       // Convert "Profil XX-123" pattern to freelancer search links
-      text = text.replace(/(?:Profil )?([A-Za-z0-9]{2,}-\d+)/g, function(match, code) {
+      text = text.replace(/(?:Profil )?([A-Za-z0-9]{2,}-\d+)(?:\.[A-Za-z]{2,})?/g, function(match, code) {
         const url = '/freelancer/search?code=' + encodeURIComponent(code)
           + '&returnTo=profilesearch-chat-' + CHAT_ID;
         return '[' + match + '](' + url + ')';

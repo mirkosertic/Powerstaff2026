@@ -12,32 +12,47 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 
 ## Fehlerliste
 
-- [x] Wenn im interaktivem Chat ein Thinking-Block mit Tokens gefüllt
-  wird, wird unterhalb davon ein leerer ASssistant Block angezeigt. Das ist irreführent,
-  der leere Block sollte nicht angezeigt werden.
-- [x] Nach einer Tool Invocation ist das Modell noch mit dem Parsen der
-  Antwort beschäftigt, hat also das Thinking noch gar nicht gestartet. Für
-  Diese Zwischenzeit soll der Ladeindikator angezeigt werden, also der Gleiche
-  der auch angezeigt wird, wenn ich den ersten Chateintrag mache und auf eine
-  Reaktion warte. Sobald das Thinking startet oder eine Assistant-Antwort kommt
-  soll der Ladeindikator verschwinden, also gleiches Verhalten wie initial im Chat.
-- [x] Der Backlink aus einem Volltext-Suchergebnis zu einem Freiberufler funktioniert nicht.
-  Der Button "Zur Profilsuche" zeigt auf das leere Suchformular, und nicht auf
-  die Suchergebnissliste mit allen Einträgen, also das Bookmark des Suchergebnisses.
+- [ ] Texte wie "Profil MS-002.txt" sollten im Profilsuche-Chat als Markdown-Link angezeigt
+  werden, ich sehe allerdings nur den Markdown-Code, und nicht den Link. Als
+  Markdown-Code wird "[Profil DEV-20017.txt](/freelancer/search?code=DEV-20017&returnTo=profilesearch-chat-17)" angezeigt.  
+  Eventuell funktioniert die Formatierung nicht. Details siehe profilesearch/form.html.
 - [ ] Ich möchte, dass bei technischen Fehlern im Chat-Streaming eine entsprechende
   Fehlermeldung angezeigt wird. Falls beim Chat-Streaming ein HTTP Unauthorized
   gesendet wird, soll die Anmeldemaske angezeigt werden.
 
+
 ## Erweiterungen
 
-- [x] Vor dem Markdown-Highlighten der Chat Agenten-Antworten im interaktivem Chat
-  soll der Inhalt des Markdowns auf das Muster "Profil <Kodierung>" untersucht werden,
-  wobei <Kodierung> sich zusammensetzt aus <Min. 2 Zeichen>-<Zahl>. Wenn dieses
-  Muster erkannt wird, soll aus dem Treffer ein Link generiert werden. Der Link
-  zeigt auf eine Freiberufler-Suche, in der nach Kodierung=<Min. 2 Zeichen>-<Zahl>
-  gesucht wird, also der vollständige Treffer nach dem "Profil " Text. Als
-  "ReturnTo" URL im Freiberufler-Suchergebnis soll die Bookmark-URL des aktuellen
-  Chats verwendet werden. Wenn der Chat noch nicht abgeschlossen ist, also gerade
-  ein Streaming von Thinking oder Agenten-Tokens erfolgt oder der "Warten"
-  Indikator angezeigt wird, soll vor dem Auslösen des Links ein Warnhinweis
-  angezeigt werden, dass hierdurch der aktuelle Chat abgebrochen wird.
+- [ ] Die Buttons für neuer Chat und Chat löschen sind in der Toolbar im Chat unlogisch
+  angeordnet. Unter der Toolbar sind die Auswahlbuttons für Chat bzw. Volltextsuche, und
+  die Funktionen zum Chat löschen und neuen Chat anlegen gehören nur zum Chat-Bereich.
+  Eventuell wären diese Buttons besser in der linken Navi des Chat-Bereichs platziert, dort
+  sind ja auch die Buttons zum Löschen eines einzelnen Chats. Vermutlich kann hier auch
+  ein BUtton für "Neuer Chat" angelegt werden; er soll  dann die gleiche Funktion haben
+  wie der Button in der Toolbar, also neuen Chat anlegen und ggf. mit dem selektierten
+  Projekt verknüpfen.
+- [ ] In den Testdaten V200_dev_testdata.sql" sind zwar Tags vorhanden, allerdings sind diese
+  Tags keinem Freiberufler zugeordnet. Ich möchte, dass Für Freiberufler noch Tag-Zuordnungen 
+  ergänzt werden, jeweils Tags passend zu den Skills, Einsatzorten und Skills/Erfahrungen des Freiberuflers.
+- [ ] Ich benötige noch ein MCP Tool, welches in diesem Projekt verbunden ist, und die Abfrage von
+  Profiltexten für eine Kodierung erlaubt. Die Eingabe ist die Kodierung eines Freiberuflers, die Ausgabe sind die
+  gefundenen Profile mit Dateiname und Text. Das Tool ruft im Hintergrund ein anderes MCP Tool mit
+  umgeformten Parametern auf. Die Implementierung der Tool-Delegation werde ich selber machen, ich möchte allerdings,
+  dass Du hier schonmal den Rumpf und die Integration in the Chat-Client vorbereitest. Die Gesamtgröße
+  der MCP Antwort dürfte auf 1 MB gedeckelt werden müssen, da dies das Protokoll erzwingt. Bereite für
+  diese Prüfung bitte alles vor, oder treffere bessere Vorkehrungen, die mit dem Spring AI Framework
+  kompatibel sind. Mit diesem Tool soll es dann dem LLM möglich sein, z.B. auf den Prompt
+  "Analysiere den Inhalt von MSE-002" oder "Was kann der Freiberufler MSE-002 besonders gut?" den
+  Inhalt des Profils als Text zu extrahieren und diesen dann zu untersuchen. Prüfe bitte, ob
+  der Inhalt als Tool-Antwort oder als Referenz auf eine Ressource geliefert werden soll, da
+  der Text beliebig lang werden kann. Mach einen Vorschlag, der zur aktuellsten MCP Protkollversion passt
+  und von den gängigsten LLMs auch verarbeitet werden kann. Reicht hier die Definition einer
+  dynamischen Ressource, oder muss es ein Tool sein?
+- [ ] Ich möchte die Benutzerverwaltung um ein einfaches Rollenkonzept erweitern. Ein Benutzer kann
+  Administrator sein, und nur wenn der aktuell angemeldete Benutzer Administrator ist, kann er
+  im Admin-Bereich die unterschiedlichen Funktionen nutzen. Für nicht-Admin Benutzer ist der
+  Admin bereich nicht sichtbar, und auch die Funktionen dürfen nicht genutzt werden.
+- [ ] Ich möchte aus Suchergebnissen für Freiberufler, Partner, Kunden oder Projekte
+  oder aus der Profilsuche / Chat die Links zu den Freiberuflern auch in einem neuen
+  Browser-Tab öffnen können. Dies würde die Navigation durch große Listen sehr erleichtern. Im
+  Moment ist das nicht möglich, da die Navigation über onClick-Handler vorgenommen wird.
