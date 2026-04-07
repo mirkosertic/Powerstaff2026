@@ -457,15 +457,27 @@
             signal: currentAbortCtrl.signal
           });
 
+          if (resp.status === 401) {
+            window.location.href = '/login';
+            return;
+          }
           if (!resp.ok) throw new Error('HTTP ' + resp.status);
 
           const reader = resp.body.getReader();
           const decoder = new TextDecoder('utf-8');
           let buffer = '';
+          let messageCompleted = false;
 
           while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
+            if (done) {
+              if (!messageCompleted) {
+                ensureTypingCleared();
+                assistantWrapper.style.display = '';
+                bubble.textContent = 'Verbindung zum Server unterbrochen. Bitte erneut versuchen.';
+              }
+              break;
+            }
             buffer += decoder.decode(value, { stream: true });
             buffer = parseSseChunk(buffer, function(eventName, rawData) {
               let payload;
@@ -533,6 +545,7 @@
                 }
 
                 case 'message_complete': {
+                  messageCompleted = true;
                   typingIndicatorRemoved = true;
                   assistantWrapper.style.display = '';
                   closeCurrentThinking();
