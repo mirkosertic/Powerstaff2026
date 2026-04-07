@@ -165,8 +165,10 @@ test.describe('Profilsuche', () => {
 
         const chatUrl = page.url();
 
-        // Lösch-Modal öffnen und bestätigen
-        await page.locator('button:has-text("Chat löschen")').click();
+        // Lösch-Modal öffnen: aktiven Sidebar-Eintrag hovern, dann Delete-Button klicken
+        const activeSession = page.locator('.chat-session-item.active');
+        await activeSession.hover();
+        await activeSession.locator('button.ibtn.del').click();
         await expect(page.locator('#modal-delete')).toBeVisible();
         await page.locator('#btn-confirm-delete').click();
 

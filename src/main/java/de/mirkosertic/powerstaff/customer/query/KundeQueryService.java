@@ -14,7 +14,7 @@ import java.util.Set;
 @Transactional(readOnly = true)
 public class KundeQueryService {
 
-    private static final Set<String> SORT_FIELDS_ALLOWLIST = Set.of("name1", "company", "city");
+    private static final Set<String> SORT_FIELDS_ALLOWLIST = Set.of("name1", "name2", "company", "city");
     private static final String DEFAULT_SORT = "company ASC";
 
     private static final String SELECT_KUNDE = """

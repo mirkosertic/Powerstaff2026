@@ -107,6 +107,8 @@ public class ProfileSearchController {
             return "profilesearch/search-page";
         }
 
+        final String returnTo = buildSearchReturnUrl(criteria);
+
         if (offset > 0) {
             final var results = queryService.searchFreelancers(criteria, offset, PAGE_SIZE);
             final long total = queryService.countSearchFreelancers(criteria);
@@ -115,6 +117,7 @@ public class ProfileSearchController {
                 response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
             }
             model.addAttribute("results", results);
+            model.addAttribute("returnTo", returnTo);
             return "profilesearch/search-results :: results";
         }
 
@@ -134,7 +137,19 @@ public class ProfileSearchController {
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("allTags", tagQueryService.findAll());
         model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
+        model.addAttribute("returnTo", returnTo);
         return "profilesearch/search-page";
+    }
+
+    private String buildSearchReturnUrl(final ProfileSearchCriteria c) {
+        final var b = UriComponentsBuilder.fromPath("/profilesearch/search");
+        if (c.searchTerm() != null && !c.searchTerm().isBlank()) b.queryParam("searchTerm", c.searchTerm());
+        if (c.salaryPerDayFrom() != null) b.queryParam("salaryPerDayFrom", c.salaryPerDayFrom());
+        if (c.salaryPerDayTo() != null) b.queryParam("salaryPerDayTo", c.salaryPerDayTo());
+        if (c.tagIds() != null && !c.tagIds().isBlank()) b.queryParam("tagIds", c.tagIds());
+        if (c.sortField() != null) b.queryParam("sortField", c.sortField());
+        if (c.sortDir() != null) b.queryParam("sortDir", c.sortDir());
+        return b.encode().build().toUriString();
     }
 
     private String buildSearchMoreUrl(final ProfileSearchCriteria c, final int offset) {

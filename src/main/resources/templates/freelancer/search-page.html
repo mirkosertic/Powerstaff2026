@@ -220,10 +220,12 @@
         <tbody>
           <tr th:each="r : ${results}"
               th:classappend="${r.contactForbidden()} ? ' row-forbidden' : ''"
-              th:attr="data-testid='freelancer-row-' + ${r.id()}, data-fl-id=${r.id()}, data-return-to=${returnTo}"
-              onclick="flNavigateToFreelancer(this)"
-              style="cursor:pointer">
-            <td class="td-name" th:text="${r.name1()}"></td>
+              th:attr="data-testid='freelancer-row-' + ${r.id()}, data-fl-id=${r.id()}, data-return-to=${returnTo}">
+            <td class="td-name">
+              <a class="row-link"
+                 th:href="${returnTo != null} ? @{/freelancer/{id}(id=${r.id()},returnTo=${returnTo})} : @{/freelancer/{id}(id=${r.id()})}"
+                 th:text="${r.name1()}"></a>
+            </td>
             <td th:text="${r.name2()}"></td>
             <td th:text="${r.company()}"></td>
             <td th:text="${r.city()}"></td>
@@ -244,11 +246,25 @@
   </div>
 
 <script>
-  function flNavigateToFreelancer(row) {
+  document.addEventListener('click', function(e) {
+    const row = e.target.closest('tr[data-fl-id]');
+    if (!row || e.target.closest('a, button')) return;
     const id = row.dataset.flId;
     const returnTo = row.dataset.returnTo;
-    location.href = '/freelancer/' + id + (returnTo ? '?returnTo=' + encodeURIComponent(returnTo) : '');
-  }
+    const url = '/freelancer/' + id + (returnTo ? '?returnTo=' + encodeURIComponent(returnTo) : '');
+    if (e.ctrlKey || e.metaKey || e.shiftKey) window.open(url, '_blank');
+    else location.href = url;
+  });
+  document.addEventListener('mousedown', function(e) {
+    if (e.button !== 1) return;
+    const row = e.target.closest('tr[data-fl-id]');
+    if (!row || e.target.closest('a')) return;
+    e.preventDefault();
+    const id = row.dataset.flId;
+    const returnTo = row.dataset.returnTo;
+    const url = '/freelancer/' + id + (returnTo ? '?returnTo=' + encodeURIComponent(returnTo) : '');
+    window.open(url, '_blank');
+  });
 </script>
 
 </body>

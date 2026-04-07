@@ -82,10 +82,10 @@
         </thead>
         <tbody>
           <tr th:each="r : ${results}"
-              th:attr="data-testid='project-row-' + ${r.id()}"
-              th:onclick="|window.location='/project/${r.id()}'|"
-              style="cursor:pointer">
-            <td class="td-name" th:text="${r.projectNumber()}"></td>
+              th:attr="data-testid='project-row-' + ${r.id()}, data-nav='/project/' + ${r.id()}">
+            <td class="td-name">
+              <a class="row-link" th:href="@{/project/{id}(id=${r.id()})}" th:text="${r.projectNumber()}"></a>
+            </td>
             <td th:text="${r.descriptionShort()}"></td>
             <td th:text="${r.workplace()}"></td>
             <td th:text="${r.startDate() != null} ? ${#temporals.format(r.startDate(), 'dd.MM.yyyy')} : ''"></td>
@@ -112,6 +112,23 @@
     </ps-infinite-scroll>
 
   </div>
+
+<script>
+  document.addEventListener('click', function(e) {
+    const row = e.target.closest('tr[data-nav]');
+    if (!row || e.target.closest('a, button')) return;
+    const url = row.dataset.nav;
+    if (e.ctrlKey || e.metaKey || e.shiftKey) window.open(url, '_blank');
+    else location.href = url;
+  });
+  document.addEventListener('mousedown', function(e) {
+    if (e.button !== 1) return;
+    const row = e.target.closest('tr[data-nav]');
+    if (!row || e.target.closest('a')) return;
+    e.preventDefault();
+    window.open(row.dataset.nav, '_blank');
+  });
+</script>
 
 </body>
 </html>

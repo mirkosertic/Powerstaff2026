@@ -253,6 +253,50 @@ class KundeQueryServiceIT extends AbstractContainerBaseIT {
         results[2].company() == "IT-KQS SortDesc A"
     }
 
+    def "Suche mit sortField=name2 asc liefert aufsteigende Reihenfolge nach name2"() {
+        given:
+        def kC = newKunde("IT-KQS SortN2 X", null, "C-Nachname")
+        def kA = newKunde("IT-KQS SortN2 X", null, "A-Nachname")
+        def kB = newKunde("IT-KQS SortN2 X", null, "B-Nachname")
+        commandService.save(kC)
+        commandService.save(kA)
+        commandService.save(kB)
+
+        when:
+        def results = queryService.search(
+            KundeSearchCriteria.empty().withCompany("IT-KQS SortN2").withSortField("name2").withSortDir("asc"),
+            0, 20
+        )
+
+        then:
+        results.size() == 3
+        results[0].name2() == "A-Nachname"
+        results[1].name2() == "B-Nachname"
+        results[2].name2() == "C-Nachname"
+    }
+
+    def "Suche mit sortField=name2 desc liefert absteigende Reihenfolge nach name2"() {
+        given:
+        def kC = newKunde("IT-KQS SortN2Desc X", null, "C-Nachname")
+        def kA = newKunde("IT-KQS SortN2Desc X", null, "A-Nachname")
+        def kB = newKunde("IT-KQS SortN2Desc X", null, "B-Nachname")
+        commandService.save(kC)
+        commandService.save(kA)
+        commandService.save(kB)
+
+        when:
+        def results = queryService.search(
+            KundeSearchCriteria.empty().withCompany("IT-KQS SortN2Desc").withSortField("name2").withSortDir("desc"),
+            0, 20
+        )
+
+        then:
+        results.size() == 3
+        results[0].name2() == "C-Nachname"
+        results[1].name2() == "B-Nachname"
+        results[2].name2() == "A-Nachname"
+    }
+
     def "Suche mit ungueltigem sortField faellt auf Default-Sortierung zurueck (keine Exception)"() {
         when:
         def results = queryService.search(

@@ -209,12 +209,32 @@
   </div>
 
   <script>
-    function psNavigateToFreelancer(id) {
-      location.href = '/freelancer/' + id + '?returnTo=' + encodeURIComponent(location.pathname + location.search);
+    function psNavigateToFreelancer(id, event) {
+      const url = '/freelancer/' + id + '?returnTo=' + encodeURIComponent(location.pathname + location.search);
+      if (event && (event.ctrlKey || event.metaKey)) window.open(url, '_blank');
+      else location.href = url;
     }
     function psNavigateToFreelancerSearch(queryString) {
       location.href = '/freelancer/search' + queryString + '&returnTo=' + encodeURIComponent(location.pathname + location.search);
     }
+    document.addEventListener('click', function(e) {
+      const row = e.target.closest('tr[data-fl-id]:not(.serp-row)');
+      if (!row || e.target.closest('a, button, .chip-xs')) return;
+      const id = row.dataset.flId;
+      if (!id) return;
+      const url = '/freelancer/' + id + '?returnTo=' + encodeURIComponent(location.pathname + location.search);
+      if (e.ctrlKey || e.metaKey || e.shiftKey) window.open(url, '_blank');
+      else location.href = url;
+    });
+    document.addEventListener('mousedown', function(e) {
+      if (e.button !== 1) return;
+      const row = e.target.closest('tr[data-fl-id]:not(.serp-row)');
+      if (!row || e.target.closest('a, .chip-xs')) return;
+      const id = row.dataset.flId;
+      if (!id) return;
+      e.preventDefault();
+      window.open('/freelancer/' + id + '?returnTo=' + encodeURIComponent(location.pathname + location.search), '_blank');
+    });
 
     function toggleTagChip(btn) {
       btn.classList.toggle('selected');

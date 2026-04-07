@@ -9,10 +9,12 @@
 <div th:fragment="results" th:remove="tag">
   <tr th:each="r : ${results}"
       th:classappend="${r.contactForbidden()} ? ' row-forbidden' : ''"
-      th:attr="data-testid='freelancer-row-' + ${r.id()}, data-fl-id=${r.id()}, data-return-to=${returnTo}"
-      onclick="flNavigateToFreelancer(this)"
-      style="cursor:pointer">
-    <td class="td-name" th:text="${r.name1()}"></td>
+      th:attr="data-testid='freelancer-row-' + ${r.id()}, data-fl-id=${r.id()}, data-return-to=${returnTo}">
+    <td class="td-name">
+      <a class="row-link"
+         th:href="${returnTo != null} ? @{/freelancer/{id}(id=${r.id()},returnTo=${returnTo})} : @{/freelancer/{id}(id=${r.id()})}"
+         th:text="${r.name1()}"></a>
+    </td>
     <td th:text="${r.name2()}"></td>
     <td th:text="${r.company()}"></td>
     <td th:text="${r.city()}"></td>

@@ -21,19 +21,6 @@
       </a>
     </div>
 
-    <!-- Aktionen -->
-    <div id="tb-actions">
-      <form th:action="@{/profilesearch/chat/new}" method="post" class="inline">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <button type="submit" class="btn btn-ghost">＋ Neuer Chat</button>
-      </form>
-
-      <button type="button" class="btn btn-danger"
-              th:attr="data-chat-id=${chatId}"
-              onclick="openModal('modal-delete')">
-        🗑 Chat löschen
-      </button>
-    </div>
   </div><!-- /#toolbar-inner -->
   </div>
 
@@ -51,6 +38,11 @@
       <button class="sidebar-toggle" onclick="toggleSidebar()" title="Verlauf ein-/ausblenden">☰</button>
 
       <p class="sidebar-label">Chat-Verlauf</p>
+
+      <form th:action="@{/profilesearch/chat/new}" method="post" class="sidebar-new-chat-form">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn btn-ghost btn-sm sidebar-new-chat">＋ Neuer Chat</button>
+      </form>
 
       <div class="chat-session-list" id="sidebar-session-list">
         <th:block th:each="chat : ${sidebar}">

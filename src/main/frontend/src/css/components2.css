@@ -421,6 +421,13 @@
   font-weight: 600;
 }
 
+/* Zeilenlink – füllt die Name-Zelle und ermöglicht Ctrl+Klick / Mittelklick / Kontextmenü */
+.row-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
 /* Zeile ohne Gesamt-Klickbarkeit */
 .tbl-wrap tbody tr.no-click {
   cursor: default;

@@ -8,10 +8,10 @@
 -->
 <div th:fragment="results" th:remove="tag">
   <tr th:each="r : ${results}"
-      th:attr="data-testid='project-row-' + ${r.id()}"
-      th:onclick="|window.location='/project/${r.id()}'|"
-      style="cursor:pointer">
-    <td class="td-name" th:text="${r.projectNumber()}"></td>
+      th:attr="data-testid='project-row-' + ${r.id()}, data-nav='/project/' + ${r.id()}">
+    <td class="td-name">
+      <a class="row-link" th:href="@{/project/{id}(id=${r.id()})}" th:text="${r.projectNumber()}"></a>
+    </td>
     <td th:text="${r.descriptionShort()}"></td>
     <td th:text="${r.workplace()}"></td>
     <td th:text="${r.startDate() != null} ? ${#temporals.format(r.startDate(), 'dd.MM.yyyy')} : ''"></td>

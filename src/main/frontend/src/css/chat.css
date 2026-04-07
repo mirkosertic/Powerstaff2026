@@ -119,6 +119,19 @@ body > .btn-row {
   flex-shrink: 0;
 }
 
+.sidebar-new-chat-form {
+  padding: 0 8px 8px;
+  flex-shrink: 0;
+}
+
+.sidebar-new-chat {
+  width: 100%;
+}
+
+#chat-sidebar.collapsed .sidebar-new-chat-form {
+  display: none;
+}
+
 .chat-session-list {
   flex: 1;
   overflow-y: auto;

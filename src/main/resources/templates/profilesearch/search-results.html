@@ -1,9 +1,14 @@
 <th:block xmlns:th="http://www.thymeleaf.org" th:fragment="results">
   <th:block th:each="r : ${results}">
     <tr th:classappend="${r.id() == null} ? ' row-unresolved' : (${r.contactForbidden()} ? ' row-forbidden' : '')"
-        th:attr="data-testid=(${r.id() != null} ? 'result-row-' + ${r.id()} : null)"
-        th:onclick="${r.id() != null} ? 'psNavigateToFreelancer(' + ${r.id()} + ')' : null">
-      <td th:text="${r.name1()}"></td>
+        th:attr="data-testid=(${r.id() != null} ? 'result-row-' + ${r.id()} : null), data-fl-id=${r.id()}">
+      <td>
+        <a th:if="${r.id() != null}"
+           class="row-link"
+           th:href="${returnTo != null} ? @{/freelancer/{id}(id=${r.id()},returnTo=${returnTo})} : @{/freelancer/{id}(id=${r.id()})}"
+           th:text="${r.name1()}"></a>
+        <span th:if="${r.id() == null}" th:text="${r.name1()}"></span>
+      </td>
       <td th:text="${r.name2()}"></td>
       <td th:text="${r.lastContactDate() != null} ? ${#temporals.format(r.lastContactDate(), 'dd.MM.yyyy')} : ''"></td>
       <td th:text="${r.salaryPerDayLong() != null} ? ${r.salaryPerDayLong()} + ' €' : ''"></td>
@@ -24,7 +29,8 @@
     <tr th:if="${r.serp() != null}"
         class="serp-row"
         th:classappend="${r.id() == null} ? ' row-unresolved' : (${r.contactForbidden()} ? ' row-forbidden' : '')"
-        th:onclick="${r.id() != null} ? 'psNavigateToFreelancer(' + ${r.id()} + ')' : null">
+        th:attr="data-fl-id=${r.id()}"
+        th:onclick="${r.id() != null} ? 'psNavigateToFreelancer(' + ${r.id()} + ', event)' : null">
       <td colspan="7">
         <div class="serp-text" th:attr="data-markdown=${r.serp()}"></div>
       </td>
