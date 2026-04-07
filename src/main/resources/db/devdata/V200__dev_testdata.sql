@@ -735,6 +735,299 @@ ON DUPLICATE KEY UPDATE db_version = db_version;
 
 
 -- =============================================================================
+-- FREIBERUFLER TAG-ZUORDNUNGEN
+-- Tags passend zu Skills, Einsatzorten und Erfahrungen der Freiberufler.
+-- Lookup per tagname, damit IDs nicht hardcodiert werden müssen.
+-- =============================================================================
+INSERT IGNORE INTO freelancer_tags (freelancer_id, tag_id)
+SELECT v.freelancer_id, t.id
+FROM (
+    -- 20001 Flausenmann Ignaz – Java Backend, München/Remote
+    SELECT 20001 AS freelancer_id, 'Java'            AS tagname UNION ALL
+    SELECT 20001, 'Spring Boot'                                  UNION ALL
+    SELECT 20001, 'Docker'                                       UNION ALL
+    SELECT 20001, 'Kubernetes'                                   UNION ALL
+    SELECT 20001, 'Senior Developer'                             UNION ALL
+    SELECT 20001, 'München'                                      UNION ALL
+    SELECT 20001, 'Remote'                                       UNION ALL
+    -- 20002 Klöpferlein Brunhilde – React/TypeScript Frontend, Berlin/Remote
+    SELECT 20002, 'React'                                        UNION ALL
+    SELECT 20002, 'TypeScript'                                   UNION ALL
+    SELECT 20002, 'Senior Developer'                             UNION ALL
+    SELECT 20002, 'Berlin'                                       UNION ALL
+    SELECT 20002, 'Remote'                                       UNION ALL
+    -- 20003 Murmelbart Gundolf – SAP ABAP Architekt, Frankfurt/Remote
+    SELECT 20003, 'SAP ABAP'                                     UNION ALL
+    SELECT 20003, 'Software-Architekt'                           UNION ALL
+    SELECT 20003, 'Frankfurt'                                    UNION ALL
+    SELECT 20003, 'Remote'                                       UNION ALL
+    -- 20004 Wackelkopf Sieglinde – Data Engineer AWS/Spark, Remote/Bundesweit
+    SELECT 20004, 'Python'                                       UNION ALL
+    SELECT 20004, 'AWS'                                          UNION ALL
+    SELECT 20004, 'Data Engineering'                             UNION ALL
+    SELECT 20004, 'Data Engineer'                                UNION ALL
+    SELECT 20004, 'Remote'                                       UNION ALL
+    SELECT 20004, 'Bundesweit'                                   UNION ALL
+    -- 20005 Zottelbein Tobias – Cloud Architect AWS/Azure/K8s, Berlin/Remote
+    SELECT 20005, 'AWS'                                          UNION ALL
+    SELECT 20005, 'Azure'                                        UNION ALL
+    SELECT 20005, 'Kubernetes'                                   UNION ALL
+    SELECT 20005, 'Docker'                                       UNION ALL
+    SELECT 20005, 'DevOps'                                       UNION ALL
+    SELECT 20005, 'Cloud Architect'                              UNION ALL
+    SELECT 20005, 'Berlin'                                       UNION ALL
+    SELECT 20005, 'Remote'                                       UNION ALL
+    -- 20006 Nüsselein Petra – Scrum Master/Agile Coach, Remote (KONTAKTSPERRE)
+    SELECT 20006, 'Scrum Master'                                 UNION ALL
+    SELECT 20006, 'Remote'                                       UNION ALL
+    -- 20007 Grübelmayer Lorenz – .NET/C# Senior, Azure, Köln
+    SELECT 20007, '.NET/C#'                                      UNION ALL
+    SELECT 20007, 'Azure'                                        UNION ALL
+    SELECT 20007, 'Senior Developer'                             UNION ALL
+    SELECT 20007, 'Köln'                                         UNION ALL
+    -- 20008 Plinkert Anneliese – Mobile Flutter, Remote/Bundesweit
+    SELECT 20008, 'Flutter'                                      UNION ALL
+    SELECT 20008, 'Senior Developer'                             UNION ALL
+    SELECT 20008, 'Remote'                                       UNION ALL
+    SELECT 20008, 'Bundesweit'                                   UNION ALL
+    -- 20009 Sülzenkamp Dagmar – IT Security/PenTest, Berlin
+    SELECT 20009, 'Security'                                     UNION ALL
+    SELECT 20009, 'Senior Developer'                             UNION ALL
+    SELECT 20009, 'Berlin'                                       UNION ALL
+    -- 20010 Brummelkopf Stefan – Go Backend, München/Remote
+    SELECT 20010, 'Go'                                           UNION ALL
+    SELECT 20010, 'Docker'                                       UNION ALL
+    SELECT 20010, 'Kubernetes'                                   UNION ALL
+    SELECT 20010, 'Senior Developer'                             UNION ALL
+    SELECT 20010, 'München'                                      UNION ALL
+    SELECT 20010, 'Remote'                                       UNION ALL
+    -- 20011 Grützbeutel Kathinka – Angular/Vue.js Frontend, Remote
+    SELECT 20011, 'Angular'                                      UNION ALL
+    SELECT 20011, 'Vue.js'                                       UNION ALL
+    SELECT 20011, 'TypeScript'                                   UNION ALL
+    SELECT 20011, 'Senior Developer'                             UNION ALL
+    SELECT 20011, 'Remote'                                       UNION ALL
+    SELECT 20011, 'Bundesweit'                                   UNION ALL
+    -- 20012 Knollenfuß Malachias – ML Engineer NLP/LLM, Stuttgart
+    SELECT 20012, 'Python'                                       UNION ALL
+    SELECT 20012, 'Machine Learning'                             UNION ALL
+    SELECT 20012, 'ML Engineer'                                  UNION ALL
+    SELECT 20012, 'Stuttgart'                                    UNION ALL
+    SELECT 20012, 'Remote'                                       UNION ALL
+    -- 20013 Zauselbein Florentinus – Blockchain/Solidity, Köln
+    SELECT 20013, 'Blockchain'                                   UNION ALL
+    SELECT 20013, 'TypeScript'                                   UNION ALL
+    SELECT 20013, 'Senior Developer'                             UNION ALL
+    SELECT 20013, 'Köln'                                         UNION ALL
+    -- 20014 Flusenbauer Simone – Product Owner, Hamburg (KONTAKTSPERRE)
+    SELECT 20014, 'Product Owner'                                UNION ALL
+    SELECT 20014, 'Hamburg'                                      UNION ALL
+    -- 20015 Schmunzelkopf Thomas – DevOps/SRE, München/Remote
+    SELECT 20015, 'Kubernetes'                                   UNION ALL
+    SELECT 20015, 'DevOps'                                       UNION ALL
+    SELECT 20015, 'DevOps Engineer'                              UNION ALL
+    SELECT 20015, 'München'                                      UNION ALL
+    SELECT 20015, 'Remote'                                       UNION ALL
+    -- 20016 Quassel Nadine – UX/UI Designerin, Remote
+    SELECT 20016, 'UX Designer'                                  UNION ALL
+    SELECT 20016, 'React'                                        UNION ALL
+    SELECT 20016, 'Remote'                                       UNION ALL
+    -- 20017 Nörgelnase Bernd – Rust/Systems, Security-nah, Frankfurt
+    SELECT 20017, 'Security'                                     UNION ALL
+    SELECT 20017, 'Senior Developer'                             UNION ALL
+    SELECT 20017, 'Frankfurt'                                    UNION ALL
+    -- 20018 Bauernschlau Christina – Java Architektin DDD, Hamburg
+    SELECT 20018, 'Java'                                         UNION ALL
+    SELECT 20018, 'Spring Boot'                                  UNION ALL
+    SELECT 20018, 'Software-Architekt'                           UNION ALL
+    SELECT 20018, 'Hamburg'                                      UNION ALL
+    SELECT 20018, 'Remote'                                       UNION ALL
+    -- 20019 Wurstkopf Alexander – Python Backend Django/FastAPI, Stuttgart
+    SELECT 20019, 'Python'                                       UNION ALL
+    SELECT 20019, 'Senior Developer'                             UNION ALL
+    SELECT 20019, 'Stuttgart'                                    UNION ALL
+    SELECT 20019, 'Remote'                                       UNION ALL
+    -- 20020 Schaumkopf Stefanie – SAP Fiori/SAPUI5, Remote/Bundesweit
+    SELECT 20020, 'SAP ABAP'                                     UNION ALL
+    SELECT 20020, 'Senior Developer'                             UNION ALL
+    SELECT 20020, 'Remote'                                       UNION ALL
+    SELECT 20020, 'Bundesweit'                                   UNION ALL
+    -- 20021 Pumpernagel Patrick – Azure Cloud Architect/DevOps, München
+    SELECT 20021, 'Azure'                                        UNION ALL
+    SELECT 20021, 'DevOps'                                       UNION ALL
+    SELECT 20021, 'DevOps Engineer'                              UNION ALL
+    SELECT 20021, 'Cloud Architect'                              UNION ALL
+    SELECT 20021, 'München'                                      UNION ALL
+    SELECT 20021, 'Remote'                                       UNION ALL
+    -- 20022 Quetschkopf Marion – Android/Kotlin/Flutter, Bundesweit (KONTAKTSPERRE)
+    SELECT 20022, 'Flutter'                                      UNION ALL
+    SELECT 20022, 'Senior Developer'                             UNION ALL
+    SELECT 20022, 'Bundesweit'                                   UNION ALL
+    -- 20023 Zippelfuß Christian – Fullstack Java/React, Köln/Remote
+    SELECT 20023, 'Java'                                         UNION ALL
+    SELECT 20023, 'React'                                        UNION ALL
+    SELECT 20023, 'TypeScript'                                   UNION ALL
+    SELECT 20023, 'Spring Boot'                                  UNION ALL
+    SELECT 20023, 'Docker'                                       UNION ALL
+    SELECT 20023, 'Kubernetes'                                   UNION ALL
+    SELECT 20023, 'AWS'                                          UNION ALL
+    SELECT 20023, 'Senior Developer'                             UNION ALL
+    SELECT 20023, 'Köln'                                         UNION ALL
+    SELECT 20023, 'Remote'                                       UNION ALL
+    -- 20024 Grimmelbach Felix – GCP Data Engineer, Bundesweit
+    SELECT 20024, 'Python'                                       UNION ALL
+    SELECT 20024, 'Data Engineering'                             UNION ALL
+    SELECT 20024, 'Data Engineer'                                UNION ALL
+    SELECT 20024, 'Bundesweit'                                   UNION ALL
+    SELECT 20024, 'Remote'                                       UNION ALL
+    -- 20025 Dösköpp Verena – Interim CTO/Lead Dev, Frankfurt
+    SELECT 20025, 'Java'                                         UNION ALL
+    SELECT 20025, 'Python'                                       UNION ALL
+    SELECT 20025, 'Go'                                           UNION ALL
+    SELECT 20025, 'Kubernetes'                                   UNION ALL
+    SELECT 20025, 'AWS'                                          UNION ALL
+    SELECT 20025, 'Lead Developer'                               UNION ALL
+    SELECT 20025, 'Software-Architekt'                           UNION ALL
+    SELECT 20025, 'Frankfurt'                                    UNION ALL
+    SELECT 20025, 'Remote'                                       UNION ALL
+    -- 20026 Flusenbart Sören – React Native, Berlin
+    SELECT 20026, 'React'                                        UNION ALL
+    SELECT 20026, 'TypeScript'                                   UNION ALL
+    SELECT 20026, 'Senior Developer'                             UNION ALL
+    SELECT 20026, 'Berlin'                                       UNION ALL
+    SELECT 20026, 'Remote'                                       UNION ALL
+    -- 20027 Grützkamm Gerd – SAP Basis Administrator, Berlin
+    SELECT 20027, 'SAP ABAP'                                     UNION ALL
+    SELECT 20027, 'Software-Architekt'                           UNION ALL
+    SELECT 20027, 'Berlin'                                       UNION ALL
+    -- 20028 Schnurbeleit Rebecca – Python ML/MLOps, Hamburg/Remote
+    SELECT 20028, 'Python'                                       UNION ALL
+    SELECT 20028, 'Machine Learning'                             UNION ALL
+    SELECT 20028, 'ML Engineer'                                  UNION ALL
+    SELECT 20028, 'Hamburg'                                      UNION ALL
+    SELECT 20028, 'Remote'                                       UNION ALL
+    -- 20029 Bumselkopf Jan – Enterprise Architekt TOGAF, Berlin
+    SELECT 20029, 'Software-Architekt'                           UNION ALL
+    SELECT 20029, 'Berlin'                                       UNION ALL
+    SELECT 20029, 'Remote'                                       UNION ALL
+    -- 20030 Knaupel Cornelia – Kotlin/Spring Boot Backend, Berlin-nah (KONTAKTSPERRE)
+    SELECT 20030, 'Java'                                         UNION ALL
+    SELECT 20030, 'Spring Boot'                                  UNION ALL
+    SELECT 20030, 'Senior Developer'                             UNION ALL
+    SELECT 20030, 'Berlin'                                       UNION ALL
+    -- 20031 Zottelbürger Dominik – LLM/KI Python, München
+    SELECT 20031, 'Python'                                       UNION ALL
+    SELECT 20031, 'Machine Learning'                             UNION ALL
+    SELECT 20031, 'ML Engineer'                                  UNION ALL
+    SELECT 20031, 'München'                                      UNION ALL
+    SELECT 20031, 'Remote'                                       UNION ALL
+    -- 20032 Knurrhahn Ines – Agile Coach/SAFe, Stuttgart
+    SELECT 20032, 'Scrum Master'                                 UNION ALL
+    SELECT 20032, 'Stuttgart'                                    UNION ALL
+    SELECT 20032, 'Bundesweit'                                   UNION ALL
+    -- 20033 Schlenker Maximilian – AWS Solutions Architect, Remote/Bundesweit
+    SELECT 20033, 'AWS'                                          UNION ALL
+    SELECT 20033, 'Kubernetes'                                   UNION ALL
+    SELECT 20033, 'Cloud Architect'                              UNION ALL
+    SELECT 20033, 'Remote'                                       UNION ALL
+    SELECT 20033, 'Bundesweit'                                   UNION ALL
+    -- 20034 Quecke Claudia – DB-Expertin PostgreSQL/Oracle, Hamburg
+    SELECT 20034, 'Data Engineering'                             UNION ALL
+    SELECT 20034, 'Data Engineer'                                UNION ALL
+    SELECT 20034, 'Hamburg'                                      UNION ALL
+    SELECT 20034, 'Remote'                                       UNION ALL
+    -- 20035 Drüsenkamp Oliver – Integration Architect MuleSoft, Köln
+    SELECT 20035, 'Java'                                         UNION ALL
+    SELECT 20035, 'Spring Boot'                                  UNION ALL
+    SELECT 20035, 'Software-Architekt'                           UNION ALL
+    SELECT 20035, 'Köln'                                         UNION ALL
+    SELECT 20035, 'Remote'                                       UNION ALL
+    -- 20036 Pürzelkopf Nina – Test Automation Cypress/Playwright, München
+    SELECT 20036, 'Senior Developer'                             UNION ALL
+    SELECT 20036, 'München'                                      UNION ALL
+    SELECT 20036, 'Remote'                                       UNION ALL
+    -- 20037 Kummerbund Robert – Platform Engineer/DevOps, Frankfurt
+    SELECT 20037, 'Kubernetes'                                   UNION ALL
+    SELECT 20037, 'DevOps'                                       UNION ALL
+    SELECT 20037, 'Go'                                           UNION ALL
+    SELECT 20037, 'DevOps Engineer'                              UNION ALL
+    SELECT 20037, 'Frankfurt'                                    UNION ALL
+    SELECT 20037, 'Remote'                                       UNION ALL
+    -- 20038 Grötstück Bianca – Vue.js/Nuxt.js Frontend, Bundesweit (KONTAKTSPERRE)
+    SELECT 20038, 'Vue.js'                                       UNION ALL
+    SELECT 20038, 'TypeScript'                                   UNION ALL
+    SELECT 20038, 'Senior Developer'                             UNION ALL
+    SELECT 20038, 'Bundesweit'                                   UNION ALL
+    -- 20039 Systemkleister Sebastian – Java/Spring Cloud Event-Driven, Frankfurt
+    SELECT 20039, 'Java'                                         UNION ALL
+    SELECT 20039, 'Spring Boot'                                  UNION ALL
+    SELECT 20039, 'Kubernetes'                                   UNION ALL
+    SELECT 20039, 'Docker'                                       UNION ALL
+    SELECT 20039, 'Senior Developer'                             UNION ALL
+    SELECT 20039, 'Frankfurt'                                    UNION ALL
+    SELECT 20039, 'Remote'                                       UNION ALL
+    -- 20040 Plinkerwald Franziska – Data Analyst BI, Berlin
+    SELECT 20040, 'Python'                                       UNION ALL
+    SELECT 20040, 'Data Engineering'                             UNION ALL
+    SELECT 20040, 'Data Engineer'                                UNION ALL
+    SELECT 20040, 'Berlin'                                       UNION ALL
+    SELECT 20040, 'Remote'                                       UNION ALL
+    -- 20041 Knollenbart Hannes – CISO-Berater/Security Architekt, München
+    SELECT 20041, 'Security'                                     UNION ALL
+    SELECT 20041, 'Software-Architekt'                           UNION ALL
+    SELECT 20041, 'München'                                      UNION ALL
+    SELECT 20041, 'Bundesweit'                                   UNION ALL
+    -- 20042 Zickzackbein Kathrin – Embedded C/C++ Automotive, Frankfurt-nah
+    SELECT 20042, 'Security'                                     UNION ALL
+    SELECT 20042, 'Senior Developer'                             UNION ALL
+    SELECT 20042, 'Frankfurt'                                    UNION ALL
+    SELECT 20042, 'Bundesweit'                                   UNION ALL
+    -- 20043 Klingelbeutel Nikolaus – SAP MM/WM Berater, Bundesweit
+    SELECT 20043, 'SAP ABAP'                                     UNION ALL
+    SELECT 20043, 'Senior Developer'                             UNION ALL
+    SELECT 20043, 'Bundesweit'                                   UNION ALL
+    -- 20044 Flusenknecht Melissa – Kubernetes/OpenShift Platform, Bundesweit/Remote
+    SELECT 20044, 'Kubernetes'                                   UNION ALL
+    SELECT 20044, 'Docker'                                       UNION ALL
+    SELECT 20044, 'DevOps'                                       UNION ALL
+    SELECT 20044, 'DevOps Engineer'                              UNION ALL
+    SELECT 20044, 'Remote'                                       UNION ALL
+    SELECT 20044, 'Bundesweit'                                   UNION ALL
+    -- 20045 Grummelkopf Christian – TypeScript/Node.js Backend, Berlin
+    SELECT 20045, 'TypeScript'                                   UNION ALL
+    SELECT 20045, 'Senior Developer'                             UNION ALL
+    SELECT 20045, 'Berlin'                                       UNION ALL
+    SELECT 20045, 'Remote'                                       UNION ALL
+    -- 20046 Natterland Lena – React/TypeScript Junior-Mid, Hamburg
+    SELECT 20046, 'React'                                        UNION ALL
+    SELECT 20046, 'TypeScript'                                   UNION ALL
+    SELECT 20046, 'Hamburg'                                      UNION ALL
+    SELECT 20046, 'Remote'                                       UNION ALL
+    -- 20047 Quabbelkopf Bruno – SAP PM, Bundesweit (KONTAKTSPERRE)
+    SELECT 20047, 'SAP ABAP'                                     UNION ALL
+    SELECT 20047, 'Bundesweit'                                   UNION ALL
+    -- 20048 Muckelkopf Erika – Cyber Security Red/Blue Team, Remote/Bundesweit
+    SELECT 20048, 'Security'                                     UNION ALL
+    SELECT 20048, 'Senior Developer'                             UNION ALL
+    SELECT 20048, 'Remote'                                       UNION ALL
+    SELECT 20048, 'Bundesweit'                                   UNION ALL
+    -- 20049 Schlenkerbart Henrik – Microservices/API Gateway, München
+    SELECT 20049, 'Java'                                         UNION ALL
+    SELECT 20049, 'Kubernetes'                                   UNION ALL
+    SELECT 20049, 'Senior Developer'                             UNION ALL
+    SELECT 20049, 'München'                                      UNION ALL
+    SELECT 20049, 'Remote'                                       UNION ALL
+    -- 20050 Pfrübel Magdalena – Data Scientist Financial Analytics, Bundesweit
+    SELECT 20050, 'Python'                                       UNION ALL
+    SELECT 20050, 'Machine Learning'                             UNION ALL
+    SELECT 20050, 'ML Engineer'                                  UNION ALL
+    SELECT 20050, 'Bundesweit'                                   UNION ALL
+    SELECT 20050, 'Remote'
+) v
+JOIN tags t ON t.tagname = v.tagname;
+
+
+-- =============================================================================
 -- PROJEKTE (IDs 40001–40050)
 -- 40001–40025 → customer_id aus 30001–30025
 -- 40026–40050 → partner_id aus 10001–10025

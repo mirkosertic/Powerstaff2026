@@ -28,12 +28,9 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   die Funktionen zum Chat löschen und neuen Chat anlegen gehören nur zum Chat-Bereich.
   Eventuell wären diese Buttons besser in der linken Navi des Chat-Bereichs platziert, dort
   sind ja auch die Buttons zum Löschen eines einzelnen Chats. Vermutlich kann hier auch
-  ein BUtton für "Neuer Chat" angelegt werden; er soll  dann die gleiche Funktion haben
+  ein Button für "Neuer Chat" angelegt werden; er soll  dann die gleiche Funktion haben
   wie der Button in der Toolbar, also neuen Chat anlegen und ggf. mit dem selektierten
   Projekt verknüpfen.
-- [ ] In den Testdaten V200_dev_testdata.sql" sind zwar Tags vorhanden, allerdings sind diese
-  Tags keinem Freiberufler zugeordnet. Ich möchte, dass Für Freiberufler noch Tag-Zuordnungen 
-  ergänzt werden, jeweils Tags passend zu den Skills, Einsatzorten und Skills/Erfahrungen des Freiberuflers.
 - [ ] Ich benötige noch ein MCP Tool, welches in diesem Projekt verbunden ist, und die Abfrage von
   Profiltexten für eine Kodierung erlaubt. Die Eingabe ist die Kodierung eines Freiberuflers, die Ausgabe sind die
   gefundenen Profile mit Dateiname und Text. Das Tool ruft im Hintergrund ein anderes MCP Tool mit
@@ -50,8 +47,9 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   dynamischen Ressource, oder muss es ein Tool sein?
 - [ ] Ich möchte die Benutzerverwaltung um ein einfaches Rollenkonzept erweitern. Ein Benutzer kann
   Administrator sein, und nur wenn der aktuell angemeldete Benutzer Administrator ist, kann er
-  im Admin-Bereich die unterschiedlichen Funktionen nutzen. Für nicht-Admin Benutzer ist der
-  Admin bereich nicht sichtbar, und auch die Funktionen dürfen nicht genutzt werden.
+  im Admin-Bereich die unterschiedlichen Funktionen nutzen. Für nicht-Admin Benutzer ist im
+  Admin bereich nur die Benutzerverwaltung sichtbar, es wird allerdings nur der aktuelle Benutzer angezeigt,
+  und für diesen kann auch nur der Systemprompt bearbeitet werden.
 - [ ] Ich möchte aus Suchergebnissen für Freiberufler, Partner, Kunden oder Projekte
   oder aus der Profilsuche / Chat die Links zu den Freiberuflern auch in einem neuen
   Browser-Tab öffnen können. Dies würde die Navigation durch große Listen sehr erleichtern. Im
