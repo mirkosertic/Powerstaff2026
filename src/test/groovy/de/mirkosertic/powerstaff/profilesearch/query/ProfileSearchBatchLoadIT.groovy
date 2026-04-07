@@ -47,7 +47,7 @@ class ProfileSearchBatchLoadIT extends AbstractContainerBaseIT {
                 .update()
     }
 
-    private void cleanup(List<Long> freelancerIds, List<Long> tagIds) {
+    private void cleanupTestData(List<Long> freelancerIds, List<Long> tagIds) {
         if (freelancerIds) {
             jdbcClient.sql("DELETE FROM freelancer_tags WHERE freelancer_id IN (:ids)")
                     .param("ids", freelancerIds).update()
@@ -92,7 +92,7 @@ class ProfileSearchBatchLoadIT extends AbstractContainerBaseIT {
         }
 
         cleanup:
-        cleanup([id1, id2], [])
+        cleanupTestData([id1, id2], [])
     }
 
     def "findFreelancersByCodesInBatch ignoriert unbekannte Codes"() {
@@ -108,7 +108,7 @@ class ProfileSearchBatchLoadIT extends AbstractContainerBaseIT {
         !result.containsKey('BATCH-NONEXISTENT')
 
         cleanup:
-        cleanup([id1], [])
+        cleanupTestData([id1], [])
     }
 
     def "findFreelancersByCodesInBatch liefert contactForbidden korrekt"() {
@@ -122,7 +122,7 @@ class ProfileSearchBatchLoadIT extends AbstractContainerBaseIT {
         result['BATCH-FL-004'].contactForbidden
 
         cleanup:
-        cleanup([id1], [])
+        cleanupTestData([id1], [])
     }
 
     // ── findTagsByFreelancerIdsInBatch ───────────────────────────────────────
@@ -155,7 +155,7 @@ class ProfileSearchBatchLoadIT extends AbstractContainerBaseIT {
         tags*.type() as Set == ['SCHWERPUNKT', 'BRANCHE'] as Set
 
         cleanup:
-        cleanup([fId], [tagJavaId, tagKotlinId, tagSpringId])
+        cleanupTestData([fId], [tagJavaId, tagKotlinId, tagSpringId])
     }
 
     def "findTagsByFreelancerIdsInBatch gruppiert Tags korrekt nach Freiberufler"() {
@@ -178,7 +178,7 @@ class ProfileSearchBatchLoadIT extends AbstractContainerBaseIT {
         result[fId2]*.tagname() == ['Docker']
 
         cleanup:
-        cleanup([fId1, fId2], [tagId1, tagId2, tagId3])
+        cleanupTestData([fId1, fId2], [tagId1, tagId2, tagId3])
     }
 
     def "findTagsByFreelancerIdsInBatch liefert leere Eintraege fuer Freiberufler ohne Tags"() {
@@ -193,6 +193,6 @@ class ProfileSearchBatchLoadIT extends AbstractContainerBaseIT {
         result.isEmpty() || result[fId] == null || result[fId].isEmpty()
 
         cleanup:
-        cleanup([fId], [])
+        cleanupTestData([fId], [])
     }
 }
