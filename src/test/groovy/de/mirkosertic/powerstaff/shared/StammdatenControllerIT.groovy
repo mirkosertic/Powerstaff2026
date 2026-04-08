@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@WithMockUser
+@WithMockUser(roles = ["USER", "ADMIN"])
 class StammdatenControllerIT extends AbstractContainerBaseIT {
 
     @Autowired

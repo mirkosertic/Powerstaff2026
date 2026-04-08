@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -27,13 +28,28 @@ public class UserController {
         this.userCommandService = userCommandService;
     }
 
+    private static boolean isAdmin(final Authentication authentication) {
+        return authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
     // -------------------------------------------------------------------------
     // Liste
     // -------------------------------------------------------------------------
 
     @GetMapping
-    public String list(final Model model, @RequestParam(required = false) final String deleted) {
-        model.addAttribute("users", userQueryService.findAll());
+    public String list(final Model model, final Authentication authentication,
+                       @RequestParam(required = false) final String deleted) {
+        final boolean admin = isAdmin(authentication);
+        final List<UserView> users;
+        if (admin) {
+            users = userQueryService.findAll();
+        } else {
+            users = userQueryService.findByUsername(authentication.getName())
+                    .map(List::of).orElse(List.of());
+        }
+        model.addAttribute("users", users);
+        model.addAttribute("isAdmin", admin);
         model.addAttribute("activePage", "admin");
         if (deleted != null) {
             model.addAttribute("success", "Benutzer „" + deleted + " wurde erfolgreich gelöscht.");
@@ -42,7 +58,7 @@ public class UserController {
     }
 
     // -------------------------------------------------------------------------
-    // Neuanlage
+    // Neuanlage (nur Admin)
     // -------------------------------------------------------------------------
 
     @PostMapping
@@ -50,7 +66,13 @@ public class UserController {
                              @RequestParam final String password,
                              @RequestParam(defaultValue = "false") final boolean mustChangePassword,
                              @RequestParam(defaultValue = "false") final boolean enabled,
+                             @RequestParam(defaultValue = "false") final boolean admin,
+                             final Authentication authentication,
                              final RedirectAttributes redirectAttributes) {
+        if (!isAdmin(authentication)) {
+            redirectAttributes.addFlashAttribute("error", "Keine Berechtigung.");
+            return "redirect:/admin/benutzer";
+        }
         if (username == null || username.isBlank()) {
             redirectAttributes.addFlashAttribute("error", "Benutzername darf nicht leer sein.");
             return "redirect:/admin/benutzer";
@@ -63,12 +85,12 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", "Ein Benutzer mit diesem Namen existiert bereits.");
             return "redirect:/admin/benutzer";
         }
-        userCommandService.createUser(username.trim(), password, mustChangePassword, enabled);
+        userCommandService.createUser(username.trim(), password, mustChangePassword, enabled, admin);
         return "redirect:/admin/benutzer";
     }
 
     // -------------------------------------------------------------------------
-    // Bearbeiten (Flags + optionales Passwort-Reset)
+    // Bearbeiten (Flags + optionales Passwort-Reset, nur Admin)
     // -------------------------------------------------------------------------
 
     @PostMapping("/{username}")
@@ -78,6 +100,10 @@ public class UserController {
                              @RequestParam(required = false) final String newPassword,
                              final Authentication authentication,
                              final RedirectAttributes redirectAttributes) {
+        if (!isAdmin(authentication)) {
+            redirectAttributes.addFlashAttribute("error", "Keine Berechtigung.");
+            return "redirect:/admin/benutzer";
+        }
         if (userCommandService.findByUsername(username).isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Benutzer nicht gefunden.");
             return "redirect:/admin/benutzer";
@@ -94,13 +120,18 @@ public class UserController {
     }
 
     // -------------------------------------------------------------------------
-    // System-Prompt bearbeiten
+    // System-Prompt bearbeiten (Admin: beliebiger Benutzer; sonst: nur eigener)
     // -------------------------------------------------------------------------
 
     @PostMapping("/{username}/systemprompt")
     public String updateSystemPrompt(@PathVariable final String username,
                                      @RequestParam final String profileSearchSystemPrompt,
+                                     final Authentication authentication,
                                      final RedirectAttributes redirectAttributes) {
+        if (!isAdmin(authentication) && !authentication.getName().equals(username)) {
+            redirectAttributes.addFlashAttribute("error", "Keine Berechtigung.");
+            return "redirect:/admin/benutzer";
+        }
         if (userCommandService.findByUsername(username).isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Benutzer nicht gefunden.");
             return "redirect:/admin/benutzer";
@@ -111,13 +142,17 @@ public class UserController {
     }
 
     // -------------------------------------------------------------------------
-    // Löschen
+    // Löschen (nur Admin)
     // -------------------------------------------------------------------------
 
     @DeleteMapping("/{username}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable final String username,
                                                           final Authentication authentication) {
+        if (!isAdmin(authentication)) {
+            return ResponseEntity.status(403)
+                    .body(Map.of("ok", false, "error", "Keine Berechtigung."));
+        }
         if (authentication != null && authentication.getName().equals(username)) {
             return ResponseEntity.badRequest()
                     .body(Map.of("ok", false, "error", "Sie können sich nicht selbst löschen."));

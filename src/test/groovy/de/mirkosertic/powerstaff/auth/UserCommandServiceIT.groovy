@@ -34,7 +34,7 @@ class UserCommandServiceIT extends AbstractContainerBaseIT {
 
     def "createUser legt einen neuen Benutzer an und er ist per findByUsername auffindbar"() {
         when: "ein neuer Benutzer angelegt wird"
-        commandService.createUser("cmd_new_user", "passwort123", true, true)
+        commandService.createUser("cmd_new_user", "passwort123", true, true, false)
         createdUsernames.add("cmd_new_user")
 
         then: "der Benutzer ist per findByUsername auffindbar"
@@ -47,7 +47,7 @@ class UserCommandServiceIT extends AbstractContainerBaseIT {
 
     def "createUser speichert Passwort als BCrypt-Hash"() {
         when: "ein Benutzer mit Klartext-Passwort angelegt wird"
-        commandService.createUser("cmd_hash_user", "geheimesPasswort", false, true)
+        commandService.createUser("cmd_hash_user", "geheimesPasswort", false, true, false)
         createdUsernames.add("cmd_hash_user")
 
         then: "das gespeicherte Passwort ist gehasht und stimmt mit dem Klartext ueberein"
@@ -58,7 +58,7 @@ class UserCommandServiceIT extends AbstractContainerBaseIT {
 
     def "updateUser aendert enabled und mustChangePassword korrekt"() {
         given: "ein Benutzer mit enabled=true und mustChangePassword=false"
-        commandService.createUser("cmd_update_user", "passwort123", false, true)
+        commandService.createUser("cmd_update_user", "passwort123", false, true, false)
         createdUsernames.add("cmd_update_user")
 
         when: "die Flags auf enabled=false und mustChangePassword=true geaendert werden"
@@ -73,7 +73,7 @@ class UserCommandServiceIT extends AbstractContainerBaseIT {
 
     def "resetPassword aendert das Passwort und setzt must_change_password auf false"() {
         given: "ein Benutzer"
-        commandService.createUser("cmd_reset_user", "altesPasswort", true, true)
+        commandService.createUser("cmd_reset_user", "altesPasswort", true, true, false)
         createdUsernames.add("cmd_reset_user")
 
         when: "das Passwort zurueckgesetzt wird"
@@ -90,7 +90,7 @@ class UserCommandServiceIT extends AbstractContainerBaseIT {
 
     def "deleteUser entfernt den Benutzer vollstaendig"() {
         given: "ein existierender Benutzer"
-        commandService.createUser("cmd_del_user", "passwort123", false, true)
+        commandService.createUser("cmd_del_user", "passwort123", false, true, false)
 
         when: "der Benutzer geloescht wird"
         commandService.deleteUser("cmd_del_user")

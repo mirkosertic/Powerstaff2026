@@ -53,27 +53,27 @@ class UserControllerIT extends AbstractContainerBaseIT {
 
         // Standard-Stubs
         when(userQueryService.findAll()).thenReturn([
-                new UserView("admin", false, true, PsUser.DEFAULT_SYSTEM_PROMPT),
-                new UserView("sachbearbeiter1", true, true, PsUser.DEFAULT_SYSTEM_PROMPT)
+                new UserView("admin", false, true, PsUser.DEFAULT_SYSTEM_PROMPT, true),
+                new UserView("sachbearbeiter1", true, true, PsUser.DEFAULT_SYSTEM_PROMPT, false)
         ])
         when(userQueryService.findByUsername("admin"))
-                .thenReturn(Optional.of(new UserView("admin", false, true, PsUser.DEFAULT_SYSTEM_PROMPT)))
+                .thenReturn(Optional.of(new UserView("admin", false, true, PsUser.DEFAULT_SYSTEM_PROMPT, true)))
         when(userQueryService.findByUsername("sachbearbeiter1"))
-                .thenReturn(Optional.of(new UserView("sachbearbeiter1", true, true, PsUser.DEFAULT_SYSTEM_PROMPT)))
+                .thenReturn(Optional.of(new UserView("sachbearbeiter1", true, true, PsUser.DEFAULT_SYSTEM_PROMPT, false)))
         when(userQueryService.findByUsername("nicht_vorhanden"))
                 .thenReturn(Optional.empty())
 
         def adminUser = new PsUser("admin",
                 '{bcrypt}$2a$10$abcdefghijklmnopqrstuuVGlGNBdm6/GQ4DV.jMRfF4wrfHOFuq6',
-                false, true, PsUser.DEFAULT_SYSTEM_PROMPT)
+                false, true, PsUser.DEFAULT_SYSTEM_PROMPT, true)
         when(userCommandService.findByUsername("admin")).thenReturn(Optional.of(adminUser))
         when(userCommandService.findByUsername("sachbearbeiter1"))
                 .thenReturn(Optional.of(new PsUser("sachbearbeiter1",
                         '{bcrypt}$2a$10$abcdefghijklmnopqrstuuVGlGNBdm6/GQ4DV.jMRfF4wrfHOFuq6',
-                        true, true, PsUser.DEFAULT_SYSTEM_PROMPT)))
+                        true, true, PsUser.DEFAULT_SYSTEM_PROMPT, false)))
         when(userCommandService.findByUsername("nicht_vorhanden")).thenReturn(Optional.empty())
 
-        doNothing().when(userCommandService).createUser(anyString(), anyString(), anyBoolean(), anyBoolean())
+        doNothing().when(userCommandService).createUser(anyString(), anyString(), anyBoolean(), anyBoolean(), anyBoolean())
         doNothing().when(userCommandService).updateUser(anyString(), anyBoolean(), anyBoolean())
         doNothing().when(userCommandService).resetPassword(anyString(), anyString())
         doNothing().when(userCommandService).deleteUser(anyString())
@@ -97,7 +97,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
 
     def "GET /admin/benutzer mit Login liefert HTTP 200 und rendert das Template"() {
         when:
-        def result = mockMvc.perform(get("/admin/benutzer").with(user("admin")))
+        def result = mockMvc.perform(get("/admin/benutzer").with(user("admin").roles("USER", "ADMIN")))
 
         then:
         result.andExpect(status().isOk())
@@ -106,7 +106,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
 
     def "GET /admin/benutzer befuellt das Model mit users"() {
         when:
-        def result = mockMvc.perform(get("/admin/benutzer").with(user("admin")))
+        def result = mockMvc.perform(get("/admin/benutzer").with(user("admin").roles("USER", "ADMIN")))
 
         then:
         result.andExpect(status().isOk())
@@ -115,7 +115,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
 
     def "GET /admin/benutzer rendert HTML ohne Exception"() {
         when:
-        def result = mockMvc.perform(get("/admin/benutzer").with(user("admin")))
+        def result = mockMvc.perform(get("/admin/benutzer").with(user("admin").roles("USER", "ADMIN")))
 
         then:
         result.andExpect(status().isOk())
@@ -136,7 +136,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/benutzer")
                         .with(csrf())
-                        .with(user("admin"))
+                        .with(user("admin").roles("USER", "ADMIN"))
                         .param("username", "neuer_user")
                         .param("password", "sicheresPasswort1")
                         .param("enabled", "true"))
@@ -151,7 +151,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/benutzer")
                         .with(csrf())
-                        .with(user("admin"))
+                        .with(user("admin").roles("USER", "ADMIN"))
                         .param("username", "neuer_user")
                         .param("password", "kurz"))
 
@@ -165,7 +165,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/benutzer")
                         .with(csrf())
-                        .with(user("admin"))
+                        .with(user("admin").roles("USER", "ADMIN"))
                         .param("username", "admin")
                         .param("password", "passwort123"))
 
@@ -183,7 +183,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/benutzer/sachbearbeiter1")
                         .with(csrf())
-                        .with(user("admin"))
+                        .with(user("admin").roles("USER", "ADMIN"))
                         .param("enabled", "true")
                         .param("mustChangePassword", "false"))
 
@@ -197,7 +197,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/benutzer/sachbearbeiter1")
                         .with(csrf())
-                        .with(user("admin"))
+                        .with(user("admin").roles("USER", "ADMIN"))
                         .param("enabled", "true")
                         .param("mustChangePassword", "false")
                         .param("newPassword", "neuesPasswort1"))
@@ -212,7 +212,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/benutzer/nicht_vorhanden")
                         .with(csrf())
-                        .with(user("admin"))
+                        .with(user("admin").roles("USER", "ADMIN"))
                         .param("enabled", "true"))
 
         then:
@@ -229,7 +229,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 delete("/admin/benutzer/sachbearbeiter1")
                         .with(csrf())
-                        .with(user("admin")))
+                        .with(user("admin").roles("USER", "ADMIN")))
 
         then:
         result.andExpect(status().isOk())
@@ -242,7 +242,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 delete("/admin/benutzer/admin")
                         .with(csrf())
-                        .with(user("admin")))
+                        .with(user("admin").roles("USER", "ADMIN")))
 
         then:
         result.andExpect(status().is4xxClientError())
@@ -254,7 +254,7 @@ class UserControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 delete("/admin/benutzer/nicht_vorhanden")
                         .with(csrf())
-                        .with(user("admin")))
+                        .with(user("admin").roles("USER", "ADMIN")))
 
         then:
         result.andExpect(status().is4xxClientError())

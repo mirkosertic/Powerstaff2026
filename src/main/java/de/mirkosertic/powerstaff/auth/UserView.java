@@ -4,6 +4,7 @@ public record UserView(
         String username,
         boolean mustChangePassword,
         boolean enabled,
-        String profileSearchSystemPrompt
+        String profileSearchSystemPrompt,
+        boolean admin
 ) {
 }

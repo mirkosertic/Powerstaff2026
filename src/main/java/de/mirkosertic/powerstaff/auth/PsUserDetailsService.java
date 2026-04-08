@@ -19,11 +19,15 @@ public class PsUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         final PsUser user = repository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Benutzer nicht gefunden: " + username));
-        return User.builder()
+        final User.UserBuilder builder = User.builder()
                 .username(user.getUsername())
                 .password(user.getPasswordHash())
-                .disabled(!user.isEnabled())
-                .roles("USER")
-                .build();
+                .disabled(!user.isEnabled());
+        if (user.isAdmin()) {
+            builder.roles("USER", "ADMIN");
+        } else {
+            builder.roles("USER");
+        }
+        return builder.build();
     }
 }

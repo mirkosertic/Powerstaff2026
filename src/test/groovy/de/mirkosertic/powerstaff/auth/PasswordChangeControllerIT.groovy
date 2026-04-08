@@ -81,7 +81,7 @@ class PasswordChangeControllerIT extends AbstractContainerBaseIT {
 
     def "POST /passwort-aendern mit falschem altem Passwort zeigt Fehler (200)"() {
         given:
-        def psUser = new PsUser("testuser", "somehash", false, true, PsUser.DEFAULT_SYSTEM_PROMPT)
+        def psUser = new PsUser("testuser", "somehash", false, true, PsUser.DEFAULT_SYSTEM_PROMPT, false)
         when(psUserRepository.findById("testuser")).thenReturn(Optional.of(psUser))
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false)
 
@@ -101,7 +101,7 @@ class PasswordChangeControllerIT extends AbstractContainerBaseIT {
 
     def "POST /passwort-aendern mit korrektem Passwort leitet auf / weiter (302)"() {
         given:
-        def psUser = new PsUser("testuser", "hashed", false, true, PsUser.DEFAULT_SYSTEM_PROMPT)
+        def psUser = new PsUser("testuser", "hashed", false, true, PsUser.DEFAULT_SYSTEM_PROMPT, false)
         when(psUserRepository.findById("testuser")).thenReturn(Optional.of(psUser))
         when(passwordEncoder.matches("richtig123", "hashed")).thenReturn(true)
         when(passwordEncoder.encode("neuesPasswort1")).thenReturn("newerHash")

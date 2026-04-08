@@ -5,9 +5,15 @@
 -- =============================================================================
 
 -- Testbenutzer ({noop}testpass = Spring Security DelegatingPasswordEncoder-Format)
-INSERT INTO ps_user (username, password_hash, must_change_password, enabled)
-VALUES ('testuser', '{noop}testpass', FALSE, TRUE)
-ON DUPLICATE KEY UPDATE password_hash = '{noop}testpass', must_change_password = FALSE, enabled = TRUE;
+-- testuser ist Administrator (wird in E2E-Tests für Admin-Funktionen verwendet)
+INSERT INTO ps_user (username, password_hash, must_change_password, enabled, is_admin)
+VALUES ('testuser', '{noop}testpass', FALSE, TRUE, TRUE)
+ON DUPLICATE KEY UPDATE password_hash = '{noop}testpass', must_change_password = FALSE, enabled = TRUE, is_admin = TRUE;
+
+-- Nicht-Administrator-Testbenutzer (für Rollen-E2E-Tests)
+INSERT INTO ps_user (username, password_hash, must_change_password, enabled, is_admin)
+VALUES ('testuser-noadmin', '{noop}testpass', FALSE, TRUE, FALSE)
+ON DUPLICATE KEY UPDATE password_hash = '{noop}testpass', must_change_password = FALSE, enabled = TRUE, is_admin = FALSE;
 
 -- Historientypen
 INSERT IGNORE INTO historytype (description) VALUES

@@ -116,7 +116,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Historientypen-Seite mit forwardedHeader aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/historientypen")
-                        .with(user("testuser")))
+                        .with(user("testuser").roles("USER", "ADMIN")))
 
         then: "HTTP 200 und das Template wird fehlerfrei gerendert"
         result.andExpect(status().isOk())
@@ -127,7 +127,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Historientypen-Seite aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/historientypen")
-                        .with(user("testuser")))
+                        .with(user("testuser").roles("USER", "ADMIN")))
 
         then: "das Model enthaelt types und newType"
         result.andExpect(status().isOk())
@@ -139,7 +139,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/historientypen")
                         .with(csrf())
-                        .with(user("testuser"))
+                        .with(user("testuser").roles("USER", "ADMIN"))
                         .param("description", "Neuer Typ"))
 
         then: "ein Redirect auf /admin/historientypen erfolgt"
@@ -152,7 +152,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/historientypen/1")
                         .with(csrf())
-                        .with(user("testuser"))
+                        .with(user("testuser").roles("USER", "ADMIN"))
                         .param("description", "Aktualisierter Typ"))
 
         then: "ein Redirect auf /admin/historientypen erfolgt"
@@ -165,7 +165,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/historientypen/1/delete")
                         .with(csrf())
-                        .with(user("testuser")))
+                        .with(user("testuser").roles("USER", "ADMIN")))
 
         then: "ein Redirect auf /admin/historientypen erfolgt"
         result.andExpect(status().is3xxRedirection())
@@ -180,7 +180,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Positionsstatus-Seite aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/positionsstatus")
-                        .with(user("testuser")))
+                        .with(user("testuser").roles("USER", "ADMIN")))
 
         then: "HTTP 200 und das Template wird fehlerfrei gerendert"
         result.andExpect(status().isOk())
@@ -191,7 +191,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Positionsstatus-Seite aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/positionsstatus")
-                        .with(user("testuser")))
+                        .with(user("testuser").roles("USER", "ADMIN")))
 
         then: "das Model enthaelt statusList und newStatus"
         result.andExpect(status().isOk())
@@ -203,7 +203,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/positionsstatus")
                         .with(csrf())
-                        .with(user("testuser"))
+                        .with(user("testuser").roles("USER", "ADMIN"))
                         .param("description", "Im Gespraech")
                         .param("color", "#fef3c7")
                         .param("colorText", "#92400e"))
@@ -218,7 +218,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/positionsstatus/1")
                         .with(csrf())
-                        .with(user("testuser"))
+                        .with(user("testuser").roles("USER", "ADMIN"))
                         .param("description", "Besetzt")
                         .param("color", "#dbeafe")
                         .param("colorText", "#1e40af"))
@@ -236,7 +236,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Tags-Seite aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/tags")
-                        .with(user("testuser")))
+                        .with(user("testuser").roles("USER", "ADMIN")))
 
         then: "HTTP 200 und das Template wird fehlerfrei gerendert"
         result.andExpect(status().isOk())
@@ -247,7 +247,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         when: "die Tags-Seite aufgerufen wird"
         def result = mockMvc.perform(
                 get("/admin/tags")
-                        .with(user("testuser")))
+                        .with(user("testuser").roles("USER", "ADMIN")))
 
         then: "das Model enthaelt tagsByType, tagTypes und newTag"
         result.andExpect(status().isOk())
@@ -259,7 +259,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/tags")
                         .with(csrf())
-                        .with(user("testuser"))
+                        .with(user("testuser").roles("USER", "ADMIN"))
                         .param("tagname", "Python")
                         .param("tagType", "SCHWERPUNKT"))
 
@@ -273,7 +273,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 post("/admin/tags/1")
                         .with(csrf())
-                        .with(user("testuser"))
+                        .with(user("testuser").roles("USER", "ADMIN"))
                         .param("tagname", "Python aktualisiert"))
 
         then: "ein Redirect auf /admin/tags erfolgt"
@@ -286,7 +286,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
         def result = mockMvc.perform(
                 delete("/admin/tags/1")
                         .with(csrf())
-                        .with(user("testuser")))
+                        .with(user("testuser").roles("USER", "ADMIN")))
 
         then: "HTTP 200 und JSON-Antwort ok:true"
         result.andExpect(status().isOk())
@@ -300,7 +300,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
 
     def "GET /admin/historientypen rendert HTML ohne Exception"() {
         when:
-        def result = mockMvc.perform(get("/admin/historientypen").with(user("testuser")))
+        def result = mockMvc.perform(get("/admin/historientypen").with(user("testuser").roles("USER", "ADMIN")))
 
         then:
         result.andExpect(status().isOk())
@@ -311,7 +311,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
 
     def "GET /admin/positionsstatus rendert HTML ohne Exception"() {
         when:
-        def result = mockMvc.perform(get("/admin/positionsstatus").with(user("testuser")))
+        def result = mockMvc.perform(get("/admin/positionsstatus").with(user("testuser").roles("USER", "ADMIN")))
 
         then:
         result.andExpect(status().isOk())
@@ -322,7 +322,7 @@ class StammdatenControllerIT extends AbstractContainerBaseIT {
 
     def "GET /admin/tags rendert HTML ohne Exception"() {
         when:
-        def result = mockMvc.perform(get("/admin/tags").with(user("testuser")))
+        def result = mockMvc.perform(get("/admin/tags").with(user("testuser").roles("USER", "ADMIN")))
 
         then:
         result.andExpect(status().isOk())

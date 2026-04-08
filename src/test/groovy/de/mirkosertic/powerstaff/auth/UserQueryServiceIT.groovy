@@ -28,9 +28,9 @@ class UserQueryServiceIT extends AbstractContainerBaseIT {
 
     def "findAll liefert alle angelegten Benutzer sortiert nach username ASC"() {
         given: "drei Benutzer mit unterschiedlichen Benutzernamen"
-        commandService.createUser("zzz_user", "passwort123", false, true)
-        commandService.createUser("aaa_user", "passwort123", false, true)
-        commandService.createUser("mmm_user", "passwort123", false, true)
+        commandService.createUser("zzz_user", "passwort123", false, true, false)
+        commandService.createUser("aaa_user", "passwort123", false, true, false)
+        commandService.createUser("mmm_user", "passwort123", false, true, false)
         createdUsernames.addAll(["zzz_user", "aaa_user", "mmm_user"])
 
         when: "alle Benutzer abgerufen werden"
@@ -48,7 +48,7 @@ class UserQueryServiceIT extends AbstractContainerBaseIT {
 
     def "findByUsername liefert korrekte UserView fuer existierenden Benutzer"() {
         given: "ein Benutzer mit mustChangePassword=true und enabled=false"
-        commandService.createUser("query_test_user", "passwort123", true, false)
+        commandService.createUser("query_test_user", "passwort123", true, false, false)
         createdUsernames.add("query_test_user")
 
         when: "der Benutzer per Username gesucht wird"
@@ -73,7 +73,7 @@ class UserQueryServiceIT extends AbstractContainerBaseIT {
 
     def "findAll liefert alle Felder der UserView korrekt befuellt"() {
         given: "ein Benutzer mit enabled=true und mustChangePassword=true"
-        commandService.createUser("view_fields_user", "passwort123", true, true)
+        commandService.createUser("view_fields_user", "passwort123", true, true, false)
         createdUsernames.add("view_fields_user")
 
         when: "der Benutzer ueber findAll gesucht wird"

@@ -17,14 +17,14 @@ public class UserQueryService {
 
     public List<UserView> findAll() {
         return jdbcClient
-                .sql("SELECT username, must_change_password, enabled, profile_search_system_prompt FROM ps_user ORDER BY username ASC")
+                .sql("SELECT username, must_change_password, enabled, profile_search_system_prompt, is_admin AS admin FROM ps_user ORDER BY username ASC")
                 .query(UserView.class)
                 .list();
     }
 
     public Optional<UserView> findByUsername(final String username) {
         return jdbcClient
-                .sql("SELECT username, must_change_password, enabled, profile_search_system_prompt FROM ps_user WHERE username = :username")
+                .sql("SELECT username, must_change_password, enabled, profile_search_system_prompt, is_admin AS admin FROM ps_user WHERE username = :username")
                 .param("username", username)
                 .query(UserView.class)
                 .optional();

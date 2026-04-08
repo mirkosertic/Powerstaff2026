@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{fragments/layout :: layout('Benutzerverwaltung', 'admin', ~{::body})}">
 <body>
 
@@ -16,9 +17,9 @@
 
     <!-- Admin-Navigation -->
     <div class="btn-row mb-md">
-      <a class="btn btn-ghost" th:href="@{/admin/historientypen}">Historientypen</a>
-      <a class="btn btn-ghost" th:href="@{/admin/positionsstatus}">Positionsstatus</a>
-      <a class="btn btn-ghost" th:href="@{/admin/tags}">Tags</a>
+      <a th:if="${isAdmin}" class="btn btn-ghost" th:href="@{/admin/historientypen}">Historientypen</a>
+      <a th:if="${isAdmin}" class="btn btn-ghost" th:href="@{/admin/positionsstatus}">Positionsstatus</a>
+      <a th:if="${isAdmin}" class="btn btn-ghost" th:href="@{/admin/tags}">Tags</a>
       <a class="btn btn-pri" th:href="@{/admin/benutzer}">Benutzer</a>
     </div>
 
@@ -39,6 +40,7 @@
                 <th>Benutzername</th>
                 <th>Aktiv</th>
                 <th>Passwort-Reset erforderlich</th>
+                <th>Administrator</th>
                 <th>Aktionen</th>
               </tr>
             </thead>
@@ -55,7 +57,11 @@
                   <span th:unless="${u.mustChangePassword}" style="color:var(--text-3)">Nein</span>
                 </td>
                 <td>
-                  <button class="ibtn" type="button"
+                  <span th:if="${u.admin}" class="chip-add">&#x2714; Admin</span>
+                  <span th:unless="${u.admin}" style="color:var(--text-3)">Nein</span>
+                </td>
+                <td>
+                  <button th:if="${isAdmin}" class="ibtn" type="button"
                           th:attr="data-username=${u.username},
                                    data-enabled=${u.enabled},
                                    data-must-change=${u.mustChangePassword},
@@ -68,7 +74,7 @@
                                    data-testid='btn-edit-prompt-' + ${u.username}"
                           data-action="edit-prompt"
                           title="Systemprompt bearbeiten">&#x1F4AC;</button>
-                  <button class="ibtn del" type="button"
+                  <button th:if="${isAdmin}" class="ibtn del" type="button"
                           th:attr="data-username=${u.username},
                                    data-testid='btn-delete-user-' + ${u.username}"
                           data-action="delete-user"
@@ -76,13 +82,13 @@
                 </td>
               </tr>
               <tr th:if="${#lists.isEmpty(users)}">
-                <td colspan="4" class="td-empty">Keine Benutzer vorhanden.</td>
+                <td colspan="5" class="td-empty">Keine Benutzer vorhanden.</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="mt-md">
+        <div th:if="${isAdmin}" class="mt-md">
           <button class="btn btn-ghost" type="button"
                   data-testid="btn-new-user"
                   onclick="openModal('modal-new-user')">
@@ -129,6 +135,12 @@
                 Passwort-Reset beim ersten Login erzwingen
               </label>
             </div>
+          </div>
+          <div class="fg mb">
+            <label class="cbfield">
+              <input type="checkbox" name="admin" value="true">
+              Administrator (darf alle Admin-Funktionen nutzen)
+            </label>
           </div>
         </form>
       </div>
