@@ -21,6 +21,14 @@
     <td th:text="${r.availabilityAsDate() != null} ? ${#temporals.format(r.availabilityAsDate(), 'dd.MM.yyyy')} : ''"></td>
     <td th:text="${r.salaryPerDayLong() != null} ? ${r.salaryPerDayLong()} + ' €' : ''"></td>
     <td th:text="${r.code()}"></td>
+    <td>
+      <span th:each="tag : ${r.tags()}"
+            class="chip chip-xs"
+            th:text="${tag.tagname()}"
+            th:attr="data-testid='search-tag-' + ${tag.id()}, data-tag-id=${tag.id()}"
+            onclick="navigateToTagSearch(event, this)">
+      </span>
+    </td>
   </tr>
 </div>
 
