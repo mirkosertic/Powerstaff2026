@@ -17,15 +17,18 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-  #lucene-mcp:
-  #  image: mirkosertic42/mcpluceneserver
-  #  container_name: powerstaff-lucenemcp
-  #  ports:
-  #    - "11000:9000"
-  #  volumes:
-  #    - ./lucene_mcp_data:/userdata:rw
-  #  environment:
-  #    SPRING_PROFILES_ACTIVE: "deployed,vectorsearch"
+  lucene-mcp:
+    image: mirkosertic42/mcpluceneserver:main
+    container_name: powerstaff-lucenemcp
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./lucene_mcp_data:/userdata:rw
+    environment:
+      SPRING_PROFILES_ACTIVE: "deployed"
+      LUCENE_TOOLS_INCLUDE: "search,semantic,debug,getDocumentDetails"
+      VECTOR_MODEL: "e5-base"
+
 
   #ollama:
   #  image: ollama/ollama

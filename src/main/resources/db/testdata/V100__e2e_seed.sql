@@ -141,3 +141,9 @@ VALUES
      '400 EUR/Tag', 'E2E Testposition Kontaktsperre',
      NOW(), 'testuser', NOW(), 'testuser')
 ON DUPLICATE KEY UPDATE db_version = db_version;
+
+-- Tag-Zuordnungen für E2E-Tests (Freelancer 1001 hat Java + München)
+INSERT IGNORE INTO freelancer_tags (freelancer_id, tag_id)
+VALUES
+    (1001, (SELECT id FROM tags WHERE tagname = 'Java' LIMIT 1)),
+    (1001, (SELECT id FROM tags WHERE tagname = 'München' LIMIT 1));

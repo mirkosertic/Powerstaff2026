@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -84,11 +83,18 @@ public class ProfileSearchController {
     }
 
     @GetMapping("/search")
-    public String search(@ModelAttribute final ProfileSearchCriteria criteria,
+    public String search(@RequestParam(required = false) final String searchTerm,
+                         @RequestParam(required = false) final Long salaryPerDayFrom,
+                         @RequestParam(required = false) final Long salaryPerDayTo,
+                         @RequestParam(required = false) final String tagIds,
+                         @RequestParam(required = false) final String sortField,
+                         @RequestParam(required = false) final String sortDir,
+                         @RequestParam(required = false) final Boolean semanticSearch,
                          @RequestParam(defaultValue = "0") final int offset,
                          final Principal principal,
                          final Model model,
                          final HttpServletResponse response) {
+        final ProfileSearchCriteria criteria = new ProfileSearchCriteria(searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch);
         final boolean empty = (criteria.searchTerm() == null || criteria.searchTerm().isBlank())
                 && criteria.salaryPerDayFrom() == null
                 && criteria.salaryPerDayTo() == null

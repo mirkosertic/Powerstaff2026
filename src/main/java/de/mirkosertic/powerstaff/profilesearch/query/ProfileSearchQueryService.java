@@ -25,7 +25,8 @@ public class ProfileSearchQueryService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProfileSearchQueryService.class);
 
-    static final String MCP_SEARCH_TOOL_NAME = "search";
+    static final String MCP_EXTENDED_SEARCH_TOOL_NAME = "extendedSearch";
+    static final String MCP_SEMANTIC_SEARCH_TOOL_NAME = "semanticSearch";
 
     private final JdbcClient jdbcClient;
     private final List<McpSyncClient> mcpClients;
@@ -171,22 +172,22 @@ public class ProfileSearchQueryService {
     public List<ProfileSearchResult> searchFreelancers(final ProfileSearchCriteria criteria, final int offset, final int limit) {
         final Optional<McpSyncClient> mcpClient = findMcpClientWithSearchTool();
         if (mcpClient.isPresent()) {
-            logger.debug("MCP '{}'-Tool gefunden – delegiere Suche an MCP-Server", MCP_SEARCH_TOOL_NAME);
+            logger.debug("MCP Tool gefunden – delegiere Suche an MCP-Server");
             return searchFreelancersViaMcp(mcpClient.get(), criteria, offset, limit);
         }
-        logger.debug("Kein MCP '{}'-Tool verfügbar – Suche über DB", MCP_SEARCH_TOOL_NAME);
+        logger.debug("Kein MCP Tools verfügbar – Suche über DB");
         return searchFreelancersViaDb(criteria, offset, limit);
     }
 
     // ── MCP-Pfad ──────────────────────────────────────────────────────────────
 
-    /** Sucht den ersten MCP-Client, der ein Tool mit dem Namen {@value #MCP_SEARCH_TOOL_NAME} anbietet. */
+    /** Sucht den ersten MCP-Client, der ein Tool mit dem Namen {@value #MCP_EXTENDED_SEARCH_TOOL_NAME} anbietet. */
     private Optional<McpSyncClient> findMcpClientWithSearchTool() {
         for (final McpSyncClient client : mcpClients) {
             try {
                 final McpSchema.ListToolsResult result = client.listTools();
                 final boolean hasSearch = result.tools().stream()
-                        .anyMatch(t -> MCP_SEARCH_TOOL_NAME.equals(t.name()));
+                        .anyMatch(t -> MCP_EXTENDED_SEARCH_TOOL_NAME.equals(t.name()) || MCP_SEMANTIC_SEARCH_TOOL_NAME.equals(t.name()));
                 if (hasSearch) {
                     return Optional.of(client);
                 }
@@ -202,13 +203,21 @@ public class ProfileSearchQueryService {
                                                                final ProfileSearchCriteria criteria,
                                                                final int offset, final int limit) {
         final Map<String, Object> arguments = buildMcpSearchArguments(criteria, offset, limit);
-        final McpSchema.CallToolResult toolResult = client.callTool(
-                new McpSchema.CallToolRequest(MCP_SEARCH_TOOL_NAME, arguments));
+        final McpSchema.CallToolResult toolResult;
+        if (criteria.isSemanticSearchActive()) {
+            logger.info("Performing semantic search via MCP-Server");
+            toolResult = client.callTool(
+                    new McpSchema.CallToolRequest(MCP_SEMANTIC_SEARCH_TOOL_NAME, arguments));
+        } else {
+            logger.info("Performing extended search via MCP-Server");
+            toolResult = client.callTool(
+                    new McpSchema.CallToolRequest(MCP_EXTENDED_SEARCH_TOOL_NAME, arguments));
+        }
         if (Boolean.TRUE.equals(toolResult.isError())) {
-            logger.error("MCP '{}'-Tool meldete einen Fehler: {}", MCP_SEARCH_TOOL_NAME, toolResult.content());
+            logger.error("MCP '{}'-Tool meldete einen Fehler: {}", MCP_EXTENDED_SEARCH_TOOL_NAME, toolResult.content());
             return List.of();
         }
-        return parseMcpSearchResult(toolResult);
+        return parseMcpSearchResult(toolResult, criteria.isSemanticSearchActive());
     }
 
     /**
@@ -221,15 +230,18 @@ public class ProfileSearchQueryService {
         arguments.put("query", criteria.searchTerm());
         arguments.put("sortBy", "_score");
         arguments.put("pageSize", limit);
-        arguments.put("page", 0); //
-        arguments.put("useVectorSearch", criteria.semanticSearch() != null ? criteria.semanticSearch() : false);
+        // TODO: Compute right page here...
+        arguments.put("page", 0);
+        if (criteria.isSemanticSearchActive()) {
+            arguments.put("similarityThreshold", 0.75f);
+        }
         return arguments;
     }
 
     /**
      * Konvertiert das Ergebnis des MCP-Search-Tools in eine Liste von {@link ProfileSearchResult}.
      */
-    private List<ProfileSearchResult> parseMcpSearchResult(final McpSchema.CallToolResult toolResult) {
+    private List<ProfileSearchResult> parseMcpSearchResult(final McpSchema.CallToolResult toolResult, boolean isSemanticSearch) {
         record Passage(
                 String text,
                 double score,
@@ -347,14 +359,14 @@ public class ProfileSearchQueryService {
             final FreelancerBatchRow freelancer = freelancerByCode.get(entry.code());
             if (freelancer == null) {
                 logger.warn("Kein Freiberufler mit Code '{}' gefunden – MCP-Treffer wird ohne DB-Daten übernommen", entry.code());
-                results.add(new ProfileSearchResult(null, entry.code(), null, null, null, null, null, false, List.of(), entry.serp()));
+                results.add(new ProfileSearchResult(null, entry.code(), null, null, null, null, null, false, List.of(), entry.serp(), !isSemanticSearch));
             } else {
                 final List<TagView> tags = tagsByFreelancerId.getOrDefault(freelancer.id(), List.of());
                 results.add(new ProfileSearchResult(
                         freelancer.id(), entry.code(), freelancer.name1(), freelancer.name2(),
                         freelancer.lastContactDate(), freelancer.salaryPerDayLong(),
                         freelancer.availabilityAsDate(), freelancer.contactForbidden(),
-                        tags, entry.serp()));
+                        tags, entry.serp(), !isSemanticSearch));
             }
         }
         return results;
@@ -423,21 +435,27 @@ public class ProfileSearchQueryService {
                 ORDER BY %s
                 LIMIT :limit OFFSET :offset
                 """, orderBy);
-        return jdbcClient.sql(sql)
+        final List<Row> rows = jdbcClient.sql(sql)
                 .param("limit", limit)
                 .param("offset", offset)
                 .query(Row.class)
-                .list()
-                .stream()
+                .list();
+
+        // Batch-Load Tags für alle gefundenen Freiberufler (analog zum MCP-Pfad)
+        final List<Long> freelancerIds = rows.stream().map(Row::id).toList();
+        final Map<Long, List<TagView>> tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);
+
+        return rows.stream()
                 .map(r -> {
                     final String term = criteria.searchTerm() != null && !criteria.searchTerm().isBlank()
                             ? " – Suche: **" + criteria.searchTerm() + "**"
                             : "";
                     final String serp = "**" + r.name1() + " " + r.name2() + "**" + term;
+                    final List<TagView> tags = tagsByFreelancerId.getOrDefault(r.id(), List.of());
                     return new ProfileSearchResult(
                             r.id(), r.code(), r.name1(), r.name2(),
                             r.lastContactDate(), r.salaryPerDayLong(),
-                            r.availabilityAsDate(), r.contactForbidden(), List.of(), serp);
+                            r.availabilityAsDate(), r.contactForbidden(), tags, serp, true);
                 })
                 .toList();
     }

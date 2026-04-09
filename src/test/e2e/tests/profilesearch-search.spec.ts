@@ -195,4 +195,60 @@ test.describe('Profilsuche – Klassische Suche', () => {
         await expect(page.locator('a:has-text("Zur Profilsuche")')).toBeVisible();
     });
 
+    // =========================================================================
+    // Szenario 8: Tag-Navigation – Profilsuche → Tag-Klick → Freiberufler-Liste → Zurück
+    // =========================================================================
+
+    test('Tag in Suchergebnis klicken navigiert zu Freiberufler-Suche mit tagId-Filter und zurück zur Profilsuche', async ({ page }) => {
+        // Suchseite mit Ergebnissen laden – Freelancer 1001 (Mustermann) hat Tags "Java" + "München" (siehe V100__e2e_seed.sql)
+        await page.goto('/profilesearch/search?searchTerm=Mustermann');
+        await expect(page.locator('[data-testid="results-table"]')).toBeVisible();
+
+        // Zeile für Freelancer 1001 finden
+        const row1001 = page.locator('[data-testid="result-row-1001"]');
+        await expect(row1001).toBeVisible();
+
+        // Tag "Java" in der Ergebniszeile klicken (Tag-Chips haben data-testid="result-tag-{id}")
+        // Wir wissen nicht die exakte Tag-ID, also suchen wir nach dem Text "Java"
+        const javaTagChip = row1001.locator('.chip.chip-xs').filter({ hasText: 'Java' });
+        await expect(javaTagChip).toBeVisible();
+
+        // Tag-ID aus dem data-testid extrahieren
+        const tagTestId = await javaTagChip.getAttribute('data-testid');
+        const tagId = tagTestId?.match(/result-tag-(\d+)/)?.[1];
+        expect(tagId).toBeTruthy();
+
+        // Auf Tag-Chip klicken → navigiert zu /freelancer/search?tagId=...
+        await javaTagChip.click();
+
+        // URL sollte /freelancer/search?tagId=X sein (returnTo wird vom JS im Template hinzugefügt)
+        await page.waitForURL(/\/freelancer\/search\?tagId=\d+/, { timeout: 10_000 });
+        await expect(page).toHaveURL(new RegExp(`tagId=${tagId}`));
+
+        // Ergebnistabelle auf Freelancer-Suchseite ist vorhanden
+        await expect(page.locator('[data-testid="results-table"]')).toBeVisible();
+
+        // Mindestens ein Ergebnis vorhanden (Freelancer 1001 mit Tag "Java")
+        const resultRows = page.locator('[data-testid="results-table"] tbody tr');
+        await expect(resultRows.first()).toBeVisible();
+        const rowCount = await resultRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Prüfen, dass Freelancer 1001 in den Ergebnissen ist
+        await expect(page.locator('[data-testid="freelancer-row-1001"]')).toBeVisible();
+
+        // "Zur Profilsuche"-Button ist sichtbar
+        const backButton = page.locator('a:has-text("Zur Profilsuche")');
+        await expect(backButton).toBeVisible();
+
+        // Zurück zur Profilsuche klicken
+        await backButton.click();
+        await page.waitForURL(/\/profilesearch\/search/, { timeout: 10_000 });
+
+        // Wir sind wieder auf der Profilsuche-Seite
+        await expect(page).toHaveURL(/\/profilesearch\/search/);
+        await expect(page.locator('[data-testid="tab-search"]')).toBeVisible();
+    });
+
 });
+

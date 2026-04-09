@@ -32,7 +32,8 @@
         th:attr="data-fl-id=${r.id()}"
         th:onclick="${r.id() != null} ? 'psNavigateToFreelancer(' + ${r.id()} + ', event)' : null">
       <td colspan="7">
-        <div class="serp-text" th:attr="data-markdown=${r.serp()}"></div>
+        <div th:if="${r.serpIsMarkdown()}" class="serp-text" th:attr="data-markdown=${r.serp()}"></div>
+        <div th:unless="${r.serpIsMarkdown()}" class="serp-text" th:text="${r.serp()}"></div>
       </td>
     </tr>
   </th:block>

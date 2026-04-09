@@ -8,6 +8,7 @@ import de.mirkosertic.powerstaff.profilesearch.query.ChatListView
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService
 import de.mirkosertic.powerstaff.profilesearch.query.MessageView
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService
+import de.mirkosertic.powerstaff.shared.query.TagQueryService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
@@ -57,12 +58,40 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
     RememberedProjectService rememberedProjectService
 
     @MockitoBean
-    LlmService llmService;
+    LlmService llmService
+
+    @MockitoBean
+    TagQueryService tagQueryService
 
     def setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .apply(springSecurity())
                 .build()
+    }
+
+    def "GET /profilesearch/search ohne Parameter zeigt Validierungsfehler-Banner"() {
+        given:
+        when(tagQueryService.findAll()).thenReturn([])
+        when(rememberedProjectService.getRememberedProjectInfo("testuser")).thenReturn(Optional.empty())
+
+        expect:
+        mockMvc.perform(get("/profilesearch/search").with(user("testuser")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profilesearch/search-page"))
+                .andExpect(content().string(containsString('data-testid="validation-error-banner"')))
+    }
+
+    def "GET /profilesearch/search mit searchTerm zeigt Ergebnistabelle"() {
+        given:
+        when(tagQueryService.findAll()).thenReturn([])
+        when(queryService.searchFreelancers(any(), anyInt(), anyInt())).thenReturn([])
+        when(queryService.countSearchFreelancers(any())).thenReturn(0L)
+        when(rememberedProjectService.getRememberedProjectInfo("testuser")).thenReturn(Optional.empty())
+
+        expect:
+        mockMvc.perform(get("/profilesearch/search?searchTerm=Java").with(user("testuser")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profilesearch/search-page"))
     }
 
     def "GET /profilesearch ohne Auth liefert Redirect zu /login"() {

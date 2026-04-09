@@ -15,6 +15,7 @@ public record ProfileSearchResult(
         LocalDateTime availabilityAsDate,
         boolean contactForbidden,
         List<TagView> tags,
-        String serp
+        String serp,
+        boolean serpIsMarkdown
 ) {
 }

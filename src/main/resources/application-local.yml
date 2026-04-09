@@ -8,12 +8,6 @@ spring:
   thymeleaf:
     cache: false
 
-  # Session-Cookie ohne Secure-Flag für lokale HTTP-Entwicklung
-  session:
-    cookie:
-      secure: false
-
-
   ai:
     model:
       #chat: "ollama"
@@ -54,3 +48,9 @@ logging:
     org.springframework.security: TRACE
     root: INFO
 
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+        same-site: lax

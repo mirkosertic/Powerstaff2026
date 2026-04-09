@@ -173,12 +173,11 @@ class ProfileSearchControllerSpec extends Specification {
         given:
         def model = Mock(Model)
         def response = Mock(HttpServletResponse)
-        def criteria = ProfileSearchCriteria.empty()
         tagQueryService.findAll() >> []
         rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
 
         when:
-        def view = controller.search(criteria, 0, principal, model, response)
+        def view = controller.search(null, null, null, null, null, null, null, 0, principal, model, response)
 
         then:
         view == "profilesearch/search-page"
@@ -191,12 +190,11 @@ class ProfileSearchControllerSpec extends Specification {
         given:
         def model = Mock(Model)
         def response = Mock(HttpServletResponse)
-        def criteria = ProfileSearchCriteria.empty().withSearchTerm("   ")
         tagQueryService.findAll() >> []
         rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
 
         when:
-        def view = controller.search(criteria, 0, principal, model, response)
+        def view = controller.search("   ", null, null, null, null, null, null, 0, principal, model, response)
 
         then:
         view == "profilesearch/search-page"
@@ -209,8 +207,8 @@ class ProfileSearchControllerSpec extends Specification {
         def response = Mock(HttpServletResponse)
         def criteria = ProfileSearchCriteria.empty().withSearchTerm("Java")
         def mockResults = [
-                new ProfileSearchResult(100L, "MOCK-100", "Mock Freelancer 0", null, null, 400L, null, false, [], null),
-                new ProfileSearchResult(101L, "MOCK-101", "Mock Freelancer 1", null, null, 410L, null, false, [], null)
+                new ProfileSearchResult(100L, "MOCK-100", "Mock Freelancer 0", null, null, 400L, null, false, [], null, false),
+                new ProfileSearchResult(101L, "MOCK-101", "Mock Freelancer 1", null, null, 410L, null, false, [], null, false)
         ]
         queryService.searchFreelancers(criteria, 0, 20) >> mockResults
         queryService.countSearchFreelancers(criteria) >> 2L
@@ -218,7 +216,7 @@ class ProfileSearchControllerSpec extends Specification {
         rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
 
         when:
-        def view = controller.search(criteria, 0, principal, model, response)
+        def view = controller.search("Java", null, null, null, null, null, null, 0, principal, model, response)
 
         then:
         view == "profilesearch/search-page"
@@ -238,7 +236,7 @@ class ProfileSearchControllerSpec extends Specification {
         rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
 
         when:
-        def view = controller.search(criteria, 0, principal, model, response)
+        def view = controller.search(null, 500L, null, null, null, null, null, 0, principal, model, response)
 
         then:
         view == "profilesearch/search-page"
@@ -255,7 +253,7 @@ class ProfileSearchControllerSpec extends Specification {
         rememberedProjectService.getRememberedProjectInfo(_) >> Optional.empty()
 
         when:
-        def view = controller.search(criteria, 20, principal, model, response)
+        def view = controller.search("Java", null, null, null, null, null, null, 20, principal, model, response)
 
         then:
         view == "profilesearch/search-results :: results"
@@ -267,7 +265,7 @@ class ProfileSearchControllerSpec extends Specification {
         def model = Mock(Model)
         def response = Mock(HttpServletResponse)
         def results = (1..20).collect { i ->
-            new ProfileSearchResult((long) i, "MOCK-$i", "Freelancer $i", null, null, 400L + i * 10L, null, false, [], null)
+            new ProfileSearchResult((long) i, "MOCK-$i", "Freelancer $i", null, null, 400L + i * 10L, null, false, [], null, false)
         }
         def criteria = ProfileSearchCriteria.empty().withSearchTerm("Mock")
         queryService.searchFreelancers(criteria, 0, 20) >> results
@@ -276,7 +274,7 @@ class ProfileSearchControllerSpec extends Specification {
         rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
 
         when:
-        controller.search(criteria, 0, principal, model, response)
+        controller.search("Mock", null, null, null, null, null, null, 0, principal, model, response)
 
         then:
         // nextUrl must be set in model (not null) when results.size() == PAGE_SIZE

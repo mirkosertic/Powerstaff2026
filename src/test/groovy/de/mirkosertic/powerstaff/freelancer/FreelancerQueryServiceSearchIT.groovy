@@ -195,4 +195,105 @@ class FreelancerQueryServiceSearchIT extends AbstractContainerBaseIT {
         notThrown(Exception)
         results.findAll { it.name1().startsWith("IT-Srch") }.size() == 3
     }
+
+    // ─── Tag-Filter-Tests ─────────────────────────────────────────────────────
+
+    def "Suche mit tagId liefert nur Freiberufler mit diesem Tag"() {
+        given:
+        // Tag anlegen
+        jdbcClient.sql("INSERT INTO tags (tagname, type) VALUES ('IT-Tag-Test', 'SCHWERPUNKT')").update()
+        def tagId = jdbcClient.sql("SELECT id FROM tags WHERE tagname = 'IT-Tag-Test'").query(Long).single()
+
+        // Zwei Freelancer anlegen
+        def f1 = newFreelancer("IT-Srch-Tag-A", "Tag Company", "Berlin", "Tagged", 800L, 700L)
+        def f2 = newFreelancer("IT-Srch-Tag-B", "NoTag Company", "Hamburg", "Untagged", 600L, 500L)
+        def fl1Id = commandService.save(f1).id
+        def fl2Id = commandService.save(f2).id
+
+        // Nur f1 mit Tag verknüpfen
+        jdbcClient.sql("INSERT INTO freelancer_tags (freelancer_id, tag_id) VALUES (:flId, :tagId)")
+                .param("flId", fl1Id)
+                .param("tagId", tagId)
+                .update()
+
+        // Kriterien mit tagId
+        def criteria = FreelancerSearchCriteria.empty().withTagId(tagId)
+
+        when:
+        def results = queryService.search(criteria, 0, 100)
+
+        then:
+        results.size() == 1
+        results[0].id() == fl1Id
+        results[0].name1() == "IT-Srch-Tag-A"
+
+        cleanup:
+        jdbcClient.sql("DELETE FROM freelancer_tags WHERE freelancer_id IN (:id1, :id2)")
+                .param("id1", fl1Id)
+                .param("id2", fl2Id)
+                .update()
+        jdbcClient.sql("DELETE FROM freelancer WHERE id IN (:id1, :id2)")
+                .param("id1", fl1Id)
+                .param("id2", fl2Id)
+                .update()
+        jdbcClient.sql("DELETE FROM tags WHERE tagname = 'IT-Tag-Test'").update()
+    }
+
+    def "Suche mit tagId kombiniert mit anderen Kriterien (AND-Logik)"() {
+        given:
+        // Tag anlegen
+        jdbcClient.sql("INSERT INTO tags (tagname, type) VALUES ('IT-Tag-Combo', 'SCHWERPUNKT')").update()
+        def tagId = jdbcClient.sql("SELECT id FROM tags WHERE tagname = 'IT-Tag-Combo'").query(Long).single()
+
+        // Zwei Freelancer mit Tag, aber unterschiedlicher Stadt
+        def f1 = newFreelancer("IT-Srch-Combo-A", "Combo Company", "München", "Skills", 800L, 700L)
+        def f2 = newFreelancer("IT-Srch-Combo-B", "Combo Company", "Berlin", "Skills", 600L, 500L)
+        def fl1Id = commandService.save(f1).id
+        def fl2Id = commandService.save(f2).id
+
+        // Beide mit Tag verknüpfen
+        jdbcClient.sql("INSERT INTO freelancer_tags (freelancer_id, tag_id) VALUES (:flId, :tagId)")
+                .param("flId", fl1Id)
+                .param("tagId", tagId)
+                .update()
+        jdbcClient.sql("INSERT INTO freelancer_tags (freelancer_id, tag_id) VALUES (:flId, :tagId)")
+                .param("flId", fl2Id)
+                .param("tagId", tagId)
+                .update()
+
+        // Suche: tagId UND city=München
+        def criteria = FreelancerSearchCriteria.empty().withTagId(tagId).withCity("München")
+
+        when:
+        def results = queryService.search(criteria, 0, 100)
+
+        then:
+        results.size() == 1
+        results[0].id() == fl1Id
+        results[0].name1() == "IT-Srch-Combo-A"
+
+        cleanup:
+        jdbcClient.sql("DELETE FROM freelancer_tags WHERE freelancer_id IN (:id1, :id2)")
+                .param("id1", fl1Id)
+                .param("id2", fl2Id)
+                .update()
+        jdbcClient.sql("DELETE FROM freelancer WHERE id IN (:id1, :id2)")
+                .param("id1", fl1Id)
+                .param("id2", fl2Id)
+                .update()
+        jdbcClient.sql("DELETE FROM tags WHERE tagname = 'IT-Tag-Combo'").update()
+    }
+
+    def "Suche mit nicht-existierendem tagId liefert leere Liste"() {
+        given:
+        def criteria = FreelancerSearchCriteria.empty().withTagId(999999L)
+
+        when:
+        def results = queryService.search(criteria, 0, 100)
+        def count = queryService.countSearch(criteria)
+
+        then:
+        results.isEmpty()
+        count == 0
+    }
 }

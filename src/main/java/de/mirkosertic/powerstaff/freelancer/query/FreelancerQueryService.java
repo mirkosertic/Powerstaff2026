@@ -1,16 +1,19 @@
 package de.mirkosertic.powerstaff.freelancer.query;
 
 import de.mirkosertic.powerstaff.shared.TagType;
+import de.mirkosertic.powerstaff.shared.query.TagView;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -74,10 +77,14 @@ public class FreelancerQueryService {
     }
 
     public List<FreelancerSearchResult> search(final FreelancerSearchCriteria criteria, final int offset, final int limit) {
+        record Row(Long id, String code, String name1, String name2, String company, String city,
+                   LocalDateTime availabilityAsDate, Long salaryLong, Long salaryPerDayLong,
+                   String skills, Boolean contactForbidden) {}
+
         final var sql = new StringBuilder("""
                 SELECT id, code, name1, name2, company, city,
                        availability_as_date, salary_long, salary_per_day_long, skills, contactforbidden
-                FROM freelancer
+                FROM freelancer f
                 WHERE 1=1
                 """);
         final Map<String, Object> params = new LinkedHashMap<>();
@@ -94,7 +101,7 @@ public class FreelancerQueryService {
         }
         if (criteria.tagId() != null) {
             final String pName = "p" + (params.size() + 1);
-            sql.append(" AND EXISTS (SELECT 1 FROM freelancer_tags WHERE freelancer_id = id AND tag_id = :").append(pName).append(")");
+            sql.append(" AND EXISTS (SELECT 1 FROM freelancer_tags WHERE freelancer_id = f.id AND tag_id = :").append(pName).append(")");
             params.put(pName, criteria.tagId());
         }
         final String orderBy;
@@ -114,7 +121,20 @@ public class FreelancerQueryService {
         for (final var entry : params.entrySet()) {
             stmt = stmt.param(entry.getKey(), entry.getValue());
         }
-        return stmt.query(FreelancerSearchResult.class).list();
+        final List<Row> rows = stmt.query(Row.class).list();
+
+        // Batch-Load Tags für alle gefundenen Freiberufler
+        final List<Long> freelancerIds = rows.stream().map(Row::id).toList();
+        final Map<Long, List<TagView>> tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);
+
+        return rows.stream()
+                .map(r -> new FreelancerSearchResult(
+                        r.id(), r.code(), r.name1(), r.name2(), r.company(), r.city(),
+                        r.availabilityAsDate(), r.salaryLong(), r.salaryPerDayLong(),
+                        r.skills(), r.contactForbidden(),
+                        tagsByFreelancerId.getOrDefault(r.id(), List.of())
+                ))
+                .toList();
     }
 
     public long countSearch(final FreelancerSearchCriteria criteria) {
@@ -206,6 +226,31 @@ public class FreelancerQueryService {
                         rs.getString("name"),
                         TagType.valueOf(rs.getString("type"))))
                 .list();
+    }
+
+    /**
+     * Lädt Tags für eine Liste von Freiberufler-IDs in einer einzigen DB-Abfrage (Batch-Load).
+     * Package-private für Tests.
+     */
+    Map<Long, List<TagView>> findTagsByFreelancerIdsInBatch(final List<Long> ids) {
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+        record TagRow(Long freelancerId, Long tagId, String tagname, String type) {}
+        return jdbcClient.sql("""
+                SELECT ft.freelancer_id, t.id AS tag_id, t.tagname, t.type
+                FROM freelancer_tags ft
+                JOIN tags t ON t.id = ft.tag_id
+                WHERE ft.freelancer_id IN (:ids)
+                ORDER BY t.tagname
+                """)
+                .param("ids", ids)
+                .query(TagRow.class)
+                .list()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        TagRow::freelancerId,
+                        Collectors.mapping(r -> new TagView(r.tagId(), r.tagname(), r.type()), Collectors.toList())));
     }
 
     private static void appendStringCriteria(final StringBuilder sql, final Map<String, Object> params, final FreelancerSearchCriteria c) {

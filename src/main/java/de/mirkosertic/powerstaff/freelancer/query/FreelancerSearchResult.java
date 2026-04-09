@@ -1,6 +1,9 @@
 package de.mirkosertic.powerstaff.freelancer.query;
 
+import de.mirkosertic.powerstaff.shared.query.TagView;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record FreelancerSearchResult(
         Long id,
@@ -13,6 +16,7 @@ public record FreelancerSearchResult(
         Long salaryLong,
         Long salaryPerDayLong,
         String skills,
-        Boolean contactForbidden
+        Boolean contactForbidden,
+        List<TagView> tags
 ) {
 }

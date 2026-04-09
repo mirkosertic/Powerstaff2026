@@ -6,3 +6,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   flyway:
     locations: classpath:db/migration,classpath:db/testdata
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+        same-site: lax

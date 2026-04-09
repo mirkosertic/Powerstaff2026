@@ -16,13 +16,12 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   werden, ich sehe allerdings nur den Markdown-Code, und nicht den Link. Als
   Markdown-Code wird "[Profil DEV-20017.txt](/freelancer/search?code=DEV-20017&returnTo=profilesearch-chat-17)" angezeigt.  
   Eventuell funktioniert die Formatierung nicht. Details siehe profilesearch/form.html.
-- [ ] Ich möchte, dass bei technischen Fehlern im Chat-Streaming eine entsprechende
-  Fehlermeldung angezeigt wird. Falls beim Chat-Streaming ein HTTP Unauthorized
-  gesendet wird, soll die Anmeldemaske angezeigt werden. Ich habe manchmal gesehen,
-  das z.B. LM Studio beim Streaming abstürzt, das führt allerdings nicht zu einer
-  Fehlermeldung in der UI; sie bleibt einfach stehen, ohne weitere Áktionen.
 - [ ] Macht es sinn, eine MCP-Session pro Chat zu starten, statt eine globale für alle?
   Brauchen wir win Retry- falls die Session aus irgendeinem Grund abgebrochen wird?
+- [ ] Klick auf einen Tag eines Freiberuflers in der Volltext-Suchergebnisliste sollte eigentlich
+  eine Suche nach allen Freiberuflern mit diesem Tag starten. Leider bekomme ich immer eine
+  leere Trefferliste, obwohl doch mindestens der ursprüngliche Freiberufler aus der Volltextsuche
+  hier angezeigt werden müsste.
 
 ## Erweiterungen
 
@@ -40,10 +39,6 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   der Text beliebig lang werden kann. Mach einen Vorschlag, der zur aktuellsten MCP Protkollversion passt
   und von den gängigsten LLMs auch verarbeitet werden kann. Reicht hier die Definition einer
   dynamischen Ressource, oder muss es ein Tool sein?
-- [ ] Ich möchte die Benutzerverwaltung um ein einfaches Rollenkonzept erweitern. Ein Benutzer kann
-  Administrator sein, und nur wenn der aktuell angemeldete Benutzer Administrator ist, kann er
-  im Admin-Bereich die unterschiedlichen Funktionen nutzen. Für nicht-Admin Benutzer ist im
-  Admin bereich nur die Benutzerverwaltung sichtbar, es wird allerdings nur der aktuelle Benutzer angezeigt,
-  und für diesen kann auch nur der Systemprompt bearbeitet werden. Ich brauche dann neben dem Admin-User
-  auch noch einen Test-Nicht-Admin in den Testdaten-Setup Skript, damit auf der Entwicklungsumgebung
-  das auch getestet werden kann; Idealerweise gibt es auch einen E2E-Test genau für diesen Fall.
+- [ ] Anzeige des Treffer-Scores in der Volltextsuche und der semantischen Suche
+- [ ] Möglichkeit des Löschen von Chat-Nachrichten in einem Chat; Branching ab einem bestimmten Punkt
+  zu einem neuen Chat.

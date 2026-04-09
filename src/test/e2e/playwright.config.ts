@@ -31,10 +31,12 @@ export default defineConfig({
             name: 'setup',
             testMatch: /auth\.setup\.ts/,
             use: { storageState: undefined },
+            timeout: 60_000, // 60s für initialen App-Start
         },
-        // Alle anderen Tests: Chromium mit fester Auflösung 1280×1024
+        // Alle Admin-Tests: Chromium mit fester Auflösung 1280×1024
         {
             name: 'chromium',
+            testIgnore: /admin-noadmin\.spec\.ts/,
             use: {
                 ...devices['Desktop Chrome'],
                 viewport: { width: 1280, height: 1024 },
@@ -44,9 +46,32 @@ export default defineConfig({
         // Firefox mit gleicher Auflösung
         {
             name: 'firefox',
+            testIgnore: /admin-noadmin\.spec\.ts/,
             use: {
                 ...devices['Desktop Firefox'],
                 viewport: { width: 1280, height: 1024 },
+            },
+            dependencies: ['setup'],
+        },
+        // Nicht-Admin-Tests: Chromium, läuft sequenziell NACH allen Admin-Tests
+        {
+            name: 'non-admin-chromium',
+            testMatch: /admin-noadmin\.spec\.ts/,
+            use: {
+                ...devices['Desktop Chrome'],
+                viewport: { width: 1280, height: 1024 },
+                storageState: undefined, // Kein gespeicherter Login
+            },
+            dependencies: ['setup'],
+        },
+        // Nicht-Admin-Tests: Firefox, läuft sequenziell NACH allen Admin-Tests
+        {
+            name: 'non-admin-firefox',
+            testMatch: /admin-noadmin\.spec\.ts/,
+            use: {
+                ...devices['Desktop Firefox'],
+                viewport: { width: 1280, height: 1024 },
+                storageState: undefined, // Kein gespeicherter Login
             },
             dependencies: ['setup'],
         },
@@ -54,6 +79,6 @@ export default defineConfig({
 
     reporter: [['html', { outputFolder: 'playwright-report' }]],
     retries: process.env.CI ? 1 : 0,
-    workers: process.env.CI ? 1 : 2,
+    workers: 1, // Sequentielle Ausführung, um Login-State-Isolation zu garantieren
     forbidOnly: !!process.env.CI,
 });

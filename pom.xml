@@ -550,6 +550,7 @@
                                         <argument>test</argument>
                                         <argument>--project=setup</argument>
                                         <argument>--project=chromium</argument>
+                                        <argument>--project=non-admin-chromium</argument>
                                         <argument>--reporter=blob</argument>
                                     </arguments>
                                     <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
@@ -613,6 +614,7 @@
                                         <argument>test</argument>
                                         <argument>--project=setup</argument>
                                         <argument>--project=firefox</argument>
+                                        <argument>--project=non-admin-firefox</argument>
                                         <argument>--reporter=blob</argument>
                                     </arguments>
                                     <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>

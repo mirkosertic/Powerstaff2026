@@ -30,7 +30,7 @@
     <p th:if="${#lists.isEmpty(results)}" class="text-muted">Keine Treffer gefunden.</p>
 
     <div class="tbl-wrap" th:if="${!#lists.isEmpty(results)}">
-      <table>
+      <table data-testid="results-table">
         <thead>
           <tr>
             <th class="srt"
@@ -215,6 +215,7 @@
                   sortDir=${sortField == 'code' and sortDir == 'asc' ? 'desc' : 'asc'}
               )}">Code</a>
             </th>
+            <th>Tags</th>
           </tr>
         </thead>
         <tbody>
@@ -232,6 +233,14 @@
             <td th:text="${r.availabilityAsDate() != null} ? ${#temporals.format(r.availabilityAsDate(), 'dd.MM.yyyy')} : ''"></td>
             <td th:text="${r.salaryPerDayLong() != null} ? ${r.salaryPerDayLong()} + ' €' : ''"></td>
             <td th:text="${r.code()}"></td>
+            <td>
+              <span th:each="tag : ${r.tags()}"
+                    class="chip chip-xs"
+                    th:text="${tag.tagname()}"
+                    th:attr="data-testid='search-tag-' + ${tag.id()}, data-tag-id=${tag.id()}"
+                    onclick="navigateToTagSearch(event, this)">
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -246,9 +255,16 @@
   </div>
 
 <script>
+  function navigateToTagSearch(event, chipElement) {
+    event.stopPropagation();
+    const tagId = chipElement.dataset.tagId;
+    const currentUrl = location.pathname + location.search;
+    location.href = '/freelancer/search?tagId=' + tagId + '&returnTo=' + encodeURIComponent(currentUrl);
+  }
+
   document.addEventListener('click', function(e) {
     const row = e.target.closest('tr[data-fl-id]');
-    if (!row || e.target.closest('a, button')) return;
+    if (!row || e.target.closest('a, button, .chip-xs')) return;
     const id = row.dataset.flId;
     const returnTo = row.dataset.returnTo;
     const url = '/freelancer/' + id + (returnTo ? '?returnTo=' + encodeURIComponent(returnTo) : '');
@@ -258,7 +274,7 @@
   document.addEventListener('mousedown', function(e) {
     if (e.button !== 1) return;
     const row = e.target.closest('tr[data-fl-id]');
-    if (!row || e.target.closest('a')) return;
+    if (!row || e.target.closest('a, .chip-xs')) return;
     e.preventDefault();
     const id = row.dataset.flId;
     const returnTo = row.dataset.returnTo;
