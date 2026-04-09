@@ -6,7 +6,6 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,17 +18,15 @@ import java.util.List;
 public class ProfileSearchConfig {
 
     @Bean
-    public LlmService llmService(final List<ChatModel> modelsInContext, final List<ToolCallbackProvider> toolCallbackProviders, final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService, final ObjectMapper objectMapper, final UserQueryService userQueryService) {
+    public LlmService llmService(final List<ChatModel> modelsInContext, final McpClientFactory mcpClientFactory, final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService, final ObjectMapper objectMapper, final UserQueryService userQueryService) {
         for (final ChatModel model : modelsInContext) {
             if (model instanceof OllamaChatModel) {
-                ChatClient.Builder builder = ChatClient.builder(model);
-                builder = builder.defaultToolCallbacks(toolCallbackProviders.toArray(new ToolCallbackProvider[0]));
-                return new SpringAILlmService(builder.build(), commandService, queryService, objectMapper, userQueryService);
+                final ChatClient chatClient = ChatClient.builder(model).build();
+                return new SpringAILlmService(chatClient, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);
             }
             if (model instanceof OpenAiChatModel) {
-                ChatClient.Builder builder = ChatClient.builder(model);
-                builder = builder.defaultToolCallbacks(toolCallbackProviders.toArray(new ToolCallbackProvider[0]));
-                return new SpringAILlmService(builder.build(), commandService, queryService, objectMapper, userQueryService);
+                final ChatClient chatClient = ChatClient.builder(model).build();
+                return new SpringAILlmService(chatClient, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);
             }
         }
         return new MockLLmService();

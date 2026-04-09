@@ -5,6 +5,7 @@ import de.mirkosertic.powerstaff.auth.PsUser;
 import de.mirkosertic.powerstaff.profilesearch.query.LlmFreelancerContext;
 import de.mirkosertic.powerstaff.profilesearch.query.LlmProjectContext;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
+import io.modelcontextprotocol.client.McpSyncClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
@@ -20,6 +21,7 @@ import org.springframework.ai.chat.metadata.EmptyUsage;
 import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import tools.jackson.databind.ObjectMapper;
 
 import java.security.Principal;
@@ -35,17 +37,40 @@ public class SpringAILlmService implements LlmService {
     private static final Logger logger = LoggerFactory.getLogger(SpringAILlmService.class);
 
     private final ChatClient chatClient;
+    private final McpClientFactory mcpClientFactory;
     private final ProfileSearchCommandService commandService;
     private final ProfileSearchQueryService queryService;
     private final ObjectMapper objectMapper;
     private final UserQueryService userQueryService;
 
-    public SpringAILlmService(final ChatClient chatClient, final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService, final ObjectMapper objectMapper, final UserQueryService userQueryService) {
+    public SpringAILlmService(final ChatClient chatClient, final McpClientFactory mcpClientFactory, final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService, final ObjectMapper objectMapper, final UserQueryService userQueryService) {
         this.chatClient = chatClient;
+        this.mcpClientFactory = mcpClientFactory;
         this.commandService = commandService;
         this.queryService = queryService;
         this.objectMapper = objectMapper;
         this.userQueryService = userQueryService;
+    }
+
+    private McpSyncClient tryCreateMcpClient() {
+        try {
+            final McpSyncClient client = mcpClientFactory.createClient();
+            client.initialize();
+            return client;
+        } catch (final McpConnectionException e) {
+            logger.warn("MCP nicht verfügbar, Chat läuft ohne Tools: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private static void closeMcpClientQuietly(final McpSyncClient client) {
+        if (client != null) {
+            try {
+                client.close();
+            } catch (final Exception e) {
+                logger.warn("Fehler beim Schließen des MCP Clients", e);
+            }
+        }
     }
 
     // package-private für Tests: Routing von ChatResponse-Tokens auf ChatProgressCollector-Callbacks
@@ -131,30 +156,40 @@ public class SpringAILlmService implements LlmService {
 
         final var chatRepository = new SpringAIChatRepository(conversationId, queryService, commandService, objectMapper, progressCollector);
 
-        final var chatClientResponse = chatClient.prompt()
-                .advisors(
-                        ToolCallAdvisor.builder()
-                                .disableInternalConversationHistory()
-                                .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)
-                                .build(),
-                        MessageChatMemoryAdvisor.builder(
-                                MessageWindowChatMemory.builder()
-                                        .maxMessages(10)
-                                        .chatMemoryRepository(chatRepository)
-                                        .build())
-                                .conversationId(conversationId)
-                                .build(),
-                        new SimpleLoggerAdvisor()
-                )
-                .system(resolveSystemPrompt(principal, context))
-                .user(userMessage)
-                .stream()
-                .chatResponse()
-                .filter(t -> {
-                    routeTokenToCollector(t, progressCollector);
-                    return true;
-                })
-                .blockLast();
+        final McpSyncClient mcpClient = tryCreateMcpClient();
+        final ChatResponse chatClientResponse;
+        try {
+            var promptSpec = chatClient.prompt()
+                    .advisors(
+                            ToolCallAdvisor.builder()
+                                    .disableInternalConversationHistory()
+                                    .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)
+                                    .build(),
+                            MessageChatMemoryAdvisor.builder(
+                                    MessageWindowChatMemory.builder()
+                                            .maxMessages(10)
+                                            .chatMemoryRepository(chatRepository)
+                                            .build())
+                                    .conversationId(conversationId)
+                                    .build(),
+                            new SimpleLoggerAdvisor()
+                    )
+                    .system(resolveSystemPrompt(principal, context))
+                    .user(userMessage);
+            if (mcpClient != null) {
+                promptSpec = promptSpec.toolCallbacks(SyncMcpToolCallbackProvider.builder().addMcpClient(mcpClient).build());
+            }
+            chatClientResponse = promptSpec
+                    .stream()
+                    .chatResponse()
+                    .filter(t -> {
+                        routeTokenToCollector(t, progressCollector);
+                        return true;
+                    })
+                    .blockLast();
+        } finally {
+            closeMcpClientQuietly(mcpClient);
+        }
 
         int promptTokens = 0;
         int completionTokens = 0;
@@ -216,30 +251,40 @@ public class SpringAILlmService implements LlmService {
         final var progressCollector = new StreamingChatProgressCollector(eventSink);
         final var chatRepository = new SpringAIChatRepository(conversationId, queryService, commandService, objectMapper, progressCollector);
 
-        final var chatClientResponse = chatClient.prompt()
-                .advisors(
-                        ToolCallAdvisor.builder()
-                                .disableInternalConversationHistory()
-                                .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)
-                                .build(),
-                        MessageChatMemoryAdvisor.builder(
-                                MessageWindowChatMemory.builder()
-                                        .maxMessages(10)
-                                        .chatMemoryRepository(chatRepository)
-                                        .build())
-                                .conversationId(conversationId)
-                                .build(),
-                        new SimpleLoggerAdvisor()
-                )
-                .system(resolveSystemPrompt(principal, context))
-                .user(userMessage)
-                .stream()
-                .chatResponse()
-                .filter(t -> {
-                    routeTokenToCollector(t, progressCollector);
-                    return true;
-                })
-                .blockLast();
+        final McpSyncClient mcpClient = tryCreateMcpClient();
+        final ChatResponse chatClientResponse;
+        try {
+            var promptSpec = chatClient.prompt()
+                    .advisors(
+                            ToolCallAdvisor.builder()
+                                    .disableInternalConversationHistory()
+                                    .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)
+                                    .build(),
+                            MessageChatMemoryAdvisor.builder(
+                                    MessageWindowChatMemory.builder()
+                                            .maxMessages(10)
+                                            .chatMemoryRepository(chatRepository)
+                                            .build())
+                                    .conversationId(conversationId)
+                                    .build(),
+                            new SimpleLoggerAdvisor()
+                    )
+                    .system(resolveSystemPrompt(principal, context))
+                    .user(userMessage);
+            if (mcpClient != null) {
+                promptSpec = promptSpec.toolCallbacks(SyncMcpToolCallbackProvider.builder().addMcpClient(mcpClient).build());
+            }
+            chatClientResponse = promptSpec
+                    .stream()
+                    .chatResponse()
+                    .filter(t -> {
+                        routeTokenToCollector(t, progressCollector);
+                        return true;
+                    })
+                    .blockLast();
+        } finally {
+            closeMcpClientQuietly(mcpClient);
+        }
 
         int promptTokens = 0;
         int completionTokens = 0;
