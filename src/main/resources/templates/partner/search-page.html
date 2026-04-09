@@ -24,7 +24,7 @@
     <p th:if="${#lists.isEmpty(results)}" class="text-muted">Keine Treffer gefunden.</p>
 
     <div class="tbl-wrap" th:if="${!#lists.isEmpty(results)}">
-      <table>
+      <table data-testid="results-table">
         <thead>
           <tr>
             <th class="srt"

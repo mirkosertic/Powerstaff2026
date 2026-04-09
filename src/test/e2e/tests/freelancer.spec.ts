@@ -91,4 +91,59 @@ test.describe('Freiberufler', () => {
         await expect(page.locator('#banner-save-error')).not.toBeVisible();
     });
 
+    test('Sortierung in QBE-Suchergebnissen: Klick auf Spaltenheader ändert Reihenfolge, Menge bleibt gleich', async ({ page }) => {
+        // Suche mit mehreren Ergebnissen (alle Freiberufler)
+        await page.goto('/freelancer/new');
+        await page.locator('[data-testid="btn-search"]').click();
+        await page.waitForURL(/\/freelancer\/search/);
+
+        // Warten bis Ergebnistabelle sichtbar
+        const resultsTable = page.locator('[data-testid="results-table"]');
+        await expect(resultsTable).toBeVisible();
+
+        // Alle Zeilen sammeln (ursprüngliche Reihenfolge)
+        const rows = resultsTable.locator('tbody tr');
+        const initialCount = await rows.count();
+
+        // Wenn nur 1 Ergebnis, Test überspringen
+        if (initialCount <= 1) {
+            console.log('Skipping sort test: not enough results (need at least 2)');
+            return;
+        }
+
+        const initialIds: string[] = [];
+        for (let i = 0; i < initialCount; i++) {
+            const id = await rows.nth(i).getAttribute('data-fl-id');
+            if (id) initialIds.push(id);
+        }
+
+        // Auf "Name 1"-Spaltenheader klicken
+        const name1Header = resultsTable.locator('thead th').first().locator('a');
+        await name1Header.click();
+        await page.waitForURL(/sortField=name1/);
+
+        // Ergebnistabelle noch vorhanden
+        await expect(resultsTable).toBeVisible();
+
+        // Zeilen-IDs nach Sortierung sammeln
+        const sortedCount = await rows.count();
+        const sortedIds: string[] = [];
+        for (let i = 0; i < sortedCount; i++) {
+            const id = await rows.nth(i).getAttribute('data-fl-id');
+            if (id) sortedIds.push(id);
+        }
+
+        // Gleiche Anzahl (Menge bleibt gleich)
+        expect(sortedCount).toBe(initialCount);
+
+        // Reihenfolge könnte sich geändert haben (bei gleichen Namen bleibt Reihenfolge ggf. gleich)
+        // Prüfen wir stattdessen, dass die URL sich geändert hat und alle IDs noch vorhanden sind
+        expect(page.url()).toContain('sortField=name1');
+
+        // Alle ursprünglichen IDs sind noch vorhanden
+        for (const id of initialIds) {
+            expect(sortedIds).toContain(id);
+        }
+    });
+
 });

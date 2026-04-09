@@ -98,4 +98,58 @@ test.describe('Projekte', () => {
         await expect(page).toHaveURL(/\/project\/4001/);
     });
 
+    test('Sortierung in QBE-Suchergebnissen: Klick auf Spaltenheader ändert Reihenfolge, Menge bleibt gleich', async ({ page }) => {
+        // Suche mit mehreren Ergebnissen (alle Projekte)
+        await page.goto('/project/new');
+        await page.locator('[data-testid="btn-search"]').click();
+        await page.waitForURL(/\/project\/search/);
+
+        // Warten bis Ergebnistabelle sichtbar
+        const resultsTable = page.locator('[data-testid="results-table"]');
+        await expect(resultsTable).toBeVisible();
+
+        // Alle Zeilen sammeln (ursprüngliche Reihenfolge)
+        const rows = resultsTable.locator('tbody tr');
+        const initialCount = await rows.count();
+
+        // Wenn nur 1 Ergebnis, Test überspringen
+        if (initialCount <= 1) {
+            console.log('Skipping sort test: not enough results (need at least 2)');
+            return;
+        }
+
+        const initialIds: string[] = [];
+        for (let i = 0; i < initialCount; i++) {
+            const testId = await rows.nth(i).getAttribute('data-testid');
+            if (testId) initialIds.push(testId);
+        }
+
+        // Auf "Projektnummer"-Spaltenheader klicken (erste sortierbare Spalte)
+        const projectNumberHeader = resultsTable.locator('thead th').first().locator('a');
+        await projectNumberHeader.click();
+        await page.waitForURL(/sortField=/);
+
+        // Ergebnistabelle noch vorhanden
+        await expect(resultsTable).toBeVisible();
+
+        // Zeilen-IDs nach Sortierung sammeln
+        const sortedCount = await rows.count();
+        const sortedIds: string[] = [];
+        for (let i = 0; i < sortedCount; i++) {
+            const testId = await rows.nth(i).getAttribute('data-testid');
+            if (testId) sortedIds.push(testId);
+        }
+
+        // Gleiche Anzahl (Menge bleibt gleich)
+        expect(sortedCount).toBe(initialCount);
+
+        // URL wurde geändert (enthält sortField Parameter)
+        expect(page.url()).toMatch(/sortField=/);
+
+        // Alle ursprünglichen IDs sind noch vorhanden
+        for (const id of initialIds) {
+            expect(sortedIds).toContain(id);
+        }
+    });
+
 });

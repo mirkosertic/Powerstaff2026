@@ -47,25 +47,33 @@ VALUES
      NOW(), 'testuser', NOW(), 'testuser')
 ON DUPLICATE KEY UPDATE db_version = db_version;
 
--- Partner (1 Stück)
+-- Partner (3 Stück für Sortierungstests)
 INSERT IGNORE INTO partner
     (id, db_version, name1, company, street, country, plz, city, contactforbidden,
      creation_date, creation_user, changed_date, changed_user)
 VALUES
     (2001, 0, 'Partner', 'Partner GmbH', 'Partnerstr. 10', 'DEU', '50667', 'Köln', FALSE,
+     NOW(), 'testuser', NOW(), 'testuser'),
+    (2003, 0, 'Alpha', 'Alpha Partner AG', 'Alphaweg 1', 'DEU', '60311', 'Frankfurt', FALSE,
+     NOW(), 'testuser', NOW(), 'testuser'),
+    (2004, 0, 'Zeta', 'Zeta GmbH', 'Zetastr. 99', 'DEU', '70173', 'Stuttgart', FALSE,
      NOW(), 'testuser', NOW(), 'testuser')
 ON DUPLICATE KEY UPDATE db_version = db_version;
 
--- Kunde (1 Stück)
+-- Kunde (3 Stück für Sortierungstests)
 INSERT IGNORE INTO kunde
     (id, db_version, name1, company, street, country, plz, city, contactforbidden,
      creation_date, creation_user, changed_date, changed_user)
 VALUES
     (3001, 0, 'Kunde', 'Kunde AG', 'Kundenallee 5', 'DEU', '70173', 'Stuttgart', FALSE,
+     NOW(), 'testuser', NOW(), 'testuser'),
+    (3003, 0, 'Beta', 'Beta Kunden GmbH', 'Betaweg 20', 'DEU', '80331', 'München', FALSE,
+     NOW(), 'testuser', NOW(), 'testuser'),
+    (3004, 0, 'Gamma', 'Gamma AG', 'Gammastr. 7', 'DEU', '10115', 'Berlin', FALSE,
      NOW(), 'testuser', NOW(), 'testuser')
 ON DUPLICATE KEY UPDATE db_version = db_version;
 
--- Projekt (2 Stück: 4001 → Kunde 3001, 4002 → Partner 2001)
+-- Projekt (4 Stück für Sortierungstests)
 INSERT IGNORE INTO project
     (id, db_version, project_number, description_short, status, customer_id, partner_id,
      creation_date, creation_user, changed_date, changed_user)
@@ -73,6 +81,10 @@ VALUES
     (4001, 0, 'E2E-P001', 'E2E Testprojekt', 1, 3001, NULL,
      NOW(), 'testuser', NOW(), 'testuser'),
     (4002, 0, 'E2E-P002', 'E2E Partnerprojekt', 4, NULL, 2001,
+     NOW(), 'testuser', NOW(), 'testuser'),
+    (4003, 0, 'E2E-P003', 'E2E Alpha Projekt', 2, 3001, NULL,
+     NOW(), 'testuser', NOW(), 'testuser'),
+    (4004, 0, 'E2E-P004', 'E2E Beta Projekt', 1, 3003, NULL,
      NOW(), 'testuser', NOW(), 'testuser')
 ON DUPLICATE KEY UPDATE db_version = db_version;
 

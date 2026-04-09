@@ -19,9 +19,12 @@ export default defineConfig({
         baseURL: `http://localhost:${PORT}`,
         locale: 'de-DE',
         timezoneId: 'Europe/Berlin',
-        screenshot: 'on',
+        screenshot: {
+            mode: 'on',
+            fullPage: true,  // Fullpage-Screenshots für lange Seiten
+        },
         video: 'on',
-        trace: 'on-first-retry',
+        trace: 'retain-on-failure',  // Traces bei Fehlern für besseres Debugging
         storageState: 'fixtures/auth-state.json',
     },
 

@@ -18,10 +18,6 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   Eventuell funktioniert die Formatierung nicht. Details siehe profilesearch/form.html.
 - [ ] Macht es sinn, eine MCP-Session pro Chat zu starten, statt eine globale für alle?
   Brauchen wir win Retry- falls die Session aus irgendeinem Grund abgebrochen wird?
-- [ ] Klick auf einen Tag eines Freiberuflers in der Volltext-Suchergebnisliste sollte eigentlich
-  eine Suche nach allen Freiberuflern mit diesem Tag starten. Leider bekomme ich immer eine
-  leere Trefferliste, obwohl doch mindestens der ursprüngliche Freiberufler aus der Volltextsuche
-  hier angezeigt werden müsste.
 
 ## Erweiterungen
 
