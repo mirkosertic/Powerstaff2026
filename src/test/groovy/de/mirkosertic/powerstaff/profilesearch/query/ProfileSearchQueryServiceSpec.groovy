@@ -1,5 +1,7 @@
 package de.mirkosertic.powerstaff.profilesearch.query
 
+import de.mirkosertic.powerstaff.profilesearch.command.McpClientFactory
+import de.mirkosertic.powerstaff.profilesearch.command.McpConnectionProperties
 import org.springframework.jdbc.core.simple.JdbcClient
 import spock.lang.Specification
 import spock.lang.Subject
@@ -8,17 +10,27 @@ import tools.jackson.databind.ObjectMapper
 class ProfileSearchQueryServiceSpec extends Specification {
 
     JdbcClient jdbcClient = Mock()
+    McpClientFactory mcpClientFactory = Mock()
+    McpConnectionProperties mcpConnectionProperties = Mock()
 
     @Subject
-    ProfileSearchQueryService service = new ProfileSearchQueryService(jdbcClient, [], new ObjectMapper())
+    ProfileSearchQueryService service = new ProfileSearchQueryService(
+            jdbcClient,
+            mcpClientFactory,
+            mcpConnectionProperties,
+            new ObjectMapper()
+    )
 
-    def "searchFreelancers delegiert an JdbcClient mit korrekten Parametern"() {
+    def "searchFreelancers delegiert an JdbcClient mit korrekten Parametern wenn MCP disabled"() {
         given:
         def criteria = ProfileSearchCriteria.empty()
         def sqlSpec = Mock(JdbcClient.StatementSpec)
         def paramSpec = Mock(JdbcClient.StatementSpec)
         def paramSpec2 = Mock(JdbcClient.StatementSpec)
         def mappedQuery = Mock(JdbcClient.MappedQuerySpec)
+
+        // MCP disabled → DB-Fallback
+        mcpConnectionProperties.isEnabled() >> false
 
         jdbcClient.sql(_ as String) >> sqlSpec
         sqlSpec.param("limit", 20) >> paramSpec
@@ -31,6 +43,7 @@ class ProfileSearchQueryServiceSpec extends Specification {
 
         then:
         result == []
+        0 * mcpClientFactory.createClient() // MCP-Factory darf nicht aufgerufen werden
     }
 
     def "countSearchFreelancers delegiert an JdbcClient"() {

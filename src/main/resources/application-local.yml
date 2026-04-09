@@ -13,31 +13,36 @@ spring:
       #chat: "ollama"
       chat: "openai"
 
+    # MCP Client Auto-Konfiguration deaktiviert – manuelles Factory-Pattern
     mcp:
       client:
-        streamable-http:
-          connections:
-            lucene-search:
-             url: http://localhost:11000
-             endpoint: /mcp/message
+        enabled: false
+    # Alte Config (nicht mehr verwendet):
+    #   streamable-http:
+    #     connections:
+    #       lucene-search:
+    #        url: http://localhost:9000
+    #        endpoint: /mcp/message
 
     openai:
       base-url: http://localhost:1234
       api-key: "dummy"
       chat:
         options:
-          model: qwen/qwen3-14b
+          model: unsloth-deepseek-r1-distill-qwen-14b
           temperature: 0.7
           stream-usage: true
     #ollama:
     #  base-url: http://localhost:11434
     #  init:
-    #    pull-model-strategy: always
+    #    pull-model-strategy: when_missing
     #    timeout: 60s
     #    max-retries: 1
     #  chat:
     #    options:
-    #      model: qwen3.5:4b
+    #      model: qwen3.5:9b
+          # model: ministral-3:8b
+          # model: ministral-3:14b
 
 # Logging – Entwicklung
 logging:
@@ -54,3 +59,13 @@ server:
       cookie:
         secure: false
         same-site: lax
+
+# MCP (Model Context Protocol) – Entwicklung: aktiviert mit Retry-Logik
+powerstaff:
+  mcp:
+    enabled: true
+    url: http://localhost:9000
+    endpoint: /mcp/message
+    request-timeout: 10s
+    max-retries: 2
+    retry-delay: 500ms

@@ -15,7 +15,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.List;
 
 @Configuration
-@EnableConfigurationProperties(ProfileSearchProperties.class)
+@EnableConfigurationProperties({ProfileSearchProperties.class, McpConnectionProperties.class})
 public class ProfileSearchConfig {
 
     @Bean

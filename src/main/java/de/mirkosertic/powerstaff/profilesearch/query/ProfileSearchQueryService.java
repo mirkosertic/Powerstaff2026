@@ -1,5 +1,8 @@
 package de.mirkosertic.powerstaff.profilesearch.query;
 
+import de.mirkosertic.powerstaff.profilesearch.command.McpClientFactory;
+import de.mirkosertic.powerstaff.profilesearch.command.McpConnectionException;
+import de.mirkosertic.powerstaff.profilesearch.command.McpConnectionProperties;
 import de.mirkosertic.powerstaff.shared.ProjectStatus;
 import de.mirkosertic.powerstaff.shared.query.TagView;
 import io.modelcontextprotocol.client.McpSyncClient;
@@ -29,12 +32,17 @@ public class ProfileSearchQueryService {
     static final String MCP_SEMANTIC_SEARCH_TOOL_NAME = "semanticSearch";
 
     private final JdbcClient jdbcClient;
-    private final List<McpSyncClient> mcpClients;
+    private final McpClientFactory mcpClientFactory;
+    private final McpConnectionProperties mcpConnectionProperties;
     private final ObjectMapper objectMapper;
 
-    public ProfileSearchQueryService(final JdbcClient jdbcClient, final List<McpSyncClient> mcpClients, final ObjectMapper objectMapper) {
+    public ProfileSearchQueryService(final JdbcClient jdbcClient,
+                                       final McpClientFactory mcpClientFactory,
+                                       final McpConnectionProperties mcpConnectionProperties,
+                                       final ObjectMapper objectMapper) {
         this.jdbcClient = jdbcClient;
-        this.mcpClients = mcpClients;
+        this.mcpClientFactory = mcpClientFactory;
+        this.mcpConnectionProperties = mcpConnectionProperties;
         this.objectMapper = objectMapper;
     }
 
@@ -170,38 +178,52 @@ public class ProfileSearchQueryService {
     }
 
     public List<ProfileSearchResult> searchFreelancers(final ProfileSearchCriteria criteria, final int offset, final int limit) {
-        final Optional<McpSyncClient> mcpClient = findMcpClientWithSearchTool();
-        if (mcpClient.isPresent()) {
-            logger.debug("MCP Tool gefunden – delegiere Suche an MCP-Server");
-            return searchFreelancersViaMcp(mcpClient.get(), criteria, offset, limit);
+        // MCP deaktiviert → DB-Fallback (nur für E2E-Tests)
+        if (!mcpConnectionProperties.isEnabled()) {
+            logger.debug("MCP deaktiviert – Suche über DB");
+            return searchFreelancersViaDb(criteria, offset, limit);
         }
-        logger.debug("Kein MCP Tools verfügbar – Suche über DB");
-        return searchFreelancersViaDb(criteria, offset, limit);
+
+        // MCP enabled → Suche mit Retry, bei Fehler Exception an User
+        try (final McpSyncClient client = mcpClientFactory.createClient()) {
+            return searchFreelancersViaMcp(client, criteria, offset, limit);
+        } catch (final McpConnectionException e) {
+            // Nach Retries fehlgeschlagen → User-Fehler
+            logger.error("MCP-Suche fehlgeschlagen nach {} Versuchen",
+                    mcpConnectionProperties.getMaxRetries() + 1, e);
+            throw new McpSearchException(
+                    "Die Profilsuche ist momentan nicht verfügbar. Bitte versuchen Sie es später erneut.",
+                    e
+            );
+        } catch (final Exception e) {
+            // Unerwarteter Fehler (z.B. Tool-Call, Parsing)
+            logger.error("Unerwarteter Fehler bei MCP-Suche", e);
+            throw new McpSearchException("Profilsuche fehlgeschlagen.", e);
+        }
     }
 
     // ── MCP-Pfad ──────────────────────────────────────────────────────────────
 
-    /** Sucht den ersten MCP-Client, der ein Tool mit dem Namen {@value #MCP_EXTENDED_SEARCH_TOOL_NAME} anbietet. */
-    private Optional<McpSyncClient> findMcpClientWithSearchTool() {
-        for (final McpSyncClient client : mcpClients) {
-            try {
-                final McpSchema.ListToolsResult result = client.listTools();
-                final boolean hasSearch = result.tools().stream()
-                        .anyMatch(t -> MCP_EXTENDED_SEARCH_TOOL_NAME.equals(t.name()) || MCP_SEMANTIC_SEARCH_TOOL_NAME.equals(t.name()));
-                if (hasSearch) {
-                    return Optional.of(client);
-                }
-            } catch (final Exception e) {
-                logger.warn("Fehler beim Abfragen der Tools von MCP-Client {}: {}", client, e.getMessage());
-            }
-        }
-        return Optional.empty();
-    }
-
-    /** Ruft das MCP-Search-Tool auf und konvertiert das Ergebnis in {@link ProfileSearchResult}-Objekte. */
+    /**
+     * Ruft das MCP-Search-Tool auf und konvertiert das Ergebnis in {@link ProfileSearchResult}-Objekte.
+     * Voraussetzung: Client ist bereits initialisiert und verfügt über Search-Tools.
+     */
     private List<ProfileSearchResult> searchFreelancersViaMcp(final McpSyncClient client,
                                                                final ProfileSearchCriteria criteria,
                                                                final int offset, final int limit) {
+        // 1. Verifiziere dass Client Search-Tools anbietet
+        final McpSchema.ListToolsResult toolsResult = client.listTools();
+        final boolean hasSearchTool = toolsResult.tools().stream()
+                .anyMatch(t -> MCP_EXTENDED_SEARCH_TOOL_NAME.equals(t.name())
+                        || MCP_SEMANTIC_SEARCH_TOOL_NAME.equals(t.name()));
+
+        if (!hasSearchTool) {
+            logger.error("MCP-Client bietet kein Search-Tool an. Verfügbare Tools: {}",
+                    toolsResult.tools().stream().map(McpSchema.Tool::name).toList());
+            throw new McpSearchException("MCP-Server bietet kein Search-Tool an.", null);
+        }
+
+        // 2. Tool aufrufen
         final Map<String, Object> arguments = buildMcpSearchArguments(criteria, offset, limit);
         final McpSchema.CallToolResult toolResult;
         if (criteria.isSemanticSearchActive()) {
@@ -213,10 +235,14 @@ public class ProfileSearchQueryService {
             toolResult = client.callTool(
                     new McpSchema.CallToolRequest(MCP_EXTENDED_SEARCH_TOOL_NAME, arguments));
         }
+
+        // 3. Fehlerbehandlung
         if (Boolean.TRUE.equals(toolResult.isError())) {
-            logger.error("MCP '{}'-Tool meldete einen Fehler: {}", MCP_EXTENDED_SEARCH_TOOL_NAME, toolResult.content());
-            return List.of();
+            logger.error("MCP Search-Tool meldete einen Fehler: {}", toolResult.content());
+            throw new McpSearchException("MCP-Suche lieferte Fehler.", null);
         }
+
+        // 4. Ergebnis parsen
         return parseMcpSearchResult(toolResult, criteria.isSemanticSearchActive());
     }
 

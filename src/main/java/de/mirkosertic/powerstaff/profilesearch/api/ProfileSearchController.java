@@ -4,6 +4,7 @@ import de.mirkosertic.powerstaff.profilesearch.command.LlmService;
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchCommandService;
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchProperties;
 import de.mirkosertic.powerstaff.profilesearch.query.ChatListView;
+import de.mirkosertic.powerstaff.profilesearch.query.McpSearchException;
 import de.mirkosertic.powerstaff.profilesearch.query.MessageView;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchCriteria;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -353,6 +355,38 @@ public class ProfileSearchController {
     private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
         if (principal == null) return null;
         return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);
+    }
+
+    /**
+     * Exception-Handler für MCP-Suchfehler.
+     * <p>
+     * Zeigt dem Benutzer eine verständliche Fehlermeldung an, wenn die MCP-basierte
+     * Profilsuche nach allen Retry-Versuchen fehlgeschlagen ist.
+     */
+    @ExceptionHandler(McpSearchException.class)
+    public String handleMcpSearchException(final McpSearchException ex,
+                                           @RequestParam(required = false) final String searchTerm,
+                                           @RequestParam(required = false) final Long salaryPerDayFrom,
+                                           @RequestParam(required = false) final Long salaryPerDayTo,
+                                           @RequestParam(required = false) final String tagIds,
+                                           @RequestParam(required = false) final String sortField,
+                                           @RequestParam(required = false) final String sortDir,
+                                           @RequestParam(required = false) final Boolean semanticSearch,
+                                           final Principal principal,
+                                           final Model model) {
+        final ProfileSearchCriteria criteria = new ProfileSearchCriteria(
+                searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch);
+
+        model.addAttribute("error", ex.getMessage());
+        model.addAttribute("results", List.of());
+        model.addAttribute("totalCount", 0L);
+        model.addAttribute("criteria", criteria);
+        model.addAttribute("sortField", criteria.sortField());
+        model.addAttribute("sortDir", criteria.sortDir());
+        model.addAttribute("nextUrl", null);
+        model.addAttribute("allTags", tagQueryService.findAll());
+        model.addAttribute("rememberedProject", buildRememberedProjectInfo(principal));
+        return "profilesearch/search-page";
     }
 
 }
