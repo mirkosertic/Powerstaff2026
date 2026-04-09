@@ -85,15 +85,20 @@ public class McpClientFactory {
     /**
      * Baut den MCP-Client mit HTTP-Streaming-Transport.
      * Verwendet Spring AI's Builder-API für HttpClientStreamableHttpTransport.
+     * <p>
+     * Wichtig: URL und Endpoint müssen separat übergeben werden:
+     * <ul>
+     *   <li>builder(url) - nur Base-URL (Schema + Host + Port)</li>
+     *   <li>.endpoint(path) - Pfad zum MCP-Endpoint</li>
+     * </ul>
      */
     private McpSyncClient buildClient() {
-        final String mcpServerUrl = properties.getUrl() + properties.getEndpoint();
-
         // 1. JSON Mapper erstellen
         final JsonMapper jsonMapper = JsonMapper.builder().build();
 
-        // 2. Transport aufbauen
-        final HttpClientStreamableHttpTransport transport = HttpClientStreamableHttpTransport.builder(mcpServerUrl)
+        // 2. Transport aufbauen (URL und Endpoint separat!)
+        final HttpClientStreamableHttpTransport transport = HttpClientStreamableHttpTransport.builder(properties.getUrl())
+                .endpoint(properties.getEndpoint())
                 .clientBuilder(HttpClient.newBuilder()
                         .connectTimeout(properties.getRequestTimeout()))
                 .jsonMapper(new JacksonMcpJsonMapper(jsonMapper))
