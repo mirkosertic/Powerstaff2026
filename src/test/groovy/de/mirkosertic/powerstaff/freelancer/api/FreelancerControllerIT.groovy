@@ -111,7 +111,7 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
         when(queryService.findTagsByFreelancerId(anyLong())).thenReturn([])
         when(queryService.findAvailableTagsByFreelancerIdAndType(anyLong(), any())).thenReturn([])
         when(queryService.search(any(), anyInt(), anyInt())).thenReturn([
-                new FreelancerSearchResult(1L, "CODE-001", "Mustermann", "Max", null, "Berlin", null, null, null, null, null)
+                new FreelancerSearchResult(1L, "CODE-001", "Mustermann", "Max", null, "Berlin", null, null, null, null, null, [])
         ])
         when(queryService.countSearch(any())).thenReturn(1L)
 
@@ -416,7 +416,7 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
     def "buildSearchMoreUrl enthaelt alle Kriterien im X-Next-Url Header"() {
         given: "genau PAGE_SIZE Treffer, damit nextUrl gesetzt wird"
         def twentyResults = (1..20).collect { i ->
-            new FreelancerSearchResult(i as Long, "CODE-$i", "Mustermann$i", null, null, "Berlin", null, null, null, null, null)
+            new FreelancerSearchResult(i as Long, "CODE-$i", "Mustermann$i", null, null, "Berlin", null, null, null, null, null, [])
         }
         when(queryService.search(any(), anyInt(), anyInt())).thenReturn(twentyResults)
         when(queryService.countSearch(any())).thenReturn(100L)
@@ -445,7 +445,7 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
         given: "weitere Treffer vorhanden"
         when(queryService.search(any(), anyInt(), anyInt())).thenReturn(
                 (1..20).collect { i ->
-                    new FreelancerSearchResult(i as Long, "CODE-$i", "Mustermann$i", null, null, "Berlin", null, null, null, null, null)
+                    new FreelancerSearchResult(i as Long, "CODE-$i", "Mustermann$i", null, null, "Berlin", null, null, null, null, null, [])
                 }
         )
         when(queryService.countSearch(any())).thenReturn(100L)
@@ -469,7 +469,7 @@ class FreelancerControllerIT extends AbstractContainerBaseIT {
     def "buildSearchMoreUrl kein X-Next-Url Header wenn keine weiteren Treffer"() {
         given:
         when(queryService.search(any(), anyInt(), anyInt())).thenReturn([
-                new FreelancerSearchResult(1L, "CODE-001", "Mustermann", null, null, "Berlin", null, null, null, null, null)
+                new FreelancerSearchResult(1L, "CODE-001", "Mustermann", null, null, "Berlin", null, null, null, null, null, [])
         ])
         when(queryService.countSearch(any())).thenReturn(1L)
 
