@@ -17,6 +17,11 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+  onnx:
+    image: mirkosertic42/mcpluceneserver_onnx:main
+    container_name: powerstaff-lucenemcp-onnx-models
+    volumes:
+      - onnx-models:/onnxmodels
   lucene-mcp:
     image: mirkosertic42/mcpluceneserver:main
     container_name: powerstaff-lucenemcp
@@ -24,11 +29,35 @@ services:
       - "9000:9000"
     volumes:
       - ./lucene_mcp_data:/userdata:rw
+      - onnx-models:/onnxmodels:ro
     environment:
       SPRING_PROFILES_ACTIVE: "deployed"
       LUCENE_TOOLS_INCLUDE: "search,semantic,debug,getDocumentDetails"
       VECTOR_MODEL: "e5-base"
+      ONNX_MODELS_PATH: "/onnxmodels"
+    depends_on:
+      - mysql
+      - onnx
 
+  mysql-backup:
+    image: fradelg/mysql-cron-backup
+    container_name: powerstaff-mysql-backup
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: "3306"
+      MYSQL_USER: powerstaff
+      MYSQL_PASS: powerstaff
+      MYSQL_DB: powerstaff
+      CRON_TIME: "0 3 * * *"
+      MAX_BACKUPS: "7"
+      INIT_BACKUP: "1"
+      MYSQLDUMP_OPTS: "--no-tablespaces"
+    volumes:
+      - ./powerstaff_mysql_backups_data:/backup:rw
+    restart: unless-stopped
 
   #ollama:
   #  image: ollama/ollama
@@ -58,3 +87,6 @@ services:
   #  environment:
   #    - "OLLAMA_BASE_URL=http://ollama:11434"
   #  restart: unless-stopped
+
+volumes:
+  onnx-models:

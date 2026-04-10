@@ -16,6 +16,12 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   werden, ich sehe allerdings nur den Markdown-Code, und nicht den Link. Als
   Markdown-Code wird "[Profil DEV-20017.txt](/freelancer/search?code=DEV-20017&returnTo=profilesearch-chat-17)" angezeigt.  
   Eventuell funktioniert die Formatierung nicht. Details siehe profilesearch/form.html.
+- [ ] In der Profil-Volltextsuche kann ich Tags auswählen. Manchmal passier es, dass mehrere Tags ausgewählt
+  werden, wenn ich einen selektiere. Ich weis noch nicht, warum das passiert. Eventuell gibt es
+  Verwirrung mit den IDs (tag vs. freelancer_tag vs. ?)?
+- [ ] Wenn ein Freiberufler einem Partner zugewiesen ist, so wird auf dem Freiberufler-Formular
+  als Partner nur die Partner-ID, jedoch nicht der Name bzw. die Firma des Partners angezeigt.
+  Das sollte hier aber sichtbar sein, mit der ID kann ein Anwender nichts anfangan.
 
 ## Erweiterungen
 
@@ -36,3 +42,16 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [ ] Anzeige des Treffer-Scores in der Volltextsuche und der semantischen Suche
 - [ ] Möglichkeit des Löschen von Chat-Nachrichten in einem Chat; Branching ab einem bestimmten Punkt
   zu einem neuen Chat.
+- [ ] Projekte sollen über eine Checkbox als "Auf Homepage sichtbar" markierbar sein. Dieses Flag
+  soll in der Datenbank am Projekt gespeichert werden, und standardmäßig "false", also nicht sichtbar sein.
+  Die Anzeige erfolgt im Projekt-Formular an passender Stelle. Das Flag ist nicht Teil der Projekt QBE Suche
+- [ ] Alle als "Auf der Homepage sichtbar" gekennzeichneten Projekte sollen auf der Homepage angezeigt werden.
+  Dafür müssen diese Projekte in eine eigenständige MySQL Datenbank in eine spezielle Tabelle exportiert werden.
+  Es handelt sich hier um eine Master-Slave Replikation, die Datenbank für die Homepage ist Read-Only für die
+  Homepage. Die Replikation soll laufend erfolgen. Projekte, die als nicht mehr sichtbar gekennzeichnet sind,
+  müssen aus der Homepage zuverlässig entfernt werden. Ob dieser Replikationsjob Teil der Anwendung ist
+  oder ob das, analog dem MySQL-Backup-Job, ein eigenständiger Container wird, gilt es zu definieren. Wichtig ist,
+  dass auf Ebene Powerstaff das fachliche Merkmal für die Sichtbarkeit von den Anwendern gepflegt werden kann.
+- [ ] Die API-Tokens für die Chat/LLM Integration sollen vom Administrator und nur dem Administrator
+  auf Ebene Benutzer pflegbar sein. Jeder Benutzer verwendet seinen eigenen API-Token für den Chat. Damit
+  soll eine individuelle Abrechnung der Arbeitsplätze erfolgen.
