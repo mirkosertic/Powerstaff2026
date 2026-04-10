@@ -23,3 +23,7 @@ jobs:
 
       - name: Build with Maven
         run: ./mvnw clean package verify
+
+      - name: Run E2E Tests
+        run: ./mvnw clean verify -Pe2e -DskipTests
+
