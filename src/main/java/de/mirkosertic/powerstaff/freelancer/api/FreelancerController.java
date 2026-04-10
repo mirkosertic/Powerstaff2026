@@ -9,7 +9,6 @@ import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerContactEntry;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerHistoryEntry;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerHasPositionsException;
-import de.mirkosertic.powerstaff.freelancer.command.FreelancerTagCommandService;
 import de.mirkosertic.powerstaff.freelancer.command.FreelancerTagEntry;
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerQueryService;
 import de.mirkosertic.powerstaff.freelancer.query.FreelancerSearchCriteria;
@@ -55,7 +54,6 @@ public class FreelancerController {
 
     private final FreelancerCommandService commandService;
     private final FreelancerQueryService queryService;
-    private final FreelancerTagCommandService tagCommandService;
     private final HistoryTypeQueryService historyTypeQueryService;
     private final RememberedProjectService rememberedProjectService;
     private final ProjectPositionCommandService positionCommandService;
@@ -63,14 +61,12 @@ public class FreelancerController {
 
     public FreelancerController(final FreelancerCommandService commandService,
                                 final FreelancerQueryService queryService,
-                                final FreelancerTagCommandService tagCommandService,
                                 final HistoryTypeQueryService historyTypeQueryService,
                                 final RememberedProjectService rememberedProjectService,
                                 final ProjectPositionCommandService positionCommandService,
                                 final ObjectMapper objectMapper) {
         this.commandService = commandService;
         this.queryService = queryService;
-        this.tagCommandService = tagCommandService;
         this.historyTypeQueryService = historyTypeQueryService;
         this.rememberedProjectService = rememberedProjectService;
         this.positionCommandService = positionCommandService;
@@ -159,6 +155,10 @@ public class FreelancerController {
             model.addAttribute("contacts", List.of());
             model.addAttribute("history", List.of());
             model.addAttribute("tags", List.of());
+        }
+        if (freelancer.getPartnerId() != null) {
+            queryService.findPartnerById(freelancer.getPartnerId())
+                    .ifPresent(p -> model.addAttribute("partner", p));
         }
         model.addAttribute("historyTypes", historyTypeQueryService.findAll());
         model.addAttribute("tagTypes", TagType.values());

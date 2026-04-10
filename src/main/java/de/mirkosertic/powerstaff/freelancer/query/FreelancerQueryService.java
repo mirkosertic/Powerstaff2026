@@ -209,6 +209,17 @@ public class FreelancerQueryService {
                 .toList();
     }
 
+    public Optional<FreelancerPartnerView> findPartnerById(final long partnerId) {
+        return jdbcClient.sql("""
+                SELECT id, company, name1, name2
+                FROM partner
+                WHERE id = :partnerId
+                """)
+                .param("partnerId", partnerId)
+                .query(FreelancerPartnerView.class)
+                .optional();
+    }
+
     public List<TagInfo> findAvailableTagsByFreelancerIdAndType(final long freelancerId, final TagType type) {
         return jdbcClient.sql("""
                 SELECT t.id, t.tagname AS name, t.type

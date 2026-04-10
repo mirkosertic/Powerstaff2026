@@ -141,11 +141,16 @@
             </div>
             <div class="fg">
               <label>Partner</label>
-              <span th:if="${freelancer.partnerId != null}" class="subsection-label">
-                <a th:href="@{/partner/{id}(id=${freelancer.partnerId})}"
-                   th:text="${freelancer.partnerId}">–</a>
+              <span th:if="${partner != null}" class="subsection-label">
+                <a data-testid="partner-link"
+                   th:href="@{/partner/{id}(id=${partner.id})}">
+                  <span th:text="${partner.company}">–</span>
+                  <span th:if="${partner.name1 != null}">
+                    (<span th:text="${(partner.name2 != null ? partner.name2 + ' ' : '') + partner.name1}"></span>)
+                  </span>
+                </a>
               </span>
-              <span th:if="${freelancer.partnerId == null}" class="subsection-label text-muted">Kein Partner</span>
+              <span th:if="${partner == null and freelancer.partnerId == null}" class="subsection-label text-muted">Kein Partner</span>
             </div>
           </div>
         </div>

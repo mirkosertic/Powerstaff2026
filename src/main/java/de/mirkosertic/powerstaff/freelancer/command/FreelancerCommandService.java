@@ -45,6 +45,12 @@ public class FreelancerCommandService {
                            final List<FreelancerContactEntry> contactChanges,
                            final List<FreelancerHistoryEntry> historyChanges,
                            final List<FreelancerTagEntry> tagChanges) {
+        // partner_id wird ausschließlich über das Partner-Modul gesetzt – beim Speichern
+        // des Freiberufler-Formulars bestehenden Wert aus der DB übernehmen.
+        if (freelancer.getId() != null) {
+            freelancerRepository.findById(freelancer.getId())
+                    .ifPresent(existing -> freelancer.setPartnerId(existing.getPartnerId()));
+        }
         // Leeren Code → NULL normalisieren (verhindert UNIQUE-Constraint-Verletzung)
         if (freelancer.getCode() != null && freelancer.getCode().isBlank()) {
             freelancer.setCode(null);

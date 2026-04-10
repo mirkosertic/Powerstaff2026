@@ -30,23 +30,6 @@ INSERT IGNORE INTO tags (tagname, type) VALUES
     ('Java',    'SCHWERPUNKT'),
     ('München', 'EINSATZORT');
 
--- Freiberufler (3 Stück)
-INSERT IGNORE INTO freelancer
-    (id, db_version, name1, name2, company, street, country, plz, city,
-     code, contactforbidden, kontaktart,
-     creation_date, creation_user, changed_date, changed_user)
-VALUES
-    (1001, 0, 'Mustermann', 'Max', NULL, 'Musterstr. 1', 'DEU', '80331', 'München',
-     'E2E-001', FALSE, 'NL',
-     NOW(), 'testuser', NOW(), 'testuser'),
-    (1002, 0, 'Beispiel', 'Erika', NULL, 'Beispielweg 2', 'DEU', '10115', 'Berlin',
-     'E2E-002', FALSE, 'NL',
-     NOW(), 'testuser', NOW(), 'testuser'),
-    (1003, 0, 'Test', 'Klaus', 'TestGmbH', 'Testgasse 3', 'DEU', '20095', 'Hamburg',
-     'E2E-003', FALSE, 'NL',
-     NOW(), 'testuser', NOW(), 'testuser')
-ON DUPLICATE KEY UPDATE db_version = db_version;
-
 -- Partner (3 Stück für Sortierungstests)
 INSERT IGNORE INTO partner
     (id, db_version, name1, company, street, country, plz, city, contactforbidden,
@@ -57,6 +40,23 @@ VALUES
     (2003, 0, 'Alpha', 'Alpha Partner AG', 'Alphaweg 1', 'DEU', '60311', 'Frankfurt', FALSE,
      NOW(), 'testuser', NOW(), 'testuser'),
     (2004, 0, 'Zeta', 'Zeta GmbH', 'Zetastr. 99', 'DEU', '70173', 'Stuttgart', FALSE,
+     NOW(), 'testuser', NOW(), 'testuser')
+ON DUPLICATE KEY UPDATE db_version = db_version;
+
+-- Freiberufler (3 Stück)
+INSERT IGNORE INTO freelancer
+    (id, db_version, name1, name2, company, street, country, plz, city,
+     code, contactforbidden, kontaktart, partner_id,
+     creation_date, creation_user, changed_date, changed_user)
+VALUES
+    (1001, 0, 'Mustermann', 'Max', NULL, 'Musterstr. 1', 'DEU', '80331', 'München',
+     'E2E-001', FALSE, 'NL', 2001,
+     NOW(), 'testuser', NOW(), 'testuser'),
+    (1002, 0, 'Beispiel', 'Erika', NULL, 'Beispielweg 2', 'DEU', '10115', 'Berlin',
+     'E2E-002', FALSE, 'NL', NULL,
+     NOW(), 'testuser', NOW(), 'testuser'),
+    (1003, 0, 'Test', 'Klaus', 'TestGmbH', 'Testgasse 3', 'DEU', '20095', 'Hamburg',
+     'E2E-003', FALSE, 'NL', NULL,
      NOW(), 'testuser', NOW(), 'testuser')
 ON DUPLICATE KEY UPDATE db_version = db_version;
 

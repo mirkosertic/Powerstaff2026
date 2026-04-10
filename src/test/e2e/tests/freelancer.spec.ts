@@ -146,4 +146,17 @@ test.describe('Freiberufler', () => {
         }
     });
 
+    test('Freiberufler mit Partner: Partner-Link zeigt Firmenname und navigiert zum Partner', async ({ page }) => {
+        await page.goto('/freelancer/1001');
+
+        const partnerLink = page.locator('[data-testid="partner-link"]');
+        await expect(partnerLink).toBeVisible();
+        await expect(partnerLink).toContainText('Partner GmbH');
+
+        await partnerLink.click();
+        await page.waitForURL(/\/partner\/2001/);
+
+        await expect(page.locator('input[name="company"]')).toHaveValue('Partner GmbH');
+    });
+
 });

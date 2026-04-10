@@ -19,9 +19,6 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [ ] In der Profil-Volltextsuche kann ich Tags auswählen. Manchmal passier es, dass mehrere Tags ausgewählt
   werden, wenn ich einen selektiere. Ich weis noch nicht, warum das passiert. Eventuell gibt es
   Verwirrung mit den IDs (tag vs. freelancer_tag vs. ?)?
-- [ ] Wenn ein Freiberufler einem Partner zugewiesen ist, so wird auf dem Freiberufler-Formular
-  als Partner nur die Partner-ID, jedoch nicht der Name bzw. die Firma des Partners angezeigt.
-  Das sollte hier aber sichtbar sein, mit der ID kann ein Anwender nichts anfangan.
 
 ## Erweiterungen
 
@@ -42,9 +39,6 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 - [ ] Anzeige des Treffer-Scores in der Volltextsuche und der semantischen Suche
 - [ ] Möglichkeit des Löschen von Chat-Nachrichten in einem Chat; Branching ab einem bestimmten Punkt
   zu einem neuen Chat.
-- [ ] Projekte sollen über eine Checkbox als "Auf Homepage sichtbar" markierbar sein. Dieses Flag
-  soll in der Datenbank am Projekt gespeichert werden, und standardmäßig "false", also nicht sichtbar sein.
-  Die Anzeige erfolgt im Projekt-Formular an passender Stelle. Das Flag ist nicht Teil der Projekt QBE Suche
 - [ ] Alle als "Auf der Homepage sichtbar" gekennzeichneten Projekte sollen auf der Homepage angezeigt werden.
   Dafür müssen diese Projekte in eine eigenständige MySQL Datenbank in eine spezielle Tabelle exportiert werden.
   Es handelt sich hier um eine Master-Slave Replikation, die Datenbank für die Homepage ist Read-Only für die
