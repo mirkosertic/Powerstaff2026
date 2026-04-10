@@ -37,10 +37,7 @@ lucene:
             sync:
                 enabled: false
                 intervalMinutes: 5
-                query: >
-                    SELECT file_path, updated_at
-                    FROM document_metadata
-                    WHERE updated_at > :last_sync_timestamp
-                filePathColumn: file_path
-                timestampColumn: updated_at
-```
+                query: |
+                  SELECT code AS dbmeta_code
+                  FROM freelancer
+                  WHERE creation_date > :last_sync_timestamp OR creation_date > :last_sync_timestamp                
