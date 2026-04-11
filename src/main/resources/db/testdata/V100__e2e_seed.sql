@@ -25,10 +25,16 @@ INSERT IGNORE INTO project_position_status (description, color, color_text, is_d
     ('Vorgeschlagen', '#dbeafe', '#1e40af', TRUE),
     ('Im Gespräch',   '#fef9c3', '#713f12', FALSE);
 
--- Tags
+-- Tags (Java=ID 1, München=ID 2 via Auto-Increment in frischer DB)
 INSERT IGNORE INTO tags (tagname, type) VALUES
     ('Java',    'SCHWERPUNKT'),
     ('München', 'EINSATZORT');
+
+-- Tags mit expliziten IDs für Regressionstests (Substring-Bug Tag-Selektion):
+-- tagIds=1 darf NICHT auch ID 10 oder 11 selektieren.
+INSERT IGNORE INTO tags (id, tagname, type) VALUES
+    (10, 'E2E-Tag-10', 'SCHWERPUNKT'),
+    (11, 'E2E-Tag-11', 'EINSATZORT');
 
 -- Partner (3 Stück für Sortierungstests)
 INSERT IGNORE INTO partner

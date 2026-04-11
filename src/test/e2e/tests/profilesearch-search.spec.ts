@@ -196,7 +196,109 @@ test.describe('Profilsuche – Klassische Suche', () => {
     });
 
     // =========================================================================
-    // Szenario 8: Tag-Navigation – Profilsuche → Tag-Klick → Freiberufler-Liste → Zurück
+    // Szenario 8: Tag-Chip-Selektion im Suchformular
+    // =========================================================================
+
+    test('Tag selektieren: Chip erhält Klasse "selected" und ID erscheint im hidden input', async ({ page }) => {
+        // Arrange: Suchseite laden – allTags wird immer befüllt, auch ohne Kriterien
+        await page.goto('/profilesearch/search');
+        const chip1 = page.locator('[data-testid="tag-chip-1"]');
+        await expect(chip1).toBeVisible();
+
+        // Vorbedingung: Chip noch nicht selektiert
+        await expect(chip1).not.toHaveClass(/selected/);
+        await expect(page.locator('#tag-ids-input')).toHaveValue('');
+
+        // Act: Tag-Chip klicken
+        await chip1.click();
+
+        // Assert: Chip selektiert, ID im hidden input
+        await expect(chip1).toHaveClass(/selected/);
+        await expect(page.locator('#tag-ids-input')).toHaveValue('1');
+    });
+
+    test('Tag deselektieren: Chip verliert "selected", ID wird aus hidden input entfernt', async ({ page }) => {
+        // Arrange: Suchseite mit vorselektiertem Tag (tagIds=1 ≙ Java)
+        await page.goto('/profilesearch/search?tagIds=1');
+        const chip1 = page.locator('[data-testid="tag-chip-1"]');
+        await expect(chip1).toBeVisible();
+
+        // Vorbedingung: Chip ist bereits selektiert (Thymeleaf-Rendering)
+        await expect(chip1).toHaveClass(/selected/);
+        await expect(page.locator('#tag-ids-input')).toHaveValue('1');
+
+        // Act: nochmals klicken → deselektieren
+        await chip1.click();
+
+        // Assert: Chip nicht mehr selektiert, Input leer
+        await expect(chip1).not.toHaveClass(/selected/);
+        await expect(page.locator('#tag-ids-input')).toHaveValue('');
+    });
+
+    test('Mehrere Tags selektieren: beide IDs kommasepariert im hidden input', async ({ page }) => {
+        // Arrange: leere Suchseite
+        await page.goto('/profilesearch/search');
+        const chip1 = page.locator('[data-testid="tag-chip-1"]');
+        const chip2 = page.locator('[data-testid="tag-chip-2"]');
+        await expect(chip1).toBeVisible();
+        await expect(chip2).toBeVisible();
+
+        // Act: beide Tags selektieren
+        await chip1.click();
+        await chip2.click();
+
+        // Assert: beide selektiert
+        await expect(chip1).toHaveClass(/selected/);
+        await expect(chip2).toHaveClass(/selected/);
+
+        // Assert: hidden input enthält beide IDs
+        const value = await page.locator('#tag-ids-input').inputValue();
+        expect(value.split(',')).toContain('1');
+        expect(value.split(',')).toContain('2');
+    });
+
+    test('Regression Substring-Bug: tagIds=1 selektiert nur Tag-ID 1, nicht Tag-ID 10 oder 11', async ({ page }) => {
+        // Reproduziert den Fix: früher nutzte Thymeleaf #strings.contains("1,10,11", "1"),
+        // was für Tags mit ID 10 und 11 ebenfalls true lieferte.
+        // Seed: E2E-Tag-10 hat ID 10, E2E-Tag-11 hat ID 11 (explizite IDs in V100__e2e_seed.sql).
+        await page.goto('/profilesearch/search?tagIds=1');
+
+        const chip1  = page.locator('[data-testid="tag-chip-1"]');
+        const chip10 = page.locator('[data-testid="tag-chip-10"]');
+        const chip11 = page.locator('[data-testid="tag-chip-11"]');
+
+        await expect(chip1).toBeVisible();
+        await expect(chip10).toBeVisible();
+        await expect(chip11).toBeVisible();
+
+        // Nur ID 1 ist selektiert
+        await expect(chip1).toHaveClass(/selected/);
+
+        // ID 10 und 11 dürfen NICHT selektiert sein (kein Substring-Match)
+        await expect(chip10).not.toHaveClass(/selected/);
+        await expect(chip11).not.toHaveClass(/selected/);
+
+        // Auch der hidden input darf nur "1" enthalten
+        await expect(page.locator('#tag-ids-input')).toHaveValue('1');
+    });
+
+    test('Regression: nach Suche mit tagIds=1 bleiben nur Tag-ID 1 selektiert', async ({ page }) => {
+        // Suche ausführen → Server rendert Seite erneut → Thymeleaf-Selektion wird geprüft
+        await page.goto('/profilesearch/search?tagIds=1');
+        await page.locator('[data-testid="btn-search"]').click();
+        await page.waitForURL(/\/profilesearch\/search\?.*tagIds=1/);
+
+        const chip1  = page.locator('[data-testid="tag-chip-1"]');
+        const chip10 = page.locator('[data-testid="tag-chip-10"]');
+        const chip11 = page.locator('[data-testid="tag-chip-11"]');
+
+        await expect(chip1).toHaveClass(/selected/);
+        await expect(chip10).not.toHaveClass(/selected/);
+        await expect(chip11).not.toHaveClass(/selected/);
+    });
+
+    // =========================================================================
+    // Szenario 9: Tag-Navigation – Profilsuche → Tag-Klick → Freiberufler-Liste → Zurück
     // =========================================================================
 
     test('Tag in Suchergebnis klicken navigiert zu Freiberufler-Suche mit tagId-Filter und zurück zur Profilsuche', async ({ page }) => {

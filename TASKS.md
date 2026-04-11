@@ -16,9 +16,6 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   werden, ich sehe allerdings nur den Markdown-Code, und nicht den Link. Als
   Markdown-Code wird "[Profil DEV-20017.txt](/freelancer/search?code=DEV-20017&returnTo=profilesearch-chat-17)" angezeigt.  
   Eventuell funktioniert die Formatierung nicht. Details siehe profilesearch/form.html.
-- [ ] In der Profil-Volltextsuche kann ich Tags auswählen. Manchmal passier es, dass mehrere Tags ausgewählt
-  werden, wenn ich einen selektiere. Ich weis noch nicht, warum das passiert. Eventuell gibt es
-  Verwirrung mit den IDs (tag vs. freelancer_tag vs. ?)?
 
 ## Erweiterungen
 

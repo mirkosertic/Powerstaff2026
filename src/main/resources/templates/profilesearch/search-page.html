@@ -76,7 +76,7 @@
               <th:block th:each="tag : ${allTags}">
                 <button type="button"
                         class="chip"
-                        th:classappend="${criteria != null and criteria.tagIds() != null and #strings.contains(criteria.tagIds(), tag.id().toString())} ? ' selected' : ''"
+                        th:classappend="${criteria != null and criteria.tagIds() != null and #lists.contains(#strings.arraySplit(criteria.tagIds(), ','), tag.id().toString())} ? ' selected' : ''"
                         th:attr="data-tag-id=${tag.id()},data-testid='tag-chip-' + ${tag.id()}"
                         th:text="${tag.tagname()}"
                         onclick="toggleTagChip(this)">
