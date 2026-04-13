@@ -61,6 +61,14 @@ de.powerstaff
 
 Kommunikation zwischen Modulen ausschließlich über publizierte Service-Interfaces (keine direkten Repository-Aufrufe quer durch Module). Modulgrenzen werden automatisch durch `@ApplicationModuleTest` in der CI-Pipeline verifiziert.
 
+## Qualitätssicherung und Testergebnisse
+
+Powerstaff 2026 setzt auf eine mehrschichtige Teststrategie: Unit-Tests (Spock/Groovy), Integrationstests gegen echte MySQL via Testcontainers, Spring Modulith-Modultests sowie End-to-End-Tests mit Playwright. Die E2E-Tests laufen bei jedem Pull Request automatisch in der CI-Pipeline und prüfen die vollständige Benutzeroberflächenfunktionalität im Browser.
+
+Die jeweils aktuellen **E2E-Testergebnisse** (Playwright-Report mit Screenshots, Traces und Testergebnissen pro Modul) sind öffentlich einsehbar:
+
+**[https://mirkosertic.github.io/Powerstaff2026/](https://mirkosertic.github.io/Powerstaff2026/)**
+
 ---
 
 ## Konfiguration für JDBC Metadaten-Extraktion im MCPLuceneServer
