@@ -16,6 +16,8 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   werden, ich sehe allerdings nur den Markdown-Code, und nicht den Link. Als
   Markdown-Code wird "[Profil DEV-20017.txt](/freelancer/search?code=DEV-20017&returnTo=profilesearch-chat-17)" angezeigt.  
   Eventuell funktioniert die Formatierung nicht. Details siehe profilesearch/form.html.
+- [ ] Sortierung der Felder in der Volltextsuche herstellen; Metadaten und MCP-Tool anpassen;
+  Filer für Tags und Tagessatz an Tool übergeben
 
 ## Erweiterungen
 

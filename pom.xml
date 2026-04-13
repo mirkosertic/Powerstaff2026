@@ -24,7 +24,6 @@
         <gmavenplus.version>4.3.1</gmavenplus.version>
         <pitest.version>1.23.0</pitest.version>
         <pitest-junit5.version>1.2.3</pitest-junit5.version>
-        <pitest-spock.version>0.0.8</pitest-spock.version>
         <jacoco.version>0.8.14</jacoco.version>
         <!-- Standardmäßig leer; JaCoCo überschreibt diese Properties zur Laufzeit -->
         <jacocoArgLine></jacocoArgLine>
@@ -384,11 +383,6 @@
                         <artifactId>pitest-junit5-plugin</artifactId>
                         <version>${pitest-junit5.version}</version>
                     </dependency>
-                    <dependency>
-                        <groupId>io.github.surpsg</groupId>
-                        <artifactId>pitest-spock-plugin</artifactId>
-                        <version>${pitest-spock.version}</version>
-                    </dependency>
                 </dependencies>
                 <configuration>
                     <targetClasses>
@@ -442,6 +436,12 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.21.0</version>
             </plugin>
 
         </plugins>
@@ -537,6 +537,7 @@
                                 </configuration>
                             </execution>
                             <!-- Durchlauf 1: Chromium – blob-Report für späteres Merge -->
+                            <!-- Exit-Code wird in Datei gespeichert; Firefox-Lauf läuft immer durch -->
                             <execution>
                                 <id>e2e-playwright-chromium</id>
                                 <phase>integration-test</phase>
@@ -544,24 +545,16 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>npx</executable>
+                                    <executable>bash</executable>
                                     <arguments>
-                                        <argument>playwright</argument>
-                                        <argument>test</argument>
-                                        <argument>--project=setup</argument>
-                                        <argument>--project=chromium</argument>
-                                        <argument>--project=non-admin-chromium</argument>
-                                        <argument>--reporter=blob</argument>
+                                        <argument>-c</argument>
+                                        <argument>npx playwright test --project=setup --project=chromium --project=non-admin-chromium --reporter=blob; echo $? &gt; "$EXIT_FILE"; exit 0</argument>
                                     </arguments>
                                     <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
                                     <environmentVariables>
                                         <PLAYWRIGHT_BLOB_OUTPUT_DIR>${project.build.directory}/e2e-blob-chromium</PLAYWRIGHT_BLOB_OUTPUT_DIR>
+                                        <EXIT_FILE>${project.build.directory}/playwright-chromium-exit.txt</EXIT_FILE>
                                     </environmentVariables>
-                                    <!-- successCode 1 = Testfehler, aber Firefox-Lauf soll trotzdem laufen -->
-                                    <successCodes>
-                                        <successCode>0</successCode>
-                                        <successCode>1</successCode>
-                                    </successCodes>
                                 </configuration>
                             </execution>
                             <!-- Datenbank zwischen den Läufen neu aufsetzen -->
@@ -601,6 +594,7 @@
                                 </configuration>
                             </execution>
                             <!-- Durchlauf 2: Firefox – blob-Report für späteres Merge -->
+                            <!-- Exit-Code wird in Datei gespeichert; Cleanup und Report laufen immer durch -->
                             <execution>
                                 <id>e2e-playwright-firefox</id>
                                 <phase>integration-test</phase>
@@ -608,23 +602,16 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>npx</executable>
+                                    <executable>bash</executable>
                                     <arguments>
-                                        <argument>playwright</argument>
-                                        <argument>test</argument>
-                                        <argument>--project=setup</argument>
-                                        <argument>--project=firefox</argument>
-                                        <argument>--project=non-admin-firefox</argument>
-                                        <argument>--reporter=blob</argument>
+                                        <argument>-c</argument>
+                                        <argument>npx playwright test --project=setup --project=firefox --project=non-admin-firefox --reporter=blob; echo $? &gt; "$EXIT_FILE"; exit 0</argument>
                                     </arguments>
                                     <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
                                     <environmentVariables>
                                         <PLAYWRIGHT_BLOB_OUTPUT_DIR>${project.build.directory}/e2e-blob-firefox</PLAYWRIGHT_BLOB_OUTPUT_DIR>
+                                        <EXIT_FILE>${project.build.directory}/playwright-firefox-exit.txt</EXIT_FILE>
                                     </environmentVariables>
-                                    <successCodes>
-                                        <successCode>0</successCode>
-                                        <successCode>1</successCode>
-                                    </successCodes>
                                 </configuration>
                             </execution>
                             <!-- Blob-Dateien beider Browser in ein gemeinsames Verzeichnis kopieren -->
@@ -686,6 +673,27 @@
                                         <argument>down</argument>
                                         <argument>-v</argument>
                                     </arguments>
+                                </configuration>
+                            </execution>
+                            <!-- Build fehlschlagen lassen wenn E2E-Tests fehlgeschlagen sind.
+                                 Läuft in verify (nach post-integration-test), damit Docker-Cleanup
+                                 und Report-Erstellung immer abgeschlossen werden. -->
+                            <execution>
+                                <id>e2e-check-results</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>bash</executable>
+                                    <arguments>
+                                        <argument>-c</argument>
+                                        <argument>code1=$(cat "$CHROMIUM_EXIT" 2>/dev/null || echo 0); code2=$(cat "$FIREFOX_EXIT" 2>/dev/null || echo 0); if [ "$code1" != "0" ] || [ "$code2" != "0" ]; then echo "E2E-Tests fehlgeschlagen (chromium=$code1, firefox=$code2) – siehe target/playwright-report/index.html"; exit 1; fi</argument>
+                                    </arguments>
+                                    <environmentVariables>
+                                        <CHROMIUM_EXIT>${project.build.directory}/playwright-chromium-exit.txt</CHROMIUM_EXIT>
+                                        <FIREFOX_EXIT>${project.build.directory}/playwright-firefox-exit.txt</FIREFOX_EXIT>
+                                    </environmentVariables>
                                 </configuration>
                             </execution>
                         </executions>
