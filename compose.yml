@@ -36,8 +36,10 @@ services:
       VECTOR_MODEL: "e5-base"
       ONNX_MODELS_PATH: "/onnxmodels"
     depends_on:
-      - mysql
-      - onnx
+      mysql:
+        condition: service_healthy
+      onnx:
+        condition: service_started
 
   mysql-backup:
     image: fradelg/mysql-cron-backup

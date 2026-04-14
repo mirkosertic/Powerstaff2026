@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.thymeleaf.util.ArrayUtils;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -256,11 +259,59 @@ public class ProfileSearchQueryService {
         arguments.put("query", criteria.searchTerm());
         arguments.put("sortBy", "_score");
         arguments.put("pageSize", limit);
-        // TODO: Compute right page here...
-        arguments.put("page", 0);
+        arguments.put("page", offset / limit);
         if (criteria.isSemanticSearchActive()) {
             arguments.put("similarityThreshold", 0.75f);
         }
+
+        final List<Object> filters = new ArrayList<>();
+        if (criteria.salaryPerDayFrom() != null || criteria.salaryPerDayTo() != null) {
+            final Map<String, Object> filter = new HashMap<>();
+            filter.put("field", "dbmeta_tagessatz");
+            filter.put("operator", "range");
+            if (criteria.salaryPerDayFrom() != null) {
+                filter.put("from", criteria.salaryPerDayFrom().toString());
+            }
+            if (criteria.salaryPerDayTo() != null) {
+                filter.put("to", criteria.salaryPerDayTo().toString());
+            }
+            filters.add(filter);
+        }
+        if (criteria.tagIds() != null && !criteria.tagIds().isEmpty()) {
+            final String[] tagIds = StringUtils.split(criteria.tagIds(),",");
+            final Map<String, Object> filter = new HashMap<>();
+            filter.put("field", "dbmeta_tags");
+            filter.put("operator", "in");
+            filter.put("values", tagIds);
+            filters.add(filter);
+        }
+
+        arguments.put("filters", filters);
+
+        if (!Objects.isNull(criteria.sortField())) {
+            final Map<String, String> sortMap = new HashMap<>();
+            sortMap.put("name1", "dbmeta_name1");
+            sortMap.put("name2", "dbmeta_name2");
+            sortMap.put("lastContactDate", "dbmeta_name2");
+            sortMap.put("salaryPerDayLong", "dbmeta_tagessatz");
+            sortMap.put("availabilityAsDate", "dbmeta_availability_as_date");
+            sortMap.put("code", "dbmeta_code");
+
+            final String indexField = sortMap.get(criteria.sortField());
+            if (indexField != null) {
+                arguments.put("sortBy", indexField);
+                if ("ASC".equalsIgnoreCase(criteria.sortDir())) {
+                    arguments.put("sortOrder", "asc");;
+                } else if ("DESC".equalsIgnoreCase(criteria.sortDir())) {
+                    arguments.put("sortOrder", "desc");;
+                } else {
+                    logger.warn("Unbekannter Sortierreihenfolge: {}", criteria.sortDir());
+                }
+            } else {
+                logger.warn("Kein Indexfeld gefunden für : {}", criteria.sortField());
+            }
+        }
+
         return arguments;
     }
 

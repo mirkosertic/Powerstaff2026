@@ -16,8 +16,11 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   werden, ich sehe allerdings nur den Markdown-Code, und nicht den Link. Als
   Markdown-Code wird "[Profil DEV-20017.txt](/freelancer/search?code=DEV-20017&returnTo=profilesearch-chat-17)" angezeigt.  
   Eventuell funktioniert die Formatierung nicht. Details siehe profilesearch/form.html.
-- [ ] Sortierung der Felder in der Volltextsuche herstellen; Metadaten und MCP-Tool anpassen;
-  Filer für Tags und Tagessatz an Tool übergeben
+- [ ] Die Anzeige der Volltext-Suchtreffer im Frontend stimmt nicht. ProfileSearchQueryService.search verwendet countSearchFreelancers
+  um die Anzahl der Freiberufler aus der DB zu bestimmen. Das ist allerdings nur ein Fallback für den Fall, dass kein
+  MCP Tool zur Verfügung steht, also eigentlich nur für die e2e Tests.  Eigentlich muss aus der Tool-Antwort SearchResponse.totalHits
+  die Anzahl bestimmt werden für den Fall, dass ein MCP-Tool für die Suche genutzt wurde. Das soll für die einfache,
+  die exterten und semantische Suche so umgesetzt werden.
 
 ## Erweiterungen
 
