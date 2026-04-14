@@ -16,6 +16,7 @@ public record ProfileSearchResult(
         boolean contactForbidden,
         List<TagView> tags,
         String serp,
-        boolean serpIsMarkdown
+        boolean serpIsMarkdown,
+        Double scoreRelative
 ) {
 }

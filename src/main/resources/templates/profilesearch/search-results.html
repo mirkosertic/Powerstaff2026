@@ -34,6 +34,11 @@
       <td colspan="7">
         <div th:if="${r.serpIsMarkdown()}" class="serp-text" th:attr="data-markdown=${r.serp()}"></div>
         <div th:unless="${r.serpIsMarkdown()}" class="serp-text" th:text="${r.serp()}"></div>
+        <div th:if="${r.scoreRelative() != null}" class="score-bar-wrap"
+             th:title="'Trefferqualität: ' + ${#numbers.formatDecimal(r.scoreRelative() * 100, 0, 0)} + '%'">
+          <div class="score-bar"
+               th:style="'width:' + ${#numbers.formatDecimal(r.scoreRelative() * 100, 0, 0)} + '%'"></div>
+        </div>
       </td>
     </tr>
   </th:block>

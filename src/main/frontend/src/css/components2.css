@@ -233,6 +233,21 @@
 .serp-text strong { color: var(--text); font-weight: 600; }
 .serp-text em { color: var(--text); }
 
+.score-bar-wrap {
+  height: 5px;
+  background: var(--border-l);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 5px;
+  width: 100%;
+}
+.score-bar {
+  height: 100%;
+  background: var(--pri);
+  border-radius: 3px;
+  transition: width .3s ease;
+}
+
 /* Kleine Chips (für Tabellenzellen) */
 .chip-xs {
   display: inline-flex;

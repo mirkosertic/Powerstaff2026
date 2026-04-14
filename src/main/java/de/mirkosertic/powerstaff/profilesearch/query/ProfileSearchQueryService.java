@@ -388,7 +388,7 @@ public class ProfileSearchQueryService {
                 String error
         ) {}
 
-        record DocumentEntry(String code, String serp) {}
+        record DocumentEntry(String code, String serp, double score) {}
 
         final List<DocumentEntry> entries = new ArrayList<>();
         long totalHits = 0L;
@@ -411,7 +411,7 @@ public class ProfileSearchQueryService {
                         for (final Passage passage : document.passages()) {
                             serp.append(passage.text()).append(" ");
                         }
-                        entries.add(new DocumentEntry(code, serp.toString()));
+                        entries.add(new DocumentEntry(code, serp.toString(), document.score()));
                     }
                 } else {
                     logger.error("MCP-Search-Tool meldete einen Fehler: {}", response.error());
@@ -434,19 +434,22 @@ public class ProfileSearchQueryService {
                 .toList();
         final Map<Long, List<TagView>> tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);
 
+        final double maxScore = entries.stream().mapToDouble(DocumentEntry::score).max().orElse(1.0);
+
         final List<ProfileSearchResult> results = new ArrayList<>();
         for (final DocumentEntry entry : entries) {
+            final double scoreRelative = maxScore > 0 ? entry.score() / maxScore : 0.0;
             final FreelancerBatchRow freelancer = freelancerByCode.get(entry.code());
             if (freelancer == null) {
                 logger.warn("Kein Freiberufler mit Code '{}' gefunden – MCP-Treffer wird ohne DB-Daten übernommen", entry.code());
-                results.add(new ProfileSearchResult(null, entry.code(), null, null, null, null, null, false, List.of(), entry.serp(), !isSemanticSearch));
+                results.add(new ProfileSearchResult(null, entry.code(), null, null, null, null, null, false, List.of(), entry.serp(), !isSemanticSearch, scoreRelative));
             } else {
                 final List<TagView> tags = tagsByFreelancerId.getOrDefault(freelancer.id(), List.of());
                 results.add(new ProfileSearchResult(
                         freelancer.id(), entry.code(), freelancer.name1(), freelancer.name2(),
                         freelancer.lastContactDate(), freelancer.salaryPerDayLong(),
                         freelancer.availabilityAsDate(), freelancer.contactForbidden(),
-                        tags, entry.serp(), !isSemanticSearch));
+                        tags, entry.serp(), !isSemanticSearch, scoreRelative));
             }
         }
         return new ProfileSearchPage(results, totalHits);
@@ -535,7 +538,7 @@ public class ProfileSearchQueryService {
                     return new ProfileSearchResult(
                             r.id(), r.code(), r.name1(), r.name2(),
                             r.lastContactDate(), r.salaryPerDayLong(),
-                            r.availabilityAsDate(), r.contactForbidden(), tags, serp, true);
+                            r.availabilityAsDate(), r.contactForbidden(), tags, serp, true, null);
                 })
                 .toList();
         final long total = jdbcClient.sql("SELECT COUNT(*) FROM freelancer")
