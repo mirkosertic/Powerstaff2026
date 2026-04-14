@@ -50,7 +50,6 @@ logging:
     de.mirkosertic.powerstaff: DEBUG
     org.springframework: INFO
     org.springframework.jdbc.core: DEBUG
-    org.springframework.security: TRACE
     root: INFO
 
 server:

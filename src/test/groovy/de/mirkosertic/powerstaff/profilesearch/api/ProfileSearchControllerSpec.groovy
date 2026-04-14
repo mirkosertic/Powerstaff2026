@@ -4,6 +4,7 @@ import de.mirkosertic.powerstaff.profilesearch.command.LlmService
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchCommandService
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchProperties
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchCriteria
+import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchPage
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchResult
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService
@@ -210,8 +211,7 @@ class ProfileSearchControllerSpec extends Specification {
                 new ProfileSearchResult(100L, "MOCK-100", "Mock Freelancer 0", null, null, 400L, null, false, [], null, false),
                 new ProfileSearchResult(101L, "MOCK-101", "Mock Freelancer 1", null, null, 410L, null, false, [], null, false)
         ]
-        queryService.searchFreelancers(criteria, 0, 20) >> mockResults
-        queryService.countSearchFreelancers(criteria) >> 2L
+        queryService.searchFreelancers(criteria, 0, 20) >> new ProfileSearchPage(mockResults, 2L)
         tagQueryService.findAll() >> []
         rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
 
@@ -230,8 +230,7 @@ class ProfileSearchControllerSpec extends Specification {
         def model = Mock(Model)
         def response = Mock(HttpServletResponse)
         def criteria = ProfileSearchCriteria.empty().withSalaryPerDayFrom(500L)
-        queryService.searchFreelancers(criteria, 0, 20) >> []
-        queryService.countSearchFreelancers(criteria) >> 0L
+        queryService.searchFreelancers(criteria, 0, 20) >> new ProfileSearchPage([], 0L)
         tagQueryService.findAll() >> []
         rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
 
@@ -248,8 +247,7 @@ class ProfileSearchControllerSpec extends Specification {
         def model = Mock(Model)
         def response = Mock(HttpServletResponse)
         def criteria = ProfileSearchCriteria.empty().withSearchTerm("Java")
-        queryService.searchFreelancers(criteria, 20, 20) >> []
-        queryService.countSearchFreelancers(criteria) >> 15L
+        queryService.searchFreelancers(criteria, 20, 20) >> new ProfileSearchPage([], 15L)
         rememberedProjectService.getRememberedProjectInfo(_) >> Optional.empty()
 
         when:
@@ -268,8 +266,7 @@ class ProfileSearchControllerSpec extends Specification {
             new ProfileSearchResult((long) i, "MOCK-$i", "Freelancer $i", null, null, 400L + i * 10L, null, false, [], null, false)
         }
         def criteria = ProfileSearchCriteria.empty().withSearchTerm("Mock")
-        queryService.searchFreelancers(criteria, 0, 20) >> results
-        queryService.countSearchFreelancers(criteria) >> 50L
+        queryService.searchFreelancers(criteria, 0, 20) >> new ProfileSearchPage(results, 50L)
         tagQueryService.findAll() >> []
         rememberedProjectService.getRememberedProjectInfo("testuser") >> Optional.empty()
 

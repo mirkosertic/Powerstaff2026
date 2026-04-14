@@ -180,7 +180,7 @@ public class ProfileSearchQueryService {
         ));
     }
 
-    public List<ProfileSearchResult> searchFreelancers(final ProfileSearchCriteria criteria, final int offset, final int limit) {
+    public ProfileSearchPage searchFreelancers(final ProfileSearchCriteria criteria, final int offset, final int limit) {
         // MCP deaktiviert → DB-Fallback (nur für E2E-Tests)
         if (!mcpConnectionProperties.isEnabled()) {
             logger.debug("MCP deaktiviert – Suche über DB");
@@ -211,9 +211,9 @@ public class ProfileSearchQueryService {
      * Ruft das MCP-Search-Tool auf und konvertiert das Ergebnis in {@link ProfileSearchResult}-Objekte.
      * Voraussetzung: Client ist bereits initialisiert und verfügt über Search-Tools.
      */
-    private List<ProfileSearchResult> searchFreelancersViaMcp(final McpSyncClient client,
-                                                               final ProfileSearchCriteria criteria,
-                                                               final int offset, final int limit) {
+    private ProfileSearchPage searchFreelancersViaMcp(final McpSyncClient client,
+                                                       final ProfileSearchCriteria criteria,
+                                                       final int offset, final int limit) {
         // 1. Verifiziere dass Client Search-Tools anbietet
         final McpSchema.ListToolsResult toolsResult = client.listTools();
         final boolean hasSearchTool = toolsResult.tools().stream()
@@ -247,6 +247,7 @@ public class ProfileSearchQueryService {
 
         // 4. Ergebnis parsen
         return parseMcpSearchResult(toolResult, criteria.isSemanticSearchActive());
+
     }
 
     /**
@@ -318,7 +319,7 @@ public class ProfileSearchQueryService {
     /**
      * Konvertiert das Ergebnis des MCP-Search-Tools in eine Liste von {@link ProfileSearchResult}.
      */
-    private List<ProfileSearchResult> parseMcpSearchResult(final McpSchema.CallToolResult toolResult, boolean isSemanticSearch) {
+    private ProfileSearchPage parseMcpSearchResult(final McpSchema.CallToolResult toolResult, boolean isSemanticSearch) {
         record Passage(
                 String text,
                 double score,
@@ -390,10 +391,12 @@ public class ProfileSearchQueryService {
         record DocumentEntry(String code, String serp) {}
 
         final List<DocumentEntry> entries = new ArrayList<>();
+        long totalHits = 0L;
         for (final McpSchema.Content content : toolResult.content()) {
             if (content instanceof final McpSchema.TextContent textContent) {
                 final SearchResponse response = objectMapper.readValue(textContent.text(), SearchResponse.class);
                 if (response.success()) {
+                    totalHits = response.totalHits();
                     for (final SearchDocument document : response.documents()) {
                         String code = document.fileName();
                         if (code.indexOf("Profil ") == 0) {
@@ -419,7 +422,7 @@ public class ProfileSearchQueryService {
         }
 
         if (entries.isEmpty()) {
-            return List.of();
+            return new ProfileSearchPage(List.of(), totalHits);
         }
 
         // Batch-Load: alle Freiberuflerdaten und Tags in je einem SELECT statt n Einzelabfragen
@@ -446,7 +449,7 @@ public class ProfileSearchQueryService {
                         tags, entry.serp(), !isSemanticSearch));
             }
         }
-        return results;
+        return new ProfileSearchPage(results, totalHits);
     }
 
     /**
@@ -498,8 +501,8 @@ public class ProfileSearchQueryService {
 
     // ── DB-Pfad (bisherige Implementierung) ───────────────────────────────────
 
-    private List<ProfileSearchResult> searchFreelancersViaDb(final ProfileSearchCriteria criteria,
-                                                              final int offset, final int limit) {
+    private ProfileSearchPage searchFreelancersViaDb(final ProfileSearchCriteria criteria,
+                                                      final int offset, final int limit) {
         record Row(Long id, String code, String name1, String name2,
                    LocalDateTime lastContactDate, Long salaryPerDayLong,
                    LocalDateTime availabilityAsDate, boolean contactForbidden) {}
@@ -522,7 +525,7 @@ public class ProfileSearchQueryService {
         final List<Long> freelancerIds = rows.stream().map(Row::id).toList();
         final Map<Long, List<TagView>> tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);
 
-        return rows.stream()
+        final List<ProfileSearchResult> results = rows.stream()
                 .map(r -> {
                     final String term = criteria.searchTerm() != null && !criteria.searchTerm().isBlank()
                             ? " – Suche: **" + criteria.searchTerm() + "**"
@@ -535,6 +538,10 @@ public class ProfileSearchQueryService {
                             r.availabilityAsDate(), r.contactForbidden(), tags, serp, true);
                 })
                 .toList();
+        final long total = jdbcClient.sql("SELECT COUNT(*) FROM freelancer")
+                .query(Long.class)
+                .single();
+        return new ProfileSearchPage(results, total);
     }
 
     private String resolveOrderBy(final String sortField, final String sortDir) {
@@ -550,9 +557,4 @@ public class ProfileSearchQueryService {
         return column + " " + direction;
     }
 
-    public long countSearchFreelancers(final ProfileSearchCriteria criteria) {
-        return jdbcClient.sql("SELECT COUNT(*) FROM freelancer")
-                .query(Long.class)
-                .single();
-    }
 }

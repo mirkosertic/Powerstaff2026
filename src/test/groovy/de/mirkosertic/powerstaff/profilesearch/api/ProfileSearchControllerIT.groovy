@@ -5,6 +5,7 @@ import de.mirkosertic.powerstaff.profilesearch.command.LlmService
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchCommandService
 import de.mirkosertic.powerstaff.profilesearch.command.ProfileSearchMessage
 import de.mirkosertic.powerstaff.profilesearch.query.ChatListView
+import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchPage
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService
 import de.mirkosertic.powerstaff.profilesearch.query.MessageView
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService
@@ -84,8 +85,7 @@ class ProfileSearchControllerIT extends AbstractContainerBaseIT {
     def "GET /profilesearch/search mit searchTerm zeigt Ergebnistabelle"() {
         given:
         when(tagQueryService.findAll()).thenReturn([])
-        when(queryService.searchFreelancers(any(), anyInt(), anyInt())).thenReturn([])
-        when(queryService.countSearchFreelancers(any())).thenReturn(0L)
+        when(queryService.searchFreelancers(any(), anyInt(), anyInt())).thenReturn(new ProfileSearchPage([], 0L))
         when(rememberedProjectService.getRememberedProjectInfo("testuser")).thenReturn(Optional.empty())
 
         expect:

@@ -24,42 +24,31 @@ class ProfileSearchQueryServiceSpec extends Specification {
     def "searchFreelancers delegiert an JdbcClient mit korrekten Parametern wenn MCP disabled"() {
         given:
         def criteria = ProfileSearchCriteria.empty()
-        def sqlSpec = Mock(JdbcClient.StatementSpec)
+        def sqlSpecData = Mock(JdbcClient.StatementSpec)
+        def sqlSpecCount = Mock(JdbcClient.StatementSpec)
         def paramSpec = Mock(JdbcClient.StatementSpec)
         def paramSpec2 = Mock(JdbcClient.StatementSpec)
         def mappedQuery = Mock(JdbcClient.MappedQuerySpec)
+        def countMappedQuery = Mock(JdbcClient.MappedQuerySpec)
 
         // MCP disabled → DB-Fallback
         mcpConnectionProperties.isEnabled() >> false
 
-        jdbcClient.sql(_ as String) >> sqlSpec
-        sqlSpec.param("limit", 20) >> paramSpec
+        jdbcClient.sql("SELECT COUNT(*) FROM freelancer") >> sqlSpecCount
+        jdbcClient.sql(_ as String) >> sqlSpecData
+        sqlSpecData.param("limit", 20) >> paramSpec
         paramSpec.param("offset", 0) >> paramSpec2
         paramSpec2.query(_ as Class) >> mappedQuery
         mappedQuery.list() >> []
+        sqlSpecCount.query(_ as Class) >> countMappedQuery
+        countMappedQuery.single() >> 0L
 
         when:
         def result = service.searchFreelancers(criteria, 0, 20)
 
         then:
-        result == []
+        result.results() == []
+        result.totalHits() == 0L
         0 * mcpClientFactory.createClient() // MCP-Factory darf nicht aufgerufen werden
-    }
-
-    def "countSearchFreelancers delegiert an JdbcClient"() {
-        given:
-        def criteria = ProfileSearchCriteria.empty()
-        def sqlSpec = Mock(JdbcClient.StatementSpec)
-        def mappedQuery = Mock(JdbcClient.MappedQuerySpec)
-
-        jdbcClient.sql(_ as String) >> sqlSpec
-        sqlSpec.query(Long.class) >> mappedQuery
-        mappedQuery.single() >> 42L
-
-        when:
-        def count = service.countSearchFreelancers(criteria)
-
-        then:
-        count == 42L
     }
 }

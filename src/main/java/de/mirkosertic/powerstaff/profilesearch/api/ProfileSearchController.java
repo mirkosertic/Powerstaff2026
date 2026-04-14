@@ -7,6 +7,7 @@ import de.mirkosertic.powerstaff.profilesearch.query.ChatListView;
 import de.mirkosertic.powerstaff.profilesearch.query.McpSearchException;
 import de.mirkosertic.powerstaff.profilesearch.query.MessageView;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchCriteria;
+import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchPage;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectInfo;
 import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
@@ -118,8 +119,9 @@ public class ProfileSearchController {
         final String returnTo = buildSearchReturnUrl(criteria);
 
         if (offset > 0) {
-            final var results = queryService.searchFreelancers(criteria, offset, PAGE_SIZE);
-            final long total = queryService.countSearchFreelancers(criteria);
+            final ProfileSearchPage page = queryService.searchFreelancers(criteria, offset, PAGE_SIZE);
+            final var results = page.results();
+            final long total = page.totalHits();
             final int nextOffset = offset + PAGE_SIZE;
             if (nextOffset < total) {
                 response.setHeader("X-Next-Url", buildSearchMoreUrl(criteria, nextOffset));
@@ -133,9 +135,10 @@ public class ProfileSearchController {
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
 
-        final var results = queryService.searchFreelancers(criteria, 0, PAGE_SIZE);
-        final long total = queryService.countSearchFreelancers(criteria);
-        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
+        final ProfileSearchPage page = queryService.searchFreelancers(criteria, 0, PAGE_SIZE);
+        final var results = page.results();
+        final long total = page.totalHits();
+        final String nextUrl = PAGE_SIZE < total ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;
 
         model.addAttribute("results", results);
         model.addAttribute("totalCount", total);
