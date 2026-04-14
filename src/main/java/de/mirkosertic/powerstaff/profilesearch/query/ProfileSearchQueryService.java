@@ -262,7 +262,7 @@ public class ProfileSearchQueryService {
         arguments.put("pageSize", limit);
         arguments.put("page", offset / limit);
         if (criteria.isSemanticSearchActive()) {
-            arguments.put("similarityThreshold", 0.75f);
+            arguments.put("similarityThreshold", 0.80f);
         }
 
         final List<Object> filters = new ArrayList<>();
