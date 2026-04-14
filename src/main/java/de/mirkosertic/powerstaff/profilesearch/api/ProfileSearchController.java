@@ -93,11 +93,12 @@ public class ProfileSearchController {
                          @RequestParam(required = false) final String sortField,
                          @RequestParam(required = false) final String sortDir,
                          @RequestParam(required = false) final Boolean semanticSearch,
+                         @RequestParam(defaultValue = "0.8") final float similarityThreshold,
                          @RequestParam(defaultValue = "0") final int offset,
                          final Principal principal,
                          final Model model,
                          final HttpServletResponse response) {
-        final ProfileSearchCriteria criteria = new ProfileSearchCriteria(searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch);
+        final ProfileSearchCriteria criteria = new ProfileSearchCriteria(searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch, similarityThreshold);
         final boolean empty = (criteria.searchTerm() == null || criteria.searchTerm().isBlank())
                 && criteria.salaryPerDayFrom() == null
                 && criteria.salaryPerDayTo() == null
@@ -182,6 +183,10 @@ public class ProfileSearchController {
         }
         if (c.sortDir() != null) {
             b.queryParam("sortDir", c.sortDir());
+        }
+        if (Boolean.TRUE.equals(c.semanticSearch())) {
+            b.queryParam("semanticSearch", "true");
+            b.queryParam("similarityThreshold", c.effectiveSimilarityThreshold());
         }
         return b.encode().build().toUriString();
     }
@@ -375,10 +380,11 @@ public class ProfileSearchController {
                                            @RequestParam(required = false) final String sortField,
                                            @RequestParam(required = false) final String sortDir,
                                            @RequestParam(required = false) final Boolean semanticSearch,
+                                           @RequestParam(required = false) final Float similarityThreshold,
                                            final Principal principal,
                                            final Model model) {
         final ProfileSearchCriteria criteria = new ProfileSearchCriteria(
-                searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch);
+                searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch, similarityThreshold);
 
         model.addAttribute("error", ex.getMessage());
         model.addAttribute("results", List.of());

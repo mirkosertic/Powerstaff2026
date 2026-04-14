@@ -94,9 +94,34 @@
                    th:classappend="${criteria != null and criteria.isSemanticSearchActive()} ? ' on' : ''"
                    data-testid="cb-semantic-search">
               <input type="checkbox" name="semanticSearch" value="true"
-                     th:checked="${criteria != null and criteria.isSemanticSearchActive()}"/>
+                     id="cb-semantic-search"
+                     th:checked="${criteria != null and criteria.isSemanticSearchActive()}"
+                     onchange="toggleSemanticOptions(this)"/>
               🔮 Semantische Suche
             </label>
+          </div>
+
+          <!-- Treffergenauigkeit (nur bei Semantischer Suche sichtbar) -->
+          <div class="mt-md fg"
+               id="semantic-options"
+               th:classappend="${criteria == null or !criteria.isSemanticSearchActive()} ? ' hidden' : ''">
+            <label for="input-similarity-threshold">Treffergenauigkeit</label>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <input type="range"
+                     id="input-similarity-threshold"
+                     name="similarityThreshold"
+                     min="0.0" max="1.0" step="0.05"
+                     th:value="${criteria != null and criteria.similarityThreshold() != null} ? ${criteria.similarityThreshold()} : '0.8'"
+                     oninput="document.getElementById('similarity-threshold-display').textContent = parseFloat(this.value).toFixed(2)"
+                     data-testid="input-similarity-threshold"/>
+              <span id="similarity-threshold-display"
+                    th:text="${criteria != null and criteria.similarityThreshold() != null} ? ${#numbers.formatDecimal(criteria.similarityThreshold(), 1, 'POINT', 2, 'POINT')} : '0.80'">
+              </span>
+            </div>
+            <span class="text-muted" style="margin-top:4px; display:block;">
+              Je höher der Wert, desto strenger filtert die KI – weniger, aber passendere Ergebnisse.
+              Bei niedrigerem Wert erhalten Sie mehr Treffer, die aber weniger präzise zur Suchanfrage passen.
+            </span>
           </div>
 
           <!-- Aktions-Buttons -->
@@ -235,6 +260,12 @@
       e.preventDefault();
       window.open('/freelancer/' + id + '?returnTo=' + encodeURIComponent(location.pathname + location.search), '_blank');
     });
+
+    function toggleSemanticOptions(cb) {
+      const panel = document.getElementById('semantic-options');
+      if (!panel) return;
+      panel.classList.toggle('hidden', !cb.checked);
+    }
 
     function toggleTagChip(btn) {
       btn.classList.toggle('selected');

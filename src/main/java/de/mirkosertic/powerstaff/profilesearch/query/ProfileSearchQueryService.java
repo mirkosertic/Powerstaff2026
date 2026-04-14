@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.thymeleaf.util.ArrayUtils;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
@@ -262,7 +260,7 @@ public class ProfileSearchQueryService {
         arguments.put("pageSize", limit);
         arguments.put("page", offset / limit);
         if (criteria.isSemanticSearchActive()) {
-            arguments.put("similarityThreshold", 0.80f);
+            arguments.put("similarityThreshold", criteria.effectiveSimilarityThreshold());
         }
 
         final List<Object> filters = new ArrayList<>();
@@ -279,7 +277,7 @@ public class ProfileSearchQueryService {
             filters.add(filter);
         }
         if (criteria.tagIds() != null && !criteria.tagIds().isEmpty()) {
-            final String[] tagIds = StringUtils.split(criteria.tagIds(),",");
+            final String[] tagIds = criteria.tagIds().split(",");
             final Map<String, Object> filter = new HashMap<>();
             filter.put("field", "dbmeta_tags");
             filter.put("operator", "in");
@@ -306,7 +304,7 @@ public class ProfileSearchQueryService {
                 } else if ("DESC".equalsIgnoreCase(criteria.sortDir())) {
                     arguments.put("sortOrder", "desc");;
                 } else {
-                    logger.warn("Unbekannter Sortierreihenfolge: {}", criteria.sortDir());
+                    logger.warn("Unbekannte Sortierreihenfolge: {}", criteria.sortDir());
                 }
             } else {
                 logger.warn("Kein Indexfeld gefunden für : {}", criteria.sortField());
