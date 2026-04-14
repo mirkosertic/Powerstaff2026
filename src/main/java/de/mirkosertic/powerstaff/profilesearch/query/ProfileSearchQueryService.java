@@ -434,22 +434,19 @@ public class ProfileSearchQueryService {
                 .toList();
         final Map<Long, List<TagView>> tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);
 
-        final double maxScore = entries.stream().mapToDouble(DocumentEntry::score).max().orElse(1.0);
-
         final List<ProfileSearchResult> results = new ArrayList<>();
         for (final DocumentEntry entry : entries) {
-            final double scoreRelative = maxScore > 0 ? entry.score() / maxScore : 0.0;
             final FreelancerBatchRow freelancer = freelancerByCode.get(entry.code());
             if (freelancer == null) {
                 logger.warn("Kein Freiberufler mit Code '{}' gefunden – MCP-Treffer wird ohne DB-Daten übernommen", entry.code());
-                results.add(new ProfileSearchResult(null, entry.code(), null, null, null, null, null, false, List.of(), entry.serp(), !isSemanticSearch, scoreRelative));
+                results.add(new ProfileSearchResult(null, entry.code(), null, null, null, null, null, false, List.of(), entry.serp(), !isSemanticSearch, entry.score()));
             } else {
                 final List<TagView> tags = tagsByFreelancerId.getOrDefault(freelancer.id(), List.of());
                 results.add(new ProfileSearchResult(
                         freelancer.id(), entry.code(), freelancer.name1(), freelancer.name2(),
                         freelancer.lastContactDate(), freelancer.salaryPerDayLong(),
                         freelancer.availabilityAsDate(), freelancer.contactForbidden(),
-                        tags, entry.serp(), !isSemanticSearch, scoreRelative));
+                        tags, entry.serp(), !isSemanticSearch, entry.score()));
             }
         }
         return new ProfileSearchPage(results, totalHits);

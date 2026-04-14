@@ -17,6 +17,6 @@ public record ProfileSearchResult(
         List<TagView> tags,
         String serp,
         boolean serpIsMarkdown,
-        Double scoreRelative
+        Double score
 ) {
 }

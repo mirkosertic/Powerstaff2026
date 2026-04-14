@@ -258,13 +258,30 @@
       });
     }
 
+    function renormalizeScoreBars() {
+      const tbody = document.getElementById('results-tbody');
+      if (!tbody) return;
+      const wraps = tbody.querySelectorAll('.score-bar-wrap[data-score]');
+      if (wraps.length === 0) return;
+      const maxScore = Math.max(...Array.from(wraps).map(el => parseFloat(el.dataset.score) || 0));
+      if (maxScore <= 0) return;
+      wraps.forEach(el => {
+        const pct = Math.round((parseFloat(el.dataset.score) || 0) / maxScore * 100);
+        el.querySelector('.score-bar').style.width = pct + '%';
+        el.title = 'Trefferqualität: ' + pct + '%';
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       renderSerpMarkdown(document);
+      renormalizeScoreBars();
 
       const serpTbody = document.getElementById('results-tbody');
       if (serpTbody) {
-        new MutationObserver(() => renderSerpMarkdown(serpTbody))
-          .observe(serpTbody, { childList: true });
+        new MutationObserver(() => {
+          renderSerpMarkdown(serpTbody);
+          renormalizeScoreBars();
+        }).observe(serpTbody, { childList: true });
       }
     });
   </script>
