@@ -12,11 +12,6 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
 
 ## Fehlerliste
 
-- [ ] Texte wie "Profil MS-002.txt" sollten im Profilsuche-Chat als Markdown-Link angezeigt
-  werden, ich sehe allerdings nur den Markdown-Code, und nicht den Link. Als
-  Markdown-Code wird "[Profil DEV-20017.txt](/freelancer/search?code=DEV-20017&returnTo=profilesearch-chat-17)" angezeigt.  
-  Eventuell funktioniert die Formatierung nicht. Details siehe profilesearch/form.html.
-
 ## Erweiterungen
 
 - [ ] Ich benötige noch ein MCP Tool, welches in diesem Projekt verbunden ist, und die Abfrage von
@@ -44,4 +39,5 @@ Der Agent markiert jede abgeschlossene Task mit `[x]` und erstellt danach einen 
   dass auf Ebene Powerstaff das fachliche Merkmal für die Sichtbarkeit von den Anwendern gepflegt werden kann.
 - [ ] Die API-Tokens für die Chat/LLM Integration sollen vom Administrator und nur dem Administrator
   auf Ebene Benutzer pflegbar sein. Jeder Benutzer verwendet seinen eigenen API-Token für den Chat. Damit
-  soll eine individuelle Abrechnung der Arbeitsplätze erfolgen.
+  soll eine individuelle Abrechnung der Arbeitsplätze erfolgen. Wenn ein Benutzer keinen eigenen API Token hat,
+  soll der API-Token des Administrators verwendet werden.

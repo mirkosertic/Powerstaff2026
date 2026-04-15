@@ -241,14 +241,17 @@
     scrollToBottom();
 
     function renderAssistantContent(text) {
-      // Convert [freelancer:<id>:<label>] to Markdown links so marked processes them natively
+      // Convert [freelancer:<id>:<label>] to Markdown links so marked processes them natively.
+      // Normalize newlines in label — breaks:true makes \n inside [...] prevent link rendering.
       text = (text || '').replace(/\[freelancer:(\d+):([^\]]+)\]/g,
-        (_, id, label) => `[${label}](/freelancer/${id})`);
-      // Convert "Profil XX-123" pattern to freelancer search links
-      text = text.replace(/(?:Profil )?([A-Za-z0-9]{2,}-\d+)(?:\.[A-Za-z]{2,})?/g, function(match, code) {
+        (_, id, label) => `[${label.replace(/\s*\n\s*/g, ' ')}](/freelancer/${id})`);
+      // Convert "Profil XX-123" or "XX-123.ext" patterns to freelancer search links.
+      // Negative lookbehind (?<!\[) prevents double-converting patterns already inside [...].
+      // Use capture group `code` (not full `match`) as link text to avoid "Profil" prefix / ".txt" suffix.
+      text = text.replace(/(?<!\[)(?:Profil )?([A-Za-z0-9]{2,}-\d+)(?:\.[A-Za-z]{2,})?/g, function(match, code) {
         const url = '/freelancer/search?code=' + encodeURIComponent(code)
           + '&returnTo=profilesearch-chat-' + CHAT_ID;
-        return '[' + match + '](' + url + ')';
+        return '[' + code + '](' + url + ')';
       });
       return renderMarkdown(text);
     }

@@ -117,10 +117,10 @@ test.describe('Profilsuche', () => {
         await expect(page.locator('.chat-msg.assistant .msg-bubble').filter({ hasText: 'E2E-001' }))
             .toBeVisible({ timeout: 10_000 });
 
-        // Link "Profil E2E-001" muss in der Antwort als <a>-Element gerendert sein
+        // Link "E2E-001" muss in der Antwort als <a>-Element gerendert sein
         const profilLink = page.locator('.chat-msg.assistant a[href*="code=E2E-001"]');
         await expect(profilLink).toBeVisible();
-        await expect(profilLink).toHaveText('Profil E2E-001');
+        await expect(profilLink).toHaveText('E2E-001');
 
         // Link-URL muss auf Freiberufler-Suche mit korrektem returnTo zeigen
         const href = await profilLink.getAttribute('href');
