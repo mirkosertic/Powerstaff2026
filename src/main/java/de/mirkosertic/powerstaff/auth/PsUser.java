@@ -26,11 +26,14 @@ public class PsUser implements Persistable<String> {
     @Column("is_admin")
     private final boolean admin;
 
+    @Column("llm_api_token")
+    private final String llmApiToken;
+
     public static final String DEFAULT_SYSTEM_PROMPT =
             "Du bist ein freundlicher KI-Assistent für den Benutzer {user} und antwortest immer auf deutsch. Dein Name ist Staffi.";
 
     public PsUser(final String username, final String passwordHash, final boolean mustChangePassword, final boolean enabled,
-                  final String profileSearchSystemPrompt, final boolean admin) {
+                  final String profileSearchSystemPrompt, final boolean admin, final String llmApiToken) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.mustChangePassword = mustChangePassword;
@@ -38,6 +41,7 @@ public class PsUser implements Persistable<String> {
         this.profileSearchSystemPrompt = profileSearchSystemPrompt != null
                 ? profileSearchSystemPrompt : DEFAULT_SYSTEM_PROMPT;
         this.admin = admin;
+        this.llmApiToken = llmApiToken;
     }
 
     /**
@@ -78,5 +82,9 @@ public class PsUser implements Persistable<String> {
 
     public boolean isAdmin() {
         return admin;
+    }
+
+    public String getLlmApiToken() {
+        return llmApiToken;
     }
 }

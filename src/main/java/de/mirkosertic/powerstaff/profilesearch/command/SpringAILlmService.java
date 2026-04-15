@@ -2,6 +2,7 @@ package de.mirkosertic.powerstaff.profilesearch.command;
 
 import de.mirkosertic.powerstaff.auth.UserQueryService;
 import de.mirkosertic.powerstaff.auth.PsUser;
+import de.mirkosertic.powerstaff.auth.UserView;
 import de.mirkosertic.powerstaff.profilesearch.query.LlmFreelancerContext;
 import de.mirkosertic.powerstaff.profilesearch.query.LlmProjectContext;
 import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
@@ -37,19 +38,33 @@ public class SpringAILlmService implements LlmService {
     private static final Logger logger = LoggerFactory.getLogger(SpringAILlmService.class);
 
     private final ChatClient chatClient;
+    private final LlmChatClientFactory chatClientFactory;
     private final McpClientFactory mcpClientFactory;
     private final ProfileSearchCommandService commandService;
     private final ProfileSearchQueryService queryService;
     private final ObjectMapper objectMapper;
     private final UserQueryService userQueryService;
 
-    public SpringAILlmService(final ChatClient chatClient, final McpClientFactory mcpClientFactory, final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService, final ObjectMapper objectMapper, final UserQueryService userQueryService) {
+    public SpringAILlmService(final ChatClient chatClient, final LlmChatClientFactory chatClientFactory,
+            final McpClientFactory mcpClientFactory, final ProfileSearchCommandService commandService,
+            final ProfileSearchQueryService queryService, final ObjectMapper objectMapper,
+            final UserQueryService userQueryService) {
         this.chatClient = chatClient;
+        this.chatClientFactory = chatClientFactory;
         this.mcpClientFactory = mcpClientFactory;
         this.commandService = commandService;
         this.queryService = queryService;
         this.objectMapper = objectMapper;
         this.userQueryService = userQueryService;
+    }
+
+    private ChatClient resolveChatClient(final Principal principal) {
+        final String token = userQueryService.findByUsername(principal.getName())
+                .map(UserView::llmApiToken)
+                .filter(t -> t != null && !t.isBlank())
+                .or(() -> userQueryService.findFirstAdminLlmApiToken())
+                .orElse(null);
+        return chatClientFactory.create(token);
     }
 
     private McpSyncClient tryCreateMcpClient() {
@@ -159,7 +174,7 @@ public class SpringAILlmService implements LlmService {
         final McpSyncClient mcpClient = tryCreateMcpClient();
         final ChatResponse chatClientResponse;
         try {
-            var promptSpec = chatClient.prompt()
+            var promptSpec = resolveChatClient(principal).prompt()
                     .advisors(
                             ToolCallAdvisor.builder()
                                     .disableInternalConversationHistory()
@@ -254,7 +269,7 @@ public class SpringAILlmService implements LlmService {
         final McpSyncClient mcpClient = tryCreateMcpClient();
         final ChatResponse chatClientResponse;
         try {
-            var promptSpec = chatClient.prompt()
+            var promptSpec = resolveChatClient(principal).prompt()
                     .advisors(
                             ToolCallAdvisor.builder()
                                     .disableInternalConversationHistory()

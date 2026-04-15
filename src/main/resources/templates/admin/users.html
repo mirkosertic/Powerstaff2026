@@ -41,6 +41,7 @@
                 <th>Aktiv</th>
                 <th>Passwort-Reset erforderlich</th>
                 <th>Administrator</th>
+                <th th:if="${isAdmin}">LLM API-Token</th>
                 <th>Aktionen</th>
               </tr>
             </thead>
@@ -60,6 +61,14 @@
                   <span th:if="${u.admin}" class="chip-add">&#x2714; Admin</span>
                   <span th:unless="${u.admin}" style="color:var(--text-3)">Nein</span>
                 </td>
+                <td th:if="${isAdmin}">
+                  <span th:if="${u.llmApiToken != null and !#strings.isEmpty(u.llmApiToken)}"
+                        class="chip-add"
+                        th:attr="data-testid='apitoken-set-' + ${u.username}">&#x2714; Gesetzt</span>
+                  <span th:unless="${u.llmApiToken != null and !#strings.isEmpty(u.llmApiToken)}"
+                        style="color:var(--text-3)"
+                        th:attr="data-testid='apitoken-unset-' + ${u.username}">Nicht gesetzt</span>
+                </td>
                 <td>
                   <button th:if="${isAdmin}" class="ibtn" type="button"
                           th:attr="data-username=${u.username},
@@ -74,6 +83,11 @@
                                    data-testid='btn-edit-prompt-' + ${u.username}"
                           data-action="edit-prompt"
                           title="Systemprompt bearbeiten">&#x1F4AC;</button>
+                  <button th:if="${isAdmin}" class="ibtn" type="button"
+                          th:attr="data-username=${u.username},
+                                   data-testid='btn-edit-apitoken-' + ${u.username}"
+                          data-action="edit-apitoken"
+                          title="LLM API-Token setzen">&#x1F511;</button>
                   <button th:if="${isAdmin}" class="ibtn del" type="button"
                           th:attr="data-username=${u.username},
                                    data-testid='btn-delete-user-' + ${u.username}"
@@ -82,7 +96,7 @@
                 </td>
               </tr>
               <tr th:if="${#lists.isEmpty(users)}">
-                <td colspan="5" class="td-empty">Keine Benutzer vorhanden.</td>
+                <td colspan="6" class="td-empty">Keine Benutzer vorhanden.</td>
               </tr>
             </tbody>
           </table>
@@ -240,6 +254,38 @@
     </div>
   </div>
 
+  <!-- Modal: LLM API-Token setzen (nur Admin) -->
+  <div th:if="${isAdmin}" class="mbk hidden" id="modal-edit-apitoken">
+    <div class="mbox">
+      <div class="mhd">
+        <h3>LLM API-Token setzen</h3>
+        <button class="mx" type="button" onclick="closeModal('modal-edit-apitoken')">&#x2715;</button>
+      </div>
+      <div class="mbody">
+        <form id="edit-apitoken-form" method="post" action="#">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <p id="edit-apitoken-user-display" class="mb" style="font-weight:600;color:var(--text-1)"></p>
+          <div class="fg mb">
+            <label for="edit-apitoken-input">API-Token</label>
+            <input type="password" id="edit-apitoken-input" name="llmApiToken"
+                   autocomplete="off"
+                   placeholder="Leer lassen um Token zu entfernen"
+                   data-testid="field-apitoken"/>
+          </div>
+          <p class="text-muted" style="font-size:0.85em">
+            Der Token wird verschlüsselt gespeichert und ist nach dem Speichern nicht mehr sichtbar.
+            Leer lassen, um den Token zu entfernen.
+          </p>
+        </form>
+      </div>
+      <div class="mft">
+        <button class="btn btn-ghost" type="button" onclick="closeModal('modal-edit-apitoken')">Abbrechen</button>
+        <button class="btn btn-pri" type="submit" form="edit-apitoken-form"
+                data-testid="btn-submit-apitoken">Speichern</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let _pendingDeleteUsername = null;
     let _pendingDeleteEl = null;
@@ -264,6 +310,16 @@
         document.getElementById('edit-prompt-user-display').textContent = 'Benutzer: ' + username;
         document.getElementById('edit-system-prompt').value = promptBtn.dataset.systemPrompt || '';
         openModal('modal-edit-prompt');
+        return;
+      }
+
+      const apitokenBtn = e.target.closest('[data-action="edit-apitoken"]');
+      if (apitokenBtn) {
+        const username = apitokenBtn.dataset.username;
+        document.getElementById('edit-apitoken-form').action = '/admin/benutzer/' + username + '/apitoken';
+        document.getElementById('edit-apitoken-user-display').textContent = 'Benutzer: ' + username;
+        document.getElementById('edit-apitoken-input').value = '';
+        openModal('modal-edit-apitoken');
         return;
       }
 

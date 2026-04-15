@@ -20,13 +20,18 @@ public class UserCommandService {
     @Transactional
     public void createUser(final String username, final String plainPassword, final boolean mustChangePassword, final boolean enabled, final boolean admin) {
         final String hash = passwordEncoder.encode(plainPassword);
-        final PsUser user = new PsUser(username, hash, mustChangePassword, enabled, PsUser.DEFAULT_SYSTEM_PROMPT, admin);
+        final PsUser user = new PsUser(username, hash, mustChangePassword, enabled, PsUser.DEFAULT_SYSTEM_PROMPT, admin, null);
         repository.save(user);
     }
 
     @Transactional
     public void updateSystemPrompt(final String username, final String prompt) {
         repository.updateSystemPrompt(username, prompt != null ? prompt : PsUser.DEFAULT_SYSTEM_PROMPT);
+    }
+
+    @Transactional
+    public void updateApiToken(final String username, final String token) {
+        repository.updateApiToken(username, token != null && !token.isBlank() ? token.trim() : null);
     }
 
     @Transactional

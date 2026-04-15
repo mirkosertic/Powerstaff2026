@@ -20,4 +20,8 @@ interface PsUserRepository extends CrudRepository<PsUser, String> {
     @Modifying
     @Query("UPDATE ps_user SET profile_search_system_prompt = :prompt WHERE username = :username")
     void updateSystemPrompt(@Param("username") String username, @Param("prompt") String prompt);
+
+    @Modifying
+    @Query("UPDATE ps_user SET llm_api_token = :token WHERE username = :username")
+    void updateApiToken(@Param("username") String username, @Param("token") String token);
 }

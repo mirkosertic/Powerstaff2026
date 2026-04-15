@@ -142,6 +142,28 @@ public class UserController {
     }
 
     // -------------------------------------------------------------------------
+    // API-Token setzen (nur Admin)
+    // -------------------------------------------------------------------------
+
+    @PostMapping("/{username}/apitoken")
+    public String updateApiToken(@PathVariable final String username,
+                                 @RequestParam(required = false) final String llmApiToken,
+                                 final Authentication authentication,
+                                 final RedirectAttributes redirectAttributes) {
+        if (!isAdmin(authentication)) {
+            redirectAttributes.addFlashAttribute("error", "Keine Berechtigung.");
+            return "redirect:/admin/benutzer";
+        }
+        if (userCommandService.findByUsername(username).isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Benutzer nicht gefunden.");
+            return "redirect:/admin/benutzer";
+        }
+        userCommandService.updateApiToken(username, llmApiToken);
+        redirectAttributes.addFlashAttribute("success", "API-Token für \"" + username + "\" wurde gespeichert.");
+        return "redirect:/admin/benutzer";
+    }
+
+    // -------------------------------------------------------------------------
     // Löschen (nur Admin)
     // -------------------------------------------------------------------------
 

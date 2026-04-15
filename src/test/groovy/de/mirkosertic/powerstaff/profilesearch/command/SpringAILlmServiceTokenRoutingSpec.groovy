@@ -12,10 +12,10 @@ import tools.jackson.databind.ObjectMapper
 
 class SpringAILlmServiceTokenRoutingSpec extends Specification {
 
-    // routeTokenToCollector() greift nicht auf ChatClient, CommandService etc. zu —
-    // wir übergeben null für ungenutzte Dependencies, um das JDK-25/Mockito-
+    // routeTokenToCollector() greift nicht auf ChatClient, Factory, CommandService etc. zu —
+    // wir übergeben null/Stub für ungenutzte Dependencies, um das JDK-25/Mockito-
     // Byte-Buddy-Problem zu umgehen.
-    SpringAILlmService service = new SpringAILlmService(null, null, null, null, new ObjectMapper(), null)
+    SpringAILlmService service = new SpringAILlmService(null, (token -> null) as LlmChatClientFactory, null, null, null, new ObjectMapper(), null)
 
     def "normaler Text-Token wird als assistantResponseToken weitergeleitet"() {
         given:

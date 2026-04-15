@@ -5,6 +5,7 @@ public record UserView(
         boolean mustChangePassword,
         boolean enabled,
         String profileSearchSystemPrompt,
-        boolean admin
+        boolean admin,
+        String llmApiToken
 ) {
 }

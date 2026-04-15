@@ -1,0 +1,2 @@
+ALTER TABLE ps_user
+    ADD COLUMN llm_api_token VARCHAR(500) NULL DEFAULT NULL;
