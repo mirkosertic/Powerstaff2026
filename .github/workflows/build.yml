@@ -8,15 +8,11 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  attestations: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-      attestations: write
-      packages: write
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -47,12 +43,13 @@ jobs:
       with:
         path: src/test/e2e/playwright-report/
 
-    - uses: JamesIves/github-pages-deploy-action@3.7.1
+    - name: Deploy Playwright Report to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      if: always()
       with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: src/test/e2e/playwright-report/
-        CLEAN: true
+        branch: gh-pages
+        folder: src/test/e2e/playwright-report/
+        clean: true
 
     - name: Get project version
       id: get_version
