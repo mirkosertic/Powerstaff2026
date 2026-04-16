@@ -28,6 +28,8 @@
         <!-- Standardmäßig leer; JaCoCo überschreibt diese Properties zur Laufzeit -->
         <jacocoArgLine></jacocoArgLine>
         <jacocoItArgLine></jacocoItArgLine>
+        <!-- E2E-Tests überspringbar machen (analog zu skipTests, skipITs) -->
+        <skipE2E>false</skipE2E>
     </properties>
 
     <dependencyManagement>
@@ -328,6 +330,21 @@
                         </configuration>
                     </execution>
 
+                    <!-- 4b) E2E-Report (post-integration-test, nach Docker-Down) -->
+                    <execution>
+                        <id>jacoco-report-e2e</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <dataFile>${project.build.directory}/jacoco-e2e.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-e2e</outputDirectory>
+                            <title>E2E-Test Coverage (Playwright)</title>
+                        </configuration>
+                    </execution>
+
                     <!-- 5) Exec-Dateien zusammenführen (verify, vor Gesamtreport) -->
                     <execution>
                         <id>jacoco-merge</id>
@@ -342,6 +359,7 @@
                                     <includes>
                                         <include>jacoco-unit.exec</include>
                                         <include>jacoco-it.exec</include>
+                                        <include>jacoco-e2e.exec</include>
                                     </includes>
                                 </fileSet>
                             </fileSets>
@@ -359,10 +377,63 @@
                         <configuration>
                             <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-merged</outputDirectory>
-                            <title>Gesamte Test Coverage (Unit + Integration)</title>
+                            <title>Gesamte Test Coverage (Unit + Integration + e2e)</title>
                         </configuration>
                     </execution>
 
+                </executions>
+            </plugin>
+
+            <!-- ===== E2E-Test Shell-Script mit Maven-Variable-Substitution ===== -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-e2e-jacoco-script</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <useDefaultDelimiters>false</useDefaultDelimiters>
+                            <delimiters>
+                                <delimiter>@</delimiter>
+                            </delimiters>
+                            <resources>
+                                <resource>
+                                    <directory>src/test/e2e</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>start-e2e-with-jacoco.sh</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ===== E2E-Script ausführbar machen ===== -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>chmod-e2e-jacoco-script</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <target>
+                                <chmod file="${project.build.directory}/start-e2e-with-jacoco.sh" perm="755"/>
+                            </target>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
@@ -435,6 +506,257 @@
                             <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
                         </configuration>
                     </execution>
+
+                    <!-- ===== E2E-Tests: Docker, Playwright, Reports ===== -->
+                    <!-- Vorherigen Container + Volumes aufräumen (idempotent, läuft auch wenn nichts läuft).
+                         Stellt sicher: keine Altdaten aus fehlgeschlagenen Vorläufen. -->
+                    <execution>
+                        <id>e2e-docker-cleanup</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>compose</argument>
+                                <argument>-f</argument>
+                                <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
+                                <argument>down</argument>
+                                <argument>-v</argument>
+                            </arguments>
+                            <!-- Fehler ignorieren (Container lief möglicherweise gar nicht) -->
+                            <successCodes>
+                                <successCode>0</successCode>
+                                <successCode>1</successCode>
+                            </successCodes>
+                        </configuration>
+                    </execution>
+                    <!-- MySQL via Docker Compose starten (MUSS vor npm ci laufen, damit
+                         MySQL bereit ist bevor Playwright seinen webServer startet) -->
+                    <execution>
+                        <id>e2e-docker-up</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>compose</argument>
+                                <argument>-f</argument>
+                                <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
+                                <argument>up</argument>
+                                <argument>-d</argument>
+                                <argument>--wait</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- npm ci in src/test/e2e -->
+                    <execution>
+                        <id>e2e-npm-ci</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>ci</argument>
+                            </arguments>
+                            <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <!-- npx playwright install chromium -->
+                    <execution>
+                        <id>e2e-playwright-install</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>npx</executable>
+                            <arguments>
+                                <argument>playwright</argument>
+                                <argument>install</argument>
+                                <argument>chromium</argument>
+                                <argument>firefox</argument>
+                            </arguments>
+                            <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <!-- Durchlauf 1: Chromium – blob-Report für späteres Merge -->
+                    <!-- Exit-Code wird in Datei gespeichert; Firefox-Lauf läuft immer durch -->
+                    <execution>
+                        <id>e2e-playwright-chromium</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>npx playwright test --project=setup --project=chromium --project=non-admin-chromium --reporter=blob; echo $? &gt; "$EXIT_FILE"; exit 0</argument>
+                            </arguments>
+                            <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                            <environmentVariables>
+                                <PLAYWRIGHT_BLOB_OUTPUT_DIR>${project.build.directory}/e2e-blob-chromium</PLAYWRIGHT_BLOB_OUTPUT_DIR>
+                                <EXIT_FILE>${project.build.directory}/playwright-chromium-exit.txt</EXIT_FILE>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                    <!-- Datenbank zwischen den Läufen neu aufsetzen -->
+                    <execution>
+                        <id>e2e-docker-between-down</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>compose</argument>
+                                <argument>-f</argument>
+                                <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
+                                <argument>down</argument>
+                                <argument>-v</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>e2e-docker-between-up</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>compose</argument>
+                                <argument>-f</argument>
+                                <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
+                                <argument>up</argument>
+                                <argument>-d</argument>
+                                <argument>--wait</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- Durchlauf 2: Firefox – blob-Report für späteres Merge -->
+                    <!-- Exit-Code wird in Datei gespeichert; Cleanup und Report laufen immer durch -->
+                    <execution>
+                        <id>e2e-playwright-firefox</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>npx playwright test --project=setup --project=firefox --project=non-admin-firefox --reporter=blob; echo $? &gt; "$EXIT_FILE"; exit 0</argument>
+                            </arguments>
+                            <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                            <environmentVariables>
+                                <PLAYWRIGHT_BLOB_OUTPUT_DIR>${project.build.directory}/e2e-blob-firefox</PLAYWRIGHT_BLOB_OUTPUT_DIR>
+                                <EXIT_FILE>${project.build.directory}/playwright-firefox-exit.txt</EXIT_FILE>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                    <!-- Blob-Dateien beider Browser in ein gemeinsames Verzeichnis kopieren -->
+                    <execution>
+                        <id>e2e-combine-blobs</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>mkdir -p "$COMBINED" &amp;&amp; cp "$CHROMIUM"/*.zip "$COMBINED/" 2>/dev/null; cp "$FIREFOX"/*.zip "$COMBINED/" 2>/dev/null; true</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <CHROMIUM>${project.build.directory}/e2e-blob-chromium</CHROMIUM>
+                                <FIREFOX>${project.build.directory}/e2e-blob-firefox</FIREFOX>
+                                <COMBINED>${project.build.directory}/e2e-blobs</COMBINED>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                    <!-- Blob-Reports beider Browser zu einem aggregierten HTML-Report zusammenführen -->
+                    <execution>
+                        <id>e2e-merge-reports</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>npx</executable>
+                            <arguments>
+                                <argument>playwright</argument>
+                                <argument>merge-reports</argument>
+                                <argument>--reporter=html</argument>
+                                <argument>${project.build.directory}/e2e-blobs</argument>
+                            </arguments>
+                            <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                            <!-- Fehler ignorieren falls ein Blob-Verzeichnis leer ist -->
+                            <successCodes>
+                                <successCode>0</successCode>
+                                <successCode>1</successCode>
+                            </successCodes>
+                        </configuration>
+                    </execution>
+                    <!-- MySQL Container + Volumes nach den Tests bereinigen -->
+                    <execution>
+                        <id>e2e-docker-down</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>compose</argument>
+                                <argument>-f</argument>
+                                <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
+                                <argument>down</argument>
+                                <argument>-v</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- Build fehlschlagen lassen wenn E2E-Tests fehlgeschlagen sind.
+                         Läuft in verify (nach post-integration-test), damit Docker-Cleanup
+                         und Report-Erstellung immer abgeschlossen werden. -->
+                    <execution>
+                        <id>e2e-check-results</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipE2E}</skip>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>code1=$(cat "$CHROMIUM_EXIT" 2>/dev/null || echo 0); code2=$(cat "$FIREFOX_EXIT" 2>/dev/null || echo 0); if [ "$code1" != "0" ] || [ "$code2" != "0" ]; then echo "E2E-Tests fehlgeschlagen (chromium=$code1, firefox=$code2) – siehe target/playwright-report/index.html"; exit 1; fi</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <CHROMIUM_EXIT>${project.build.directory}/playwright-chromium-exit.txt</CHROMIUM_EXIT>
+                                <FIREFOX_EXIT>${project.build.directory}/playwright-firefox-exit.txt</FIREFOX_EXIT>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
@@ -448,259 +770,8 @@
     </build>
 
     <profiles>
-        <!-- ===== E2E-Profil: Playwright-Tests ===== -->
-        <!-- Aktivierung: mvn clean verify -Pe2e -->
-        <profile>
-            <id>e2e</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.6.3</version>
-                        <executions>
-                            <!-- Vorherigen Container + Volumes aufräumen (idempotent, läuft auch wenn nichts läuft).
-                                 Stellt sicher: keine Altdaten aus fehlgeschlagenen Vorläufen. -->
-                            <execution>
-                                <id>e2e-docker-cleanup</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>docker</executable>
-                                    <arguments>
-                                        <argument>compose</argument>
-                                        <argument>-f</argument>
-                                        <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
-                                        <argument>down</argument>
-                                        <argument>-v</argument>
-                                    </arguments>
-                                    <!-- Fehler ignorieren (Container lief möglicherweise gar nicht) -->
-                                    <successCodes>
-                                        <successCode>0</successCode>
-                                        <successCode>1</successCode>
-                                    </successCodes>
-                                </configuration>
-                            </execution>
-                            <!-- MySQL via Docker Compose starten (MUSS vor npm ci laufen, damit
-                                 MySQL bereit ist bevor Playwright seinen webServer startet) -->
-                            <execution>
-                                <id>e2e-docker-up</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>docker</executable>
-                                    <arguments>
-                                        <argument>compose</argument>
-                                        <argument>-f</argument>
-                                        <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
-                                        <argument>up</argument>
-                                        <argument>-d</argument>
-                                        <argument>--wait</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <!-- npm ci in src/test/e2e -->
-                            <execution>
-                                <id>e2e-npm-ci</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>npm</executable>
-                                    <arguments>
-                                        <argument>ci</argument>
-                                    </arguments>
-                                    <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
-                                </configuration>
-                            </execution>
-                            <!-- npx playwright install chromium -->
-                            <execution>
-                                <id>e2e-playwright-install</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>npx</executable>
-                                    <arguments>
-                                        <argument>playwright</argument>
-                                        <argument>install</argument>
-                                        <argument>chromium</argument>
-                                        <argument>firefox</argument>
-                                    </arguments>
-                                    <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
-                                </configuration>
-                            </execution>
-                            <!-- Durchlauf 1: Chromium – blob-Report für späteres Merge -->
-                            <!-- Exit-Code wird in Datei gespeichert; Firefox-Lauf läuft immer durch -->
-                            <execution>
-                                <id>e2e-playwright-chromium</id>
-                                <phase>integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>bash</executable>
-                                    <arguments>
-                                        <argument>-c</argument>
-                                        <argument>npx playwright test --project=setup --project=chromium --project=non-admin-chromium --reporter=blob; echo $? &gt; "$EXIT_FILE"; exit 0</argument>
-                                    </arguments>
-                                    <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
-                                    <environmentVariables>
-                                        <PLAYWRIGHT_BLOB_OUTPUT_DIR>${project.build.directory}/e2e-blob-chromium</PLAYWRIGHT_BLOB_OUTPUT_DIR>
-                                        <EXIT_FILE>${project.build.directory}/playwright-chromium-exit.txt</EXIT_FILE>
-                                    </environmentVariables>
-                                </configuration>
-                            </execution>
-                            <!-- Datenbank zwischen den Läufen neu aufsetzen -->
-                            <execution>
-                                <id>e2e-docker-between-down</id>
-                                <phase>integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>docker</executable>
-                                    <arguments>
-                                        <argument>compose</argument>
-                                        <argument>-f</argument>
-                                        <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
-                                        <argument>down</argument>
-                                        <argument>-v</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>e2e-docker-between-up</id>
-                                <phase>integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>docker</executable>
-                                    <arguments>
-                                        <argument>compose</argument>
-                                        <argument>-f</argument>
-                                        <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
-                                        <argument>up</argument>
-                                        <argument>-d</argument>
-                                        <argument>--wait</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <!-- Durchlauf 2: Firefox – blob-Report für späteres Merge -->
-                            <!-- Exit-Code wird in Datei gespeichert; Cleanup und Report laufen immer durch -->
-                            <execution>
-                                <id>e2e-playwright-firefox</id>
-                                <phase>integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>bash</executable>
-                                    <arguments>
-                                        <argument>-c</argument>
-                                        <argument>npx playwright test --project=setup --project=firefox --project=non-admin-firefox --reporter=blob; echo $? &gt; "$EXIT_FILE"; exit 0</argument>
-                                    </arguments>
-                                    <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
-                                    <environmentVariables>
-                                        <PLAYWRIGHT_BLOB_OUTPUT_DIR>${project.build.directory}/e2e-blob-firefox</PLAYWRIGHT_BLOB_OUTPUT_DIR>
-                                        <EXIT_FILE>${project.build.directory}/playwright-firefox-exit.txt</EXIT_FILE>
-                                    </environmentVariables>
-                                </configuration>
-                            </execution>
-                            <!-- Blob-Dateien beider Browser in ein gemeinsames Verzeichnis kopieren -->
-                            <execution>
-                                <id>e2e-combine-blobs</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>bash</executable>
-                                    <arguments>
-                                        <argument>-c</argument>
-                                        <argument>mkdir -p "$COMBINED" &amp;&amp; cp "$CHROMIUM"/*.zip "$COMBINED/" 2>/dev/null; cp "$FIREFOX"/*.zip "$COMBINED/" 2>/dev/null; true</argument>
-                                    </arguments>
-                                    <environmentVariables>
-                                        <CHROMIUM>${project.build.directory}/e2e-blob-chromium</CHROMIUM>
-                                        <FIREFOX>${project.build.directory}/e2e-blob-firefox</FIREFOX>
-                                        <COMBINED>${project.build.directory}/e2e-blobs</COMBINED>
-                                    </environmentVariables>
-                                </configuration>
-                            </execution>
-                            <!-- Blob-Reports beider Browser zu einem aggregierten HTML-Report zusammenführen -->
-                            <execution>
-                                <id>e2e-merge-reports</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>npx</executable>
-                                    <arguments>
-                                        <argument>playwright</argument>
-                                        <argument>merge-reports</argument>
-                                        <argument>--reporter=html</argument>
-                                        <argument>${project.build.directory}/e2e-blobs</argument>
-                                    </arguments>
-                                    <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
-                                    <!-- Fehler ignorieren falls ein Blob-Verzeichnis leer ist -->
-                                    <successCodes>
-                                        <successCode>0</successCode>
-                                        <successCode>1</successCode>
-                                    </successCodes>
-                                </configuration>
-                            </execution>
-                            <!-- MySQL Container + Volumes nach den Tests bereinigen -->
-                            <execution>
-                                <id>e2e-docker-down</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>docker</executable>
-                                    <arguments>
-                                        <argument>compose</argument>
-                                        <argument>-f</argument>
-                                        <argument>${project.basedir}/src/test/e2e/docker-compose-e2e.yml</argument>
-                                        <argument>down</argument>
-                                        <argument>-v</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <!-- Build fehlschlagen lassen wenn E2E-Tests fehlgeschlagen sind.
-                                 Läuft in verify (nach post-integration-test), damit Docker-Cleanup
-                                 und Report-Erstellung immer abgeschlossen werden. -->
-                            <execution>
-                                <id>e2e-check-results</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>bash</executable>
-                                    <arguments>
-                                        <argument>-c</argument>
-                                        <argument>code1=$(cat "$CHROMIUM_EXIT" 2>/dev/null || echo 0); code2=$(cat "$FIREFOX_EXIT" 2>/dev/null || echo 0); if [ "$code1" != "0" ] || [ "$code2" != "0" ]; then echo "E2E-Tests fehlgeschlagen (chromium=$code1, firefox=$code2) – siehe target/playwright-report/index.html"; exit 1; fi</argument>
-                                    </arguments>
-                                    <environmentVariables>
-                                        <CHROMIUM_EXIT>${project.build.directory}/playwright-chromium-exit.txt</CHROMIUM_EXIT>
-                                        <FIREFOX_EXIT>${project.build.directory}/playwright-firefox-exit.txt</FIREFOX_EXIT>
-                                    </environmentVariables>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+        <!-- E2E-Tests laufen jetzt standardmäßig bei 'mvn verify' (nicht mehr in separatem Profil).
+             Zum Überspringen: mvn verify -DskipE2E -->
 
         <!-- ===== SchemaSpy-Profil: Datenbankdokumentation generieren ===== -->
         <!-- Aktivierung: ./mvnw generate-sources -Pschemaspy               -->

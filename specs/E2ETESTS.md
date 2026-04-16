@@ -63,9 +63,9 @@ playwright-java würde Screenshots/Traces manuell in Spock-`cleanup:`-Blöcken e
 
 `src/main/frontend/` ist Produktionscode (CSS, Vite-Build). Playwright ist Testinfrastruktur. Trennung verhindert, dass Playwright-`node_modules` (~400 MB mit Browser-Binaries) in den Frontend-Build einlaufen.
 
-### Opt-in Maven-Profil `e2e`
+### Standardmäßig in `mvn verify`, Opt-out via `-DskipE2E`
 
-E2E-Tests dauern typisch 3–10 Minuten. Der normale `mvn clean verify` bleibt schnell (~30 Sekunden). E2E läuft explizit mit `mvn clean verify -Pe2e`.
+E2E-Tests laufen standardmäßig bei `mvn verify` zusammen mit Unit- und IT-Tests, um vollständige Test-Coverage zu gewährleisten. Für schnelle lokale Entwicklung können E2E-Tests übersprungen werden: `mvn verify -DskipE2E`.
 
 ---
 
@@ -143,13 +143,13 @@ services:
       retries: 15
 ```
 
-### `playwright.config.ts` — startet Spring Boot JAR
+### `playwright.config.ts` — startet Spring Boot JAR mit JaCoCo
 
 ```typescript
 import { defineConfig, devices } from '@playwright/test';
 import * as path from 'path';
 
-const JAR = path.resolve(__dirname, '../../../target/powerstaff-1.0-SNAPSHOT.jar');
+const SCRIPT = path.resolve(__dirname, '../../../target/start-e2e-with-jacoco.sh');
 const PORT = 8090;
 
 export default defineConfig({
@@ -157,7 +157,7 @@ export default defineConfig({
     globalTeardown: './global-teardown.ts',
 
     webServer: {
-        command: `java -jar ${JAR} --server.port=${PORT} --spring.profiles.active=e2e`,
+        command: `bash "${SCRIPT}" ${PORT}`,
         url: `http://localhost:${PORT}/actuator/health`,
         reuseExistingServer: !process.env.CI,
         timeout: 60_000,
@@ -413,11 +413,11 @@ await expect(page.locator('#toolbar')).toHaveScreenshot('toolbar.png', {
 
 ## 11. Maven-Integration
 
-Die E2E-Tests sind in einem eigenen Maven-Profil `e2e` gekapselt. Das Profil bindet `exec-maven-plugin` an die `integration-test`-Phase und wird nach den bestehenden Failsafe-`*IT`-Tests ausgeführt (Reihenfolge durch Plugin-Deklarationsreihenfolge in `pom.xml`).
+Die E2E-Tests sind in den Standard-Build-Lifecycle integriert und laufen bei `mvn verify` nach den Unit- und IT-Tests. Mit `-DskipE2E` können sie für schnelle lokale Entwicklung übersprungen werden.
 
-**Ablauf mit `-Pe2e`:**
+**Ablauf bei `mvn clean verify`:**
 ```
-mvn clean verify -Pe2e
+mvn clean verify
 
 generate-resources  → npm install + vite build (Frontend)
 package             → Spring Boot JAR wird gebaut  ← Pflicht: JAR muss vor E2E existieren
@@ -425,62 +425,65 @@ integration-test    → Failsafe: alle *IT (eigene Testcontainers-DBs, unberühr
                     → exec-plugin: npx playwright test
                          └─ globalSetup:   docker compose up (MySQL:3316)
                          └─ auth.setup.ts: Login, speichert auth-state.json
-                         └─ webServer:     java -jar ... --spring.profiles.active=e2e --server.port=8090
+                         └─ webServer:     bash start-e2e-with-jacoco.sh (JaCoCo Coverage)
                          └─ Tests laufen
                          └─ globalTeardown: docker compose down
 verify              → Failsafe prüft *IT-Ergebnisse
                     → exec-plugin prüft Playwright-Exit-Code
+                    → JaCoCo merged Report (Unit + IT + E2E Coverage)
 ```
 
-**Ohne `-Pe2e`:** Identisch mit dem bisherigen Verhalten — kein Playwright, keine Docker-Compose-DB.
+**Mit `-DskipE2E`:** E2E-Tests werden übersprungen — schnellerer Build für lokale Entwicklung (~30 Sekunden statt 3-10 Minuten).
 
 ---
 
 ## 12. GitHub Actions CI
 
+E2E-Tests sind vollständig in den Standard-Build-Workflow integriert. Es wird **kein separater E2E-Workflow** mehr benötigt.
+
 ```yaml
-# .github/workflows/e2e.yml
-name: E2E Tests
+# .github/workflows/pullrequest.yml
+name: Pullrequest Workflow
 
 on:
-  push:
-    branches: [main]
   pull_request:
+    branches: [ main ]
 
 jobs:
-  e2e:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
         with:
           java-version: '25'
           distribution: 'temurin'
+          cache: maven
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+      - name: Build and Test (Unit + IT + E2E)
+        run: ./mvnw clean verify
+```
 
-      - name: Cache Playwright-Browser
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ hashFiles('src/test/e2e/package-lock.json') }}
+**Maven orchestriert alle E2E-Dependencies automatisch:**
+- Docker Compose startet MySQL (pre-integration-test Phase)
+- `npm ci` installiert Playwright-Dependencies (pre-integration-test Phase)
+- `npx playwright install` lädt Chromium + Firefox Browser (pre-integration-test Phase)
+- E2E-Tests laufen (integration-test Phase)
+- Playwright HTML-Report wird generiert (post-integration-test Phase)
+- Docker Compose stoppt MySQL (post-integration-test Phase)
 
-      - name: Playwright-Abhängigkeiten installieren
-        run: npm ci
-        working-directory: src/test/e2e
-
-      - name: Playwright-Browser installieren
-        run: npx playwright install --with-deps chromium
-        working-directory: src/test/e2e
-
-      - name: Maven Build + E2E Tests
-        run: ./mvnw clean verify -Pe2e
-
-      - name: Playwright-Report hochladen (immer, auch bei Fehler)
-        if: always()
+**Artefakte hochladen (optional):**
+Falls Playwright-Reports bei CI-Fehlern archiviert werden sollen, kann ein zusätzlicher Step hinzugefügt werden:
+```yaml
+      - name: Playwright-Report hochladen (bei Fehler)
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
@@ -491,6 +494,7 @@ jobs:
 **Hinweise für CI:**
 - Docker ist auf `ubuntu-latest` nativ verfügbar — kein DinD nötig
 - `TESTCONTAINERS_RYUK_DISABLED=true` muss nicht gesetzt werden (Ryuk läuft auf GitHub Actions)
+- E2E-Tests können mit `-DskipE2E` übersprungen werden (für schnelle Feedback-Schleifen nicht empfohlen)
 - `--update-snapshots` für visuelle Golden Screenshots wird manuell ausgeführt und die Ergebnisse eingecheckt
 
 ---

@@ -21,9 +21,6 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build with Maven
-        run: ./mvnw clean package verify
-
-      - name: Run E2E Tests
-        run: ./mvnw clean verify -Pe2e -DskipTests
+      - name: Build and Test (Unit + IT + E2E)
+        run: ./mvnw clean verify
 

@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as path from 'path';
 
-const JAR = path.resolve(__dirname, '../../../target/powerstaff-1.0-SNAPSHOT.jar');
+const SCRIPT = path.resolve(__dirname, '../../../target/start-e2e-with-jacoco.sh');
 const PORT = 8100;
 
 export default defineConfig({
@@ -9,7 +9,7 @@ export default defineConfig({
     globalTeardown: './global-teardown.ts',
 
     webServer: {
-        command: `java -Dspring.profiles.active=e2e -Dserver.port=${PORT} -jar "${JAR}" > ../../../target/e2e-application.log 2>&1`,
+        command: `bash "${SCRIPT}" ${PORT} > ../../../target/e2e-application.log 2>&1`,
         url: `http://localhost:${PORT}/actuator/health`,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,

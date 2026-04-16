@@ -1,6 +1,6 @@
 -- =============================================================================
 -- E2E Testdaten für Powerstaff 2026
--- Wird via Flyway nur im e2e-Profil eingespielt (spring.flyway.locations).
+-- Wird via Flyway nur bei E2E-Tests eingespielt (spring.profiles.active=e2e).
 -- Idempotent: jede INSERT nutzt INSERT IGNORE oder ON DUPLICATE KEY.
 -- =============================================================================
 

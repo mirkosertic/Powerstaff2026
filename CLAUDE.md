@@ -39,16 +39,13 @@ Repositories sind immer `package-private`. Kein direkter Repository-Zugriff zwis
 ./mvnw test
 
 # Integrationstests (*IT) ausführen – benötigt Docker für Testcontainers
+./mvnw verify -DskipE2E
+
+# Alle Tests (Unit + IT + E2E) – benötigt Docker für Testcontainers
 ./mvnw verify
 
-# E2E TEsts ausführen – benötigt Docker für Testcontainers
-./mvnw verify -Pe2e
-
-# Alles zusammen ohne E2E-Tests
-./mvnw clean verify
-
-# Alles zusammen mit E2E-Tests
-./mvnw clean verify -Pe2e
+# Schneller Build ohne E2E-Tests (nur Unit + IT)
+./mvnw clean verify -DskipE2E
 
 # Nur Integrationstests
 ./mvnw failsafe:integration-test failsafe:verify
@@ -172,7 +169,8 @@ spring.sql.init.mode=always
 ## Commit-Konvention
 
 Nach jedem abgeschlossenen Task in `TASKS.md`:
-1. `./mvnw clean verify` muss erfolgreich durchlaufen. 
+1. `./mvnw clean verify` muss erfolgreich durchlaufen (inkludiert Unit + IT + E2E Tests). 
+   Bei lokaler Entwicklung ohne Docker: `./mvnw clean verify -DskipE2E`
 2. Task in `TASKS.md` als erledigt markieren (`[x]`)
 3. Git-Commit mit aussagekräftiger Message
 4. Commit-Message endet mit `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>`
