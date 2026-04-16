@@ -67,11 +67,11 @@ Powerstaff 2026 setzt auf eine mehrschichtige Teststrategie: Unit-Tests (Spock/G
 
 Die jeweils aktuellen **E2E-Testergebnisse** (Playwright-Report mit Screenshots, Traces und Testergebnissen pro Modul) sind öffentlich einsehbar:
 
-**[https://mirkosertic.github.io/Powerstaff2026/playwright-report](https://mirkosertic.github.io/Powerstaff2026/playwright-report)**
-**[https://mirkosertic.github.io/Powerstaff2026/jacoco-unit](https://mirkosertic.github.io/Powerstaff2026/jacoco-unit)**
-**[https://mirkosertic.github.io/Powerstaff2026/jacoco-it](https://mirkosertic.github.io/Powerstaff2026/jacoco-it)**
-**[https://mirkosertic.github.io/Powerstaff2026/jacoco-e2e](https://mirkosertic.github.io/Powerstaff2026/jacoco-e2e)**
-**[https://mirkosertic.github.io/Powerstaff2026/jacoco-merged](https://mirkosertic.github.io/Powerstaff2026/jacoco-merged)**
+- **[https://mirkosertic.github.io/Powerstaff2026/playwright-report](https://mirkosertic.github.io/Powerstaff2026/playwright-report)**
+- **[https://mirkosertic.github.io/Powerstaff2026/jacoco-unit](https://mirkosertic.github.io/Powerstaff2026/jacoco-unit)**
+- **[https://mirkosertic.github.io/Powerstaff2026/jacoco-it](https://mirkosertic.github.io/Powerstaff2026/jacoco-it)**
+- **[https://mirkosertic.github.io/Powerstaff2026/jacoco-e2e](https://mirkosertic.github.io/Powerstaff2026/jacoco-e2e)**
+- **[https://mirkosertic.github.io/Powerstaff2026/jacoco-merged](https://mirkosertic.github.io/Powerstaff2026/jacoco-merged)**
 
 ---
 
