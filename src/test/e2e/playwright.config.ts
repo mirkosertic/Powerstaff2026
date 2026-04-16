@@ -80,7 +80,7 @@ export default defineConfig({
         },
     ],
 
-    reporter: [['html', { outputFolder: 'playwright-report' }]],
+    reporter: [['html', { open: 'never' }]],
     retries: process.env.CI ? 1 : 0,
     workers: 1, // Sequentielle Ausführung, um Login-State-Isolation zu garantieren
     forbidOnly: !!process.env.CI,

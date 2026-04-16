@@ -33,7 +33,6 @@ jobs:
         key: playwright-${{ runner.os }}-${{ hashFiles('src/test/e2e/package.json') }}
         restore-keys: playwright-${{ runner.os }}-
 
-
     - name: Build with Maven
       run: ./mvnw clean package verify
 
@@ -41,14 +40,14 @@ jobs:
       uses: actions/upload-pages-artifact@v3
       if: always()
       with:
-        path: src/test/e2e/playwright-report/
+        path: target/site
 
     - name: Deploy Playwright Report to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       if: always()
       with:
         branch: gh-pages
-        folder: src/test/e2e/playwright-report/
+        folder: target/site
         clean: true
 
     - name: Get project version

@@ -709,6 +709,9 @@
                                 <argument>${project.build.directory}/e2e-blobs</argument>
                             </arguments>
                             <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
+                            <environmentVariables>
+                                <PLAYWRIGHT_HTML_OUTPUT_DIR>${project.build.directory}/site/playwright-report</PLAYWRIGHT_HTML_OUTPUT_DIR>
+                            </environmentVariables>
                             <!-- Fehler ignorieren falls ein Blob-Verzeichnis leer ist -->
                             <successCodes>
                                 <successCode>0</successCode>
