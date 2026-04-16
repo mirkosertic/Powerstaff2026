@@ -36,7 +36,8 @@ class PsUserRepositoryIT extends AbstractContainerBaseIT {
                 true,
                 true,
                 PsUser.DEFAULT_SYSTEM_PROMPT,
-                false
+                false,
+                null
         )
 
         when: "der Benutzer gespeichert und per ID geladen wird"
@@ -61,8 +62,8 @@ class PsUserRepositoryIT extends AbstractContainerBaseIT {
 
     def "das Speichern zweier Benutzer mit identischem username wirft eine DataIntegrityViolationException"() {
         given: "zwei PsUser-Objekte mit demselben Primaerschluessel"
-        def user1 = new PsUser("duplicate", "{bcrypt}hash1", false, true, PsUser.DEFAULT_SYSTEM_PROMPT, false)
-        def user2 = new PsUser("duplicate", "{bcrypt}hash2", false, true, PsUser.DEFAULT_SYSTEM_PROMPT, false)
+        def user1 = new PsUser("duplicate", "{bcrypt}hash1", false, true, PsUser.DEFAULT_SYSTEM_PROMPT, false, null)
+        def user2 = new PsUser("duplicate", "{bcrypt}hash2", false, true, PsUser.DEFAULT_SYSTEM_PROMPT, false, null)
         repository.save(user1)
 
         when: "der zweite Benutzer mit dem bereits vergebenen username gespeichert wird"
