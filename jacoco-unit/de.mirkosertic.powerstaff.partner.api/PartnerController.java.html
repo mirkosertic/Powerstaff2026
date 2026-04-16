@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PartnerController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Unit-Test Coverage</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.partner.api</a> &gt; <span class="el_source">PartnerController.java</span></div><h1>PartnerController.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.partner.api;
+
+import de.mirkosertic.powerstaff.partner.query.PartnerDetailView;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+import de.mirkosertic.powerstaff.freelancer.command.FreelancerCommandService;
+import de.mirkosertic.powerstaff.freelancer.command.FreelancerLookupResult;
+import de.mirkosertic.powerstaff.partner.command.Partner;
+import de.mirkosertic.powerstaff.partner.command.PartnerCommandService;
+import de.mirkosertic.powerstaff.partner.command.PartnerContactEntry;
+import de.mirkosertic.powerstaff.partner.command.PartnerHistoryEntry;
+import de.mirkosertic.powerstaff.partner.command.PartnerHasProjectsException;
+import de.mirkosertic.powerstaff.partner.query.PartnerFreelancerView;
+import de.mirkosertic.powerstaff.partner.query.PartnerQueryService;
+import de.mirkosertic.powerstaff.partner.query.PartnerSearchCriteria;
+import de.mirkosertic.powerstaff.project.command.RememberedProjectInfo;
+import de.mirkosertic.powerstaff.project.command.RememberedProjectService;
+import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.io.IOException;
+import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+
+@Controller
+@RequestMapping(&quot;/partner&quot;)
+public class PartnerController {
+
+    private static final String COOKIE_LAST_PARTNER_ID = &quot;lastPartnerId&quot;;
+    private static final int COOKIE_MAX_AGE = 30 * 24 * 60 * 60; // 30 days
+    private static final int PAGE_SIZE = 20;
+<span class="nc" id="L52">    private static final DateTimeFormatter AUDIT_DATE_FMT = DateTimeFormatter.ofPattern(&quot;dd.MM.yyyy&quot;);</span>
+
+    private final PartnerCommandService commandService;
+    private final PartnerQueryService queryService;
+    private final FreelancerCommandService freelancerCommandService;
+    private final HistoryTypeQueryService historyTypeQueryService;
+    private final RememberedProjectService rememberedProjectService;
+    private final ObjectMapper objectMapper;
+
+    public PartnerController(final PartnerCommandService commandService,
+                             final PartnerQueryService queryService,
+                             final FreelancerCommandService freelancerCommandService,
+                             final HistoryTypeQueryService historyTypeQueryService,
+                             final RememberedProjectService rememberedProjectService,
+<span class="nc" id="L66">                             final ObjectMapper objectMapper) {</span>
+<span class="nc" id="L67">        this.commandService = commandService;</span>
+<span class="nc" id="L68">        this.queryService = queryService;</span>
+<span class="nc" id="L69">        this.freelancerCommandService = freelancerCommandService;</span>
+<span class="nc" id="L70">        this.historyTypeQueryService = historyTypeQueryService;</span>
+<span class="nc" id="L71">        this.rememberedProjectService = rememberedProjectService;</span>
+<span class="nc" id="L72">        this.objectMapper = objectMapper;</span>
+<span class="nc" id="L73">    }</span>
+
+    // -------------------------------------------------------------------------
+    // Navigation: index → redirect to last or first
+    // -------------------------------------------------------------------------
+
+    @GetMapping
+    public String index(@CookieValue(name = COOKIE_LAST_PARTNER_ID, required = false) final Long lastId) {
+<span class="nc bnc" id="L81" title="All 4 branches missed.">        if (lastId != null &amp;&amp; queryService.findById(lastId).isPresent()) {</span>
+<span class="nc" id="L82">            return &quot;redirect:/partner/&quot; + lastId;</span>
+        }
+<span class="nc" id="L84">        return queryService.findFirst()</span>
+<span class="nc" id="L85">                .map(p -&gt; &quot;redirect:/partner/&quot; + p.id())</span>
+<span class="nc" id="L86">                .orElse(&quot;redirect:/partner/new&quot;);</span>
+    }
+
+    @GetMapping(&quot;/first&quot;)
+    public String first() {
+<span class="nc" id="L91">        return queryService.findFirst()</span>
+<span class="nc" id="L92">                .map(p -&gt; &quot;redirect:/partner/&quot; + p.id())</span>
+<span class="nc" id="L93">                .orElse(&quot;redirect:/partner/new&quot;);</span>
+    }
+
+    @GetMapping(&quot;/last&quot;)
+    public String last() {
+<span class="nc" id="L98">        return queryService.findLast()</span>
+<span class="nc" id="L99">                .map(p -&gt; &quot;redirect:/partner/&quot; + p.id())</span>
+<span class="nc" id="L100">                .orElse(&quot;redirect:/partner/new&quot;);</span>
+    }
+
+    @GetMapping(&quot;/previous/{id}&quot;)
+    public String previous(@PathVariable final long id) {
+<span class="nc" id="L105">        return queryService.findPrevious(id)</span>
+<span class="nc" id="L106">                .map(p -&gt; &quot;redirect:/partner/&quot; + p.id())</span>
+<span class="nc" id="L107">                .orElse(&quot;redirect:/partner/new&quot;);</span>
+    }
+
+    @GetMapping(&quot;/next/{id}&quot;)
+    public String next(@PathVariable final long id) {
+<span class="nc" id="L112">        return queryService.findNext(id)</span>
+<span class="nc" id="L113">                .map(p -&gt; &quot;redirect:/partner/&quot; + p.id())</span>
+<span class="nc" id="L114">                .orElse(&quot;redirect:/partner/new&quot;);</span>
+    }
+
+    // -------------------------------------------------------------------------
+    // Show / New
+    // -------------------------------------------------------------------------
+
+    @GetMapping(&quot;/{id}&quot;)
+    public String show(@PathVariable final long id, final HttpServletResponse response, final Model model, final Principal principal) {
+<span class="nc" id="L123">        final var partner = commandService.findById(id).orElseThrow();</span>
+<span class="nc" id="L124">        final var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, String.valueOf(id));</span>
+<span class="nc" id="L125">        cookie.setPath(&quot;/partner&quot;);</span>
+<span class="nc" id="L126">        cookie.setMaxAge(COOKIE_MAX_AGE);</span>
+<span class="nc" id="L127">        response.addCookie(cookie);</span>
+<span class="nc" id="L128">        model.addAttribute(&quot;partner&quot;, partner);</span>
+<span class="nc" id="L129">        model.addAttribute(&quot;contacts&quot;, queryService.findContactsByPartner(id));</span>
+<span class="nc" id="L130">        model.addAttribute(&quot;history&quot;, queryService.findHistoryByPartner(id));</span>
+<span class="nc" id="L131">        model.addAttribute(&quot;freelancers&quot;, queryService.findFreelancersByPartner(id));</span>
+<span class="nc" id="L132">        model.addAttribute(&quot;projects&quot;, queryService.findProjectsByPartner(id));</span>
+<span class="nc" id="L133">        model.addAttribute(&quot;historyTypes&quot;, historyTypeQueryService.findAll());</span>
+<span class="nc" id="L134">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
+<span class="nc" id="L135">        model.addAttribute(&quot;activePage&quot;, &quot;partner&quot;);</span>
+<span class="nc" id="L136">        model.addAttribute(&quot;auditInfo&quot;, buildAuditInfo(</span>
+<span class="nc" id="L137">                partner.getId(),</span>
+<span class="nc" id="L138">                partner.getCreationDate(), partner.getCreationUser(),</span>
+<span class="nc" id="L139">                partner.getChangedDate(), partner.getChangedUser()));</span>
+<span class="nc" id="L140">        return &quot;partner/form&quot;;</span>
+    }
+
+    @GetMapping(&quot;/new&quot;)
+    public String newForm(final HttpServletResponse response, final Model model, final Principal principal) {
+<span class="nc" id="L145">        final var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, &quot;&quot;);</span>
+<span class="nc" id="L146">        cookie.setPath(&quot;/partner&quot;);</span>
+<span class="nc" id="L147">        cookie.setMaxAge(0); // delete</span>
+<span class="nc" id="L148">        response.addCookie(cookie);</span>
+<span class="nc" id="L149">        final var partner = new Partner();</span>
+<span class="nc" id="L150">        model.addAttribute(&quot;partner&quot;, partner);</span>
+<span class="nc" id="L151">        model.addAttribute(&quot;contacts&quot;, List.of());</span>
+<span class="nc" id="L152">        model.addAttribute(&quot;history&quot;, List.of());</span>
+<span class="nc" id="L153">        model.addAttribute(&quot;freelancers&quot;, List.of());</span>
+<span class="nc" id="L154">        model.addAttribute(&quot;projects&quot;, List.of());</span>
+<span class="nc" id="L155">        model.addAttribute(&quot;historyTypes&quot;, historyTypeQueryService.findAll());</span>
+<span class="nc" id="L156">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
+<span class="nc" id="L157">        model.addAttribute(&quot;activePage&quot;, &quot;partner&quot;);</span>
+<span class="nc" id="L158">        model.addAttribute(&quot;auditInfo&quot;, buildAuditInfo(</span>
+<span class="nc" id="L159">                partner.getId(),</span>
+<span class="nc" id="L160">                partner.getCreationDate(), partner.getCreationUser(),</span>
+<span class="nc" id="L161">                partner.getChangedDate(), partner.getChangedUser()));</span>
+<span class="nc" id="L162">        return &quot;partner/form&quot;;</span>
+    }
+
+    private String buildAuditInfo(final Long id, final LocalDateTime creationDate, final String creationUser,
+                                  final LocalDateTime changedDate, final String changedUser) {
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (id == null) return &quot;Neu, noch nicht gespeichert&quot;;</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : &quot;?&quot;)</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">                       + &quot; &quot; + (creationUser != null ? creationUser : &quot;?&quot;);</span>
+<span class="nc" id="L170">        String result = &quot;Erfasst: &quot; + created;</span>
+<span class="nc bnc" id="L171" title="All 4 branches missed.">        if (changedDate != null &amp;&amp; !changedDate.equals(creationDate)) {</span>
+<span class="nc" id="L172">            result += &quot;&lt;br&gt;Geändert: &quot;</span>
+<span class="nc" id="L173">                   + changedDate.format(AUDIT_DATE_FMT)</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">                   + &quot; &quot; + (changedUser != null ? changedUser : &quot;?&quot;);</span>
+        }
+<span class="nc" id="L176">        return result;</span>
+    }
+
+    private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (principal == null) return null;</span>
+<span class="nc" id="L181">        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);</span>
+    }
+
+    // -------------------------------------------------------------------------
+    // Save (Unified Save: Stammdaten + Kontakte + Historie in einer Transaktion)
+    // -------------------------------------------------------------------------
+
+    @PostMapping(&quot;/save&quot;)
+    @ResponseBody
+    public ResponseEntity&lt;?&gt; save(@ModelAttribute final Partner partner,
+                                  @RequestParam(required = false, defaultValue = &quot;[]&quot;) final String contactsJson,
+                                  @RequestParam(required = false, defaultValue = &quot;[]&quot;) final String historyJson,
+                                  final HttpServletResponse response) throws IOException {
+        try {
+<span class="nc" id="L195">            final List&lt;PartnerContactEntry&gt; contacts = objectMapper.readValue(</span>
+<span class="nc" id="L196">                    contactsJson, new TypeReference&lt;&gt;() {});</span>
+<span class="nc" id="L197">            final List&lt;PartnerHistoryEntry&gt; newHistory = objectMapper.readValue(</span>
+<span class="nc" id="L198">                    historyJson, new TypeReference&lt;&gt;() {});</span>
+<span class="nc" id="L199">            final var saved = commandService.save(partner, contacts, newHistory);</span>
+<span class="nc" id="L200">            response.sendRedirect(&quot;/partner/&quot; + saved.getId() + &quot;?saved=true&quot;);</span>
+<span class="nc" id="L201">            return null;</span>
+<span class="nc" id="L202">        } catch (final OptimisticLockingFailureException e) {</span>
+<span class="nc" id="L203">            return ResponseEntity.status(HttpStatus.CONFLICT)</span>
+<span class="nc" id="L204">                    .body(Map.of(&quot;conflict&quot;, true));</span>
+<span class="nc" id="L205">        } catch (final JacksonException e) {</span>
+<span class="nc" id="L206">            return ResponseEntity.badRequest().body(Map.of(&quot;error&quot;, &quot;invalid json&quot;));</span>
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Delete
+    // -------------------------------------------------------------------------
+
+    @PostMapping(&quot;/delete/{id}&quot;)
+    @ResponseBody
+    public ResponseEntity&lt;?&gt; delete(@PathVariable final long id,
+                                    final HttpServletResponse response) throws IOException {
+        try {
+<span class="nc" id="L219">            commandService.deleteById(id);</span>
+<span class="nc" id="L220">            response.sendRedirect(&quot;/partner/new&quot;);</span>
+<span class="nc" id="L221">            return null;</span>
+<span class="nc" id="L222">        } catch (final PartnerHasProjectsException e) {</span>
+<span class="nc" id="L223">            return ResponseEntity.status(HttpStatus.CONFLICT)</span>
+<span class="nc" id="L224">                    .body(Map.of(&quot;blocked&quot;, true, &quot;projectIds&quot;, e.getProjectIds()));</span>
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // QBE-Suche
+    // -------------------------------------------------------------------------
+
+    @GetMapping(&quot;/search&quot;)
+    public String search(@ModelAttribute final PartnerSearchCriteria criteria,
+                         @RequestParam(required = false, defaultValue = &quot;0&quot;) final int offset,
+                         final Model model,
+                         final HttpServletResponse response) {
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (offset &gt; 0) {</span>
+<span class="nc" id="L238">            final var results = queryService.search(criteria, offset, PAGE_SIZE);</span>
+<span class="nc" id="L239">            final int nextOffset = offset + PAGE_SIZE;</span>
+<span class="nc" id="L240">            final long total = queryService.countSearch(criteria);</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">            if (nextOffset &lt; total) {</span>
+<span class="nc" id="L242">                response.setHeader(&quot;X-Next-Url&quot;, buildSearchMoreUrl(criteria, nextOffset));</span>
+            }
+<span class="nc" id="L244">            model.addAttribute(&quot;results&quot;, results);</span>
+<span class="nc" id="L245">            return &quot;partner/search-results :: results&quot;;</span>
+        }
+
+<span class="nc" id="L248">        response.setHeader(&quot;Cache-Control&quot;, &quot;no-store, no-cache, must-revalidate&quot;);</span>
+<span class="nc" id="L249">        response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);</span>
+<span class="nc" id="L250">        response.setHeader(&quot;Expires&quot;, &quot;0&quot;);</span>
+
+<span class="nc" id="L252">        final var results = queryService.search(criteria, 0, PAGE_SIZE);</span>
+<span class="nc" id="L253">        final long total = queryService.countSearch(criteria);</span>
+<span class="nc" id="L254">        model.addAttribute(&quot;results&quot;, results);</span>
+<span class="nc" id="L255">        model.addAttribute(&quot;totalCount&quot;, total);</span>
+<span class="nc" id="L256">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
+<span class="nc" id="L257">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
+<span class="nc" id="L258">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;</span>
+<span class="nc" id="L260">        model.addAttribute(&quot;nextUrl&quot;, nextUrl);</span>
+<span class="nc" id="L261">        model.addAttribute(&quot;editSearchUrl&quot;, buildEditSearchUrl(criteria));</span>
+<span class="nc" id="L262">        return &quot;partner/search-page&quot;;</span>
+    }
+
+    private void appendCriteriaParams(final UriComponentsBuilder b, final PartnerSearchCriteria criteria) {
+<span class="nc bnc" id="L266" title="All 2 branches missed.">        if (criteria.company()    != null) b.queryParam(&quot;company&quot;,    criteria.company());</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">        if (criteria.name1()      != null) b.queryParam(&quot;name1&quot;,      criteria.name1());</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">        if (criteria.name2()      != null) b.queryParam(&quot;name2&quot;,      criteria.name2());</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">        if (criteria.street()     != null) b.queryParam(&quot;street&quot;,     criteria.street());</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">        if (criteria.country()    != null) b.queryParam(&quot;country&quot;,    criteria.country());</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">        if (criteria.plz()        != null) b.queryParam(&quot;plz&quot;,        criteria.plz());</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (criteria.city()       != null) b.queryParam(&quot;city&quot;,       criteria.city());</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">        if (criteria.comments()   != null) b.queryParam(&quot;comments&quot;,   criteria.comments());</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">        if (criteria.debitorNr()  != null) b.queryParam(&quot;debitorNr&quot;,  criteria.debitorNr());</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">        if (criteria.kreditorNr() != null) b.queryParam(&quot;kreditorNr&quot;, criteria.kreditorNr());</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">        if (criteria.sortField()  != null) b.queryParam(&quot;sortField&quot;,  criteria.sortField());</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        if (criteria.sortDir()    != null) b.queryParam(&quot;sortDir&quot;,    criteria.sortDir());</span>
+<span class="nc" id="L278">    }</span>
+
+    private String buildEditSearchUrl(final PartnerSearchCriteria criteria) {
+<span class="nc" id="L281">        final var b = UriComponentsBuilder.fromPath(&quot;/partner/new&quot;);</span>
+<span class="nc" id="L282">        appendCriteriaParams(b, criteria);</span>
+<span class="nc" id="L283">        return b.encode().build().toUriString();</span>
+    }
+
+    private String buildSearchMoreUrl(final PartnerSearchCriteria criteria, final int offset) {
+<span class="nc" id="L287">        final var b = UriComponentsBuilder.fromPath(&quot;/partner/search&quot;).queryParam(&quot;offset&quot;, offset);</span>
+<span class="nc" id="L288">        appendCriteriaParams(b, criteria);</span>
+<span class="nc" id="L289">        return b.encode().build().toUriString();</span>
+    }
+
+    // -------------------------------------------------------------------------
+    // Freelancer-Zuordnung
+    // -------------------------------------------------------------------------
+
+    @PostMapping(&quot;/{id}/assign-freelancer&quot;)
+    @ResponseBody
+    public ResponseEntity&lt;?&gt; assignFreelancer(@PathVariable final long id,
+                                              @RequestBody final Map&lt;String, String&gt; body) {
+<span class="nc" id="L300">        final String code = body.get(&quot;code&quot;);</span>
+<span class="nc" id="L301">        final FreelancerLookupResult freelancer = freelancerCommandService.findByCode(code).orElse(null);</span>
+
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        if (freelancer == null) {</span>
+<span class="nc" id="L304">            return ResponseEntity.status(HttpStatus.NOT_FOUND)</span>
+<span class="nc" id="L305">                    .body(Map.of(&quot;notFound&quot;, true));</span>
+        }
+
+<span class="nc bnc" id="L308" title="All 4 branches missed.">        if (freelancer.partnerId() != null &amp;&amp; freelancer.partnerId() != id) {</span>
+<span class="nc" id="L309">            final String otherCompany = queryService.findById(freelancer.partnerId())</span>
+<span class="nc" id="L310">                    .map(PartnerDetailView::company)</span>
+<span class="nc" id="L311">                    .orElse(&quot;Unbekannter Partner&quot;);</span>
+<span class="nc" id="L312">            return ResponseEntity.status(HttpStatus.CONFLICT)</span>
+<span class="nc" id="L313">                    .body(Map.of(&quot;otherPartner&quot;, otherCompany,</span>
+<span class="nc" id="L314">                                 &quot;freelancerId&quot;, freelancer.id()));</span>
+        }
+
+<span class="nc" id="L317">        freelancerCommandService.assignToPartner(freelancer.id(), id);</span>
+<span class="nc" id="L318">        final List&lt;PartnerFreelancerView&gt; updated = queryService.findFreelancersByPartner(id);</span>
+<span class="nc" id="L319">        return ResponseEntity.ok(Map.of(&quot;ok&quot;, true, &quot;freelancers&quot;, updated));</span>
+    }
+
+    @PostMapping(&quot;/{id}/confirm-reassign-freelancer&quot;)
+    @ResponseBody
+    public ResponseEntity&lt;?&gt; confirmReassignFreelancer(@PathVariable final long id,
+                                                       @RequestBody final Map&lt;String, Long&gt; body) {
+<span class="nc" id="L326">        final long freelancerId = body.get(&quot;freelancerId&quot;);</span>
+<span class="nc" id="L327">        freelancerCommandService.assignToPartner(freelancerId, id);</span>
+<span class="nc" id="L328">        final List&lt;PartnerFreelancerView&gt; updated = queryService.findFreelancersByPartner(id);</span>
+<span class="nc" id="L329">        return ResponseEntity.ok(Map.of(&quot;ok&quot;, true, &quot;freelancers&quot;, updated));</span>
+    }
+
+    @PostMapping(&quot;/{id}/remove-freelancer/{freelancerId}&quot;)
+    @ResponseBody
+    public ResponseEntity&lt;?&gt; removeFreelancer(@PathVariable final long id,
+                                              @PathVariable final long freelancerId) {
+<span class="nc" id="L336">        freelancerCommandService.removeFromPartner(freelancerId, id);</span>
+<span class="nc" id="L337">        final List&lt;PartnerFreelancerView&gt; updated = queryService.findFreelancersByPartner(id);</span>
+<span class="nc" id="L338">        return ResponseEntity.ok(Map.of(&quot;ok&quot;, true, &quot;freelancers&quot;, updated));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

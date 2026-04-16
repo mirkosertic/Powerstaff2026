@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Kunde.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Integrationstest Coverage</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.customer.command</a> &gt; <span class="el_source">Kunde.java</span></div><h1>Kunde.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.customer.command;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.InsertOnlyProperty;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.time.LocalDateTime;
+
+@Table(&quot;kunde&quot;)
+<span class="fc" id="L16">public class Kunde {</span>
+
+    @Id
+    private Long id;
+
+    @Version
+    @Column(&quot;db_version&quot;)
+    private Long dbVersion;
+
+    @CreatedDate
+    @InsertOnlyProperty
+    @Column(&quot;creation_date&quot;)
+    private LocalDateTime creationDate;
+
+    @CreatedBy
+    @InsertOnlyProperty
+    @Column(&quot;creation_user&quot;)
+    private String creationUser;
+
+    @LastModifiedDate
+    @Column(&quot;changed_date&quot;)
+    private LocalDateTime changedDate;
+
+    @LastModifiedBy
+    @Column(&quot;changed_user&quot;)
+    private String changedUser;
+
+    private String company;
+    private String name1;
+    private String name2;
+    private String street;
+    private String country;
+    private String plz;
+    private String city;
+
+    @Column(&quot;contactforbidden&quot;)
+    private boolean contactForbidden;
+
+    @Column(&quot;show_again&quot;)
+    private boolean showAgain;
+
+    private String comments;
+
+    @Column(&quot;debitor_nr&quot;)
+    private String debitorNr;
+
+    @Column(&quot;kreditor_nr&quot;)
+    private String kreditorNr;
+
+<span class="fc" id="L65">    public Long getId() { return id; }</span>
+<span class="fc" id="L66">    public void setId(final Long id) { this.id = id; }</span>
+
+<span class="fc" id="L68">    public Long getDbVersion() { return dbVersion; }</span>
+<span class="fc" id="L69">    public void setDbVersion(final Long dbVersion) { this.dbVersion = dbVersion; }</span>
+
+<span class="fc" id="L71">    public LocalDateTime getCreationDate() { return creationDate; }</span>
+<span class="nc" id="L72">    public void setCreationDate(final LocalDateTime creationDate) { this.creationDate = creationDate; }</span>
+
+<span class="fc" id="L74">    public String getCreationUser() { return creationUser; }</span>
+<span class="nc" id="L75">    public void setCreationUser(final String creationUser) { this.creationUser = creationUser; }</span>
+
+<span class="fc" id="L77">    public LocalDateTime getChangedDate() { return changedDate; }</span>
+<span class="nc" id="L78">    public void setChangedDate(final LocalDateTime changedDate) { this.changedDate = changedDate; }</span>
+
+<span class="fc" id="L80">    public String getChangedUser() { return changedUser; }</span>
+<span class="nc" id="L81">    public void setChangedUser(final String changedUser) { this.changedUser = changedUser; }</span>
+
+<span class="fc" id="L83">    public String getCompany() { return company; }</span>
+<span class="fc" id="L84">    public void setCompany(final String company) { this.company = company; }</span>
+
+<span class="fc" id="L86">    public String getName1() { return name1; }</span>
+<span class="fc" id="L87">    public void setName1(final String name1) { this.name1 = name1; }</span>
+
+<span class="fc" id="L89">    public String getName2() { return name2; }</span>
+<span class="fc" id="L90">    public void setName2(final String name2) { this.name2 = name2; }</span>
+
+<span class="fc" id="L92">    public String getStreet() { return street; }</span>
+<span class="fc" id="L93">    public void setStreet(final String street) { this.street = street; }</span>
+
+<span class="fc" id="L95">    public String getCountry() { return country; }</span>
+<span class="fc" id="L96">    public void setCountry(final String country) { this.country = country; }</span>
+
+<span class="fc" id="L98">    public String getPlz() { return plz; }</span>
+<span class="fc" id="L99">    public void setPlz(final String plz) { this.plz = plz; }</span>
+
+<span class="fc" id="L101">    public String getCity() { return city; }</span>
+<span class="fc" id="L102">    public void setCity(final String city) { this.city = city; }</span>
+
+<span class="fc" id="L104">    public boolean isContactForbidden() { return contactForbidden; }</span>
+<span class="fc" id="L105">    public void setContactForbidden(final boolean contactForbidden) { this.contactForbidden = contactForbidden; }</span>
+
+<span class="fc" id="L107">    public boolean isShowAgain() { return showAgain; }</span>
+<span class="fc" id="L108">    public void setShowAgain(final boolean showAgain) { this.showAgain = showAgain; }</span>
+
+<span class="fc" id="L110">    public String getComments() { return comments; }</span>
+<span class="nc" id="L111">    public void setComments(final String comments) { this.comments = comments; }</span>
+
+<span class="fc" id="L113">    public String getDebitorNr() { return debitorNr; }</span>
+<span class="nc" id="L114">    public void setDebitorNr(final String debitorNr) { this.debitorNr = debitorNr; }</span>
+
+<span class="fc" id="L116">    public String getKreditorNr() { return kreditorNr; }</span>
+<span class="nc" id="L117">    public void setKreditorNr(final String kreditorNr) { this.kreditorNr = kreditorNr; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

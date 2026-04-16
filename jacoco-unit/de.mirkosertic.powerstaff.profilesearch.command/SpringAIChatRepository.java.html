@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpringAIChatRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Unit-Test Coverage</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.profilesearch.command</a> &gt; <span class="el_source">SpringAIChatRepository.java</span></div><h1>SpringAIChatRepository.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.profilesearch.command;
+
+import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
+import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.ai.chat.memory.ChatMemoryRepository;
+import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.ToolResponseMessage;
+import org.springframework.ai.chat.messages.UserMessage;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+public class SpringAIChatRepository implements ChatMemoryRepository {
+
+<span class="nc" id="L25">    private static final Logger logger = LoggerFactory.getLogger(SpringAIChatRepository.class);</span>
+
+    private final String conversationId;
+    private final ProfileSearchQueryService queryService;
+    private final ProfileSearchCommandService commandService;
+    private final List&lt;Message&gt; newMessages;
+    private final ObjectMapper objectMapper;
+    private final ChatProgressCollector chatProgressCollector;
+
+<span class="nc" id="L34">    public SpringAIChatRepository(final String conversationId, final ProfileSearchQueryService queryService, final ProfileSearchCommandService commandService, final ObjectMapper objectMapper, final ChatProgressCollector chatProgressCollector) {</span>
+<span class="nc" id="L35">        this.conversationId = conversationId;</span>
+<span class="nc" id="L36">        this.queryService = queryService;</span>
+<span class="nc" id="L37">        this.commandService = commandService;</span>
+<span class="nc" id="L38">        this.newMessages = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L39">        this.objectMapper = objectMapper;</span>
+<span class="nc" id="L40">        this.chatProgressCollector = chatProgressCollector;</span>
+<span class="nc" id="L41">    }</span>
+
+    @Override
+    public List&lt;String&gt; findConversationIds() {
+<span class="nc" id="L45">        return List.of(conversationId);</span>
+    }
+
+    @Override
+    public List&lt;Message&gt; findByConversationId(final @NonNull String s) {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (!conversationId.equals(s)) {</span>
+<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;Invalid conversationId: &quot; + s);</span>
+        }
+
+<span class="nc" id="L54">        return queryService.findMessagesByChat(Long.parseLong(s)).stream()</span>
+<span class="nc" id="L55">                .map(mv -&gt; {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">                    if (LlmService.ROLE_USER.equals(mv.role())) {</span>
+<span class="nc" id="L57">                        return new PersistentUserMessage(mv.content());</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                    } else if (LlmService.ROLE_ASSISTANT.equals(mv.role())) {</span>
+<span class="nc" id="L59">                        return new PersistentAssistantMessage(mv.content());</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                    } else if (LlmService.ROLE_TOOL_CALL.equals(mv.role())) {</span>
+<span class="nc" id="L61">                        final var toolCalls = new ArrayList&lt;AssistantMessage.ToolCall&gt;();</span>
+                        try {
+<span class="nc" id="L63">                            final List&lt;Map&lt;String, Object&gt;&gt; unmarshalled = objectMapper.readValue(mv.jsonPayload(), new TypeReference&lt;ArrayList&lt;Map&lt;String, Object&gt;&gt;&gt;() {</span>
+                            });
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                            for (final Map&lt;String, Object&gt; call : unmarshalled) {</span>
+<span class="nc" id="L66">                                toolCalls.add(new AssistantMessage.ToolCall(call.get(&quot;id&quot;).toString(), call.get(&quot;type&quot;).toString(), call.get(&quot;name&quot;).toString(), call.get(&quot;arguments&quot;).toString()));</span>
+<span class="nc" id="L67">                            }</span>
+<span class="nc" id="L68">                        } catch (final JacksonException ex) {</span>
+<span class="nc" id="L69">                            logger.warn(&quot;Cannot parse tool call payload: {}&quot;, mv.jsonPayload(), ex);</span>
+<span class="nc" id="L70">                        }</span>
+<span class="nc" id="L71">                        return new PersistentAssistantMessage(mv.content(), toolCalls);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                    } else if (LlmService.ROLE_TOOL_RESULT.equals(mv.role())) {</span>
+<span class="nc" id="L73">                        final var toolResponses = new ArrayList&lt;ToolResponseMessage.ToolResponse&gt;();</span>
+                        try {
+<span class="nc" id="L75">                            final List&lt;Map&lt;String, Object&gt;&gt; unmarshalled = objectMapper.readValue(mv.jsonPayload(), new TypeReference&lt;ArrayList&lt;Map&lt;String, Object&gt;&gt;&gt;() {</span>
+                            });
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                            for (final Map&lt;String, Object&gt; call : unmarshalled) {</span>
+<span class="nc" id="L78">                                toolResponses.add(new ToolResponseMessage.ToolResponse(call.get(&quot;id&quot;).toString(), call.get(&quot;name&quot;).toString(), call.get(&quot;responseData&quot;).toString()));</span>
+<span class="nc" id="L79">                            }</span>
+<span class="nc" id="L80">                        } catch (final JacksonException ex) {</span>
+<span class="nc" id="L81">                            logger.warn(&quot;Cannot parse tool call payload: {}&quot;, mv.jsonPayload(), ex);</span>
+<span class="nc" id="L82">                        }</span>
+<span class="nc" id="L83">                        return new PersistentToolResponseMessage(toolResponses);</span>
+                    } else {
+<span class="nc" id="L85">                        logger.warn(&quot;Ignoring persistent message: {}&quot;, mv);</span>
+<span class="nc" id="L86">                        return null;</span>
+                    }
+                })
+<span class="nc" id="L89">                .filter(Objects::nonNull)</span>
+<span class="nc" id="L90">                .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public void saveAll(final @NonNull String s, final List&lt;Message&gt; list) {
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        for (final Message message : list) {</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">            if (!(message instanceof PersistentMessage)) {</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                if (message instanceof final UserMessage x) {</span>
+<span class="nc" id="L98">                    logger.info(&quot;Persisting UserMessage: {}&quot;, message);</span>
+<span class="nc" id="L99">                    commandService.addMessage(Long.parseLong(s), LlmService.ROLE_USER, x.getText());</span>
+<span class="nc" id="L100">                    newMessages.add(message);</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">                } else if (message instanceof final AssistantMessage x) {</span>
+<span class="nc" id="L102">                    logger.info(&quot;Persisting AssistantMessage: {}&quot;, message);</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                    if (x.hasToolCalls()) {</span>
+<span class="nc" id="L104">                        final List&lt;Map&lt;String, Object&gt;&gt; toolCallOptions = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                        for (final AssistantMessage.ToolCall toolCall : x.getToolCalls()) {</span>
+<span class="nc" id="L106">                            final Map&lt;String, Object&gt; call = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L107">                            call.put(&quot;name&quot;, toolCall.name());</span>
+<span class="nc" id="L108">                            call.put(&quot;arguments&quot;, toolCall.arguments());</span>
+<span class="nc" id="L109">                            call.put(&quot;type&quot;, toolCall.type());</span>
+<span class="nc" id="L110">                            call.put(&quot;id&quot;, toolCall.id());</span>
+<span class="nc" id="L111">                            toolCallOptions.add(call);</span>
+<span class="nc" id="L112">                        }</span>
+
+<span class="nc" id="L114">                        final String jsonPayload = objectMapper.writeValueAsString(toolCallOptions);</span>
+
+<span class="nc" id="L116">                        commandService.addMessage(Long.parseLong(s), LlmService.ROLE_TOOL_CALL, x.getText(), jsonPayload, chatProgressCollector.getAssistantThoughtsAndReset());</span>
+
+<span class="nc" id="L118">                        chatProgressCollector.toolInvocation(x.getText(), jsonPayload);</span>
+<span class="nc" id="L119">                    } else {</span>
+<span class="nc" id="L120">                        final var saved = commandService.addMessage(Long.parseLong(s), LlmService.ROLE_ASSISTANT, x.getText(), null, chatProgressCollector.getAssistantThoughtsAndReset());</span>
+<span class="nc" id="L121">                        lastAssistantMessageId = saved.getId();</span>
+                    }
+<span class="nc" id="L123">                    newMessages.add(message);</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                } else if (message instanceof final ToolResponseMessage x) {</span>
+<span class="nc" id="L125">                    final List&lt;Map&lt;String, Object&gt;&gt; toolCallOptions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L126">                    final List&lt;String&gt; toolCallNames = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">                    for (final ToolResponseMessage.ToolResponse toolResponse : x.getResponses()) {</span>
+<span class="nc" id="L128">                        final Map&lt;String, Object&gt; call = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L129">                        call.put(&quot;name&quot;, toolResponse.name());</span>
+<span class="nc" id="L130">                        call.put(&quot;responseData&quot;, toolResponse.responseData());</span>
+<span class="nc" id="L131">                        call.put(&quot;id&quot;, toolResponse.id());</span>
+<span class="nc" id="L132">                        toolCallOptions.add(call);</span>
+<span class="nc" id="L133">                        toolCallNames.add(toolResponse.name());</span>
+<span class="nc" id="L134">                    }</span>
+
+<span class="nc" id="L136">                    final String toolnames = objectMapper.writeValueAsString(toolCallNames);</span>
+<span class="nc" id="L137">                    final String jsonPayload = objectMapper.writeValueAsString(toolCallOptions);</span>
+
+<span class="nc" id="L139">                    commandService.addMessage(Long.parseLong(s), LlmService.ROLE_TOOL_RESULT, toolnames, jsonPayload, null);</span>
+
+<span class="nc" id="L141">                    chatProgressCollector.toolResponses(toolnames, jsonPayload);</span>
+
+<span class="nc" id="L143">                    newMessages.add(message);</span>
+<span class="nc" id="L144">                } else {</span>
+<span class="nc" id="L145">                    logger.warn(&quot;Cannot persist message: {}&quot;, message);</span>
+                }
+            }
+<span class="nc" id="L148">        }</span>
+<span class="nc" id="L149">    }</span>
+
+    @Override
+    public void deleteByConversationId(final @NonNull String s) {
+<span class="nc" id="L153">        logger.info(&quot;Deleting messages for conversationId: {}&quot;, s);</span>
+<span class="nc" id="L154">    }</span>
+
+    public List&lt;Message&gt; getNewMessages() {
+<span class="nc" id="L157">        return newMessages;</span>
+    }
+
+    public long getLastAssistantMessageId() {
+<span class="nc" id="L161">        return lastAssistantMessageId;</span>
+    }
+
+<span class="nc" id="L164">    private long lastAssistantMessageId = -1;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PartnerCommandService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">E2E-Test Coverage (Playwright)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.partner.command</a> &gt; <span class="el_source">PartnerCommandService.java</span></div><h1>PartnerCommandService.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.partner.command;
+
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@Transactional
+public class PartnerCommandService {
+
+    private final PartnerRepository partnerRepository;
+    private final PartnerContactRepository contactRepository;
+    private final PartnerHistoryRepository historyRepository;
+    private final JdbcClient jdbcClient;
+
+    public PartnerCommandService(final PartnerRepository partnerRepository,
+                                 final PartnerContactRepository contactRepository,
+                                 final PartnerHistoryRepository historyRepository,
+<span class="nc" id="L22">                                 final JdbcClient jdbcClient) {</span>
+<span class="nc" id="L23">        this.partnerRepository = partnerRepository;</span>
+<span class="nc" id="L24">        this.contactRepository = contactRepository;</span>
+<span class="nc" id="L25">        this.historyRepository = historyRepository;</span>
+<span class="nc" id="L26">        this.jdbcClient = jdbcClient;</span>
+<span class="nc" id="L27">    }</span>
+
+    /**
+     * Speichert nur die Partner-Stammdaten (ohne Kontakte/Historie).
+     */
+    public Partner save(final Partner partner) {
+<span class="nc" id="L33">        return partnerRepository.save(partner);</span>
+    }
+
+    /**
+     * Speichert Partner-Stammdaten und verarbeitet Kontakt- und Historien-Delta-Commands.
+     * Nur Einträge mit op=&quot;ADD&quot; oder op=&quot;DELETE&quot; werden verarbeitet;
+     * unveränderte Einträge erhalten keinen neuen Audit-Timestamp.
+     */
+    public Partner save(final Partner partner,
+                        final List&lt;PartnerContactEntry&gt; contactChanges,
+                        final List&lt;PartnerHistoryEntry&gt; historyChanges) {
+<span class="nc" id="L44">        final Partner saved = partnerRepository.save(partner);</span>
+<span class="nc" id="L45">        final long partnerId = saved.getId();</span>
+
+        // Kontakt-Delta verarbeiten
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        for (final PartnerContactEntry cmd : contactChanges) {</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">            if (&quot;ADD&quot;.equals(cmd.op())) {</span>
+<span class="nc" id="L50">                final PartnerContact contact = new PartnerContact();</span>
+<span class="nc" id="L51">                contact.setType(cmd.type());</span>
+<span class="nc" id="L52">                contact.setValue(cmd.value());</span>
+<span class="nc" id="L53">                contact.setPartnerId(partnerId);</span>
+<span class="nc" id="L54">                contactRepository.save(contact);</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">            } else if (&quot;DELETE&quot;.equals(cmd.op())) {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">                if (cmd.id() == null) {</span>
+<span class="nc" id="L57">                    throw new IllegalArgumentException(&quot;DELETE Kontakt erfordert eine ID&quot;);</span>
+                }
+<span class="nc" id="L59">                contactRepository.deleteById(cmd.id());</span>
+            }
+<span class="nc" id="L61">        }</span>
+
+        // Historie-Delta verarbeiten
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        for (final PartnerHistoryEntry cmd : historyChanges) {</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            if (&quot;ADD&quot;.equals(cmd.op())) {</span>
+<span class="nc" id="L66">                final PartnerHistory history = new PartnerHistory();</span>
+<span class="nc" id="L67">                history.setDescription(cmd.description());</span>
+<span class="nc" id="L68">                history.setTypeId(cmd.typeId());</span>
+<span class="nc" id="L69">                history.setPartnerId(partnerId);</span>
+<span class="nc" id="L70">                historyRepository.save(history);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            } else if (&quot;UPDATE&quot;.equals(cmd.op())) {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                if (cmd.id() == null) {</span>
+<span class="nc" id="L73">                    throw new IllegalArgumentException(&quot;UPDATE Kontakthistorie erfordert eine ID&quot;);</span>
+                }
+<span class="nc" id="L75">                historyRepository.findById(cmd.id()).ifPresent(history -&gt; {</span>
+<span class="nc" id="L76">                    history.setDescription(cmd.description());</span>
+<span class="nc" id="L77">                    history.setTypeId(cmd.typeId());</span>
+<span class="nc" id="L78">                    historyRepository.save(history);</span>
+<span class="nc" id="L79">                });</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">            } else if (&quot;DELETE&quot;.equals(cmd.op())) {</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">                if (cmd.id() == null) {</span>
+<span class="nc" id="L82">                    throw new IllegalArgumentException(&quot;DELETE Kontakthistorie erfordert eine ID&quot;);</span>
+                }
+<span class="nc" id="L84">                historyRepository.deleteById(cmd.id());</span>
+            }
+<span class="nc" id="L86">        }</span>
+
+<span class="nc" id="L88">        return saved;</span>
+    }
+
+    @Transactional(readOnly = true)
+    public Optional&lt;Partner&gt; findById(final long id) {
+<span class="nc" id="L93">        return partnerRepository.findById(id);</span>
+    }
+
+    /**
+     * Löscht einen Partner. Wirft {@link PartnerHasProjectsException} wenn Projekte
+     * auf diesen Partner verweisen (RESTRICT-Check vor dem eigentlichen Delete).
+     */
+    public void deleteById(final long id) {
+<span class="nc" id="L101">        final List&lt;Long&gt; linkedProjectIds = jdbcClient</span>
+<span class="nc" id="L102">                .sql(&quot;SELECT id FROM project WHERE partner_id = :partnerId&quot;)</span>
+<span class="nc" id="L103">                .param(&quot;partnerId&quot;, id)</span>
+<span class="nc" id="L104">                .query(Long.class)</span>
+<span class="nc" id="L105">                .list();</span>
+
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (!linkedProjectIds.isEmpty()) {</span>
+<span class="nc" id="L108">            throw new PartnerHasProjectsException(linkedProjectIds);</span>
+        }
+
+<span class="nc" id="L111">        partnerRepository.deleteById(id);</span>
+<span class="nc" id="L112">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

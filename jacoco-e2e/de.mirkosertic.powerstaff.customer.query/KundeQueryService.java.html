@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KundeQueryService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">E2E-Test Coverage (Playwright)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.customer.query</a> &gt; <span class="el_source">KundeQueryService.java</span></div><h1>KundeQueryService.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.customer.query;
+
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+@Service
+@Transactional(readOnly = true)
+public class KundeQueryService {
+
+<span class="nc" id="L17">    private static final Set&lt;String&gt; SORT_FIELDS_ALLOWLIST = Set.of(&quot;name1&quot;, &quot;name2&quot;, &quot;company&quot;, &quot;city&quot;);</span>
+    private static final String DEFAULT_SORT = &quot;company ASC&quot;;
+
+    private static final String SELECT_KUNDE = &quot;&quot;&quot;
+            SELECT id, db_version, creation_date, creation_user, changed_date, changed_user,
+                   company, name1, name2, street, country, plz, city,
+                   contactforbidden, show_again, comments, debitor_nr, kreditor_nr
+            FROM kunde
+            &quot;&quot;&quot;;
+
+    private final JdbcClient jdbcClient;
+
+<span class="nc" id="L29">    public KundeQueryService(final JdbcClient jdbcClient) {</span>
+<span class="nc" id="L30">        this.jdbcClient = jdbcClient;</span>
+<span class="nc" id="L31">    }</span>
+
+    public Optional&lt;KundeDetailView&gt; findById(final Long id) {
+<span class="nc" id="L34">        return jdbcClient.sql(SELECT_KUNDE + &quot;WHERE id = :id&quot;)</span>
+<span class="nc" id="L35">                .param(&quot;id&quot;, id)</span>
+<span class="nc" id="L36">                .query(KundeDetailView.class)</span>
+<span class="nc" id="L37">                .optional();</span>
+    }
+
+    public Optional&lt;KundeDetailView&gt; findFirst() {
+<span class="nc" id="L41">        return jdbcClient.sql(SELECT_KUNDE + &quot;ORDER BY id ASC LIMIT 1&quot;)</span>
+<span class="nc" id="L42">                .query(KundeDetailView.class)</span>
+<span class="nc" id="L43">                .optional();</span>
+    }
+
+    public Optional&lt;KundeDetailView&gt; findLast() {
+<span class="nc" id="L47">        return jdbcClient.sql(SELECT_KUNDE + &quot;ORDER BY id DESC LIMIT 1&quot;)</span>
+<span class="nc" id="L48">                .query(KundeDetailView.class)</span>
+<span class="nc" id="L49">                .optional();</span>
+    }
+
+    public Optional&lt;KundeDetailView&gt; findPrevious(final Long currentId) {
+<span class="nc" id="L53">        return jdbcClient.sql(SELECT_KUNDE + &quot;WHERE id &lt; :currentId ORDER BY id DESC LIMIT 1&quot;)</span>
+<span class="nc" id="L54">                .param(&quot;currentId&quot;, currentId)</span>
+<span class="nc" id="L55">                .query(KundeDetailView.class)</span>
+<span class="nc" id="L56">                .optional();</span>
+    }
+
+    public Optional&lt;KundeDetailView&gt; findNext(final Long currentId) {
+<span class="nc" id="L60">        return jdbcClient.sql(SELECT_KUNDE + &quot;WHERE id &gt; :currentId ORDER BY id ASC LIMIT 1&quot;)</span>
+<span class="nc" id="L61">                .param(&quot;currentId&quot;, currentId)</span>
+<span class="nc" id="L62">                .query(KundeDetailView.class)</span>
+<span class="nc" id="L63">                .optional();</span>
+    }
+
+    public List&lt;KundeSearchResult&gt; search(final KundeSearchCriteria criteria, final int offset, final int limit) {
+<span class="nc" id="L67">        final var sql = new StringBuilder(&quot;&quot;&quot;</span>
+                SELECT id, company, name1, name2, city, contactforbidden
+                FROM kunde
+                WHERE 1=1
+&quot;&quot;&quot;);
+<span class="nc" id="L72">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L73">        appendCriteria(sql, params, criteria);</span>
+        final String orderBy;
+<span class="nc bnc" id="L75" title="All 4 branches missed.">        if (criteria.sortField() != null &amp;&amp; SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">            final String dir = &quot;desc&quot;.equalsIgnoreCase(criteria.sortDir()) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
+<span class="nc" id="L77">            orderBy = criteria.sortField() + &quot; &quot; + dir;</span>
+<span class="nc" id="L78">        } else {</span>
+<span class="nc" id="L79">            orderBy = DEFAULT_SORT;</span>
+        }
+<span class="nc" id="L81">        final String pLimit = &quot;p&quot; + (params.size() + 1);</span>
+<span class="nc" id="L82">        final String pOffset = &quot;p&quot; + (params.size() + 2);</span>
+<span class="nc" id="L83">        sql.append(&quot; ORDER BY &quot;).append(orderBy).append(&quot; LIMIT :&quot;).append(pLimit).append(&quot; OFFSET :&quot;).append(pOffset);</span>
+<span class="nc" id="L84">        params.put(pLimit, limit);</span>
+<span class="nc" id="L85">        params.put(pOffset, offset);</span>
+
+<span class="nc" id="L87">        var stmt = jdbcClient.sql(sql.toString());</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        for (final var entry : params.entrySet()) {</span>
+<span class="nc" id="L89">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L90">        }</span>
+<span class="nc" id="L91">        return stmt.query(KundeSearchResult.class).list();</span>
+    }
+
+    public long countSearch(final KundeSearchCriteria criteria) {
+<span class="nc" id="L95">        final var sql = new StringBuilder(&quot;SELECT COUNT(*) FROM kunde WHERE 1=1&quot;);</span>
+<span class="nc" id="L96">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L97">        appendCriteria(sql, params, criteria);</span>
+
+<span class="nc" id="L99">        var stmt = jdbcClient.sql(sql.toString());</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        for (final var entry : params.entrySet()) {</span>
+<span class="nc" id="L101">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L102">        }</span>
+<span class="nc" id="L103">        return stmt.query(Long.class).single();</span>
+    }
+
+    public List&lt;KundeProjectListItem&gt; findProjectsByKundeId(final Long kundeId, final String sortField, final String sortDir) {
+<span class="nc" id="L107">        final String safeField = allowedSortField(sortField);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        final String safeDir = &quot;DESC&quot;.equalsIgnoreCase(sortDir) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
+<span class="nc" id="L109">        return jdbcClient.sql(&quot;SELECT id, project_number, description_short, workplace, start_date, status&quot;</span>
+                + &quot; FROM project&quot;
+                + &quot; WHERE customer_id = :kundeId&quot;
+                + &quot; ORDER BY &quot; + safeField + &quot; &quot; + safeDir)
+<span class="nc" id="L113">                .param(&quot;kundeId&quot;, kundeId)</span>
+<span class="nc" id="L114">                .query(KundeProjectListItem.class)</span>
+<span class="nc" id="L115">                .list();</span>
+    }
+
+    public List&lt;KundeContactView&gt; findContactsByKundeId(final Long kundeId) {
+<span class="nc" id="L119">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT id, type, value, kunde_id
+                FROM kunde_contact
+                WHERE kunde_id = :kundeId
+                ORDER BY type ASC, value ASC
+                &quot;&quot;&quot;)
+<span class="nc" id="L125">                .param(&quot;kundeId&quot;, kundeId)</span>
+<span class="nc" id="L126">                .query(KundeContactView.class)</span>
+<span class="nc" id="L127">                .list();</span>
+    }
+
+    public List&lt;KundeHistoryView&gt; findHistoryByKundeId(final Long kundeId) {
+<span class="nc" id="L131">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT kh.id, kh.creation_date, kh.creation_user, kh.changed_date, kh.changed_user,
+                       kh.description, kh.type_id, ht.description AS type_description, kh.kunde_id
+                FROM kunde_history kh
+                JOIN historytype ht ON ht.id = kh.type_id
+                WHERE kh.kunde_id = :kundeId
+                ORDER BY kh.creation_date DESC
+                &quot;&quot;&quot;)
+<span class="nc" id="L139">                .param(&quot;kundeId&quot;, kundeId)</span>
+<span class="nc" id="L140">                .query(KundeHistoryView.class)</span>
+<span class="nc" id="L141">                .list();</span>
+    }
+
+    private static String allowedSortField(final String field) {
+<span class="nc bnc" id="L145" title="All 7 branches missed.">        return switch (field == null ? &quot;&quot; : field) {</span>
+<span class="nc" id="L146">            case &quot;projectNumber&quot; -&gt; &quot;project_number&quot;;</span>
+<span class="nc" id="L147">            case &quot;descriptionShort&quot; -&gt; &quot;description_short&quot;;</span>
+<span class="nc" id="L148">            case &quot;workplace&quot; -&gt; &quot;workplace&quot;;</span>
+<span class="nc" id="L149">            case &quot;status&quot; -&gt; &quot;status&quot;;</span>
+<span class="nc" id="L150">            default -&gt; &quot;start_date&quot;;</span>
+        };
+    }
+
+    private static void appendCriteria(final StringBuilder sql, final Map&lt;String, Object&gt; params, final KundeSearchCriteria criteria) {
+<span class="nc" id="L155">        appendLike(sql, params, &quot;company&quot;, criteria.company());</span>
+<span class="nc" id="L156">        appendLike(sql, params, &quot;name1&quot;, criteria.name1());</span>
+<span class="nc" id="L157">        appendLike(sql, params, &quot;name2&quot;, criteria.name2());</span>
+<span class="nc" id="L158">        appendLike(sql, params, &quot;street&quot;, criteria.street());</span>
+<span class="nc" id="L159">        appendLike(sql, params, &quot;country&quot;, criteria.country());</span>
+<span class="nc" id="L160">        appendLike(sql, params, &quot;plz&quot;, criteria.plz());</span>
+<span class="nc" id="L161">        appendLike(sql, params, &quot;city&quot;, criteria.city());</span>
+<span class="nc" id="L162">        appendLike(sql, params, &quot;comments&quot;, criteria.comments());</span>
+<span class="nc" id="L163">        appendLike(sql, params, &quot;debitor_nr&quot;, criteria.debitorNr());</span>
+<span class="nc" id="L164">        appendLike(sql, params, &quot;kreditor_nr&quot;, criteria.kreditorNr());</span>
+<span class="nc" id="L165">    }</span>
+
+    private static void appendLike(final StringBuilder sql, final Map&lt;String, Object&gt; params, final String column, final String value) {
+<span class="nc bnc" id="L168" title="All 4 branches missed.">        if (value != null &amp;&amp; !value.isBlank()) {</span>
+<span class="nc" id="L169">            final String paramName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="nc" id="L170">            sql.append(&quot; AND &quot;).append(column).append(&quot; LIKE :&quot;).append(paramName);</span>
+<span class="nc" id="L171">            params.put(paramName, &quot;%&quot; + value + &quot;%&quot;);</span>
+        }
+<span class="nc" id="L173">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

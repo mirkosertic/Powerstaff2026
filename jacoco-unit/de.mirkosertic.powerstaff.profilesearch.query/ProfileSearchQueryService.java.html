@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProfileSearchQueryService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Unit-Test Coverage</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.profilesearch.query</a> &gt; <span class="el_source">ProfileSearchQueryService.java</span></div><h1>ProfileSearchQueryService.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.profilesearch.query;
+
+import de.mirkosertic.powerstaff.profilesearch.command.McpClientFactory;
+import de.mirkosertic.powerstaff.profilesearch.command.McpConnectionException;
+import de.mirkosertic.powerstaff.profilesearch.command.McpConnectionProperties;
+import de.mirkosertic.powerstaff.shared.ProjectStatus;
+import de.mirkosertic.powerstaff.shared.query.TagView;
+import io.modelcontextprotocol.client.McpSyncClient;
+import io.modelcontextprotocol.spec.McpSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@Transactional(readOnly = true)
+public class ProfileSearchQueryService {
+
+<span class="fc" id="L30">    private static final Logger logger = LoggerFactory.getLogger(ProfileSearchQueryService.class);</span>
+
+    static final String MCP_EXTENDED_SEARCH_TOOL_NAME = &quot;extendedSearch&quot;;
+    static final String MCP_SEMANTIC_SEARCH_TOOL_NAME = &quot;semanticSearch&quot;;
+
+    private final JdbcClient jdbcClient;
+    private final McpClientFactory mcpClientFactory;
+    private final McpConnectionProperties mcpConnectionProperties;
+    private final ObjectMapper objectMapper;
+
+    public ProfileSearchQueryService(final JdbcClient jdbcClient,
+                                       final McpClientFactory mcpClientFactory,
+                                       final McpConnectionProperties mcpConnectionProperties,
+<span class="fc" id="L43">                                       final ObjectMapper objectMapper) {</span>
+<span class="fc" id="L44">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L45">        this.mcpClientFactory = mcpClientFactory;</span>
+<span class="fc" id="L46">        this.mcpConnectionProperties = mcpConnectionProperties;</span>
+<span class="fc" id="L47">        this.objectMapper = objectMapper;</span>
+<span class="fc" id="L48">    }</span>
+
+    public List&lt;ChatListView&gt; findChatsByUser(final String userId, final int offset, final int limit) {
+<span class="nc" id="L51">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT c.id, c.creation_date, c.creation_user, c.changed_date, c.title,
+                       c.project_id, p.project_number
+                FROM profile_search_chat c
+                LEFT JOIN project p ON p.id = c.project_id
+                WHERE c.creation_user = :userId
+                ORDER BY c.changed_date DESC
+                LIMIT :limit OFFSET :offset
+                &quot;&quot;&quot;)
+<span class="nc" id="L60">                .param(&quot;userId&quot;, userId)</span>
+<span class="nc" id="L61">                .param(&quot;limit&quot;, limit)</span>
+<span class="nc" id="L62">                .param(&quot;offset&quot;, offset)</span>
+<span class="nc" id="L63">                .query(ChatListView.class)</span>
+<span class="nc" id="L64">                .list();</span>
+    }
+
+    public long countChatsByUser(final String userId) {
+<span class="nc" id="L68">        return jdbcClient.sql(&quot;SELECT COUNT(*) FROM profile_search_chat WHERE creation_user = :userId&quot;)</span>
+<span class="nc" id="L69">                .param(&quot;userId&quot;, userId)</span>
+<span class="nc" id="L70">                .query(Long.class)</span>
+<span class="nc" id="L71">                .single();</span>
+    }
+
+    public List&lt;MessageView&gt; findMessagesByChat(final Long chatId) {
+<span class="nc" id="L75">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT id, creation_date, chat_id, role, sequence, content, json_payload, assistant_thoughts
+                FROM profile_search_message
+                WHERE chat_id = :chatId
+                ORDER BY sequence ASC
+                &quot;&quot;&quot;)
+<span class="nc" id="L81">                .param(&quot;chatId&quot;, chatId)</span>
+<span class="nc" id="L82">                .query(MessageView.class)</span>
+<span class="nc" id="L83">                .list();</span>
+    }
+
+    public Optional&lt;Long&gt; findLatestChatByUser(final String userId) {
+<span class="nc" id="L87">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT id FROM profile_search_chat
+                WHERE creation_user = :userId
+                ORDER BY changed_date DESC
+                LIMIT 1
+                &quot;&quot;&quot;)
+<span class="nc" id="L93">                .param(&quot;userId&quot;, userId)</span>
+<span class="nc" id="L94">                .query(Long.class)</span>
+<span class="nc" id="L95">                .optional();</span>
+    }
+
+
+    public Optional&lt;LlmProjectContext&gt; buildLlmContext(final String userId) {
+        // Step 1: find remembered project for user
+<span class="nc" id="L101">        final var projectIdOpt = jdbcClient.sql(</span>
+                        &quot;SELECT project_id FROM remembered_project WHERE user_id = :userId&quot;)
+<span class="nc" id="L103">                .param(&quot;userId&quot;, userId)</span>
+<span class="nc" id="L104">                .query(Long.class)</span>
+<span class="nc" id="L105">                .optional();</span>
+
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (projectIdOpt.isEmpty()) {</span>
+<span class="nc" id="L108">            return Optional.empty();</span>
+        }
+<span class="nc" id="L110">        final long projectId = projectIdOpt.get();</span>
+
+        // Step 2: load project fields
+<span class="nc" id="L113">        record ProjectRow(String projectNumber, String descriptionShort, String descriptionLong,</span>
+                          String workplace, String skills, String duration,
+                          LocalDateTime startDate, int status, Long stundensatzVk) {}
+
+<span class="nc" id="L117">        final var projectOpt = jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT project_number, description_short, description_long, workplace, skills,
+                       duration, start_date, status, stundensatz_vk
+                FROM project WHERE id = :projectId
+                &quot;&quot;&quot;)
+<span class="nc" id="L122">                .param(&quot;projectId&quot;, projectId)</span>
+<span class="nc" id="L123">                .query(ProjectRow.class)</span>
+<span class="nc" id="L124">                .optional();</span>
+
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (projectOpt.isEmpty()) {</span>
+<span class="nc" id="L127">            return Optional.empty();</span>
+        }
+<span class="nc" id="L129">        final var project = projectOpt.get();</span>
+
+        // Step 3: load positions with freelancer and status info
+<span class="nc" id="L132">        record PositionRow(Long freelancerId, String code, String name1, String name2,</span>
+                           String freelancerSkills, String positionStatus,
+                           String konditionen, String kommentar) {}
+
+<span class="nc" id="L136">        final var positionRows = jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT pp.freelancer_id, f.code, f.name1, f.name2, f.skills AS freelancer_skills,
+                       pps.description AS position_status, pp.konditionen, pp.kommentar
+                FROM project_position pp
+                JOIN freelancer f ON f.id = pp.freelancer_id
+                LEFT JOIN project_position_status pps ON pps.id = pp.status_id
+                WHERE pp.project_id = :projectId
+                &quot;&quot;&quot;)
+<span class="nc" id="L144">                .param(&quot;projectId&quot;, projectId)</span>
+<span class="nc" id="L145">                .query(PositionRow.class)</span>
+<span class="nc" id="L146">                .list();</span>
+
+        // Step 4: for each position, load tags
+<span class="nc" id="L149">        final List&lt;LlmFreelancerContext&gt; positions = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        for (final var pos : positionRows) {</span>
+<span class="nc" id="L151">            final var tags = jdbcClient.sql(&quot;&quot;&quot;</span>
+                    SELECT t.tagname FROM tags t
+                    JOIN freelancer_tags ft ON ft.tag_id = t.id
+                    WHERE ft.freelancer_id = :freelancerId
+                    ORDER BY t.tagname
+                    &quot;&quot;&quot;)
+<span class="nc" id="L157">                    .param(&quot;freelancerId&quot;, pos.freelancerId())</span>
+<span class="nc" id="L158">                    .query(String.class)</span>
+<span class="nc" id="L159">                    .list();</span>
+
+<span class="nc" id="L161">            positions.add(new LlmFreelancerContext(</span>
+<span class="nc" id="L162">                    pos.code(), pos.name1(), pos.name2(), pos.freelancerSkills(),</span>
+<span class="nc" id="L163">                    tags, pos.positionStatus(), pos.konditionen(), pos.kommentar()</span>
+            ));
+<span class="nc" id="L165">        }</span>
+
+        String statusLabel;
+        try {
+<span class="nc" id="L169">            statusLabel = ProjectStatus.fromInt(project.status()).getLabel();</span>
+<span class="nc" id="L170">        } catch (final IllegalArgumentException e) {</span>
+<span class="nc" id="L171">            statusLabel = String.valueOf(project.status());</span>
+<span class="nc" id="L172">        }</span>
+
+<span class="nc" id="L174">        return Optional.of(new LlmProjectContext(</span>
+<span class="nc" id="L175">                project.projectNumber(), project.descriptionShort(), project.descriptionLong(),</span>
+<span class="nc" id="L176">                project.workplace(), project.skills(), project.duration(), project.startDate(),</span>
+<span class="nc" id="L177">                statusLabel, project.stundensatzVk(), positions</span>
+        ));
+    }
+
+    public ProfileSearchPage searchFreelancers(final ProfileSearchCriteria criteria, final int offset, final int limit) {
+        // MCP deaktiviert → DB-Fallback (nur für E2E-Tests)
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">        if (!mcpConnectionProperties.isEnabled()) {</span>
+<span class="fc" id="L184">            logger.debug(&quot;MCP deaktiviert – Suche über DB&quot;);</span>
+<span class="fc" id="L185">            return searchFreelancersViaDb(criteria, offset, limit);</span>
+        }
+
+        // MCP enabled → Suche mit Retry, bei Fehler Exception an User
+<span class="nc" id="L189">        try (final McpSyncClient client = mcpClientFactory.createClient()) {</span>
+<span class="nc" id="L190">            return searchFreelancersViaMcp(client, criteria, offset, limit);</span>
+<span class="nc" id="L191">        } catch (final McpConnectionException e) {</span>
+            // Nach Retries fehlgeschlagen → User-Fehler
+<span class="nc" id="L193">            logger.error(&quot;MCP-Suche fehlgeschlagen nach {} Versuchen&quot;,</span>
+<span class="nc" id="L194">                    mcpConnectionProperties.getMaxRetries() + 1, e);</span>
+<span class="nc" id="L195">            throw new McpSearchException(</span>
+                    &quot;Die Profilsuche ist momentan nicht verfügbar. Bitte versuchen Sie es später erneut.&quot;,
+                    e
+            );
+<span class="nc" id="L199">        } catch (final Exception e) {</span>
+            // Unerwarteter Fehler (z.B. Tool-Call, Parsing)
+<span class="nc" id="L201">            logger.error(&quot;Unerwarteter Fehler bei MCP-Suche&quot;, e);</span>
+<span class="nc" id="L202">            throw new McpSearchException(&quot;Profilsuche fehlgeschlagen.&quot;, e);</span>
+        }
+    }
+
+    // ── MCP-Pfad ──────────────────────────────────────────────────────────────
+
+    /**
+     * Ruft das MCP-Search-Tool auf und konvertiert das Ergebnis in {@link ProfileSearchResult}-Objekte.
+     * Voraussetzung: Client ist bereits initialisiert und verfügt über Search-Tools.
+     */
+    private ProfileSearchPage searchFreelancersViaMcp(final McpSyncClient client,
+                                                       final ProfileSearchCriteria criteria,
+                                                       final int offset, final int limit) {
+        // 1. Verifiziere dass Client Search-Tools anbietet
+<span class="nc" id="L216">        final McpSchema.ListToolsResult toolsResult = client.listTools();</span>
+<span class="nc" id="L217">        final boolean hasSearchTool = toolsResult.tools().stream()</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">                .anyMatch(t -&gt; MCP_EXTENDED_SEARCH_TOOL_NAME.equals(t.name())</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">                        || MCP_SEMANTIC_SEARCH_TOOL_NAME.equals(t.name()));</span>
+
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (!hasSearchTool) {</span>
+<span class="nc" id="L222">            logger.error(&quot;MCP-Client bietet kein Search-Tool an. Verfügbare Tools: {}&quot;,</span>
+<span class="nc" id="L223">                    toolsResult.tools().stream().map(McpSchema.Tool::name).toList());</span>
+<span class="nc" id="L224">            throw new McpSearchException(&quot;MCP-Server bietet kein Search-Tool an.&quot;, null);</span>
+        }
+
+        // 2. Tool aufrufen
+<span class="nc" id="L228">        final Map&lt;String, Object&gt; arguments = buildMcpSearchArguments(criteria, offset, limit);</span>
+        final McpSchema.CallToolResult toolResult;
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        if (criteria.isSemanticSearchActive()) {</span>
+<span class="nc" id="L231">            logger.info(&quot;Performing semantic search via MCP-Server&quot;);</span>
+<span class="nc" id="L232">            toolResult = client.callTool(</span>
+                    new McpSchema.CallToolRequest(MCP_SEMANTIC_SEARCH_TOOL_NAME, arguments));
+        } else {
+<span class="nc" id="L235">            logger.info(&quot;Performing extended search via MCP-Server&quot;);</span>
+<span class="nc" id="L236">            toolResult = client.callTool(</span>
+                    new McpSchema.CallToolRequest(MCP_EXTENDED_SEARCH_TOOL_NAME, arguments));
+        }
+
+        // 3. Fehlerbehandlung
+<span class="nc bnc" id="L241" title="All 2 branches missed.">        if (Boolean.TRUE.equals(toolResult.isError())) {</span>
+<span class="nc" id="L242">            logger.error(&quot;MCP Search-Tool meldete einen Fehler: {}&quot;, toolResult.content());</span>
+<span class="nc" id="L243">            throw new McpSearchException(&quot;MCP-Suche lieferte Fehler.&quot;, null);</span>
+        }
+
+        // 4. Ergebnis parsen
+<span class="nc" id="L247">        return parseMcpSearchResult(toolResult, criteria.isSemanticSearchActive());</span>
+
+    }
+
+    /**
+     * Baut die Argument-Map für das MCP-Search-Tool aus den Suchkriterien.
+     */
+    private Map&lt;String, Object&gt; buildMcpSearchArguments(final ProfileSearchCriteria criteria,
+                                                          final int offset, final int limit) {
+
+<span class="nc" id="L257">        final Map&lt;String, Object&gt; arguments = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L258">        arguments.put(&quot;query&quot;, criteria.searchTerm());</span>
+<span class="nc" id="L259">        arguments.put(&quot;sortBy&quot;, &quot;_score&quot;);</span>
+<span class="nc" id="L260">        arguments.put(&quot;pageSize&quot;, limit);</span>
+<span class="nc" id="L261">        arguments.put(&quot;page&quot;, offset / limit);</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">        if (criteria.isSemanticSearchActive()) {</span>
+<span class="nc" id="L263">            arguments.put(&quot;similarityThreshold&quot;, criteria.effectiveSimilarityThreshold());</span>
+        }
+
+<span class="nc" id="L266">        final List&lt;Object&gt; filters = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L267" title="All 4 branches missed.">        if (criteria.salaryPerDayFrom() != null || criteria.salaryPerDayTo() != null) {</span>
+<span class="nc" id="L268">            final Map&lt;String, Object&gt; filter = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L269">            filter.put(&quot;field&quot;, &quot;dbmeta_tagessatz&quot;);</span>
+<span class="nc" id="L270">            filter.put(&quot;operator&quot;, &quot;range&quot;);</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">            if (criteria.salaryPerDayFrom() != null) {</span>
+<span class="nc" id="L272">                filter.put(&quot;from&quot;, criteria.salaryPerDayFrom().toString());</span>
+            }
+<span class="nc bnc" id="L274" title="All 2 branches missed.">            if (criteria.salaryPerDayTo() != null) {</span>
+<span class="nc" id="L275">                filter.put(&quot;to&quot;, criteria.salaryPerDayTo().toString());</span>
+            }
+<span class="nc" id="L277">            filters.add(filter);</span>
+        }
+<span class="nc bnc" id="L279" title="All 4 branches missed.">        if (criteria.tagIds() != null &amp;&amp; !criteria.tagIds().isEmpty()) {</span>
+<span class="nc" id="L280">            final String[] tagIds = criteria.tagIds().split(&quot;,&quot;);</span>
+<span class="nc" id="L281">            final Map&lt;String, Object&gt; filter = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L282">            filter.put(&quot;field&quot;, &quot;dbmeta_tags&quot;);</span>
+<span class="nc" id="L283">            filter.put(&quot;operator&quot;, &quot;in&quot;);</span>
+<span class="nc" id="L284">            filter.put(&quot;values&quot;, tagIds);</span>
+<span class="nc" id="L285">            filters.add(filter);</span>
+        }
+
+<span class="nc" id="L288">        arguments.put(&quot;filters&quot;, filters);</span>
+
+<span class="nc bnc" id="L290" title="All 2 branches missed.">        if (!Objects.isNull(criteria.sortField())) {</span>
+<span class="nc" id="L291">            final Map&lt;String, String&gt; sortMap = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L292">            sortMap.put(&quot;name1&quot;, &quot;dbmeta_name1&quot;);</span>
+<span class="nc" id="L293">            sortMap.put(&quot;name2&quot;, &quot;dbmeta_name2&quot;);</span>
+<span class="nc" id="L294">            sortMap.put(&quot;lastContactDate&quot;, &quot;dbmeta_name2&quot;);</span>
+<span class="nc" id="L295">            sortMap.put(&quot;salaryPerDayLong&quot;, &quot;dbmeta_tagessatz&quot;);</span>
+<span class="nc" id="L296">            sortMap.put(&quot;availabilityAsDate&quot;, &quot;dbmeta_availability_as_date&quot;);</span>
+<span class="nc" id="L297">            sortMap.put(&quot;code&quot;, &quot;dbmeta_code&quot;);</span>
+
+<span class="nc" id="L299">            final String indexField = sortMap.get(criteria.sortField());</span>
+<span class="nc bnc" id="L300" title="All 2 branches missed.">            if (indexField != null) {</span>
+<span class="nc" id="L301">                arguments.put(&quot;sortBy&quot;, indexField);</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">                if (&quot;ASC&quot;.equalsIgnoreCase(criteria.sortDir())) {</span>
+<span class="nc" id="L303">                    arguments.put(&quot;sortOrder&quot;, &quot;asc&quot;);;</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">                } else if (&quot;DESC&quot;.equalsIgnoreCase(criteria.sortDir())) {</span>
+<span class="nc" id="L305">                    arguments.put(&quot;sortOrder&quot;, &quot;desc&quot;);;</span>
+                } else {
+<span class="nc" id="L307">                    logger.warn(&quot;Unbekannte Sortierreihenfolge: {}&quot;, criteria.sortDir());</span>
+                }
+            } else {
+<span class="nc" id="L310">                logger.warn(&quot;Kein Indexfeld gefunden für : {}&quot;, criteria.sortField());</span>
+            }
+        }
+
+<span class="nc" id="L314">        return arguments;</span>
+    }
+
+    /**
+     * Konvertiert das Ergebnis des MCP-Search-Tools in eine Liste von {@link ProfileSearchResult}.
+     */
+    private ProfileSearchPage parseMcpSearchResult(final McpSchema.CallToolResult toolResult, boolean isSemanticSearch) {
+<span class="nc" id="L321">        record Passage(</span>
+                String text,
+                double score,
+                List&lt;String&gt; matchedTerms,
+                double termCoverage,
+                double position
+        ) {
+        }
+
+<span class="nc" id="L330">        record VectorMatchInfo(</span>
+                boolean matchedViaVector,
+                int matchedChunkIndex,
+                String matchedChunkText,
+                float vectorScore
+        ) {
+        }
+
+<span class="nc" id="L338">        record SearchDocument(</span>
+                double score,
+                String filePath,
+                String fileName,
+                String title,
+                String author,
+                String creator,
+                String subject,
+                String language,
+                String fileExtension,
+                String fileType,
+                Long fileSize,
+                Long createdDate,
+                Long modifiedDate,
+                Long indexedDate,
+                List&lt;Passage&gt; passages,
+                VectorMatchInfo vectorMatchInfo
+        ) {
+        }
+
+<span class="nc" id="L358">        record FacetValue(String value, long count) {</span>
+        }
+
+<span class="nc" id="L361">        record ActiveFilter(</span>
+                String field,
+                String operator,
+                String value,
+                List&lt;String&gt; values,
+                String from,
+                String to,
+                String addedAt,
+                long matchCount
+        ) {
+        }
+
+<span class="nc" id="L373">        record SearchResponse(</span>
+                boolean success,
+                List&lt;SearchDocument&gt; documents,
+                long totalHits,
+                int page,
+                int pageSize,
+                int totalPages,
+                boolean hasNextPage,
+                boolean hasPreviousPage,
+                Map&lt;String, List&lt;FacetValue&gt;&gt; facets,
+                List&lt;ActiveFilter&gt; activeFilters,
+                long searchTimeMs,
+                String contentNote,
+                String error
+        ) {}
+
+<span class="nc" id="L389">        record DocumentEntry(String code, String serp, double score) {}</span>
+
+<span class="nc" id="L391">        final List&lt;DocumentEntry&gt; entries = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L392">        long totalHits = 0L;</span>
+<span class="nc bnc" id="L393" title="All 2 branches missed.">        for (final McpSchema.Content content : toolResult.content()) {</span>
+<span class="nc bnc" id="L394" title="All 2 branches missed.">            if (content instanceof final McpSchema.TextContent textContent) {</span>
+<span class="nc" id="L395">                final SearchResponse response = objectMapper.readValue(textContent.text(), SearchResponse.class);</span>
+<span class="nc bnc" id="L396" title="All 2 branches missed.">                if (response.success()) {</span>
+<span class="nc" id="L397">                    totalHits = response.totalHits();</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">                    for (final SearchDocument document : response.documents()) {</span>
+<span class="nc" id="L399">                        String code = document.fileName();</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">                        if (code.indexOf(&quot;Profil &quot;) == 0) {</span>
+<span class="nc" id="L401">                            code = code.substring(&quot;Profil &quot;.length());</span>
+                        }
+<span class="nc" id="L403">                        final int p = code.indexOf(&quot;.&quot;);</span>
+<span class="nc bnc" id="L404" title="All 2 branches missed.">                        if (p &gt; 0) {</span>
+<span class="nc" id="L405">                            code = code.substring(0, p);</span>
+                        }
+
+<span class="nc" id="L408">                        final StringBuilder serp = new StringBuilder();</span>
+<span class="nc bnc" id="L409" title="All 2 branches missed.">                        for (final Passage passage : document.passages()) {</span>
+<span class="nc" id="L410">                            serp.append(passage.text()).append(&quot; &quot;);</span>
+<span class="nc" id="L411">                        }</span>
+<span class="nc" id="L412">                        entries.add(new DocumentEntry(code, serp.toString(), document.score()));</span>
+<span class="nc" id="L413">                    }</span>
+                } else {
+<span class="nc" id="L415">                    logger.error(&quot;MCP-Search-Tool meldete einen Fehler: {}&quot;, response.error());</span>
+                }
+<span class="nc" id="L417">            } else {</span>
+<span class="nc" id="L418">                logger.warn(&quot;Nicht unterstützter Content-Typ: {} in MCP-Antwort&quot;, content.getClass().getSimpleName());</span>
+            }
+<span class="nc" id="L420">        }</span>
+
+<span class="nc bnc" id="L422" title="All 2 branches missed.">        if (entries.isEmpty()) {</span>
+<span class="nc" id="L423">            return new ProfileSearchPage(List.of(), totalHits);</span>
+        }
+
+        // Batch-Load: alle Freiberuflerdaten und Tags in je einem SELECT statt n Einzelabfragen
+<span class="nc" id="L427">        final List&lt;String&gt; codes = entries.stream().map(DocumentEntry::code).toList();</span>
+<span class="nc" id="L428">        final Map&lt;String, FreelancerBatchRow&gt; freelancerByCode = findFreelancersByCodesInBatch(codes);</span>
+
+<span class="nc" id="L430">        final List&lt;Long&gt; freelancerIds = freelancerByCode.values().stream()</span>
+<span class="nc" id="L431">                .map(FreelancerBatchRow::id)</span>
+<span class="nc" id="L432">                .toList();</span>
+<span class="nc" id="L433">        final Map&lt;Long, List&lt;TagView&gt;&gt; tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);</span>
+
+<span class="nc" id="L435">        final List&lt;ProfileSearchResult&gt; results = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L436" title="All 2 branches missed.">        for (final DocumentEntry entry : entries) {</span>
+<span class="nc" id="L437">            final FreelancerBatchRow freelancer = freelancerByCode.get(entry.code());</span>
+<span class="nc bnc" id="L438" title="All 2 branches missed.">            if (freelancer == null) {</span>
+<span class="nc" id="L439">                logger.warn(&quot;Kein Freiberufler mit Code '{}' gefunden – MCP-Treffer wird ohne DB-Daten übernommen&quot;, entry.code());</span>
+<span class="nc bnc" id="L440" title="All 2 branches missed.">                results.add(new ProfileSearchResult(null, entry.code(), null, null, null, null, null, false, List.of(), entry.serp(), !isSemanticSearch, entry.score()));</span>
+            } else {
+<span class="nc" id="L442">                final List&lt;TagView&gt; tags = tagsByFreelancerId.getOrDefault(freelancer.id(), List.of());</span>
+<span class="nc" id="L443">                results.add(new ProfileSearchResult(</span>
+<span class="nc" id="L444">                        freelancer.id(), entry.code(), freelancer.name1(), freelancer.name2(),</span>
+<span class="nc" id="L445">                        freelancer.lastContactDate(), freelancer.salaryPerDayLong(),</span>
+<span class="nc" id="L446">                        freelancer.availabilityAsDate(), freelancer.contactForbidden(),</span>
+<span class="nc bnc" id="L447" title="All 2 branches missed.">                        tags, entry.serp(), !isSemanticSearch, entry.score()));</span>
+            }
+<span class="nc" id="L449">        }</span>
+<span class="nc" id="L450">        return new ProfileSearchPage(results, totalHits);</span>
+    }
+
+    /**
+     * Lädt Freiberuflerdaten für eine Liste von Codes in einer einzigen DB-Abfrage.
+     * Package-private für Tests.
+     */
+    Map&lt;String, FreelancerBatchRow&gt; findFreelancersByCodesInBatch(final List&lt;String&gt; codes) {
+<span class="nc bnc" id="L458" title="All 2 branches missed.">        if (codes.isEmpty()) {</span>
+<span class="nc" id="L459">            return Map.of();</span>
+        }
+<span class="nc" id="L461">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT id, code, name1, name2,
+                       last_contact_date, salary_per_day_long,
+                       availability_as_date, contactforbidden
+                FROM freelancer
+                WHERE code IN (:codes)
+                &quot;&quot;&quot;)
+<span class="nc" id="L468">                .param(&quot;codes&quot;, codes)</span>
+<span class="nc" id="L469">                .query(FreelancerBatchRow.class)</span>
+<span class="nc" id="L470">                .list()</span>
+<span class="nc" id="L471">                .stream()</span>
+<span class="nc" id="L472">                .collect(Collectors.toMap(FreelancerBatchRow::code, r -&gt; r));</span>
+    }
+
+    /**
+     * Lädt Tags für eine Liste von Freiberufler-IDs in einer einzigen DB-Abfrage.
+     * Package-private für Tests.
+     */
+    Map&lt;Long, List&lt;TagView&gt;&gt; findTagsByFreelancerIdsInBatch(final List&lt;Long&gt; ids) {
+<span class="pc bpc" id="L480" title="1 of 2 branches missed.">        if (ids.isEmpty()) {</span>
+<span class="fc" id="L481">            return Map.of();</span>
+        }
+<span class="nc" id="L483">        record TagRow(Long freelancerId, Long tagId, String tagname, String type) {}</span>
+<span class="nc" id="L484">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT ft.freelancer_id, t.id AS tag_id, t.tagname, t.type
+                FROM freelancer_tags ft
+                JOIN tags t ON t.id = ft.tag_id
+                WHERE ft.freelancer_id IN (:ids)
+                ORDER BY t.tagname
+                &quot;&quot;&quot;)
+<span class="nc" id="L491">                .param(&quot;ids&quot;, ids)</span>
+<span class="nc" id="L492">                .query(TagRow.class)</span>
+<span class="nc" id="L493">                .list()</span>
+<span class="nc" id="L494">                .stream()</span>
+<span class="nc" id="L495">                .collect(Collectors.groupingBy(</span>
+                        TagRow::freelancerId,
+<span class="nc" id="L497">                        Collectors.mapping(r -&gt; new TagView(r.tagId(), r.tagname(), r.type()), Collectors.toList())));</span>
+    }
+
+    // ── DB-Pfad (bisherige Implementierung) ───────────────────────────────────
+
+    private ProfileSearchPage searchFreelancersViaDb(final ProfileSearchCriteria criteria,
+                                                      final int offset, final int limit) {
+<span class="nc" id="L504">        record Row(Long id, String code, String name1, String name2,</span>
+                   LocalDateTime lastContactDate, Long salaryPerDayLong,
+                   LocalDateTime availabilityAsDate, boolean contactForbidden) {}
+<span class="fc" id="L507">        final String orderBy = resolveOrderBy(criteria.sortField(), criteria.sortDir());</span>
+<span class="fc" id="L508">        final String sql = String.format(&quot;&quot;&quot;</span>
+                SELECT f.id, f.code, f.name1, f.name2,
+                       f.last_contact_date, f.salary_per_day_long,
+                       f.availability_as_date, f.contactforbidden
+                FROM freelancer f
+                ORDER BY %s
+                LIMIT :limit OFFSET :offset
+                &quot;&quot;&quot;, orderBy);
+<span class="fc" id="L516">        final List&lt;Row&gt; rows = jdbcClient.sql(sql)</span>
+<span class="fc" id="L517">                .param(&quot;limit&quot;, limit)</span>
+<span class="fc" id="L518">                .param(&quot;offset&quot;, offset)</span>
+<span class="fc" id="L519">                .query(Row.class)</span>
+<span class="fc" id="L520">                .list();</span>
+
+        // Batch-Load Tags für alle gefundenen Freiberufler (analog zum MCP-Pfad)
+<span class="fc" id="L523">        final List&lt;Long&gt; freelancerIds = rows.stream().map(Row::id).toList();</span>
+<span class="fc" id="L524">        final Map&lt;Long, List&lt;TagView&gt;&gt; tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);</span>
+
+<span class="fc" id="L526">        final List&lt;ProfileSearchResult&gt; results = rows.stream()</span>
+<span class="fc" id="L527">                .map(r -&gt; {</span>
+<span class="nc bnc" id="L528" title="All 4 branches missed.">                    final String term = criteria.searchTerm() != null &amp;&amp; !criteria.searchTerm().isBlank()</span>
+<span class="nc" id="L529">                            ? &quot; – Suche: **&quot; + criteria.searchTerm() + &quot;**&quot;</span>
+<span class="nc" id="L530">                            : &quot;&quot;;</span>
+<span class="nc" id="L531">                    final String serp = &quot;**&quot; + r.name1() + &quot; &quot; + r.name2() + &quot;**&quot; + term;</span>
+<span class="nc" id="L532">                    final List&lt;TagView&gt; tags = tagsByFreelancerId.getOrDefault(r.id(), List.of());</span>
+<span class="nc" id="L533">                    return new ProfileSearchResult(</span>
+<span class="nc" id="L534">                            r.id(), r.code(), r.name1(), r.name2(),</span>
+<span class="nc" id="L535">                            r.lastContactDate(), r.salaryPerDayLong(),</span>
+<span class="nc" id="L536">                            r.availabilityAsDate(), r.contactForbidden(), tags, serp, true, null);</span>
+                })
+<span class="fc" id="L538">                .toList();</span>
+<span class="fc" id="L539">        final long total = jdbcClient.sql(&quot;SELECT COUNT(*) FROM freelancer&quot;)</span>
+<span class="fc" id="L540">                .query(Long.class)</span>
+<span class="fc" id="L541">                .single();</span>
+<span class="fc" id="L542">        return new ProfileSearchPage(results, total);</span>
+    }
+
+    private String resolveOrderBy(final String sortField, final String sortDir) {
+<span class="pc bpc" id="L546" title="6 of 8 branches missed.">        final String column = switch (sortField != null ? sortField : &quot;&quot;) {</span>
+<span class="nc" id="L547">            case &quot;name2&quot;            -&gt; &quot;f.name2&quot;;</span>
+<span class="nc" id="L548">            case &quot;lastContactDate&quot;  -&gt; &quot;f.last_contact_date&quot;;</span>
+<span class="nc" id="L549">            case &quot;salaryPerDayLong&quot; -&gt; &quot;f.salary_per_day_long&quot;;</span>
+<span class="nc" id="L550">            case &quot;availabilityAsDate&quot; -&gt; &quot;f.availability_as_date&quot;;</span>
+<span class="nc" id="L551">            case &quot;code&quot;             -&gt; &quot;f.code&quot;;</span>
+<span class="fc" id="L552">            default                 -&gt; &quot;f.name1&quot;;</span>
+        };
+<span class="pc bpc" id="L554" title="1 of 2 branches missed.">        final String direction = &quot;desc&quot;.equalsIgnoreCase(sortDir) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
+<span class="fc" id="L555">        return column + &quot; &quot; + direction;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

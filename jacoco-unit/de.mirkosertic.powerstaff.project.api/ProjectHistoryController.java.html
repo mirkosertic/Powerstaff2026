@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProjectHistoryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Unit-Test Coverage</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.project.api</a> &gt; <span class="el_source">ProjectHistoryController.java</span></div><h1>ProjectHistoryController.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.project.api;
+
+import de.mirkosertic.powerstaff.project.command.ProjectHistory;
+import de.mirkosertic.powerstaff.project.command.ProjectHistoryCommandService;
+import de.mirkosertic.powerstaff.project.query.ProjectHistoryQueryService;
+import de.mirkosertic.powerstaff.project.query.ProjectHistoryView;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping(&quot;/project/{projectId}/history&quot;)
+public class ProjectHistoryController {
+
+    private final ProjectHistoryCommandService commandService;
+    private final ProjectHistoryQueryService queryService;
+
+    public ProjectHistoryController(final ProjectHistoryCommandService commandService,
+<span class="nc" id="L29">                                    final ProjectHistoryQueryService queryService) {</span>
+<span class="nc" id="L30">        this.commandService = commandService;</span>
+<span class="nc" id="L31">        this.queryService = queryService;</span>
+<span class="nc" id="L32">    }</span>
+
+<span class="nc" id="L34">    record HistoryRequest(String description) {}</span>
+
+    @PostMapping
+    public ResponseEntity&lt;List&lt;ProjectHistoryView&gt;&gt; create(@PathVariable final Long projectId,
+                                                           @RequestBody final HistoryRequest request) {
+<span class="nc" id="L39">        final var history = new ProjectHistory();</span>
+<span class="nc" id="L40">        history.setProjectId(projectId);</span>
+<span class="nc" id="L41">        history.setDescription(request.description());</span>
+<span class="nc" id="L42">        commandService.save(history);</span>
+<span class="nc" id="L43">        return ResponseEntity.ok(queryService.findByProjectId(projectId));</span>
+    }
+
+    @PutMapping(&quot;/{historyId}&quot;)
+    public ResponseEntity&lt;Map&lt;String, Boolean&gt;&gt; update(@PathVariable final Long projectId,
+                                                       @PathVariable final Long historyId,
+                                                       @RequestBody final HistoryRequest request) {
+<span class="nc" id="L50">        final var history = commandService.findById(historyId)</span>
+<span class="nc" id="L51">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND));</span>
+<span class="nc" id="L52">        history.setDescription(request.description());</span>
+<span class="nc" id="L53">        commandService.save(history);</span>
+<span class="nc" id="L54">        return ResponseEntity.ok(Map.of(&quot;ok&quot;, true));</span>
+    }
+
+    @DeleteMapping(&quot;/{historyId}&quot;)
+    public ResponseEntity&lt;Map&lt;String, Boolean&gt;&gt; delete(@PathVariable final Long projectId,
+                                                       @PathVariable final Long historyId) {
+<span class="nc" id="L60">        commandService.delete(historyId);</span>
+<span class="nc" id="L61">        return ResponseEntity.ok(Map.of(&quot;ok&quot;, true));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">E2E-Test Coverage (Playwright)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.config</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.config;
+
+import de.mirkosertic.powerstaff.auth.MustChangePasswordFilter;
+import de.mirkosertic.powerstaff.auth.PsAuthenticationSuccessHandler;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    private final MustChangePasswordFilter mustChangePasswordFilter;
+    private final PsAuthenticationSuccessHandler authenticationSuccessHandler;
+
+    public SecurityConfig(final MustChangePasswordFilter mustChangePasswordFilter,
+<span class="nc" id="L28">                          final PsAuthenticationSuccessHandler authenticationSuccessHandler) {</span>
+<span class="nc" id="L29">        this.mustChangePasswordFilter = mustChangePasswordFilter;</span>
+<span class="nc" id="L30">        this.authenticationSuccessHandler = authenticationSuccessHandler;</span>
+<span class="nc" id="L31">    }</span>
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(final HttpSecurity http) {
+<span class="nc" id="L35">        http</span>
+<span class="nc" id="L36">            .authorizeHttpRequests(authorize -&gt; authorize</span>
+<span class="nc" id="L37">                .requestMatchers(&quot;/login&quot;, &quot;/error&quot;, &quot;/css/**&quot;, &quot;/generated/**&quot;).permitAll()</span>
+<span class="nc" id="L38">                .requestMatchers(&quot;/admin/historientypen/**&quot;, &quot;/admin/positionsstatus/**&quot;, &quot;/admin/tags/**&quot;).hasRole(&quot;ADMIN&quot;)</span>
+<span class="nc" id="L39">                .anyRequest().authenticated()</span>
+            )
+<span class="nc" id="L41">            .formLogin(form -&gt; form</span>
+<span class="nc" id="L42">                .loginPage(&quot;/login&quot;)</span>
+<span class="nc" id="L43">                .successHandler(authenticationSuccessHandler)</span>
+<span class="nc" id="L44">                .failureUrl(&quot;/login?error&quot;)</span>
+<span class="nc" id="L45">                .permitAll()</span>
+            )
+<span class="nc" id="L47">            .logout(logout -&gt; logout</span>
+<span class="nc" id="L48">                .logoutSuccessUrl(&quot;/login?logout&quot;)</span>
+<span class="nc" id="L49">                .permitAll()</span>
+            )
+<span class="nc" id="L51">            .csrf(csrf -&gt; csrf</span>
+<span class="nc" id="L52">                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())</span>
+            )
+<span class="nc" id="L54">            .addFilterAfter(mustChangePasswordFilter, UsernamePasswordAuthenticationFilter.class);</span>
+
+<span class="nc" id="L56">        return http.build();</span>
+    }
+
+    /**
+     * DelegatingPasswordEncoder: Standard-Algorithmus ist bcrypt.
+     * Unterstützt {bcrypt} und {noop} Prefixe in der DB.
+     * Passwörter ohne Prefix werden ebenfalls mit BCrypt geprüft (Legacy-Kompatibilität).
+     * ADR: Neue Hashes werden immer mit {bcrypt} Prefix gespeichert.
+     */
+    @Bean
+    @SuppressWarnings(&quot;deprecation&quot;)
+    public PasswordEncoder passwordEncoder() {
+<span class="nc" id="L68">        final Map&lt;String, PasswordEncoder&gt; encoders = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L69">        encoders.put(&quot;bcrypt&quot;, new BCryptPasswordEncoder());</span>
+<span class="nc" id="L70">        encoders.put(&quot;noop&quot;, NoOpPasswordEncoder.getInstance());</span>
+<span class="nc" id="L71">        final DelegatingPasswordEncoder delegating = new DelegatingPasswordEncoder(&quot;bcrypt&quot;, encoders);</span>
+<span class="nc" id="L72">        delegating.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder());</span>
+<span class="nc" id="L73">        return delegating;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

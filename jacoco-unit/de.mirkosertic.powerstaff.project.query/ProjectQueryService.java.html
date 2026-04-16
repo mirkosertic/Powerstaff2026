@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProjectQueryService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Unit-Test Coverage</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.project.query</a> &gt; <span class="el_source">ProjectQueryService.java</span></div><h1>ProjectQueryService.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.project.query;
+
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+@Service
+@Transactional(readOnly = true)
+public class ProjectQueryService {
+
+<span class="nc" id="L17">    private static final Set&lt;String&gt; SORT_FIELDS_ALLOWLIST = Set.of(</span>
+            &quot;project_number&quot;, &quot;description_short&quot;, &quot;status&quot;);
+    private static final String DEFAULT_SORT = &quot;entry_date DESC&quot;;
+
+    private static final String SELECT_PROJECT = &quot;&quot;&quot;
+            SELECT id, db_version, creation_date, creation_user, changed_date, changed_user,
+                   project_number, entry_date, start_date, duration, status, visible_on_web_site,
+                   description_short, description_long, skills, workplace,
+                   customer_id, partner_id, stundensatz_vk, debitor_nr, kreditor_nr
+            FROM project
+            &quot;&quot;&quot;;
+
+    private final JdbcClient jdbcClient;
+
+<span class="nc" id="L31">    public ProjectQueryService(final JdbcClient jdbcClient) {</span>
+<span class="nc" id="L32">        this.jdbcClient = jdbcClient;</span>
+<span class="nc" id="L33">    }</span>
+
+    public Optional&lt;ProjectDetailView&gt; findById(final Long id) {
+<span class="nc" id="L36">        return jdbcClient.sql(SELECT_PROJECT + &quot;WHERE id = :id&quot;)</span>
+<span class="nc" id="L37">                .param(&quot;id&quot;, id)</span>
+<span class="nc" id="L38">                .query(ProjectDetailView.class)</span>
+<span class="nc" id="L39">                .optional();</span>
+    }
+
+    public Optional&lt;ProjectDetailView&gt; findFirst() {
+<span class="nc" id="L43">        return jdbcClient.sql(SELECT_PROJECT + &quot;ORDER BY id ASC LIMIT 1&quot;)</span>
+<span class="nc" id="L44">                .query(ProjectDetailView.class)</span>
+<span class="nc" id="L45">                .optional();</span>
+    }
+
+    public Optional&lt;ProjectDetailView&gt; findLast() {
+<span class="nc" id="L49">        return jdbcClient.sql(SELECT_PROJECT + &quot;ORDER BY id DESC LIMIT 1&quot;)</span>
+<span class="nc" id="L50">                .query(ProjectDetailView.class)</span>
+<span class="nc" id="L51">                .optional();</span>
+    }
+
+    public Optional&lt;ProjectDetailView&gt; findPrevious(final Long currentId) {
+<span class="nc" id="L55">        return jdbcClient.sql(SELECT_PROJECT + &quot;WHERE id &lt; :currentId ORDER BY id DESC LIMIT 1&quot;)</span>
+<span class="nc" id="L56">                .param(&quot;currentId&quot;, currentId)</span>
+<span class="nc" id="L57">                .query(ProjectDetailView.class)</span>
+<span class="nc" id="L58">                .optional();</span>
+    }
+
+    public Optional&lt;ProjectDetailView&gt; findNext(final Long currentId) {
+<span class="nc" id="L62">        return jdbcClient.sql(SELECT_PROJECT + &quot;WHERE id &gt; :currentId ORDER BY id ASC LIMIT 1&quot;)</span>
+<span class="nc" id="L63">                .param(&quot;currentId&quot;, currentId)</span>
+<span class="nc" id="L64">                .query(ProjectDetailView.class)</span>
+<span class="nc" id="L65">                .optional();</span>
+    }
+
+    public List&lt;ProjectSearchResult&gt; search(final ProjectSearchCriteria criteria, final int offset, final int limit) {
+<span class="nc" id="L69">        final var sql = new StringBuilder(&quot;&quot;&quot;</span>
+                SELECT id, project_number, description_short, workplace, start_date, status, stundensatz_vk
+                FROM project
+                WHERE 1=1
+                &quot;&quot;&quot;);
+<span class="nc" id="L74">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L75">        appendLike(sql, params, &quot;project_number&quot;, criteria.projectNumber());</span>
+<span class="nc" id="L76">        appendLike(sql, params, &quot;description_short&quot;, criteria.descriptionShort());</span>
+<span class="nc" id="L77">        appendLike(sql, params, &quot;description_long&quot;, criteria.descriptionLong());</span>
+<span class="nc" id="L78">        appendLike(sql, params, &quot;skills&quot;, criteria.skills());</span>
+<span class="nc" id="L79">        appendLike(sql, params, &quot;workplace&quot;, criteria.workplace());</span>
+<span class="nc" id="L80">        appendLike(sql, params, &quot;duration&quot;, criteria.duration());</span>
+<span class="nc" id="L81">        appendLike(sql, params, &quot;debitor_nr&quot;, criteria.debitorNr());</span>
+<span class="nc" id="L82">        appendLike(sql, params, &quot;kreditor_nr&quot;, criteria.kreditorNr());</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (criteria.status() != null) {</span>
+<span class="nc" id="L84">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="nc" id="L85">            sql.append(&quot; AND status = :&quot;).append(pName);</span>
+<span class="nc" id="L86">            params.put(pName, criteria.status());</span>
+        }
+        final String orderBy;
+<span class="nc bnc" id="L89" title="All 4 branches missed.">        if (criteria.sortField() != null &amp;&amp; SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            final String dir = &quot;desc&quot;.equalsIgnoreCase(criteria.sortDir()) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
+<span class="nc" id="L91">            orderBy = criteria.sortField() + &quot; &quot; + dir;</span>
+<span class="nc" id="L92">        } else {</span>
+<span class="nc" id="L93">            orderBy = DEFAULT_SORT;</span>
+        }
+<span class="nc" id="L95">        final String pLimit = &quot;p&quot; + (params.size() + 1);</span>
+<span class="nc" id="L96">        final String pOffset = &quot;p&quot; + (params.size() + 2);</span>
+<span class="nc" id="L97">        sql.append(&quot; ORDER BY &quot;).append(orderBy).append(&quot; LIMIT :&quot;).append(pLimit).append(&quot; OFFSET :&quot;).append(pOffset);</span>
+<span class="nc" id="L98">        params.put(pLimit, limit);</span>
+<span class="nc" id="L99">        params.put(pOffset, offset);</span>
+
+<span class="nc" id="L101">        var stmt = jdbcClient.sql(sql.toString());</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        for (final var entry : params.entrySet()) {</span>
+<span class="nc" id="L103">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L104">        }</span>
+<span class="nc" id="L105">        return stmt.query(ProjectSearchResult.class).list();</span>
+    }
+
+    public long countSearch(final ProjectSearchCriteria criteria) {
+<span class="nc" id="L109">        final var sql = new StringBuilder(&quot;SELECT COUNT(*) FROM project WHERE 1=1&quot;);</span>
+<span class="nc" id="L110">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L111">        appendLike(sql, params, &quot;project_number&quot;, criteria.projectNumber());</span>
+<span class="nc" id="L112">        appendLike(sql, params, &quot;description_short&quot;, criteria.descriptionShort());</span>
+<span class="nc" id="L113">        appendLike(sql, params, &quot;description_long&quot;, criteria.descriptionLong());</span>
+<span class="nc" id="L114">        appendLike(sql, params, &quot;skills&quot;, criteria.skills());</span>
+<span class="nc" id="L115">        appendLike(sql, params, &quot;workplace&quot;, criteria.workplace());</span>
+<span class="nc" id="L116">        appendLike(sql, params, &quot;duration&quot;, criteria.duration());</span>
+<span class="nc" id="L117">        appendLike(sql, params, &quot;debitor_nr&quot;, criteria.debitorNr());</span>
+<span class="nc" id="L118">        appendLike(sql, params, &quot;kreditor_nr&quot;, criteria.kreditorNr());</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (criteria.status() != null) {</span>
+<span class="nc" id="L120">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="nc" id="L121">            sql.append(&quot; AND status = :&quot;).append(pName);</span>
+<span class="nc" id="L122">            params.put(pName, criteria.status());</span>
+        }
+
+<span class="nc" id="L125">        var stmt = jdbcClient.sql(sql.toString());</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        for (final var entry : params.entrySet()) {</span>
+<span class="nc" id="L127">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L128">        }</span>
+<span class="nc" id="L129">        return stmt.query(Long.class).single();</span>
+    }
+
+    private static void appendLike(final StringBuilder sql, final Map&lt;String, Object&gt; params, final String column, final String value) {
+<span class="nc bnc" id="L133" title="All 4 branches missed.">        if (value != null &amp;&amp; !value.isBlank()) {</span>
+<span class="nc" id="L134">            final String paramName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="nc" id="L135">            sql.append(&quot; AND &quot;).append(column).append(&quot; LIKE :&quot;).append(paramName);</span>
+<span class="nc" id="L136">            params.put(paramName, &quot;%&quot; + value + &quot;%&quot;);</span>
+        }
+<span class="nc" id="L138">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

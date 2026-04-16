@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProjectSearchCriteria.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Integrationstest Coverage</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.project.query</a> &gt; <span class="el_source">ProjectSearchCriteria.java</span></div><h1>ProjectSearchCriteria.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.project.query;
+
+<span class="fc" id="L3">public record ProjectSearchCriteria(</span>
+        String projectNumber,
+        String descriptionShort,
+        String descriptionLong,
+        String skills,
+        String workplace,
+        String duration,
+        Integer status,
+        String debitorNr,
+        String kreditorNr,
+        String sortField,
+        String sortDir
+) {
+    public static ProjectSearchCriteria empty() {
+<span class="fc" id="L17">        return new ProjectSearchCriteria(null, null, null, null, null, null, null, null, null, null, null);</span>
+    }
+
+<span class="fc" id="L20">    public ProjectSearchCriteria withProjectNumber(final String v) { return new ProjectSearchCriteria(v, descriptionShort, descriptionLong, skills, workplace, duration, status, debitorNr, kreditorNr, sortField, sortDir); }</span>
+<span class="nc" id="L21">    public ProjectSearchCriteria withDescriptionShort(final String v) { return new ProjectSearchCriteria(projectNumber, v, descriptionLong, skills, workplace, duration, status, debitorNr, kreditorNr, sortField, sortDir); }</span>
+<span class="nc" id="L22">    public ProjectSearchCriteria withDescriptionLong(final String v) { return new ProjectSearchCriteria(projectNumber, descriptionShort, v, skills, workplace, duration, status, debitorNr, kreditorNr, sortField, sortDir); }</span>
+<span class="nc" id="L23">    public ProjectSearchCriteria withSkills(final String v) { return new ProjectSearchCriteria(projectNumber, descriptionShort, descriptionLong, v, workplace, duration, status, debitorNr, kreditorNr, sortField, sortDir); }</span>
+<span class="nc" id="L24">    public ProjectSearchCriteria withWorkplace(final String v) { return new ProjectSearchCriteria(projectNumber, descriptionShort, descriptionLong, skills, v, duration, status, debitorNr, kreditorNr, sortField, sortDir); }</span>
+<span class="nc" id="L25">    public ProjectSearchCriteria withDuration(final String v) { return new ProjectSearchCriteria(projectNumber, descriptionShort, descriptionLong, skills, workplace, v, status, debitorNr, kreditorNr, sortField, sortDir); }</span>
+<span class="fc" id="L26">    public ProjectSearchCriteria withStatus(final Integer v) { return new ProjectSearchCriteria(projectNumber, descriptionShort, descriptionLong, skills, workplace, duration, v, debitorNr, kreditorNr, sortField, sortDir); }</span>
+<span class="nc" id="L27">    public ProjectSearchCriteria withDebitorNr(final String v) { return new ProjectSearchCriteria(projectNumber, descriptionShort, descriptionLong, skills, workplace, duration, status, v, kreditorNr, sortField, sortDir); }</span>
+<span class="nc" id="L28">    public ProjectSearchCriteria withKreditorNr(final String v) { return new ProjectSearchCriteria(projectNumber, descriptionShort, descriptionLong, skills, workplace, duration, status, debitorNr, v, sortField, sortDir); }</span>
+<span class="fc" id="L29">    public ProjectSearchCriteria withSortField(final String v) { return new ProjectSearchCriteria(projectNumber, descriptionShort, descriptionLong, skills, workplace, duration, status, debitorNr, kreditorNr, v, sortDir); }</span>
+<span class="fc" id="L30">    public ProjectSearchCriteria withSortDir(final String v) { return new ProjectSearchCriteria(projectNumber, descriptionShort, descriptionLong, skills, workplace, duration, status, debitorNr, kreditorNr, sortField, v); }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

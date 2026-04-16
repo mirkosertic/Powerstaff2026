@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PartnerQueryService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Gesamte Test Coverage (Unit + Integration + e2e)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.partner.query</a> &gt; <span class="el_source">PartnerQueryService.java</span></div><h1>PartnerQueryService.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.partner.query;
+
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+@Service
+@Transactional(readOnly = true)
+public class PartnerQueryService {
+
+<span class="fc" id="L17">    private static final Set&lt;String&gt; SORT_FIELDS_ALLOWLIST = Set.of(&quot;name1&quot;, &quot;name2&quot;, &quot;company&quot;, &quot;city&quot;);</span>
+    private static final String DEFAULT_SORT = &quot;company ASC&quot;;
+
+    private static final String SELECT_PARTNER = &quot;&quot;&quot;
+            SELECT id, db_version, creation_date, creation_user, changed_date, changed_user,
+                   company, name1, name2, street, country, plz, city,
+                   contactforbidden, show_again, comments, debitor_nr, kreditor_nr
+            FROM partner
+            &quot;&quot;&quot;;
+
+    private final JdbcClient jdbcClient;
+
+<span class="fc" id="L29">    public PartnerQueryService(final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L30">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L31">    }</span>
+
+    public Optional&lt;PartnerDetailView&gt; findById(final Long id) {
+<span class="fc" id="L34">        return jdbcClient.sql(SELECT_PARTNER + &quot;WHERE id = :id&quot;)</span>
+<span class="fc" id="L35">                .param(&quot;id&quot;, id)</span>
+<span class="fc" id="L36">                .query(PartnerDetailView.class)</span>
+<span class="fc" id="L37">                .optional();</span>
+    }
+
+    public Optional&lt;PartnerDetailView&gt; findFirst() {
+<span class="fc" id="L41">        return jdbcClient.sql(SELECT_PARTNER + &quot;ORDER BY id ASC LIMIT 1&quot;)</span>
+<span class="fc" id="L42">                .query(PartnerDetailView.class)</span>
+<span class="fc" id="L43">                .optional();</span>
+    }
+
+    public Optional&lt;PartnerDetailView&gt; findLast() {
+<span class="fc" id="L47">        return jdbcClient.sql(SELECT_PARTNER + &quot;ORDER BY id DESC LIMIT 1&quot;)</span>
+<span class="fc" id="L48">                .query(PartnerDetailView.class)</span>
+<span class="fc" id="L49">                .optional();</span>
+    }
+
+    public Optional&lt;PartnerDetailView&gt; findPrevious(final Long currentId) {
+<span class="fc" id="L53">        return jdbcClient.sql(SELECT_PARTNER + &quot;WHERE id &lt; :currentId ORDER BY id DESC LIMIT 1&quot;)</span>
+<span class="fc" id="L54">                .param(&quot;currentId&quot;, currentId)</span>
+<span class="fc" id="L55">                .query(PartnerDetailView.class)</span>
+<span class="fc" id="L56">                .optional();</span>
+    }
+
+    public Optional&lt;PartnerDetailView&gt; findNext(final Long currentId) {
+<span class="fc" id="L60">        return jdbcClient.sql(SELECT_PARTNER + &quot;WHERE id &gt; :currentId ORDER BY id ASC LIMIT 1&quot;)</span>
+<span class="fc" id="L61">                .param(&quot;currentId&quot;, currentId)</span>
+<span class="fc" id="L62">                .query(PartnerDetailView.class)</span>
+<span class="fc" id="L63">                .optional();</span>
+    }
+
+    /**
+     * QBE search: all non-null/non-blank fields are combined with AND LIKE '%value%'.
+     * Returns up to {@code limit} results starting at {@code offset}, sorted by company ASC.
+     */
+    public List&lt;PartnerSearchResult&gt; search(final PartnerSearchCriteria criteria, final int offset, final int limit) {
+<span class="fc" id="L71">        final var sql = new StringBuilder(&quot;&quot;&quot;</span>
+                SELECT id, company, name1, name2, city, contactforbidden
+                FROM partner
+                WHERE 1=1
+&quot;&quot;&quot;);
+<span class="fc" id="L76">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L77">        appendCriteria(sql, params, criteria);</span>
+        final String orderBy;
+<span class="fc bfc" id="L79" title="All 4 branches covered.">        if (criteria.sortField() != null &amp;&amp; SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            final String dir = &quot;desc&quot;.equalsIgnoreCase(criteria.sortDir()) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
+<span class="fc" id="L81">            orderBy = criteria.sortField() + &quot; &quot; + dir;</span>
+<span class="fc" id="L82">        } else {</span>
+<span class="fc" id="L83">            orderBy = DEFAULT_SORT;</span>
+        }
+<span class="fc" id="L85">        final String pLimit = &quot;p&quot; + (params.size() + 1);</span>
+<span class="fc" id="L86">        final String pOffset = &quot;p&quot; + (params.size() + 2);</span>
+<span class="fc" id="L87">        sql.append(&quot; ORDER BY &quot;).append(orderBy).append(&quot; LIMIT :&quot;).append(pLimit).append(&quot; OFFSET :&quot;).append(pOffset);</span>
+<span class="fc" id="L88">        params.put(pLimit, limit);</span>
+<span class="fc" id="L89">        params.put(pOffset, offset);</span>
+
+<span class="fc" id="L91">        var stmt = jdbcClient.sql(sql.toString());</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        for (final var entry : params.entrySet()) {</span>
+<span class="fc" id="L93">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L94">        }</span>
+<span class="fc" id="L95">        return stmt.query(PartnerSearchResult.class).list();</span>
+    }
+
+    public long countSearch(final PartnerSearchCriteria criteria) {
+<span class="fc" id="L99">        final var sql = new StringBuilder(&quot;SELECT COUNT(*) FROM partner WHERE 1=1&quot;);</span>
+<span class="fc" id="L100">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L101">        appendCriteria(sql, params, criteria);</span>
+
+<span class="fc" id="L103">        var stmt = jdbcClient.sql(sql.toString());</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        for (final var entry : params.entrySet()) {</span>
+<span class="fc" id="L105">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L106">        }</span>
+<span class="fc" id="L107">        return stmt.query(Long.class).single();</span>
+    }
+
+    private static void appendCriteria(final StringBuilder sql, final Map&lt;String, Object&gt; params, final PartnerSearchCriteria criteria) {
+<span class="fc" id="L111">        appendLike(sql, params, &quot;company&quot;, criteria.company());</span>
+<span class="fc" id="L112">        appendLike(sql, params, &quot;name1&quot;, criteria.name1());</span>
+<span class="fc" id="L113">        appendLike(sql, params, &quot;name2&quot;, criteria.name2());</span>
+<span class="fc" id="L114">        appendLike(sql, params, &quot;street&quot;, criteria.street());</span>
+<span class="fc" id="L115">        appendLike(sql, params, &quot;country&quot;, criteria.country());</span>
+<span class="fc" id="L116">        appendLike(sql, params, &quot;plz&quot;, criteria.plz());</span>
+<span class="fc" id="L117">        appendLike(sql, params, &quot;city&quot;, criteria.city());</span>
+<span class="fc" id="L118">        appendLike(sql, params, &quot;comments&quot;, criteria.comments());</span>
+<span class="fc" id="L119">        appendLike(sql, params, &quot;debitor_nr&quot;, criteria.debitorNr());</span>
+<span class="fc" id="L120">        appendLike(sql, params, &quot;kreditor_nr&quot;, criteria.kreditorNr());</span>
+<span class="fc" id="L121">    }</span>
+
+    private static void appendLike(final StringBuilder sql, final Map&lt;String, Object&gt; params, final String column, final String value) {
+<span class="pc bpc" id="L124" title="1 of 4 branches missed.">        if (value != null &amp;&amp; !value.isBlank()) {</span>
+<span class="fc" id="L125">            final String paramName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="fc" id="L126">            sql.append(&quot; AND &quot;).append(column).append(&quot; LIKE :&quot;).append(paramName);</span>
+<span class="fc" id="L127">            params.put(paramName, &quot;%&quot; + value + &quot;%&quot;);</span>
+        }
+<span class="fc" id="L129">    }</span>
+
+    public List&lt;PartnerFreelancerView&gt; findFreelancersByPartner(final Long partnerId) {
+<span class="fc" id="L132">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT id, code, name1, name2, company, availability_as_date, salary_long
+                FROM freelancer
+                WHERE partner_id = :partnerId
+                ORDER BY name1 ASC, name2 ASC
+                &quot;&quot;&quot;)
+<span class="fc" id="L138">                .param(&quot;partnerId&quot;, partnerId)</span>
+<span class="fc" id="L139">                .query(PartnerFreelancerView.class)</span>
+<span class="fc" id="L140">                .list();</span>
+    }
+
+    public List&lt;PartnerProjectView&gt; findProjectsByPartner(final Long partnerId) {
+<span class="fc" id="L144">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT id, project_number, description_short, workplace, start_date, status
+                FROM project
+                WHERE partner_id = :partnerId
+                ORDER BY start_date DESC
+                &quot;&quot;&quot;)
+<span class="fc" id="L150">                .param(&quot;partnerId&quot;, partnerId)</span>
+<span class="fc" id="L151">                .query(PartnerProjectView.class)</span>
+<span class="fc" id="L152">                .list();</span>
+    }
+
+    public List&lt;PartnerContactView&gt; findContactsByPartner(final Long partnerId) {
+<span class="fc" id="L156">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT id, type, value, partner_id
+                FROM partner_contact
+                WHERE partner_id = :partnerId
+                ORDER BY type ASC, value ASC
+                &quot;&quot;&quot;)
+<span class="fc" id="L162">                .param(&quot;partnerId&quot;, partnerId)</span>
+<span class="fc" id="L163">                .query(PartnerContactView.class)</span>
+<span class="fc" id="L164">                .list();</span>
+    }
+
+    public List&lt;PartnerHistoryView&gt; findHistoryByPartner(final Long partnerId) {
+<span class="fc" id="L168">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+                SELECT ph.id, ph.creation_date, ph.creation_user, ph.changed_date, ph.changed_user,
+                       ph.description, ph.type_id, ht.description AS type_description, ph.partner_id
+                FROM partner_history ph
+                JOIN historytype ht ON ht.id = ph.type_id
+                WHERE ph.partner_id = :partnerId
+                ORDER BY ph.creation_date DESC
+                &quot;&quot;&quot;)
+<span class="fc" id="L176">                .param(&quot;partnerId&quot;, partnerId)</span>
+<span class="fc" id="L177">                .query(PartnerHistoryView.class)</span>
+<span class="fc" id="L178">                .list();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

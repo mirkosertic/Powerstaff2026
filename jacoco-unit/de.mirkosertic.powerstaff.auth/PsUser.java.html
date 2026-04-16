@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PsUser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Unit-Test Coverage</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.auth</a> &gt; <span class="el_source">PsUser.java</span></div><h1>PsUser.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.auth;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+@Table(&quot;ps_user&quot;)
+public class PsUser implements Persistable&lt;String&gt; {
+
+    @Id
+    private final String username;
+
+    @Column(&quot;password_hash&quot;)
+    private final String passwordHash;
+
+    @Column(&quot;must_change_password&quot;)
+    private final boolean mustChangePassword;
+
+    @Column(&quot;enabled&quot;)
+    private final boolean enabled;
+
+    @Column(&quot;profile_search_system_prompt&quot;)
+    private final String profileSearchSystemPrompt;
+
+    @Column(&quot;is_admin&quot;)
+    private final boolean admin;
+
+    @Column(&quot;llm_api_token&quot;)
+    private final String llmApiToken;
+
+    public static final String DEFAULT_SYSTEM_PROMPT =
+            &quot;Du bist ein freundlicher KI-Assistent für den Benutzer {user} und antwortest immer auf deutsch. Dein Name ist Staffi.&quot;;
+
+    public PsUser(final String username, final String passwordHash, final boolean mustChangePassword, final boolean enabled,
+<span class="nc" id="L36">                  final String profileSearchSystemPrompt, final boolean admin, final String llmApiToken) {</span>
+<span class="nc" id="L37">        this.username = username;</span>
+<span class="nc" id="L38">        this.passwordHash = passwordHash;</span>
+<span class="nc" id="L39">        this.mustChangePassword = mustChangePassword;</span>
+<span class="nc" id="L40">        this.enabled = enabled;</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        this.profileSearchSystemPrompt = profileSearchSystemPrompt != null</span>
+<span class="nc" id="L42">                ? profileSearchSystemPrompt : DEFAULT_SYSTEM_PROMPT;</span>
+<span class="nc" id="L43">        this.admin = admin;</span>
+<span class="nc" id="L44">        this.llmApiToken = llmApiToken;</span>
+<span class="nc" id="L45">    }</span>
+
+    /**
+     * Spring Data JDBC: String-PKs sind niemals null, daher würde isNew() ohne
+     * Persistable-Implementierung immer false liefern und save() ein UPDATE statt
+     * INSERT ausführen. Da alle Passwort-Änderungen direkt per JdbcClient laufen,
+     * geht save() im Repository ausschließlich für Neuanlage – daher immer true.
+     */
+    @Override
+    public String getId() {
+<span class="nc" id="L55">        return username;</span>
+    }
+
+    @Override
+    public boolean isNew() {
+<span class="nc" id="L60">        return true;</span>
+    }
+
+    public String getUsername() {
+<span class="nc" id="L64">        return username;</span>
+    }
+
+    public String getPasswordHash() {
+<span class="nc" id="L68">        return passwordHash;</span>
+    }
+
+    public boolean isMustChangePassword() {
+<span class="nc" id="L72">        return mustChangePassword;</span>
+    }
+
+    public boolean isEnabled() {
+<span class="nc" id="L76">        return enabled;</span>
+    }
+
+    public String getProfileSearchSystemPrompt() {
+<span class="nc" id="L80">        return profileSearchSystemPrompt;</span>
+    }
+
+    public boolean isAdmin() {
+<span class="nc" id="L84">        return admin;</span>
+    }
+
+    public String getLlmApiToken() {
+<span class="nc" id="L88">        return llmApiToken;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

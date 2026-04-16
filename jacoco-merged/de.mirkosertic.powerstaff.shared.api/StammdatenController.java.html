@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StammdatenController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Gesamte Test Coverage (Unit + Integration + e2e)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.shared.api</a> &gt; <span class="el_source">StammdatenController.java</span></div><h1>StammdatenController.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.shared.api;
+
+import de.mirkosertic.powerstaff.shared.TagType;
+import de.mirkosertic.powerstaff.shared.command.HistoryType;
+import de.mirkosertic.powerstaff.shared.command.ProjectPositionStatus;
+import de.mirkosertic.powerstaff.shared.command.StammdatenCommandService;
+import de.mirkosertic.powerstaff.shared.command.Tag;
+import de.mirkosertic.powerstaff.shared.query.HistoryTypeQueryService;
+import de.mirkosertic.powerstaff.shared.query.ProjectPositionStatusQueryService;
+import de.mirkosertic.powerstaff.shared.query.TagQueryService;
+import de.mirkosertic.powerstaff.shared.query.TagView;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+@Controller
+@RequestMapping(&quot;/admin&quot;)
+public class StammdatenController {
+
+    private final HistoryTypeQueryService historyTypeQueryService;
+    private final ProjectPositionStatusQueryService projectPositionStatusQueryService;
+    private final TagQueryService tagQueryService;
+    private final StammdatenCommandService stammdatenCommandService;
+
+    public StammdatenController(
+            final HistoryTypeQueryService historyTypeQueryService,
+            final ProjectPositionStatusQueryService projectPositionStatusQueryService,
+            final TagQueryService tagQueryService,
+<span class="fc" id="L41">            final StammdatenCommandService stammdatenCommandService) {</span>
+<span class="fc" id="L42">        this.historyTypeQueryService = historyTypeQueryService;</span>
+<span class="fc" id="L43">        this.projectPositionStatusQueryService = projectPositionStatusQueryService;</span>
+<span class="fc" id="L44">        this.tagQueryService = tagQueryService;</span>
+<span class="fc" id="L45">        this.stammdatenCommandService = stammdatenCommandService;</span>
+<span class="fc" id="L46">    }</span>
+
+    // -------------------------------------------------------------------------
+    // Redirect /admin → /admin/historientypen
+    // -------------------------------------------------------------------------
+
+    @GetMapping
+    public String adminRoot() {
+<span class="fc" id="L54">        return &quot;redirect:/admin/historientypen&quot;;</span>
+    }
+
+    // -------------------------------------------------------------------------
+    // Historientypen
+    // -------------------------------------------------------------------------
+
+    @GetMapping(&quot;/historientypen&quot;)
+    public String historientypen(final Model model) {
+<span class="fc" id="L63">        model.addAttribute(&quot;types&quot;, historyTypeQueryService.findAll());</span>
+<span class="fc" id="L64">        model.addAttribute(&quot;newType&quot;, new HistoryType());</span>
+<span class="fc" id="L65">        model.addAttribute(&quot;activePage&quot;, &quot;admin&quot;);</span>
+<span class="fc" id="L66">        return &quot;admin/historientypen&quot;;</span>
+    }
+
+    @PostMapping(&quot;/historientypen&quot;)
+    public String createHistoryType(@ModelAttribute final HistoryType newType) {
+<span class="fc" id="L71">        stammdatenCommandService.saveHistoryType(newType);</span>
+<span class="fc" id="L72">        return &quot;redirect:/admin/historientypen&quot;;</span>
+    }
+
+    @PostMapping(&quot;/historientypen/{id}&quot;)
+    public String updateHistoryType(@PathVariable final long id,
+                                    @RequestParam final String description) {
+<span class="fc" id="L78">        stammdatenCommandService.findHistoryTypeById(id).ifPresent(ht -&gt; {</span>
+<span class="fc" id="L79">            ht.setDescription(description);</span>
+<span class="fc" id="L80">            stammdatenCommandService.saveHistoryType(ht);</span>
+<span class="fc" id="L81">        });</span>
+<span class="fc" id="L82">        return &quot;redirect:/admin/historientypen&quot;;</span>
+    }
+
+    @PostMapping(&quot;/historientypen/{id}/delete&quot;)
+    public String deleteHistoryType(@PathVariable final long id) {
+<span class="fc" id="L87">        stammdatenCommandService.deleteHistoryType(id);</span>
+<span class="fc" id="L88">        return &quot;redirect:/admin/historientypen&quot;;</span>
+    }
+
+    // -------------------------------------------------------------------------
+    // Projektpositions-Status
+    // -------------------------------------------------------------------------
+
+    @GetMapping(&quot;/positionsstatus&quot;)
+    public String positionsstatus(final Model model) {
+<span class="fc" id="L97">        model.addAttribute(&quot;statusList&quot;, projectPositionStatusQueryService.findAll());</span>
+<span class="fc" id="L98">        model.addAttribute(&quot;newStatus&quot;, new ProjectPositionStatus());</span>
+<span class="fc" id="L99">        model.addAttribute(&quot;activePage&quot;, &quot;admin&quot;);</span>
+<span class="fc" id="L100">        return &quot;admin/positionsstatus&quot;;</span>
+    }
+
+    @PostMapping(&quot;/positionsstatus&quot;)
+    public String createPositionsStatus(@ModelAttribute final ProjectPositionStatus newStatus) {
+<span class="fc" id="L105">        stammdatenCommandService.saveProjectPositionStatus(newStatus);</span>
+<span class="fc" id="L106">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
+    }
+
+    @PostMapping(&quot;/positionsstatus/{id}/delete&quot;)
+    public String deletePositionsStatus(@PathVariable final long id) {
+<span class="nc" id="L111">        stammdatenCommandService.deleteProjectPositionStatus(id);</span>
+<span class="nc" id="L112">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
+    }
+
+    @PostMapping(&quot;/positionsstatus/{id}&quot;)
+    public String updatePositionsStatus(@PathVariable final long id,
+                                        @RequestParam final String description,
+                                        @RequestParam final String color,
+                                        @RequestParam final String colorText,
+                                        @RequestParam(defaultValue = &quot;false&quot;) final boolean defaultStatus) {
+<span class="fc" id="L121">        stammdatenCommandService.findProjectPositionStatusById(id).ifPresent(pps -&gt; {</span>
+<span class="fc" id="L122">            pps.setDescription(description);</span>
+<span class="fc" id="L123">            pps.setColor(color);</span>
+<span class="fc" id="L124">            pps.setColorText(colorText);</span>
+<span class="fc" id="L125">            pps.setDefaultStatus(defaultStatus);</span>
+<span class="fc" id="L126">            stammdatenCommandService.saveProjectPositionStatus(pps);</span>
+<span class="fc" id="L127">        });</span>
+<span class="fc" id="L128">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
+    }
+
+    // -------------------------------------------------------------------------
+    // Tags
+    // -------------------------------------------------------------------------
+
+    @GetMapping(&quot;/tags&quot;)
+    public String tags(final Model model) {
+<span class="fc" id="L137">        final Map&lt;TagType, List&lt;TagView&gt;&gt; tagsByType = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        for (final TagType type : TagType.values()) {</span>
+<span class="fc" id="L139">            tagsByType.put(type, tagQueryService.findByType(type));</span>
+        }
+<span class="fc" id="L141">        model.addAttribute(&quot;tagsByType&quot;, tagsByType);</span>
+<span class="fc" id="L142">        model.addAttribute(&quot;tagTypes&quot;, TagType.values());</span>
+<span class="fc" id="L143">        model.addAttribute(&quot;newTag&quot;, new Tag());</span>
+<span class="fc" id="L144">        model.addAttribute(&quot;activePage&quot;, &quot;admin&quot;);</span>
+<span class="fc" id="L145">        return &quot;admin/tags&quot;;</span>
+    }
+
+    @PostMapping(&quot;/tags&quot;)
+    public String createTag(@RequestParam final String tagname,
+                            @RequestParam final String tagType) {
+<span class="fc" id="L151">        final Tag tag = new Tag(tagname, tagType);</span>
+<span class="fc" id="L152">        stammdatenCommandService.saveTag(tag);</span>
+<span class="fc" id="L153">        return &quot;redirect:/admin/tags&quot;;</span>
+    }
+
+    @PostMapping(&quot;/tags/{id}&quot;)
+    public String updateTag(@PathVariable final long id,
+                            @RequestParam final String tagname) {
+<span class="fc" id="L159">        stammdatenCommandService.findTagById(id).ifPresent(tag -&gt; {</span>
+<span class="fc" id="L160">            tag.setTagname(tagname);</span>
+<span class="fc" id="L161">            stammdatenCommandService.saveTag(tag);</span>
+<span class="fc" id="L162">        });</span>
+<span class="fc" id="L163">        return &quot;redirect:/admin/tags&quot;;</span>
+    }
+
+    @DeleteMapping(&quot;/tags/{id}&quot;)
+    @ResponseBody
+    public ResponseEntity&lt;Map&lt;String, Boolean&gt;&gt; deleteTag(@PathVariable final long id) {
+<span class="fc" id="L169">        stammdatenCommandService.deleteTag(id);</span>
+<span class="fc" id="L170">        return ResponseEntity.ok(Map.of(&quot;ok&quot;, true));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
