@@ -7,12 +7,14 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.api.OpenAiApi;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Configuration
 @EnableConfigurationProperties({ProfileSearchProperties.class, McpConnectionProperties.class})
@@ -21,7 +23,8 @@ public class ProfileSearchConfig {
     @Bean
     public LlmService llmService(final List<ChatModel> modelsInContext, final McpClientFactory mcpClientFactory,
             final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService,
-            final ObjectMapper objectMapper, final UserQueryService userQueryService, final OpenAiApi openAiApi) {
+            final ObjectMapper objectMapper, final UserQueryService userQueryService,
+            @Autowired(required = false) final OpenAiApi openAiApi) {
         for (final ChatModel model : modelsInContext) {
             if (model instanceof final OllamaChatModel ollamaModel) {
                 // Ollama: local server, no API token concept — factory always returns the default client
@@ -32,7 +35,7 @@ public class ProfileSearchConfig {
             if (model instanceof final OpenAiChatModel openAiModel) {
                 final ChatClient defaultClient = ChatClient.builder(openAiModel).build();
                 final LlmChatClientFactory factory = token -> {
-                    if (token == null || token.isBlank()) {
+                    if (token == null || token.isBlank() || openAiApi == null) {
                         return defaultClient;
                     }
                     final OpenAiApi perUserApi = openAiApi.mutate().apiKey(token).build();
