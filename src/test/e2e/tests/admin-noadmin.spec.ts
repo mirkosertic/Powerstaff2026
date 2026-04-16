@@ -45,4 +45,39 @@ test.describe('Administration – Nicht-Admin-Benutzer', () => {
         expect(response?.status()).toBe(403);
     });
 
+    // -------------------------------------------------------------------------
+    // API-Token-Schutz für Nicht-Admins
+    // -------------------------------------------------------------------------
+
+    test('Nicht-Admin sieht keine LLM-API-Token-Spalte', async ({ page }) => {
+        await page.goto('/admin/benutzer');
+
+        await expect(page.locator('th').filter({ hasText: 'LLM API-Token' })).not.toBeAttached();
+    });
+
+    test('Nicht-Admin sieht keinen Schlüssel-Button für den eigenen Eintrag', async ({ page }) => {
+        await page.goto('/admin/benutzer');
+
+        await expect(page.locator('[data-testid="btn-edit-apitoken-testuser-noadmin"]')).not.toBeAttached();
+    });
+
+    test('Nicht-Admin erhält Fehlermeldung beim direkten POST auf den Endpoint', async ({ page }) => {
+        await page.goto('/admin/benutzer');
+
+        // CSRF-Token aus dem Meta-Tag lesen
+        const csrfToken = await page.evaluate(() =>
+            (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? ''
+        );
+
+        // Direkt POST auf den geschützten Endpoint (kein UI-Weg für Non-Admin)
+        const response = await page.request.post('/admin/benutzer/testuser-noadmin/apitoken', {
+            headers: { 'X-XSRF-TOKEN': csrfToken },
+            form: { llmApiToken: 'hacker-token' },
+        });
+
+        // Controller leitet weiter auf /admin/benutzer mit Flash-Fehler
+        const body = await response.text();
+        expect(body).toContain('Keine Berechtigung');
+    });
+
 });
