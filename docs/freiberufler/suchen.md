@@ -15,7 +15,9 @@ Lassen Sie alle Felder leer, um alle Freiberufler anzuzeigen.
 
 ## Ergebnistabelle
 
-Die Treffer werden in einer Tabelle angezeigt:
+Die Treffer werden in einer Tabelle angezeigt. Eine Ergebniszeile sieht so aus:
+
+![Suchergebnis-Zeile](../screenshots/components/search-results-row.png)
 
 | Spalte           | Inhalt                     |
 |------------------|----------------------------|

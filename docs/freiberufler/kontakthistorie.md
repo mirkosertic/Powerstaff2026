@@ -2,6 +2,12 @@
 
 Die Kontakthistorie erfasst alle Gesprächsnotizen und Kontaktereignisse chronologisch.
 
+![Formular-Karte Kontakthistorie](../screenshots/components/fcard-kontakthistorie.png)
+
+Ein einzelner Historieneintrag zeigt Typ-Badge, Zeitstempel, erfassenden Benutzer und den Beschreibungstext:
+
+![Historieneintrag](../screenshots/components/history-item.png)
+
 ## Neuen Historieneintrag anlegen
 
 1. Öffnen Sie den Freiberufler
@@ -11,6 +17,8 @@ Die Kontakthistorie erfasst alle Gesprächsnotizen und Kontaktereignisse chronol
 5. Tragen Sie eine **Beschreibung** ein (z. B. Gesprächsnotiz)
 6. Klicken Sie auf **Speichern** im Dialog
 7. Klicken Sie auf **💾 Speichern** im Formular
+
+![Dialog Historieneintrag anlegen](../screenshots/components/modal-historieneintrag.png)
 
 Jeder Eintrag zeigt Typ, Datum, Uhrzeit und den erfassenden Benutzer.
 

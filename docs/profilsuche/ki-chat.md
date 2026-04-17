@@ -20,6 +20,10 @@ Klicken Sie auf **＋ Neuer Chat** in der linken Seitenleiste.
 
 ## Suchanfrage stellen
 
+Die Eingabe erfolgt über den Bereich am unteren Rand des Chats:
+
+![Chat-Eingabebereich](../screenshots/components/profilsuche-chat-eingabe.png)
+
 Beschreiben Sie in natürlicher Sprache, welches Profil Sie suchen:
 
 > *„Ich suche einen Java-Entwickler mit Spring-Boot-Erfahrung, verfügbar ab Juli,

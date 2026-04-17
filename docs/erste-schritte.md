@@ -18,7 +18,9 @@ Nach dem Login sehen Sie die Hauptoberfläche mit zwei zentralen Bereichen:
 
 ### Navigation (obere Leiste)
 
-Die obere Navigationsleiste enthält:
+Die obere Navigationsleiste enthält alle Module sowie den Theme-Toggle und den Abmelden-Button.
+
+![App-Navigation](screenshots/components/app-navigation.png)
 
 | Element                     | Funktion                                      |
 |-----------------------------|-----------------------------------------------|
@@ -33,7 +35,13 @@ Die obere Navigationsleiste enthält:
 
 ### Toolbar (unter der Navigation)
 
-Jedes Formular hat eine Toolbar mit folgenden Funktionen:
+Jedes Formular hat eine Toolbar mit Navigationspfeilen, Audit-Informationen und Aktionsbuttons.
+
+![Toolbar](screenshots/components/toolbar-gesamt.png)
+
+**Datensatz-Navigation** – navigiert durch alle vorhandenen Datensätze:
+
+![Toolbar Navigation](screenshots/components/toolbar-navigation.png)
 
 | Schaltfläche     | Funktion                                            |
 |------------------|-----------------------------------------------------|
@@ -42,6 +50,17 @@ Jedes Formular hat eine Toolbar mit folgenden Funktionen:
 | [ID-Feld]        | ID direkt eingeben und mit Enter aufrufen           |
 | ▶                | Zum nächsten Datensatz                              |
 | ⏭                | Zum letzten Datensatz                               |
+
+**Audit-Informationen** – zeigt wer den Datensatz wann erfasst und geändert hat:
+
+![Toolbar Audit](screenshots/components/toolbar-audit.png)
+
+**Aktionsbuttons** – Suchen, Neu anlegen, Speichern und Löschen:
+
+![Toolbar Aktionen](screenshots/components/toolbar-aktionen.png)
+
+| Schaltfläche     | Funktion                                            |
+|------------------|-----------------------------------------------------|
 | 🔍 **Suchen**    | QBE-Suche mit den aktuellen Formularfeldern starten |
 | ＋ **Neu**        | Leeres Formular für Neuanlage öffnen                |
 | 💾 **Speichern** | Änderungen speichern                                |
@@ -53,6 +72,8 @@ Jedes Formular hat eine Toolbar mit folgenden Funktionen:
 
 Sobald Sie ein Projekt öffnen, wird es systemweit als **gemerktes Projekt** gespeichert.
 Es erscheint dann in der Toolbar aller anderen Formulare (📌 mit Projektnummer und Beschreibung).
+
+![Toolbar mit gemerktem Projekt](screenshots/components/toolbar-gemerktes-projekt.png)
 
 Im Freiberufler-Formular erscheint zusätzlich der Button **Projekt zuordnen** – ein Klick ordnet
 den Freiberufler direkt der offenen Position zu, ohne Formularwechsel.
