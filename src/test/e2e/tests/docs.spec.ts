@@ -145,7 +145,7 @@ test.describe('Handbuch-Screenshots', () => {
     });
 
     test('Admin – Benutzerverwaltung', async ({ page }) => {
-        await page.goto('/admin/users', { waitUntil: 'networkidle' });
+        await page.goto('/admin/benutzer', { waitUntil: 'networkidle' });
         await page.screenshot({ path: `${SCREENSHOTS}/admin-benutzer.png`, fullPage: true });
     });
 
