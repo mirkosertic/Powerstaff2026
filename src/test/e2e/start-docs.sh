@@ -7,7 +7,7 @@ set -e
 # Usage: bash start-docs.sh [PORT]
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 
 PORT="${1:-8200}"
 JAR=$(find "${PROJECT_ROOT}/target" -maxdepth 1 -name "*.jar" ! -name "*-sources.jar" 2>/dev/null | head -1)
