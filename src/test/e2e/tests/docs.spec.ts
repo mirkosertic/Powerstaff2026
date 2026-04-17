@@ -110,7 +110,9 @@ test.describe('Handbuch-Screenshots', () => {
     });
 
     test('Profilsuche – KI-Chat', async ({ page }) => {
-        await page.goto('/profilesearch/new', { waitUntil: 'networkidle' });
+        await page.goto('/profilesearch');
+        await page.waitForURL(/\/profilesearch\/chat\/\d+/);
+        await page.waitForLoadState('networkidle');
         await page.screenshot({ path: `${SCREENSHOTS}/profilsuche-ki-chat.png`, fullPage: true });
     });
 
