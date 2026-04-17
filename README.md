@@ -114,7 +114,7 @@ im Dev-Mode generiert (`-Ddevmode=true` mit realistischen Beispieldaten):
 ./mvnw package -DskipTests
 
 # Screenshots neu generieren (startet MySQL + App automatisch)
-npx playwright test --config src/test/e2e/playwright.config.docs.ts
+npm run --prefix src/test/e2e docs
 ```
 
 ---
