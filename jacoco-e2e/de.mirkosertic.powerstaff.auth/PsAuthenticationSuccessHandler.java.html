@@ -13,25 +13,25 @@ public class PsAuthenticationSuccessHandler implements AuthenticationSuccessHand
 
     private final PsUserRepository repository;
 
-<span class="nc" id="L16">    public PsAuthenticationSuccessHandler(final PsUserRepository repository) {</span>
-<span class="nc" id="L17">        this.repository = repository;</span>
-<span class="nc" id="L18">    }</span>
+<span class="fc" id="L16">    public PsAuthenticationSuccessHandler(final PsUserRepository repository) {</span>
+<span class="fc" id="L17">        this.repository = repository;</span>
+<span class="fc" id="L18">    }</span>
 
     @Override
     public void onAuthenticationSuccess(final HttpServletRequest request,
                                         final HttpServletResponse response,
                                         final Authentication authentication) throws IOException {
 
-<span class="nc" id="L25">        final String username = authentication.getName();</span>
-<span class="nc" id="L26">        final boolean mustChange = repository.findById(username)</span>
-<span class="nc" id="L27">                .map(PsUser::isMustChangePassword)</span>
-<span class="nc" id="L28">                .orElse(false);</span>
+<span class="fc" id="L25">        final String username = authentication.getName();</span>
+<span class="fc" id="L26">        final boolean mustChange = repository.findById(username)</span>
+<span class="fc" id="L27">                .map(PsUser::isMustChangePassword)</span>
+<span class="fc" id="L28">                .orElse(false);</span>
 
-<span class="nc bnc" id="L30" title="All 2 branches missed.">        if (mustChange) {</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        if (mustChange) {</span>
 <span class="nc" id="L31">            response.sendRedirect(&quot;/passwort-aendern&quot;);</span>
         } else {
-<span class="nc" id="L33">            response.sendRedirect(&quot;/&quot;);</span>
+<span class="fc" id="L33">            response.sendRedirect(&quot;/&quot;);</span>
         }
-<span class="nc" id="L35">    }</span>
+<span class="fc" id="L35">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -21,10 +21,10 @@ import java.util.function.Consumer;
     public void sendMessageStreaming(final Principal principal, final String sessionId,
             final String conversationId, final Optional&lt;LlmProjectContext&gt; context,
             final String userMessage, final Consumer&lt;ChatStreamEvent&gt; eventSink) {
-<span class="nc bnc" id="L24" title="All 2 branches missed.">        for (final String word : &quot;Mock streaming response Nummer 0. Profil E2E-001 wurde als Kandidat identifiziert.&quot;.split(&quot; &quot;)) {</span>
-<span class="nc" id="L25">            eventSink.accept(new ChatStreamEvent.ContentToken(word + &quot; &quot;));</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        for (final String word : &quot;Mock streaming response Nummer 0. Profil E2E-001 wurde als Kandidat identifiziert.&quot;.split(&quot; &quot;)) {</span>
+<span class="fc" id="L25">            eventSink.accept(new ChatStreamEvent.ContentToken(word + &quot; &quot;));</span>
         }
-<span class="nc" id="L27">        eventSink.accept(new ChatStreamEvent.MessageComplete(10L, 150, 50, 0));</span>
-<span class="nc" id="L28">    }</span>
+<span class="fc" id="L27">        eventSink.accept(new ChatStreamEvent.MessageComplete(10L, 150, 50, 0));</span>
+<span class="fc" id="L28">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

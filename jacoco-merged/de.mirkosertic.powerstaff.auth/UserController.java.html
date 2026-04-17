@@ -30,7 +30,7 @@ public class UserController {
 
     private static boolean isAdmin(final Authentication authentication) {
 <span class="pc bpc" id="L32" title="1 of 2 branches missed.">        return authentication != null &amp;&amp; authentication.getAuthorities().stream()</span>
-<span class="pc bpc" id="L33" title="1 of 2 branches missed.">                .anyMatch(a -&gt; a.getAuthority().equals(&quot;ROLE_ADMIN&quot;));</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">                .anyMatch(a -&gt; a.getAuthority().equals(&quot;ROLE_ADMIN&quot;));</span>
     }
 
     // -------------------------------------------------------------------------
@@ -42,17 +42,17 @@ public class UserController {
                        @RequestParam(required = false) final String deleted) {
 <span class="fc" id="L43">        final boolean admin = isAdmin(authentication);</span>
         final List&lt;UserView&gt; users;
-<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if (admin) {</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (admin) {</span>
 <span class="fc" id="L46">            users = userQueryService.findAll();</span>
         } else {
-<span class="nc" id="L48">            users = userQueryService.findByUsername(authentication.getName())</span>
-<span class="nc" id="L49">                    .map(List::of).orElse(List.of());</span>
+<span class="fc" id="L48">            users = userQueryService.findByUsername(authentication.getName())</span>
+<span class="fc" id="L49">                    .map(List::of).orElse(List.of());</span>
         }
 <span class="fc" id="L51">        model.addAttribute(&quot;users&quot;, users);</span>
 <span class="fc" id="L52">        model.addAttribute(&quot;isAdmin&quot;, admin);</span>
 <span class="fc" id="L53">        model.addAttribute(&quot;activePage&quot;, &quot;admin&quot;);</span>
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        if (deleted != null) {</span>
-<span class="nc" id="L55">            model.addAttribute(&quot;success&quot;, &quot;Benutzer „&quot; + deleted + &quot; wurde erfolgreich gelöscht.&quot;);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (deleted != null) {</span>
+<span class="fc" id="L55">            model.addAttribute(&quot;success&quot;, &quot;Benutzer „&quot; + deleted + &quot; wurde erfolgreich gelöscht.&quot;);</span>
         }
 <span class="fc" id="L57">        return &quot;admin/users&quot;;</span>
     }
@@ -109,7 +109,7 @@ public class UserController {
 <span class="fc" id="L109">            return &quot;redirect:/admin/benutzer&quot;;</span>
         }
 <span class="fc" id="L111">        userCommandService.updateUser(username, mustChangePassword, enabled);</span>
-<span class="pc bpc" id="L112" title="1 of 4 branches missed.">        if (newPassword != null &amp;&amp; !newPassword.isBlank()) {</span>
+<span class="fc bfc" id="L112" title="All 4 branches covered.">        if (newPassword != null &amp;&amp; !newPassword.isBlank()) {</span>
 <span class="pc bpc" id="L113" title="1 of 2 branches missed.">            if (newPassword.length() &lt; 8) {</span>
 <span class="nc" id="L114">                redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Das neue Passwort muss mindestens 8 Zeichen lang sein.&quot;);</span>
 <span class="nc" id="L115">                return &quot;redirect:/admin/benutzer&quot;;</span>
@@ -128,17 +128,17 @@ public class UserController {
                                      @RequestParam final String profileSearchSystemPrompt,
                                      final Authentication authentication,
                                      final RedirectAttributes redirectAttributes) {
-<span class="nc bnc" id="L131" title="All 4 branches missed.">        if (!isAdmin(authentication) &amp;&amp; !authentication.getName().equals(username)) {</span>
+<span class="pc bpc" id="L131" title="2 of 4 branches missed.">        if (!isAdmin(authentication) &amp;&amp; !authentication.getName().equals(username)) {</span>
 <span class="nc" id="L132">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Keine Berechtigung.&quot;);</span>
 <span class="nc" id="L133">            return &quot;redirect:/admin/benutzer&quot;;</span>
         }
-<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (userCommandService.findByUsername(username).isEmpty()) {</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (userCommandService.findByUsername(username).isEmpty()) {</span>
 <span class="nc" id="L136">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Benutzer nicht gefunden.&quot;);</span>
 <span class="nc" id="L137">            return &quot;redirect:/admin/benutzer&quot;;</span>
         }
-<span class="nc" id="L139">        userCommandService.updateSystemPrompt(username, profileSearchSystemPrompt);</span>
-<span class="nc" id="L140">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Systemprompt für \&quot;&quot; + username + &quot;\&quot; wurde gespeichert.&quot;);</span>
-<span class="nc" id="L141">        return &quot;redirect:/admin/benutzer&quot;;</span>
+<span class="fc" id="L139">        userCommandService.updateSystemPrompt(username, profileSearchSystemPrompt);</span>
+<span class="fc" id="L140">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;Systemprompt für \&quot;&quot; + username + &quot;\&quot; wurde gespeichert.&quot;);</span>
+<span class="fc" id="L141">        return &quot;redirect:/admin/benutzer&quot;;</span>
     }
 
     // -------------------------------------------------------------------------
@@ -150,17 +150,17 @@ public class UserController {
                                  @RequestParam(required = false) final String llmApiToken,
                                  final Authentication authentication,
                                  final RedirectAttributes redirectAttributes) {
-<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (!isAdmin(authentication)) {</span>
-<span class="nc" id="L154">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Keine Berechtigung.&quot;);</span>
-<span class="nc" id="L155">            return &quot;redirect:/admin/benutzer&quot;;</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (!isAdmin(authentication)) {</span>
+<span class="fc" id="L154">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Keine Berechtigung.&quot;);</span>
+<span class="fc" id="L155">            return &quot;redirect:/admin/benutzer&quot;;</span>
         }
-<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (userCommandService.findByUsername(username).isEmpty()) {</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">        if (userCommandService.findByUsername(username).isEmpty()) {</span>
 <span class="nc" id="L158">            redirectAttributes.addFlashAttribute(&quot;error&quot;, &quot;Benutzer nicht gefunden.&quot;);</span>
 <span class="nc" id="L159">            return &quot;redirect:/admin/benutzer&quot;;</span>
         }
-<span class="nc" id="L161">        userCommandService.updateApiToken(username, llmApiToken);</span>
-<span class="nc" id="L162">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;API-Token für \&quot;&quot; + username + &quot;\&quot; wurde gespeichert.&quot;);</span>
-<span class="nc" id="L163">        return &quot;redirect:/admin/benutzer&quot;;</span>
+<span class="fc" id="L161">        userCommandService.updateApiToken(username, llmApiToken);</span>
+<span class="fc" id="L162">        redirectAttributes.addFlashAttribute(&quot;success&quot;, &quot;API-Token für \&quot;&quot; + username + &quot;\&quot; wurde gespeichert.&quot;);</span>
+<span class="fc" id="L163">        return &quot;redirect:/admin/benutzer&quot;;</span>
     }
 
     // -------------------------------------------------------------------------

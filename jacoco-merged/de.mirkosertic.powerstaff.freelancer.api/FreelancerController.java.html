@@ -156,9 +156,9 @@ public class FreelancerController {
 <span class="fc" id="L156">            model.addAttribute(&quot;history&quot;, List.of());</span>
 <span class="fc" id="L157">            model.addAttribute(&quot;tags&quot;, List.of());</span>
         }
-<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (freelancer.getPartnerId() != null) {</span>
-<span class="nc" id="L160">            queryService.findPartnerById(freelancer.getPartnerId())</span>
-<span class="nc" id="L161">                    .ifPresent(p -&gt; model.addAttribute(&quot;partner&quot;, p));</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (freelancer.getPartnerId() != null) {</span>
+<span class="fc" id="L160">            queryService.findPartnerById(freelancer.getPartnerId())</span>
+<span class="fc" id="L161">                    .ifPresent(p -&gt; model.addAttribute(&quot;partner&quot;, p));</span>
         }
 <span class="fc" id="L163">        model.addAttribute(&quot;historyTypes&quot;, historyTypeQueryService.findAll());</span>
 <span class="fc" id="L164">        model.addAttribute(&quot;tagTypes&quot;, TagType.values());</span>
@@ -173,13 +173,13 @@ public class FreelancerController {
     private String buildAuditInfo(final Long id, final LocalDateTime creationDate, final String creationUser,
                                   final LocalDateTime changedDate, final String changedUser) {
 <span class="fc bfc" id="L175" title="All 2 branches covered.">        if (id == null) return &quot;Neu, noch nicht gespeichert&quot;;</span>
-<span class="pc bpc" id="L176" title="1 of 2 branches missed.">        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : &quot;?&quot;)</span>
-<span class="pc bpc" id="L177" title="1 of 2 branches missed.">                       + &quot; &quot; + (creationUser != null ? creationUser : &quot;?&quot;);</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : &quot;?&quot;)</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">                       + &quot; &quot; + (creationUser != null ? creationUser : &quot;?&quot;);</span>
 <span class="fc" id="L178">        String result = &quot;Erfasst: &quot; + created;</span>
-<span class="pc bpc" id="L179" title="3 of 4 branches missed.">        if (changedDate != null &amp;&amp; !changedDate.equals(creationDate)) {</span>
-<span class="nc" id="L180">            result += &quot;&lt;br&gt;Geändert: &quot;</span>
-<span class="nc" id="L181">                   + changedDate.format(AUDIT_DATE_FMT)</span>
-<span class="nc bnc" id="L182" title="All 2 branches missed.">                   + &quot; &quot; + (changedUser != null ? changedUser : &quot;?&quot;);</span>
+<span class="fc bfc" id="L179" title="All 4 branches covered.">        if (changedDate != null &amp;&amp; !changedDate.equals(creationDate)) {</span>
+<span class="fc" id="L180">            result += &quot;&lt;br&gt;Geändert: &quot;</span>
+<span class="fc" id="L181">                   + changedDate.format(AUDIT_DATE_FMT)</span>
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">                   + &quot; &quot; + (changedUser != null ? changedUser : &quot;?&quot;);</span>
         }
 <span class="fc" id="L184">        return result;</span>
     }
@@ -301,27 +301,27 @@ public class FreelancerController {
 
     private void appendCriteriaParams(final UriComponentsBuilder b, final FreelancerSearchCriteria c) {
 <span class="fc bfc" id="L303" title="All 2 branches covered.">        if (c.name1()           != null) b.queryParam(&quot;name1&quot;,           c.name1());</span>
-<span class="pc bpc" id="L304" title="1 of 2 branches missed.">        if (c.name2()           != null) b.queryParam(&quot;name2&quot;,           c.name2());</span>
-<span class="pc bpc" id="L305" title="1 of 2 branches missed.">        if (c.company()         != null) b.queryParam(&quot;company&quot;,         c.company());</span>
-<span class="pc bpc" id="L306" title="1 of 2 branches missed.">        if (c.street()          != null) b.queryParam(&quot;street&quot;,          c.street());</span>
-<span class="pc bpc" id="L307" title="1 of 2 branches missed.">        if (c.country()         != null) b.queryParam(&quot;country&quot;,         c.country());</span>
-<span class="pc bpc" id="L308" title="1 of 2 branches missed.">        if (c.plz()             != null) b.queryParam(&quot;plz&quot;,             c.plz());</span>
+<span class="fc bfc" id="L304" title="All 2 branches covered.">        if (c.name2()           != null) b.queryParam(&quot;name2&quot;,           c.name2());</span>
+<span class="fc bfc" id="L305" title="All 2 branches covered.">        if (c.company()         != null) b.queryParam(&quot;company&quot;,         c.company());</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">        if (c.street()          != null) b.queryParam(&quot;street&quot;,          c.street());</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        if (c.country()         != null) b.queryParam(&quot;country&quot;,         c.country());</span>
+<span class="fc bfc" id="L308" title="All 2 branches covered.">        if (c.plz()             != null) b.queryParam(&quot;plz&quot;,             c.plz());</span>
 <span class="fc bfc" id="L309" title="All 2 branches covered.">        if (c.city()            != null) b.queryParam(&quot;city&quot;,            c.city());</span>
-<span class="pc bpc" id="L310" title="1 of 2 branches missed.">        if (c.nationalitaet()   != null) b.queryParam(&quot;nationalitaet&quot;,   c.nationalitaet());</span>
-<span class="pc bpc" id="L311" title="1 of 2 branches missed.">        if (c.comments()        != null) b.queryParam(&quot;comments&quot;,        c.comments());</span>
-<span class="pc bpc" id="L312" title="1 of 2 branches missed.">        if (c.einsatzdetails()  != null) b.queryParam(&quot;einsatzdetails&quot;,  c.einsatzdetails());</span>
-<span class="pc bpc" id="L313" title="1 of 2 branches missed.">        if (c.contactPerson()   != null) b.queryParam(&quot;contactPerson&quot;,   c.contactPerson());</span>
-<span class="pc bpc" id="L314" title="1 of 2 branches missed.">        if (c.contactReason()   != null) b.queryParam(&quot;contactReason&quot;,   c.contactReason());</span>
-<span class="pc bpc" id="L315" title="1 of 2 branches missed.">        if (c.kontaktart()      != null) b.queryParam(&quot;kontaktart&quot;,      c.kontaktart());</span>
-<span class="pc bpc" id="L316" title="1 of 2 branches missed.">        if (c.debitorNr()       != null) b.queryParam(&quot;debitorNr&quot;,       c.debitorNr());</span>
-<span class="pc bpc" id="L317" title="1 of 2 branches missed.">        if (c.gulpId()          != null) b.queryParam(&quot;gulpId&quot;,          c.gulpId());</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">        if (c.nationalitaet()   != null) b.queryParam(&quot;nationalitaet&quot;,   c.nationalitaet());</span>
+<span class="fc bfc" id="L311" title="All 2 branches covered.">        if (c.comments()        != null) b.queryParam(&quot;comments&quot;,        c.comments());</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">        if (c.einsatzdetails()  != null) b.queryParam(&quot;einsatzdetails&quot;,  c.einsatzdetails());</span>
+<span class="fc bfc" id="L313" title="All 2 branches covered.">        if (c.contactPerson()   != null) b.queryParam(&quot;contactPerson&quot;,   c.contactPerson());</span>
+<span class="fc bfc" id="L314" title="All 2 branches covered.">        if (c.contactReason()   != null) b.queryParam(&quot;contactReason&quot;,   c.contactReason());</span>
+<span class="fc bfc" id="L315" title="All 2 branches covered.">        if (c.kontaktart()      != null) b.queryParam(&quot;kontaktart&quot;,      c.kontaktart());</span>
+<span class="fc bfc" id="L316" title="All 2 branches covered.">        if (c.debitorNr()       != null) b.queryParam(&quot;debitorNr&quot;,       c.debitorNr());</span>
+<span class="fc bfc" id="L317" title="All 2 branches covered.">        if (c.gulpId()          != null) b.queryParam(&quot;gulpId&quot;,          c.gulpId());</span>
 <span class="fc bfc" id="L318" title="All 2 branches covered.">        if (c.code()            != null) b.queryParam(&quot;code&quot;,            c.code());</span>
 <span class="fc bfc" id="L319" title="All 2 branches covered.">        if (c.skills()          != null) b.queryParam(&quot;skills&quot;,          c.skills());</span>
 <span class="pc bpc" id="L320" title="1 of 2 branches missed.">        if (c.salaryLongMax()   != null) b.queryParam(&quot;salaryLongMax&quot;,   c.salaryLongMax());</span>
 <span class="pc bpc" id="L321" title="1 of 2 branches missed.">        if (c.salaryPerDayLongMax() != null) b.queryParam(&quot;salaryPerDayLongMax&quot;, c.salaryPerDayLongMax());</span>
 <span class="fc bfc" id="L322" title="All 2 branches covered.">        if (c.sortField()       != null) b.queryParam(&quot;sortField&quot;,       c.sortField());</span>
 <span class="fc bfc" id="L323" title="All 2 branches covered.">        if (c.sortDir()         != null) b.queryParam(&quot;sortDir&quot;,         c.sortDir());</span>
-<span class="pc bpc" id="L324" title="1 of 2 branches missed.">        if (c.tagId()           != null) b.queryParam(&quot;tagId&quot;,           c.tagId());</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">        if (c.tagId()           != null) b.queryParam(&quot;tagId&quot;,           c.tagId());</span>
 <span class="fc" id="L325">    }</span>
 
     private String buildEditSearchUrl(final FreelancerSearchCriteria c) {

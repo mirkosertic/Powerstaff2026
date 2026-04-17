@@ -14,7 +14,7 @@ import java.util.Set;
 @Transactional(readOnly = true)
 public class ProjectQueryService {
 
-<span class="nc" id="L17">    private static final Set&lt;String&gt; SORT_FIELDS_ALLOWLIST = Set.of(</span>
+<span class="fc" id="L17">    private static final Set&lt;String&gt; SORT_FIELDS_ALLOWLIST = Set.of(</span>
             &quot;project_number&quot;, &quot;description_short&quot;, &quot;status&quot;);
     private static final String DEFAULT_SORT = &quot;entry_date DESC&quot;;
 
@@ -28,15 +28,15 @@ public class ProjectQueryService {
 
     private final JdbcClient jdbcClient;
 
-<span class="nc" id="L31">    public ProjectQueryService(final JdbcClient jdbcClient) {</span>
-<span class="nc" id="L32">        this.jdbcClient = jdbcClient;</span>
-<span class="nc" id="L33">    }</span>
+<span class="fc" id="L31">    public ProjectQueryService(final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L32">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L33">    }</span>
 
     public Optional&lt;ProjectDetailView&gt; findById(final Long id) {
-<span class="nc" id="L36">        return jdbcClient.sql(SELECT_PROJECT + &quot;WHERE id = :id&quot;)</span>
-<span class="nc" id="L37">                .param(&quot;id&quot;, id)</span>
-<span class="nc" id="L38">                .query(ProjectDetailView.class)</span>
-<span class="nc" id="L39">                .optional();</span>
+<span class="fc" id="L36">        return jdbcClient.sql(SELECT_PROJECT + &quot;WHERE id = :id&quot;)</span>
+<span class="fc" id="L37">                .param(&quot;id&quot;, id)</span>
+<span class="fc" id="L38">                .query(ProjectDetailView.class)</span>
+<span class="fc" id="L39">                .optional();</span>
     }
 
     public Optional&lt;ProjectDetailView&gt; findFirst() {
@@ -66,75 +66,75 @@ public class ProjectQueryService {
     }
 
     public List&lt;ProjectSearchResult&gt; search(final ProjectSearchCriteria criteria, final int offset, final int limit) {
-<span class="nc" id="L69">        final var sql = new StringBuilder(&quot;&quot;&quot;</span>
+<span class="fc" id="L69">        final var sql = new StringBuilder(&quot;&quot;&quot;</span>
                 SELECT id, project_number, description_short, workplace, start_date, status, stundensatz_vk
                 FROM project
                 WHERE 1=1
                 &quot;&quot;&quot;);
-<span class="nc" id="L74">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L75">        appendLike(sql, params, &quot;project_number&quot;, criteria.projectNumber());</span>
-<span class="nc" id="L76">        appendLike(sql, params, &quot;description_short&quot;, criteria.descriptionShort());</span>
-<span class="nc" id="L77">        appendLike(sql, params, &quot;description_long&quot;, criteria.descriptionLong());</span>
-<span class="nc" id="L78">        appendLike(sql, params, &quot;skills&quot;, criteria.skills());</span>
-<span class="nc" id="L79">        appendLike(sql, params, &quot;workplace&quot;, criteria.workplace());</span>
-<span class="nc" id="L80">        appendLike(sql, params, &quot;duration&quot;, criteria.duration());</span>
-<span class="nc" id="L81">        appendLike(sql, params, &quot;debitor_nr&quot;, criteria.debitorNr());</span>
-<span class="nc" id="L82">        appendLike(sql, params, &quot;kreditor_nr&quot;, criteria.kreditorNr());</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (criteria.status() != null) {</span>
-<span class="nc" id="L84">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
-<span class="nc" id="L85">            sql.append(&quot; AND status = :&quot;).append(pName);</span>
-<span class="nc" id="L86">            params.put(pName, criteria.status());</span>
+<span class="fc" id="L74">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L75">        appendLike(sql, params, &quot;project_number&quot;, criteria.projectNumber());</span>
+<span class="fc" id="L76">        appendLike(sql, params, &quot;description_short&quot;, criteria.descriptionShort());</span>
+<span class="fc" id="L77">        appendLike(sql, params, &quot;description_long&quot;, criteria.descriptionLong());</span>
+<span class="fc" id="L78">        appendLike(sql, params, &quot;skills&quot;, criteria.skills());</span>
+<span class="fc" id="L79">        appendLike(sql, params, &quot;workplace&quot;, criteria.workplace());</span>
+<span class="fc" id="L80">        appendLike(sql, params, &quot;duration&quot;, criteria.duration());</span>
+<span class="fc" id="L81">        appendLike(sql, params, &quot;debitor_nr&quot;, criteria.debitorNr());</span>
+<span class="fc" id="L82">        appendLike(sql, params, &quot;kreditor_nr&quot;, criteria.kreditorNr());</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (criteria.status() != null) {</span>
+<span class="fc" id="L84">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="fc" id="L85">            sql.append(&quot; AND status = :&quot;).append(pName);</span>
+<span class="fc" id="L86">            params.put(pName, criteria.status());</span>
         }
         final String orderBy;
-<span class="nc bnc" id="L89" title="All 4 branches missed.">        if (criteria.sortField() != null &amp;&amp; SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {</span>
-<span class="nc bnc" id="L90" title="All 2 branches missed.">            final String dir = &quot;desc&quot;.equalsIgnoreCase(criteria.sortDir()) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
-<span class="nc" id="L91">            orderBy = criteria.sortField() + &quot; &quot; + dir;</span>
-<span class="nc" id="L92">        } else {</span>
-<span class="nc" id="L93">            orderBy = DEFAULT_SORT;</span>
+<span class="pc bpc" id="L89" title="1 of 4 branches missed.">        if (criteria.sortField() != null &amp;&amp; SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">            final String dir = &quot;desc&quot;.equalsIgnoreCase(criteria.sortDir()) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
+<span class="fc" id="L91">            orderBy = criteria.sortField() + &quot; &quot; + dir;</span>
+<span class="fc" id="L92">        } else {</span>
+<span class="fc" id="L93">            orderBy = DEFAULT_SORT;</span>
         }
-<span class="nc" id="L95">        final String pLimit = &quot;p&quot; + (params.size() + 1);</span>
-<span class="nc" id="L96">        final String pOffset = &quot;p&quot; + (params.size() + 2);</span>
-<span class="nc" id="L97">        sql.append(&quot; ORDER BY &quot;).append(orderBy).append(&quot; LIMIT :&quot;).append(pLimit).append(&quot; OFFSET :&quot;).append(pOffset);</span>
-<span class="nc" id="L98">        params.put(pLimit, limit);</span>
-<span class="nc" id="L99">        params.put(pOffset, offset);</span>
+<span class="fc" id="L95">        final String pLimit = &quot;p&quot; + (params.size() + 1);</span>
+<span class="fc" id="L96">        final String pOffset = &quot;p&quot; + (params.size() + 2);</span>
+<span class="fc" id="L97">        sql.append(&quot; ORDER BY &quot;).append(orderBy).append(&quot; LIMIT :&quot;).append(pLimit).append(&quot; OFFSET :&quot;).append(pOffset);</span>
+<span class="fc" id="L98">        params.put(pLimit, limit);</span>
+<span class="fc" id="L99">        params.put(pOffset, offset);</span>
 
-<span class="nc" id="L101">        var stmt = jdbcClient.sql(sql.toString());</span>
-<span class="nc bnc" id="L102" title="All 2 branches missed.">        for (final var entry : params.entrySet()) {</span>
-<span class="nc" id="L103">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
-<span class="nc" id="L104">        }</span>
-<span class="nc" id="L105">        return stmt.query(ProjectSearchResult.class).list();</span>
+<span class="fc" id="L101">        var stmt = jdbcClient.sql(sql.toString());</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        for (final var entry : params.entrySet()) {</span>
+<span class="fc" id="L103">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L104">        }</span>
+<span class="fc" id="L105">        return stmt.query(ProjectSearchResult.class).list();</span>
     }
 
     public long countSearch(final ProjectSearchCriteria criteria) {
-<span class="nc" id="L109">        final var sql = new StringBuilder(&quot;SELECT COUNT(*) FROM project WHERE 1=1&quot;);</span>
-<span class="nc" id="L110">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L111">        appendLike(sql, params, &quot;project_number&quot;, criteria.projectNumber());</span>
-<span class="nc" id="L112">        appendLike(sql, params, &quot;description_short&quot;, criteria.descriptionShort());</span>
-<span class="nc" id="L113">        appendLike(sql, params, &quot;description_long&quot;, criteria.descriptionLong());</span>
-<span class="nc" id="L114">        appendLike(sql, params, &quot;skills&quot;, criteria.skills());</span>
-<span class="nc" id="L115">        appendLike(sql, params, &quot;workplace&quot;, criteria.workplace());</span>
-<span class="nc" id="L116">        appendLike(sql, params, &quot;duration&quot;, criteria.duration());</span>
-<span class="nc" id="L117">        appendLike(sql, params, &quot;debitor_nr&quot;, criteria.debitorNr());</span>
-<span class="nc" id="L118">        appendLike(sql, params, &quot;kreditor_nr&quot;, criteria.kreditorNr());</span>
-<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (criteria.status() != null) {</span>
-<span class="nc" id="L120">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
-<span class="nc" id="L121">            sql.append(&quot; AND status = :&quot;).append(pName);</span>
-<span class="nc" id="L122">            params.put(pName, criteria.status());</span>
+<span class="fc" id="L109">        final var sql = new StringBuilder(&quot;SELECT COUNT(*) FROM project WHERE 1=1&quot;);</span>
+<span class="fc" id="L110">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L111">        appendLike(sql, params, &quot;project_number&quot;, criteria.projectNumber());</span>
+<span class="fc" id="L112">        appendLike(sql, params, &quot;description_short&quot;, criteria.descriptionShort());</span>
+<span class="fc" id="L113">        appendLike(sql, params, &quot;description_long&quot;, criteria.descriptionLong());</span>
+<span class="fc" id="L114">        appendLike(sql, params, &quot;skills&quot;, criteria.skills());</span>
+<span class="fc" id="L115">        appendLike(sql, params, &quot;workplace&quot;, criteria.workplace());</span>
+<span class="fc" id="L116">        appendLike(sql, params, &quot;duration&quot;, criteria.duration());</span>
+<span class="fc" id="L117">        appendLike(sql, params, &quot;debitor_nr&quot;, criteria.debitorNr());</span>
+<span class="fc" id="L118">        appendLike(sql, params, &quot;kreditor_nr&quot;, criteria.kreditorNr());</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (criteria.status() != null) {</span>
+<span class="fc" id="L120">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="fc" id="L121">            sql.append(&quot; AND status = :&quot;).append(pName);</span>
+<span class="fc" id="L122">            params.put(pName, criteria.status());</span>
         }
 
-<span class="nc" id="L125">        var stmt = jdbcClient.sql(sql.toString());</span>
-<span class="nc bnc" id="L126" title="All 2 branches missed.">        for (final var entry : params.entrySet()) {</span>
-<span class="nc" id="L127">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
-<span class="nc" id="L128">        }</span>
-<span class="nc" id="L129">        return stmt.query(Long.class).single();</span>
+<span class="fc" id="L125">        var stmt = jdbcClient.sql(sql.toString());</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        for (final var entry : params.entrySet()) {</span>
+<span class="fc" id="L127">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L128">        }</span>
+<span class="fc" id="L129">        return stmt.query(Long.class).single();</span>
     }
 
     private static void appendLike(final StringBuilder sql, final Map&lt;String, Object&gt; params, final String column, final String value) {
-<span class="nc bnc" id="L133" title="All 4 branches missed.">        if (value != null &amp;&amp; !value.isBlank()) {</span>
-<span class="nc" id="L134">            final String paramName = &quot;p&quot; + (params.size() + 1);</span>
-<span class="nc" id="L135">            sql.append(&quot; AND &quot;).append(column).append(&quot; LIKE :&quot;).append(paramName);</span>
-<span class="nc" id="L136">            params.put(paramName, &quot;%&quot; + value + &quot;%&quot;);</span>
+<span class="fc bfc" id="L133" title="All 4 branches covered.">        if (value != null &amp;&amp; !value.isBlank()) {</span>
+<span class="fc" id="L134">            final String paramName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="fc" id="L135">            sql.append(&quot; AND &quot;).append(column).append(&quot; LIKE :&quot;).append(paramName);</span>
+<span class="fc" id="L136">            params.put(paramName, &quot;%&quot; + value + &quot;%&quot;);</span>
         }
-<span class="nc" id="L138">    }</span>
+<span class="fc" id="L138">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

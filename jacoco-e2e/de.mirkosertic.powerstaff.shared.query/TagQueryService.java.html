@@ -11,23 +11,23 @@ public class TagQueryService {
 
     private final JdbcClient jdbcClient;
 
-<span class="nc" id="L14">    public TagQueryService(final JdbcClient jdbcClient) {</span>
-<span class="nc" id="L15">        this.jdbcClient = jdbcClient;</span>
-<span class="nc" id="L16">    }</span>
+<span class="fc" id="L14">    public TagQueryService(final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L15">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L16">    }</span>
 
     public List&lt;TagView&gt; findAll() {
-<span class="nc" id="L19">        return jdbcClient</span>
-<span class="nc" id="L20">                .sql(&quot;SELECT id, tagname, type FROM tags ORDER BY tagname ASC&quot;)</span>
-<span class="nc" id="L21">                .query(TagView.class)</span>
-<span class="nc" id="L22">                .list();</span>
+<span class="fc" id="L19">        return jdbcClient</span>
+<span class="fc" id="L20">                .sql(&quot;SELECT id, tagname, type FROM tags ORDER BY tagname ASC&quot;)</span>
+<span class="fc" id="L21">                .query(TagView.class)</span>
+<span class="fc" id="L22">                .list();</span>
     }
 
     public List&lt;TagView&gt; findByType(final TagType type) {
-<span class="nc" id="L26">        return jdbcClient</span>
-<span class="nc" id="L27">                .sql(&quot;SELECT id, tagname, type FROM tags WHERE type = :type ORDER BY tagname ASC&quot;)</span>
-<span class="nc" id="L28">                .param(&quot;type&quot;, type.name())</span>
-<span class="nc" id="L29">                .query(TagView.class)</span>
-<span class="nc" id="L30">                .list();</span>
+<span class="fc" id="L26">        return jdbcClient</span>
+<span class="fc" id="L27">                .sql(&quot;SELECT id, tagname, type FROM tags WHERE type = :type ORDER BY tagname ASC&quot;)</span>
+<span class="fc" id="L28">                .param(&quot;type&quot;, type.name())</span>
+<span class="fc" id="L29">                .query(TagView.class)</span>
+<span class="fc" id="L30">                .list();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

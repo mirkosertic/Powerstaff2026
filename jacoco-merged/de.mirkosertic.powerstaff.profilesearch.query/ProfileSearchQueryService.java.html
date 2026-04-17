@@ -501,7 +501,7 @@ public class ProfileSearchQueryService {
 
     private ProfileSearchPage searchFreelancersViaDb(final ProfileSearchCriteria criteria,
                                                       final int offset, final int limit) {
-<span class="nc" id="L504">        record Row(Long id, String code, String name1, String name2,</span>
+<span class="fc" id="L504">        record Row(Long id, String code, String name1, String name2,</span>
                    LocalDateTime lastContactDate, Long salaryPerDayLong,
                    LocalDateTime availabilityAsDate, boolean contactForbidden) {}
 <span class="fc" id="L507">        final String orderBy = resolveOrderBy(criteria.sortField(), criteria.sortDir());</span>
@@ -525,15 +525,15 @@ public class ProfileSearchQueryService {
 
 <span class="fc" id="L526">        final List&lt;ProfileSearchResult&gt; results = rows.stream()</span>
 <span class="fc" id="L527">                .map(r -&gt; {</span>
-<span class="nc bnc" id="L528" title="All 4 branches missed.">                    final String term = criteria.searchTerm() != null &amp;&amp; !criteria.searchTerm().isBlank()</span>
-<span class="nc" id="L529">                            ? &quot; – Suche: **&quot; + criteria.searchTerm() + &quot;**&quot;</span>
-<span class="nc" id="L530">                            : &quot;&quot;;</span>
-<span class="nc" id="L531">                    final String serp = &quot;**&quot; + r.name1() + &quot; &quot; + r.name2() + &quot;**&quot; + term;</span>
-<span class="nc" id="L532">                    final List&lt;TagView&gt; tags = tagsByFreelancerId.getOrDefault(r.id(), List.of());</span>
-<span class="nc" id="L533">                    return new ProfileSearchResult(</span>
-<span class="nc" id="L534">                            r.id(), r.code(), r.name1(), r.name2(),</span>
-<span class="nc" id="L535">                            r.lastContactDate(), r.salaryPerDayLong(),</span>
-<span class="nc" id="L536">                            r.availabilityAsDate(), r.contactForbidden(), tags, serp, true, null);</span>
+<span class="fc bfc" id="L528" title="All 4 branches covered.">                    final String term = criteria.searchTerm() != null &amp;&amp; !criteria.searchTerm().isBlank()</span>
+<span class="fc" id="L529">                            ? &quot; – Suche: **&quot; + criteria.searchTerm() + &quot;**&quot;</span>
+<span class="fc" id="L530">                            : &quot;&quot;;</span>
+<span class="fc" id="L531">                    final String serp = &quot;**&quot; + r.name1() + &quot; &quot; + r.name2() + &quot;**&quot; + term;</span>
+<span class="fc" id="L532">                    final List&lt;TagView&gt; tags = tagsByFreelancerId.getOrDefault(r.id(), List.of());</span>
+<span class="fc" id="L533">                    return new ProfileSearchResult(</span>
+<span class="fc" id="L534">                            r.id(), r.code(), r.name1(), r.name2(),</span>
+<span class="fc" id="L535">                            r.lastContactDate(), r.salaryPerDayLong(),</span>
+<span class="fc" id="L536">                            r.availabilityAsDate(), r.contactForbidden(), tags, serp, true, null);</span>
                 })
 <span class="fc" id="L538">                .toList();</span>
 <span class="fc" id="L539">        final long total = jdbcClient.sql(&quot;SELECT COUNT(*) FROM freelancer&quot;)</span>
@@ -543,7 +543,7 @@ public class ProfileSearchQueryService {
     }
 
     private String resolveOrderBy(final String sortField, final String sortDir) {
-<span class="pc bpc" id="L546" title="6 of 8 branches missed.">        final String column = switch (sortField != null ? sortField : &quot;&quot;) {</span>
+<span class="pc bpc" id="L546" title="5 of 8 branches missed.">        final String column = switch (sortField != null ? sortField : &quot;&quot;) {</span>
 <span class="nc" id="L547">            case &quot;name2&quot;            -&gt; &quot;f.name2&quot;;</span>
 <span class="nc" id="L548">            case &quot;lastContactDate&quot;  -&gt; &quot;f.last_contact_date&quot;;</span>
 <span class="nc" id="L549">            case &quot;salaryPerDayLong&quot; -&gt; &quot;f.salary_per_day_long&quot;;</span>
@@ -551,7 +551,7 @@ public class ProfileSearchQueryService {
 <span class="nc" id="L551">            case &quot;code&quot;             -&gt; &quot;f.code&quot;;</span>
 <span class="fc" id="L552">            default                 -&gt; &quot;f.name1&quot;;</span>
         };
-<span class="pc bpc" id="L554" title="1 of 2 branches missed.">        final String direction = &quot;desc&quot;.equalsIgnoreCase(sortDir) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
+<span class="fc bfc" id="L554" title="All 2 branches covered.">        final String direction = &quot;desc&quot;.equalsIgnoreCase(sortDir) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
 <span class="fc" id="L555">        return column + &quot; &quot; + direction;</span>
     }
 

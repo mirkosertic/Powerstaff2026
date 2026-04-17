@@ -108,8 +108,8 @@ public class StammdatenController {
 
     @PostMapping(&quot;/positionsstatus/{id}/delete&quot;)
     public String deletePositionsStatus(@PathVariable final long id) {
-<span class="nc" id="L111">        stammdatenCommandService.deleteProjectPositionStatus(id);</span>
-<span class="nc" id="L112">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
+<span class="fc" id="L111">        stammdatenCommandService.deleteProjectPositionStatus(id);</span>
+<span class="fc" id="L112">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
     }
 
     @PostMapping(&quot;/positionsstatus/{id}&quot;)

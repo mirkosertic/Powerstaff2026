@@ -1,39 +1,39 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},12,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ChatListView,24,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},27,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ChatListView,0,24,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},0,27,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},42,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},15,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,LlmFreelancerContext,27,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchPage,9,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},15,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,LlmFreelancerContext,0,27,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchPage,0,9,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},0,15,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,MessageView,27,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},0,27,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},27,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},27,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},30,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService,1035,0,82,0,231,0,62,0,19,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,LlmProjectContext,33,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},0,30,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService,646,389,67,15,134,97,44,18,6,13
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,LlmProjectContext,0,33,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,FreelancerBatchRow,27,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchCriteria,205,0,2,0,12,0,13,0,12,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchCriteria,173,32,2,0,10,2,11,2,10,2
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},51,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,McpSearchException,5,0,0,0,2,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},18,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchResult,39,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchResult,0,39,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},9,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerDetailView,114,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerQueryService.new Record() {...},15,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerQueryService,670,0,28,0,144,0,36,0,22,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerPartnerView,15,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerContactView,15,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerSearchCriteria,1129,0,0,0,24,0,24,0,24,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerQueryService.new Record() {...},36,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerSearchResult,39,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerHistoryView,30,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,TagInfo,12,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.command,ProjectPositionStatus,46,0,0,0,20,0,11,0,11,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.command,StammdatenCommandService,89,0,4,0,24,0,14,0,12,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.command,Tag,29,0,0,0,13,0,7,0,7,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.command,HistoryType,19,0,0,0,9,0,5,0,5,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerDetailView,0,114,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerQueryService.new Record() {...},0,15,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerQueryService,108,562,7,21,24,120,10,26,3,19
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerPartnerView,0,15,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerContactView,0,15,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerSearchCriteria,1060,69,0,0,23,1,23,1,23,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerQueryService.new Record() {...},0,36,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerSearchResult,0,39,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,FreelancerHistoryView,0,30,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.query,TagInfo,0,12,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.command,ProjectPositionStatus,15,31,0,0,6,14,2,9,2,9
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.command,StammdatenCommandService,26,63,3,1,6,18,4,10,2,10
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.command,Tag,13,16,0,0,5,8,4,3,4,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.command,HistoryType,9,10,0,0,4,5,2,3,2,3
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ContactType.new ContactType() {...},18,0,4,0,5,0,5,0,3,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ContactType.new ContactType() {...},18,0,4,0,5,0,5,0,3,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ContactType.new ContactType() {...},18,0,4,0,5,0,5,0,3,0
@@ -41,145 +41,145 @@ E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ContactType.new 
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ContactType.new ContactType() {...},10,0,0,0,3,0,3,0,3,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ContactType.new ContactType() {...},10,0,0,0,3,0,3,0,3,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ContactType,39,0,0,0,7,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,WebMvcConfig,74,0,8,0,18,0,8,0,4,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus.new ProjectStatus() {...},8,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus.new ProjectStatus() {...},8,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus.new ProjectStatus() {...},8,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus.new ProjectStatus() {...},8,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus.new ProjectStatus() {...},8,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType,49,0,0,0,10,0,3,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus,77,0,4,0,14,0,6,0,4,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType.new TagType() {...},8,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType.new TagType() {...},8,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType.new TagType() {...},8,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType.new TagType() {...},8,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType.new TagType() {...},8,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.api,KundeController,683,0,50,0,121,0,48,0,23,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.api,KundeController.new TypeReference() {...},8,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.api,KundeController.new TypeReference() {...},8,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,PartnerHistoryEntry,15,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,PartnerCommandService,214,0,22,0,52,0,17,0,6,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,WebMvcConfig,40,34,3,5,11,7,3,5,0,4
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus.new ProjectStatus() {...},0,8,0,0,0,2,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus.new ProjectStatus() {...},2,6,0,0,1,1,1,1,1,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus.new ProjectStatus() {...},0,8,0,0,0,2,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus.new ProjectStatus() {...},2,6,0,0,1,1,1,1,1,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus.new ProjectStatus() {...},0,8,0,0,0,2,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType,0,49,0,0,0,10,0,3,0,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,ProjectStatus,9,68,1,3,2,12,2,4,1,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType.new TagType() {...},0,8,0,0,0,2,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType.new TagType() {...},0,8,0,0,0,2,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType.new TagType() {...},0,8,0,0,0,2,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType.new TagType() {...},0,8,0,0,0,2,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared,TagType.new TagType() {...},0,8,0,0,0,2,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.api,KundeController,193,490,15,35,41,80,23,25,12,11
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.api,KundeController.new TypeReference() {...},0,8,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.api,KundeController.new TypeReference() {...},0,8,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,PartnerHistoryEntry,0,15,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,PartnerCommandService,137,77,18,4,32,20,13,4,3,3
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,PartnerContactEntry,15,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,PartnerHasProjectsException,12,0,0,0,4,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,PartnerHistory,59,0,0,0,17,0,17,0,17,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,PartnerHistory,44,15,0,0,13,4,13,4,13,4
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,PartnerContact,59,0,0,0,17,0,17,0,17,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,Partner,129,0,0,0,37,0,37,0,37,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectPosition,80,0,0,0,23,0,23,0,23,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,RememberedProjectInfo,12,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,RememberedProjectService,64,0,2,0,13,0,7,0,6,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,FreelancerAlreadyAssignedException,6,0,0,0,2,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectPositionCommandService,126,0,6,0,34,0,10,0,7,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectHistory,52,0,0,0,15,0,15,0,15,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,RememberedProject,41,0,0,0,13,0,8,0,8,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectCommandService,45,0,2,0,12,0,5,0,4,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectValidator,21,0,4,0,6,0,5,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectHistoryCommandService,22,0,0,0,7,0,4,0,4,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,Project,153,0,0,0,44,0,43,0,43,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.command,Partner,24,105,0,0,6,31,6,31,6,31
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectPosition,53,27,0,0,16,7,16,7,16,7
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,RememberedProjectInfo,0,12,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,RememberedProjectService,5,59,0,2,2,11,1,6,1,5
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,FreelancerAlreadyAssignedException,0,6,0,0,0,2,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectPositionCommandService,41,85,5,1,7,27,7,3,4,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectHistory,41,11,0,0,12,3,12,3,12,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,RememberedProject,11,30,0,0,3,10,3,5,3,5
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectCommandService,30,15,2,0,7,5,3,2,2,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectValidator,18,3,4,0,5,1,4,1,2,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,ProjectHistoryCommandService,10,12,0,0,3,4,2,2,2,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,Project,84,69,0,0,21,23,21,22,21,22
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.command,BothFKsException,4,0,0,0,2,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,PsAuthenticationSuccessHandler,31,0,2,0,11,0,3,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,UserQueryService,33,0,0,0,16,0,4,0,4,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,MustChangePasswordFilter,67,0,10,0,19,0,8,0,3,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,PsAuthenticationSuccessHandler,4,27,1,1,1,10,1,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,UserQueryService,8,25,0,0,4,12,1,3,1,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,MustChangePasswordFilter,4,63,3,7,2,17,3,5,0,3
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,PasswordChangeController.PasswordChangeCommand,3,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,UserController,315,0,48,0,73,0,33,0,9,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,UserCommandService,83,0,6,0,20,0,11,0,8,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,PsUser,54,0,2,0,19,0,11,0,10,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,UserView,21,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,PasswordChangeController,100,0,8,0,23,0,7,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,PsUserDetailsService,65,0,4,0,13,0,5,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.api,FreelancerController.new TypeReference() {...},8,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.api,FreelancerController.new TypeReference() {...},8,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.api,FreelancerController.new TypeReference() {...},8,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.api,FreelancerController,976,0,82,0,160,0,68,0,27,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.api,ProjectController.AssignByIdRequest,6,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.api,ProjectController,772,0,50,0,134,0,55,0,30,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.api,ProjectHistoryController.HistoryRequest,6,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.api,ProjectController.PositionRequest,15,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.api,ProjectHistoryController,69,0,0,0,16,0,5,0,5,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerSearchCriteria,379,0,0,0,14,0,14,0,14,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerQueryService,348,0,14,0,80,0,22,0,15,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,UserController,107,208,21,27,28,45,20,13,0,9
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,UserCommandService,12,71,2,4,3,17,3,8,1,7
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,PsUser,7,47,1,1,2,17,3,8,2,8
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,UserView,0,21,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,PasswordChangeController,91,9,8,0,19,4,6,1,2,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.auth,PsUserDetailsService,8,57,1,3,0,13,2,3,1,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.api,FreelancerController.new TypeReference() {...},0,8,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.api,FreelancerController.new TypeReference() {...},0,8,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.api,FreelancerController.new TypeReference() {...},0,8,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.api,FreelancerController,242,734,18,64,44,116,26,42,10,17
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.api,ProjectController.AssignByIdRequest,0,6,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.api,ProjectController,318,454,15,35,63,71,28,27,17,13
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.api,ProjectHistoryController.HistoryRequest,0,6,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.api,ProjectController.PositionRequest,0,15,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.api,ProjectHistoryController,38,31,0,0,7,9,3,2,3,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerSearchCriteria,340,39,0,0,13,1,13,1,13,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerQueryService,51,297,2,12,18,62,7,15,5,10
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerContactView,15,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerFreelancerView,24,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerSearchResult,21,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerFreelancerView,0,24,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerSearchResult,0,21,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerDetailView,57,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerProjectView,26,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerHistoryView,30,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.api,StammdatenController,235,0,2,0,54,0,18,0,17,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerProjectView,0,26,0,0,0,2,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.query,PartnerHistoryView,0,30,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.api,StammdatenController,2,233,0,2,1,53,1,17,1,16
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,DuplicateTagException,6,0,0,0,2,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerTagCommandService,59,0,2,0,15,0,5,0,4,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerHistoryEntry,15,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerTagCommandService,53,6,2,0,12,3,4,1,3,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerHistoryEntry,0,15,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerContact,59,0,0,0,17,0,17,0,17,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerHistory,59,0,0,0,17,0,17,0,17,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,Freelancer,262,0,0,0,75,0,75,0,75,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerHistory,44,15,0,0,13,4,13,4,13,4
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,Freelancer,28,234,0,0,7,68,7,68,7,68
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerTag,52,0,0,0,15,0,15,0,15,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerTagEntry,9,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerHasPositionsException,12,0,0,0,4,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerLookupResult,12,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerLookupResult,0,12,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,DuplicateCodeException,5,0,0,0,2,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerCommandService,360,0,42,0,83,0,33,0,12,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerCommandService,216,144,31,11,51,32,24,9,5,7
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.freelancer.command,FreelancerContactEntry,15,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeSearchCriteria,379,0,0,0,14,0,14,0,14,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeSearchCriteria,340,39,0,0,13,1,13,1,13,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeContactView,15,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeHistoryView,30,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeProjectListItem,26,0,0,0,2,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeQueryService,372,0,23,0,84,0,28,0,15,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeProjectListItem,0,26,0,0,0,2,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeQueryService,62,310,8,15,22,62,13,15,5,10
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeDetailView,57,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeSearchResult,21,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.command,Kunde,129,0,0,0,37,0,37,0,37,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.query,KundeSearchResult,0,21,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.command,Kunde,24,105,0,0,6,31,6,31,6,31
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.command,KundeHistory,59,0,0,0,17,0,17,0,17,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.command,KundeContactEntry,15,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.command,KundeCommandService,214,0,22,0,52,0,17,0,6,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.command,KundeCommandService,169,45,20,2,40,12,14,3,3,3
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.command,KundeContact,59,0,0,0,17,0,17,0,17,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.command,KundeHistoryEntry,15,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.command,KundeHasProjectsException,12,0,0,0,4,0,2,0,2,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController.SendResponse,15,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController.SendResponseWrapper,15,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController.SendRequest,6,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController,1031,0,84,0,195,0,62,0,18,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,HistoryTypeView,9,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,ProjectPositionStatusQueryService,22,0,0,0,11,0,3,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,TagQueryService,26,0,0,0,12,0,3,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,HistoryTypeQueryService,14,0,0,0,7,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,ProjectPositionStatusView,18,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,TagView,12,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff,HomeController,7,0,0,0,3,0,3,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff,PowerstaffApplication,8,0,0,0,3,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectQueryService,372,0,18,0,75,0,19,0,10,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectPositionQueryService,71,0,10,0,19,0,9,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectPositionView,42,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectSearchResult,24,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectDetailView,66,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectSearchCriteria,326,0,0,0,13,0,13,0,13,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectHistoryQueryService,17,0,0,0,7,0,2,0,2,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectHistoryView,24,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController.SendRequest,0,6,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController,435,596,45,39,72,123,35,27,5,13
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,HistoryTypeView,0,9,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,ProjectPositionStatusQueryService,0,22,0,0,0,11,0,3,0,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,TagQueryService,0,26,0,0,0,12,0,3,0,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,HistoryTypeQueryService,0,14,0,0,0,7,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,ProjectPositionStatusView,0,18,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,TagView,0,12,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff,HomeController,0,7,0,0,0,3,0,3,0,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff,PowerstaffApplication,0,8,0,0,0,3,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectQueryService,40,332,2,16,14,61,6,13,4,6
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectPositionQueryService,34,37,7,3,9,10,7,2,1,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectPositionView,0,42,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectSearchResult,0,24,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectDetailView,0,66,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectSearchCriteria,290,36,0,0,12,1,12,1,12,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectHistoryQueryService,0,17,0,0,0,7,0,2,0,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.project.query,ProjectHistoryView,0,24,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.config,DevDataConfig,29,0,0,0,7,0,3,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.config,SecurityConfig,126,0,0,0,27,0,7,0,7,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.config,AuditingConfig,25,0,6,0,7,0,6,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.api,PartnerController.new TypeReference() {...},8,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.api,PartnerController.new TypeReference() {...},8,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.api,PartnerController,845,0,54,0,152,0,52,0,25,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ContentToken,6,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.config,SecurityConfig,0,126,0,0,0,27,0,7,0,7
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.config,AuditingConfig,3,22,3,3,1,6,3,3,0,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.api,PartnerController.new TypeReference() {...},0,8,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.api,PartnerController.new TypeReference() {...},0,8,0,0,0,1,0,1,0,1
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.api,PartnerController,301,544,19,35,60,92,28,24,15,10
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ContentToken,0,6,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,790,0,70,0,181,0,50,0,15,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,MockLLmService,51,0,2,0,6,0,4,0,3,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,MockLLmService,13,38,0,2,1,5,1,3,1,2
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.StreamError,6,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,95,0,12,0,17,0,10,0,4,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,82,13,11,1,14,3,8,2,2,2
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,PersistentUserMessage,4,0,0,0,2,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchProperties,13,0,0,0,5,0,3,0,3,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchProperties,4,9,0,0,2,3,1,2,1,2
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService.new ChatProgressCollector() {...},35,0,2,0,9,0,4,0,3,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchChat,45,0,0,0,13,0,13,0,13,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchChat,35,10,0,0,10,3,10,3,10,3
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService.StreamingChatProgressCollector,66,0,2,0,18,0,7,0,6,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,PersistentAssistantMessage,11,0,0,0,4,0,2,0,2,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ToolResult,9,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,McpClientFactory,161,0,6,0,43,0,8,0,5,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,McpClientFactory,151,10,6,0,39,4,6,2,3,2
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAIChatRepository,479,0,30,0,92,0,25,0,10,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,McpConnectionProperties,65,0,0,0,25,0,13,0,13,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,McpConnectionProperties,35,30,0,0,15,10,10,3,10,3
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchMessage,59,0,0,0,17,0,17,0,17,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,PersistentToolResponseMessage,5,0,0,0,2,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAIChatRepository.new TypeReference() {...},8,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAIChatRepository.new TypeReference() {...},8,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,McpConnectionException,9,0,0,0,4,0,2,0,2,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ThinkingToken,6,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchCommandService,162,0,8,0,45,0,9,0,5,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.MessageComplete,15,0,0,0,1,0,1,0,1,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchCommandService,113,49,8,0,29,16,6,3,2,3
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.MessageComplete,0,15,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ToolCall,9,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ChatProgressCollector,8,0,0,0,7,0,7,0,7,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SimpleLoggerAdvisor,50,0,0,0,15,0,8,0,8,0

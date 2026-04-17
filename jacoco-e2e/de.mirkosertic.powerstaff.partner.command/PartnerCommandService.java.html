@@ -19,12 +19,12 @@ public class PartnerCommandService {
     public PartnerCommandService(final PartnerRepository partnerRepository,
                                  final PartnerContactRepository contactRepository,
                                  final PartnerHistoryRepository historyRepository,
-<span class="nc" id="L22">                                 final JdbcClient jdbcClient) {</span>
-<span class="nc" id="L23">        this.partnerRepository = partnerRepository;</span>
-<span class="nc" id="L24">        this.contactRepository = contactRepository;</span>
-<span class="nc" id="L25">        this.historyRepository = historyRepository;</span>
-<span class="nc" id="L26">        this.jdbcClient = jdbcClient;</span>
-<span class="nc" id="L27">    }</span>
+<span class="fc" id="L22">                                 final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L23">        this.partnerRepository = partnerRepository;</span>
+<span class="fc" id="L24">        this.contactRepository = contactRepository;</span>
+<span class="fc" id="L25">        this.historyRepository = historyRepository;</span>
+<span class="fc" id="L26">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L27">    }</span>
 
     /**
      * Speichert nur die Partner-Stammdaten (ohne Kontakte/Historie).
@@ -41,11 +41,11 @@ public class PartnerCommandService {
     public Partner save(final Partner partner,
                         final List&lt;PartnerContactEntry&gt; contactChanges,
                         final List&lt;PartnerHistoryEntry&gt; historyChanges) {
-<span class="nc" id="L44">        final Partner saved = partnerRepository.save(partner);</span>
-<span class="nc" id="L45">        final long partnerId = saved.getId();</span>
+<span class="fc" id="L44">        final Partner saved = partnerRepository.save(partner);</span>
+<span class="fc" id="L45">        final long partnerId = saved.getId();</span>
 
         // Kontakt-Delta verarbeiten
-<span class="nc bnc" id="L48" title="All 2 branches missed.">        for (final PartnerContactEntry cmd : contactChanges) {</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        for (final PartnerContactEntry cmd : contactChanges) {</span>
 <span class="nc bnc" id="L49" title="All 2 branches missed.">            if (&quot;ADD&quot;.equals(cmd.op())) {</span>
 <span class="nc" id="L50">                final PartnerContact contact = new PartnerContact();</span>
 <span class="nc" id="L51">                contact.setType(cmd.type());</span>
@@ -61,14 +61,14 @@ public class PartnerCommandService {
 <span class="nc" id="L61">        }</span>
 
         // Historie-Delta verarbeiten
-<span class="nc bnc" id="L64" title="All 2 branches missed.">        for (final PartnerHistoryEntry cmd : historyChanges) {</span>
-<span class="nc bnc" id="L65" title="All 2 branches missed.">            if (&quot;ADD&quot;.equals(cmd.op())) {</span>
-<span class="nc" id="L66">                final PartnerHistory history = new PartnerHistory();</span>
-<span class="nc" id="L67">                history.setDescription(cmd.description());</span>
-<span class="nc" id="L68">                history.setTypeId(cmd.typeId());</span>
-<span class="nc" id="L69">                history.setPartnerId(partnerId);</span>
-<span class="nc" id="L70">                historyRepository.save(history);</span>
-<span class="nc bnc" id="L71" title="All 2 branches missed.">            } else if (&quot;UPDATE&quot;.equals(cmd.op())) {</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        for (final PartnerHistoryEntry cmd : historyChanges) {</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">            if (&quot;ADD&quot;.equals(cmd.op())) {</span>
+<span class="fc" id="L66">                final PartnerHistory history = new PartnerHistory();</span>
+<span class="fc" id="L67">                history.setDescription(cmd.description());</span>
+<span class="fc" id="L68">                history.setTypeId(cmd.typeId());</span>
+<span class="fc" id="L69">                history.setPartnerId(partnerId);</span>
+<span class="fc" id="L70">                historyRepository.save(history);</span>
+<span class="pc bnc" id="L71" title="All 2 branches missed.">            } else if (&quot;UPDATE&quot;.equals(cmd.op())) {</span>
 <span class="nc bnc" id="L72" title="All 2 branches missed.">                if (cmd.id() == null) {</span>
 <span class="nc" id="L73">                    throw new IllegalArgumentException(&quot;UPDATE Kontakthistorie erfordert eine ID&quot;);</span>
                 }
@@ -83,14 +83,14 @@ public class PartnerCommandService {
                 }
 <span class="nc" id="L84">                historyRepository.deleteById(cmd.id());</span>
             }
-<span class="nc" id="L86">        }</span>
+<span class="fc" id="L86">        }</span>
 
-<span class="nc" id="L88">        return saved;</span>
+<span class="fc" id="L88">        return saved;</span>
     }
 
     @Transactional(readOnly = true)
     public Optional&lt;Partner&gt; findById(final long id) {
-<span class="nc" id="L93">        return partnerRepository.findById(id);</span>
+<span class="fc" id="L93">        return partnerRepository.findById(id);</span>
     }
 
     /**

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ProfileSearchQueryService {
 
-<span class="nc" id="L30">    private static final Logger logger = LoggerFactory.getLogger(ProfileSearchQueryService.class);</span>
+<span class="fc" id="L30">    private static final Logger logger = LoggerFactory.getLogger(ProfileSearchQueryService.class);</span>
 
     static final String MCP_EXTENDED_SEARCH_TOOL_NAME = &quot;extendedSearch&quot;;
     static final String MCP_SEMANTIC_SEARCH_TOOL_NAME = &quot;semanticSearch&quot;;
@@ -40,15 +40,15 @@ public class ProfileSearchQueryService {
     public ProfileSearchQueryService(final JdbcClient jdbcClient,
                                        final McpClientFactory mcpClientFactory,
                                        final McpConnectionProperties mcpConnectionProperties,
-<span class="nc" id="L43">                                       final ObjectMapper objectMapper) {</span>
-<span class="nc" id="L44">        this.jdbcClient = jdbcClient;</span>
-<span class="nc" id="L45">        this.mcpClientFactory = mcpClientFactory;</span>
-<span class="nc" id="L46">        this.mcpConnectionProperties = mcpConnectionProperties;</span>
-<span class="nc" id="L47">        this.objectMapper = objectMapper;</span>
-<span class="nc" id="L48">    }</span>
+<span class="fc" id="L43">                                       final ObjectMapper objectMapper) {</span>
+<span class="fc" id="L44">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L45">        this.mcpClientFactory = mcpClientFactory;</span>
+<span class="fc" id="L46">        this.mcpConnectionProperties = mcpConnectionProperties;</span>
+<span class="fc" id="L47">        this.objectMapper = objectMapper;</span>
+<span class="fc" id="L48">    }</span>
 
     public List&lt;ChatListView&gt; findChatsByUser(final String userId, final int offset, final int limit) {
-<span class="nc" id="L51">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L51">        return jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT c.id, c.creation_date, c.creation_user, c.changed_date, c.title,
                        c.project_id, p.project_number
                 FROM profile_search_chat c
@@ -57,83 +57,83 @@ public class ProfileSearchQueryService {
                 ORDER BY c.changed_date DESC
                 LIMIT :limit OFFSET :offset
                 &quot;&quot;&quot;)
-<span class="nc" id="L60">                .param(&quot;userId&quot;, userId)</span>
-<span class="nc" id="L61">                .param(&quot;limit&quot;, limit)</span>
-<span class="nc" id="L62">                .param(&quot;offset&quot;, offset)</span>
-<span class="nc" id="L63">                .query(ChatListView.class)</span>
-<span class="nc" id="L64">                .list();</span>
+<span class="fc" id="L60">                .param(&quot;userId&quot;, userId)</span>
+<span class="fc" id="L61">                .param(&quot;limit&quot;, limit)</span>
+<span class="fc" id="L62">                .param(&quot;offset&quot;, offset)</span>
+<span class="fc" id="L63">                .query(ChatListView.class)</span>
+<span class="fc" id="L64">                .list();</span>
     }
 
     public long countChatsByUser(final String userId) {
-<span class="nc" id="L68">        return jdbcClient.sql(&quot;SELECT COUNT(*) FROM profile_search_chat WHERE creation_user = :userId&quot;)</span>
-<span class="nc" id="L69">                .param(&quot;userId&quot;, userId)</span>
-<span class="nc" id="L70">                .query(Long.class)</span>
-<span class="nc" id="L71">                .single();</span>
+<span class="fc" id="L68">        return jdbcClient.sql(&quot;SELECT COUNT(*) FROM profile_search_chat WHERE creation_user = :userId&quot;)</span>
+<span class="fc" id="L69">                .param(&quot;userId&quot;, userId)</span>
+<span class="fc" id="L70">                .query(Long.class)</span>
+<span class="fc" id="L71">                .single();</span>
     }
 
     public List&lt;MessageView&gt; findMessagesByChat(final Long chatId) {
-<span class="nc" id="L75">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L75">        return jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT id, creation_date, chat_id, role, sequence, content, json_payload, assistant_thoughts
                 FROM profile_search_message
                 WHERE chat_id = :chatId
                 ORDER BY sequence ASC
                 &quot;&quot;&quot;)
-<span class="nc" id="L81">                .param(&quot;chatId&quot;, chatId)</span>
-<span class="nc" id="L82">                .query(MessageView.class)</span>
-<span class="nc" id="L83">                .list();</span>
+<span class="fc" id="L81">                .param(&quot;chatId&quot;, chatId)</span>
+<span class="fc" id="L82">                .query(MessageView.class)</span>
+<span class="fc" id="L83">                .list();</span>
     }
 
     public Optional&lt;Long&gt; findLatestChatByUser(final String userId) {
-<span class="nc" id="L87">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L87">        return jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT id FROM profile_search_chat
                 WHERE creation_user = :userId
                 ORDER BY changed_date DESC
                 LIMIT 1
                 &quot;&quot;&quot;)
-<span class="nc" id="L93">                .param(&quot;userId&quot;, userId)</span>
-<span class="nc" id="L94">                .query(Long.class)</span>
-<span class="nc" id="L95">                .optional();</span>
+<span class="fc" id="L93">                .param(&quot;userId&quot;, userId)</span>
+<span class="fc" id="L94">                .query(Long.class)</span>
+<span class="fc" id="L95">                .optional();</span>
     }
 
 
     public Optional&lt;LlmProjectContext&gt; buildLlmContext(final String userId) {
         // Step 1: find remembered project for user
-<span class="nc" id="L101">        final var projectIdOpt = jdbcClient.sql(</span>
+<span class="fc" id="L101">        final var projectIdOpt = jdbcClient.sql(</span>
                         &quot;SELECT project_id FROM remembered_project WHERE user_id = :userId&quot;)
-<span class="nc" id="L103">                .param(&quot;userId&quot;, userId)</span>
-<span class="nc" id="L104">                .query(Long.class)</span>
-<span class="nc" id="L105">                .optional();</span>
+<span class="fc" id="L103">                .param(&quot;userId&quot;, userId)</span>
+<span class="fc" id="L104">                .query(Long.class)</span>
+<span class="fc" id="L105">                .optional();</span>
 
-<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (projectIdOpt.isEmpty()) {</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (projectIdOpt.isEmpty()) {</span>
 <span class="nc" id="L108">            return Optional.empty();</span>
         }
-<span class="nc" id="L110">        final long projectId = projectIdOpt.get();</span>
+<span class="fc" id="L110">        final long projectId = projectIdOpt.get();</span>
 
         // Step 2: load project fields
-<span class="nc" id="L113">        record ProjectRow(String projectNumber, String descriptionShort, String descriptionLong,</span>
+<span class="fc" id="L113">        record ProjectRow(String projectNumber, String descriptionShort, String descriptionLong,</span>
                           String workplace, String skills, String duration,
                           LocalDateTime startDate, int status, Long stundensatzVk) {}
 
-<span class="nc" id="L117">        final var projectOpt = jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L117">        final var projectOpt = jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT project_number, description_short, description_long, workplace, skills,
                        duration, start_date, status, stundensatz_vk
                 FROM project WHERE id = :projectId
                 &quot;&quot;&quot;)
-<span class="nc" id="L122">                .param(&quot;projectId&quot;, projectId)</span>
-<span class="nc" id="L123">                .query(ProjectRow.class)</span>
-<span class="nc" id="L124">                .optional();</span>
+<span class="fc" id="L122">                .param(&quot;projectId&quot;, projectId)</span>
+<span class="fc" id="L123">                .query(ProjectRow.class)</span>
+<span class="fc" id="L124">                .optional();</span>
 
-<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (projectOpt.isEmpty()) {</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        if (projectOpt.isEmpty()) {</span>
 <span class="nc" id="L127">            return Optional.empty();</span>
         }
-<span class="nc" id="L129">        final var project = projectOpt.get();</span>
+<span class="fc" id="L129">        final var project = projectOpt.get();</span>
 
         // Step 3: load positions with freelancer and status info
-<span class="nc" id="L132">        record PositionRow(Long freelancerId, String code, String name1, String name2,</span>
+<span class="fc" id="L132">        record PositionRow(Long freelancerId, String code, String name1, String name2,</span>
                            String freelancerSkills, String positionStatus,
                            String konditionen, String kommentar) {}
 
-<span class="nc" id="L136">        final var positionRows = jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L136">        final var positionRows = jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT pp.freelancer_id, f.code, f.name1, f.name2, f.skills AS freelancer_skills,
                        pps.description AS position_status, pp.konditionen, pp.kommentar
                 FROM project_position pp
@@ -141,48 +141,48 @@ public class ProfileSearchQueryService {
                 LEFT JOIN project_position_status pps ON pps.id = pp.status_id
                 WHERE pp.project_id = :projectId
                 &quot;&quot;&quot;)
-<span class="nc" id="L144">                .param(&quot;projectId&quot;, projectId)</span>
-<span class="nc" id="L145">                .query(PositionRow.class)</span>
-<span class="nc" id="L146">                .list();</span>
+<span class="fc" id="L144">                .param(&quot;projectId&quot;, projectId)</span>
+<span class="fc" id="L145">                .query(PositionRow.class)</span>
+<span class="fc" id="L146">                .list();</span>
 
         // Step 4: for each position, load tags
-<span class="nc" id="L149">        final List&lt;LlmFreelancerContext&gt; positions = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L150" title="All 2 branches missed.">        for (final var pos : positionRows) {</span>
-<span class="nc" id="L151">            final var tags = jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L149">        final List&lt;LlmFreelancerContext&gt; positions = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        for (final var pos : positionRows) {</span>
+<span class="fc" id="L151">            final var tags = jdbcClient.sql(&quot;&quot;&quot;</span>
                     SELECT t.tagname FROM tags t
                     JOIN freelancer_tags ft ON ft.tag_id = t.id
                     WHERE ft.freelancer_id = :freelancerId
                     ORDER BY t.tagname
                     &quot;&quot;&quot;)
-<span class="nc" id="L157">                    .param(&quot;freelancerId&quot;, pos.freelancerId())</span>
-<span class="nc" id="L158">                    .query(String.class)</span>
-<span class="nc" id="L159">                    .list();</span>
+<span class="fc" id="L157">                    .param(&quot;freelancerId&quot;, pos.freelancerId())</span>
+<span class="fc" id="L158">                    .query(String.class)</span>
+<span class="fc" id="L159">                    .list();</span>
 
-<span class="nc" id="L161">            positions.add(new LlmFreelancerContext(</span>
-<span class="nc" id="L162">                    pos.code(), pos.name1(), pos.name2(), pos.freelancerSkills(),</span>
-<span class="nc" id="L163">                    tags, pos.positionStatus(), pos.konditionen(), pos.kommentar()</span>
+<span class="fc" id="L161">            positions.add(new LlmFreelancerContext(</span>
+<span class="fc" id="L162">                    pos.code(), pos.name1(), pos.name2(), pos.freelancerSkills(),</span>
+<span class="fc" id="L163">                    tags, pos.positionStatus(), pos.konditionen(), pos.kommentar()</span>
             ));
-<span class="nc" id="L165">        }</span>
+<span class="fc" id="L165">        }</span>
 
         String statusLabel;
         try {
-<span class="nc" id="L169">            statusLabel = ProjectStatus.fromInt(project.status()).getLabel();</span>
+<span class="fc" id="L169">            statusLabel = ProjectStatus.fromInt(project.status()).getLabel();</span>
 <span class="nc" id="L170">        } catch (final IllegalArgumentException e) {</span>
 <span class="nc" id="L171">            statusLabel = String.valueOf(project.status());</span>
-<span class="nc" id="L172">        }</span>
+<span class="fc" id="L172">        }</span>
 
-<span class="nc" id="L174">        return Optional.of(new LlmProjectContext(</span>
-<span class="nc" id="L175">                project.projectNumber(), project.descriptionShort(), project.descriptionLong(),</span>
-<span class="nc" id="L176">                project.workplace(), project.skills(), project.duration(), project.startDate(),</span>
-<span class="nc" id="L177">                statusLabel, project.stundensatzVk(), positions</span>
+<span class="fc" id="L174">        return Optional.of(new LlmProjectContext(</span>
+<span class="fc" id="L175">                project.projectNumber(), project.descriptionShort(), project.descriptionLong(),</span>
+<span class="fc" id="L176">                project.workplace(), project.skills(), project.duration(), project.startDate(),</span>
+<span class="fc" id="L177">                statusLabel, project.stundensatzVk(), positions</span>
         ));
     }
 
     public ProfileSearchPage searchFreelancers(final ProfileSearchCriteria criteria, final int offset, final int limit) {
         // MCP deaktiviert → DB-Fallback (nur für E2E-Tests)
-<span class="nc bnc" id="L183" title="All 2 branches missed.">        if (!mcpConnectionProperties.isEnabled()) {</span>
-<span class="nc" id="L184">            logger.debug(&quot;MCP deaktiviert – Suche über DB&quot;);</span>
-<span class="nc" id="L185">            return searchFreelancersViaDb(criteria, offset, limit);</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">        if (!mcpConnectionProperties.isEnabled()) {</span>
+<span class="fc" id="L184">            logger.debug(&quot;MCP deaktiviert – Suche über DB&quot;);</span>
+<span class="fc" id="L185">            return searchFreelancersViaDb(criteria, offset, limit);</span>
         }
 
         // MCP enabled → Suche mit Retry, bei Fehler Exception an User
@@ -477,35 +477,35 @@ public class ProfileSearchQueryService {
      * Package-private für Tests.
      */
     Map&lt;Long, List&lt;TagView&gt;&gt; findTagsByFreelancerIdsInBatch(final List&lt;Long&gt; ids) {
-<span class="nc bnc" id="L480" title="All 2 branches missed.">        if (ids.isEmpty()) {</span>
+<span class="pc bpc" id="L480" title="1 of 2 branches missed.">        if (ids.isEmpty()) {</span>
 <span class="nc" id="L481">            return Map.of();</span>
         }
-<span class="nc" id="L483">        record TagRow(Long freelancerId, Long tagId, String tagname, String type) {}</span>
-<span class="nc" id="L484">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L483">        record TagRow(Long freelancerId, Long tagId, String tagname, String type) {}</span>
+<span class="fc" id="L484">        return jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT ft.freelancer_id, t.id AS tag_id, t.tagname, t.type
                 FROM freelancer_tags ft
                 JOIN tags t ON t.id = ft.tag_id
                 WHERE ft.freelancer_id IN (:ids)
                 ORDER BY t.tagname
                 &quot;&quot;&quot;)
-<span class="nc" id="L491">                .param(&quot;ids&quot;, ids)</span>
-<span class="nc" id="L492">                .query(TagRow.class)</span>
-<span class="nc" id="L493">                .list()</span>
-<span class="nc" id="L494">                .stream()</span>
-<span class="nc" id="L495">                .collect(Collectors.groupingBy(</span>
+<span class="fc" id="L491">                .param(&quot;ids&quot;, ids)</span>
+<span class="fc" id="L492">                .query(TagRow.class)</span>
+<span class="fc" id="L493">                .list()</span>
+<span class="fc" id="L494">                .stream()</span>
+<span class="fc" id="L495">                .collect(Collectors.groupingBy(</span>
                         TagRow::freelancerId,
-<span class="nc" id="L497">                        Collectors.mapping(r -&gt; new TagView(r.tagId(), r.tagname(), r.type()), Collectors.toList())));</span>
+<span class="fc" id="L497">                        Collectors.mapping(r -&gt; new TagView(r.tagId(), r.tagname(), r.type()), Collectors.toList())));</span>
     }
 
     // ── DB-Pfad (bisherige Implementierung) ───────────────────────────────────
 
     private ProfileSearchPage searchFreelancersViaDb(final ProfileSearchCriteria criteria,
                                                       final int offset, final int limit) {
-<span class="nc" id="L504">        record Row(Long id, String code, String name1, String name2,</span>
+<span class="fc" id="L504">        record Row(Long id, String code, String name1, String name2,</span>
                    LocalDateTime lastContactDate, Long salaryPerDayLong,
                    LocalDateTime availabilityAsDate, boolean contactForbidden) {}
-<span class="nc" id="L507">        final String orderBy = resolveOrderBy(criteria.sortField(), criteria.sortDir());</span>
-<span class="nc" id="L508">        final String sql = String.format(&quot;&quot;&quot;</span>
+<span class="fc" id="L507">        final String orderBy = resolveOrderBy(criteria.sortField(), criteria.sortDir());</span>
+<span class="fc" id="L508">        final String sql = String.format(&quot;&quot;&quot;</span>
                 SELECT f.id, f.code, f.name1, f.name2,
                        f.last_contact_date, f.salary_per_day_long,
                        f.availability_as_date, f.contactforbidden
@@ -513,46 +513,46 @@ public class ProfileSearchQueryService {
                 ORDER BY %s
                 LIMIT :limit OFFSET :offset
                 &quot;&quot;&quot;, orderBy);
-<span class="nc" id="L516">        final List&lt;Row&gt; rows = jdbcClient.sql(sql)</span>
-<span class="nc" id="L517">                .param(&quot;limit&quot;, limit)</span>
-<span class="nc" id="L518">                .param(&quot;offset&quot;, offset)</span>
-<span class="nc" id="L519">                .query(Row.class)</span>
-<span class="nc" id="L520">                .list();</span>
+<span class="fc" id="L516">        final List&lt;Row&gt; rows = jdbcClient.sql(sql)</span>
+<span class="fc" id="L517">                .param(&quot;limit&quot;, limit)</span>
+<span class="fc" id="L518">                .param(&quot;offset&quot;, offset)</span>
+<span class="fc" id="L519">                .query(Row.class)</span>
+<span class="fc" id="L520">                .list();</span>
 
         // Batch-Load Tags für alle gefundenen Freiberufler (analog zum MCP-Pfad)
-<span class="nc" id="L523">        final List&lt;Long&gt; freelancerIds = rows.stream().map(Row::id).toList();</span>
-<span class="nc" id="L524">        final Map&lt;Long, List&lt;TagView&gt;&gt; tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);</span>
+<span class="fc" id="L523">        final List&lt;Long&gt; freelancerIds = rows.stream().map(Row::id).toList();</span>
+<span class="fc" id="L524">        final Map&lt;Long, List&lt;TagView&gt;&gt; tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);</span>
 
-<span class="nc" id="L526">        final List&lt;ProfileSearchResult&gt; results = rows.stream()</span>
-<span class="nc" id="L527">                .map(r -&gt; {</span>
-<span class="nc bnc" id="L528" title="All 4 branches missed.">                    final String term = criteria.searchTerm() != null &amp;&amp; !criteria.searchTerm().isBlank()</span>
-<span class="nc" id="L529">                            ? &quot; – Suche: **&quot; + criteria.searchTerm() + &quot;**&quot;</span>
-<span class="nc" id="L530">                            : &quot;&quot;;</span>
-<span class="nc" id="L531">                    final String serp = &quot;**&quot; + r.name1() + &quot; &quot; + r.name2() + &quot;**&quot; + term;</span>
-<span class="nc" id="L532">                    final List&lt;TagView&gt; tags = tagsByFreelancerId.getOrDefault(r.id(), List.of());</span>
-<span class="nc" id="L533">                    return new ProfileSearchResult(</span>
-<span class="nc" id="L534">                            r.id(), r.code(), r.name1(), r.name2(),</span>
-<span class="nc" id="L535">                            r.lastContactDate(), r.salaryPerDayLong(),</span>
-<span class="nc" id="L536">                            r.availabilityAsDate(), r.contactForbidden(), tags, serp, true, null);</span>
+<span class="fc" id="L526">        final List&lt;ProfileSearchResult&gt; results = rows.stream()</span>
+<span class="fc" id="L527">                .map(r -&gt; {</span>
+<span class="fc bfc" id="L528" title="All 4 branches covered.">                    final String term = criteria.searchTerm() != null &amp;&amp; !criteria.searchTerm().isBlank()</span>
+<span class="fc" id="L529">                            ? &quot; – Suche: **&quot; + criteria.searchTerm() + &quot;**&quot;</span>
+<span class="fc" id="L530">                            : &quot;&quot;;</span>
+<span class="fc" id="L531">                    final String serp = &quot;**&quot; + r.name1() + &quot; &quot; + r.name2() + &quot;**&quot; + term;</span>
+<span class="fc" id="L532">                    final List&lt;TagView&gt; tags = tagsByFreelancerId.getOrDefault(r.id(), List.of());</span>
+<span class="fc" id="L533">                    return new ProfileSearchResult(</span>
+<span class="fc" id="L534">                            r.id(), r.code(), r.name1(), r.name2(),</span>
+<span class="fc" id="L535">                            r.lastContactDate(), r.salaryPerDayLong(),</span>
+<span class="fc" id="L536">                            r.availabilityAsDate(), r.contactForbidden(), tags, serp, true, null);</span>
                 })
-<span class="nc" id="L538">                .toList();</span>
-<span class="nc" id="L539">        final long total = jdbcClient.sql(&quot;SELECT COUNT(*) FROM freelancer&quot;)</span>
-<span class="nc" id="L540">                .query(Long.class)</span>
-<span class="nc" id="L541">                .single();</span>
-<span class="nc" id="L542">        return new ProfileSearchPage(results, total);</span>
+<span class="fc" id="L538">                .toList();</span>
+<span class="fc" id="L539">        final long total = jdbcClient.sql(&quot;SELECT COUNT(*) FROM freelancer&quot;)</span>
+<span class="fc" id="L540">                .query(Long.class)</span>
+<span class="fc" id="L541">                .single();</span>
+<span class="fc" id="L542">        return new ProfileSearchPage(results, total);</span>
     }
 
     private String resolveOrderBy(final String sortField, final String sortDir) {
-<span class="nc bnc" id="L546" title="All 8 branches missed.">        final String column = switch (sortField != null ? sortField : &quot;&quot;) {</span>
+<span class="pc bpc" id="L546" title="5 of 8 branches missed.">        final String column = switch (sortField != null ? sortField : &quot;&quot;) {</span>
 <span class="nc" id="L547">            case &quot;name2&quot;            -&gt; &quot;f.name2&quot;;</span>
 <span class="nc" id="L548">            case &quot;lastContactDate&quot;  -&gt; &quot;f.last_contact_date&quot;;</span>
 <span class="nc" id="L549">            case &quot;salaryPerDayLong&quot; -&gt; &quot;f.salary_per_day_long&quot;;</span>
 <span class="nc" id="L550">            case &quot;availabilityAsDate&quot; -&gt; &quot;f.availability_as_date&quot;;</span>
 <span class="nc" id="L551">            case &quot;code&quot;             -&gt; &quot;f.code&quot;;</span>
-<span class="nc" id="L552">            default                 -&gt; &quot;f.name1&quot;;</span>
+<span class="fc" id="L552">            default                 -&gt; &quot;f.name1&quot;;</span>
         };
-<span class="nc bnc" id="L554" title="All 2 branches missed.">        final String direction = &quot;desc&quot;.equalsIgnoreCase(sortDir) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
-<span class="nc" id="L555">        return column + &quot; &quot; + direction;</span>
+<span class="fc bfc" id="L554" title="All 2 branches covered.">        final String direction = &quot;desc&quot;.equalsIgnoreCase(sortDir) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
+<span class="fc" id="L555">        return column + &quot; &quot; + direction;</span>
     }
 
 }

@@ -38,12 +38,12 @@ public class StammdatenController {
             final HistoryTypeQueryService historyTypeQueryService,
             final ProjectPositionStatusQueryService projectPositionStatusQueryService,
             final TagQueryService tagQueryService,
-<span class="nc" id="L41">            final StammdatenCommandService stammdatenCommandService) {</span>
-<span class="nc" id="L42">        this.historyTypeQueryService = historyTypeQueryService;</span>
-<span class="nc" id="L43">        this.projectPositionStatusQueryService = projectPositionStatusQueryService;</span>
-<span class="nc" id="L44">        this.tagQueryService = tagQueryService;</span>
-<span class="nc" id="L45">        this.stammdatenCommandService = stammdatenCommandService;</span>
-<span class="nc" id="L46">    }</span>
+<span class="fc" id="L41">            final StammdatenCommandService stammdatenCommandService) {</span>
+<span class="fc" id="L42">        this.historyTypeQueryService = historyTypeQueryService;</span>
+<span class="fc" id="L43">        this.projectPositionStatusQueryService = projectPositionStatusQueryService;</span>
+<span class="fc" id="L44">        this.tagQueryService = tagQueryService;</span>
+<span class="fc" id="L45">        this.stammdatenCommandService = stammdatenCommandService;</span>
+<span class="fc" id="L46">    }</span>
 
     // -------------------------------------------------------------------------
     // Redirect /admin → /admin/historientypen
@@ -60,32 +60,32 @@ public class StammdatenController {
 
     @GetMapping(&quot;/historientypen&quot;)
     public String historientypen(final Model model) {
-<span class="nc" id="L63">        model.addAttribute(&quot;types&quot;, historyTypeQueryService.findAll());</span>
-<span class="nc" id="L64">        model.addAttribute(&quot;newType&quot;, new HistoryType());</span>
-<span class="nc" id="L65">        model.addAttribute(&quot;activePage&quot;, &quot;admin&quot;);</span>
-<span class="nc" id="L66">        return &quot;admin/historientypen&quot;;</span>
+<span class="fc" id="L63">        model.addAttribute(&quot;types&quot;, historyTypeQueryService.findAll());</span>
+<span class="fc" id="L64">        model.addAttribute(&quot;newType&quot;, new HistoryType());</span>
+<span class="fc" id="L65">        model.addAttribute(&quot;activePage&quot;, &quot;admin&quot;);</span>
+<span class="fc" id="L66">        return &quot;admin/historientypen&quot;;</span>
     }
 
     @PostMapping(&quot;/historientypen&quot;)
     public String createHistoryType(@ModelAttribute final HistoryType newType) {
-<span class="nc" id="L71">        stammdatenCommandService.saveHistoryType(newType);</span>
-<span class="nc" id="L72">        return &quot;redirect:/admin/historientypen&quot;;</span>
+<span class="fc" id="L71">        stammdatenCommandService.saveHistoryType(newType);</span>
+<span class="fc" id="L72">        return &quot;redirect:/admin/historientypen&quot;;</span>
     }
 
     @PostMapping(&quot;/historientypen/{id}&quot;)
     public String updateHistoryType(@PathVariable final long id,
                                     @RequestParam final String description) {
-<span class="nc" id="L78">        stammdatenCommandService.findHistoryTypeById(id).ifPresent(ht -&gt; {</span>
-<span class="nc" id="L79">            ht.setDescription(description);</span>
-<span class="nc" id="L80">            stammdatenCommandService.saveHistoryType(ht);</span>
-<span class="nc" id="L81">        });</span>
-<span class="nc" id="L82">        return &quot;redirect:/admin/historientypen&quot;;</span>
+<span class="fc" id="L78">        stammdatenCommandService.findHistoryTypeById(id).ifPresent(ht -&gt; {</span>
+<span class="fc" id="L79">            ht.setDescription(description);</span>
+<span class="fc" id="L80">            stammdatenCommandService.saveHistoryType(ht);</span>
+<span class="fc" id="L81">        });</span>
+<span class="fc" id="L82">        return &quot;redirect:/admin/historientypen&quot;;</span>
     }
 
     @PostMapping(&quot;/historientypen/{id}/delete&quot;)
     public String deleteHistoryType(@PathVariable final long id) {
-<span class="nc" id="L87">        stammdatenCommandService.deleteHistoryType(id);</span>
-<span class="nc" id="L88">        return &quot;redirect:/admin/historientypen&quot;;</span>
+<span class="fc" id="L87">        stammdatenCommandService.deleteHistoryType(id);</span>
+<span class="fc" id="L88">        return &quot;redirect:/admin/historientypen&quot;;</span>
     }
 
     // -------------------------------------------------------------------------
@@ -94,22 +94,22 @@ public class StammdatenController {
 
     @GetMapping(&quot;/positionsstatus&quot;)
     public String positionsstatus(final Model model) {
-<span class="nc" id="L97">        model.addAttribute(&quot;statusList&quot;, projectPositionStatusQueryService.findAll());</span>
-<span class="nc" id="L98">        model.addAttribute(&quot;newStatus&quot;, new ProjectPositionStatus());</span>
-<span class="nc" id="L99">        model.addAttribute(&quot;activePage&quot;, &quot;admin&quot;);</span>
-<span class="nc" id="L100">        return &quot;admin/positionsstatus&quot;;</span>
+<span class="fc" id="L97">        model.addAttribute(&quot;statusList&quot;, projectPositionStatusQueryService.findAll());</span>
+<span class="fc" id="L98">        model.addAttribute(&quot;newStatus&quot;, new ProjectPositionStatus());</span>
+<span class="fc" id="L99">        model.addAttribute(&quot;activePage&quot;, &quot;admin&quot;);</span>
+<span class="fc" id="L100">        return &quot;admin/positionsstatus&quot;;</span>
     }
 
     @PostMapping(&quot;/positionsstatus&quot;)
     public String createPositionsStatus(@ModelAttribute final ProjectPositionStatus newStatus) {
-<span class="nc" id="L105">        stammdatenCommandService.saveProjectPositionStatus(newStatus);</span>
-<span class="nc" id="L106">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
+<span class="fc" id="L105">        stammdatenCommandService.saveProjectPositionStatus(newStatus);</span>
+<span class="fc" id="L106">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
     }
 
     @PostMapping(&quot;/positionsstatus/{id}/delete&quot;)
     public String deletePositionsStatus(@PathVariable final long id) {
-<span class="nc" id="L111">        stammdatenCommandService.deleteProjectPositionStatus(id);</span>
-<span class="nc" id="L112">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
+<span class="fc" id="L111">        stammdatenCommandService.deleteProjectPositionStatus(id);</span>
+<span class="fc" id="L112">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
     }
 
     @PostMapping(&quot;/positionsstatus/{id}&quot;)
@@ -118,14 +118,14 @@ public class StammdatenController {
                                         @RequestParam final String color,
                                         @RequestParam final String colorText,
                                         @RequestParam(defaultValue = &quot;false&quot;) final boolean defaultStatus) {
-<span class="nc" id="L121">        stammdatenCommandService.findProjectPositionStatusById(id).ifPresent(pps -&gt; {</span>
-<span class="nc" id="L122">            pps.setDescription(description);</span>
-<span class="nc" id="L123">            pps.setColor(color);</span>
-<span class="nc" id="L124">            pps.setColorText(colorText);</span>
-<span class="nc" id="L125">            pps.setDefaultStatus(defaultStatus);</span>
-<span class="nc" id="L126">            stammdatenCommandService.saveProjectPositionStatus(pps);</span>
-<span class="nc" id="L127">        });</span>
-<span class="nc" id="L128">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
+<span class="fc" id="L121">        stammdatenCommandService.findProjectPositionStatusById(id).ifPresent(pps -&gt; {</span>
+<span class="fc" id="L122">            pps.setDescription(description);</span>
+<span class="fc" id="L123">            pps.setColor(color);</span>
+<span class="fc" id="L124">            pps.setColorText(colorText);</span>
+<span class="fc" id="L125">            pps.setDefaultStatus(defaultStatus);</span>
+<span class="fc" id="L126">            stammdatenCommandService.saveProjectPositionStatus(pps);</span>
+<span class="fc" id="L127">        });</span>
+<span class="fc" id="L128">        return &quot;redirect:/admin/positionsstatus&quot;;</span>
     }
 
     // -------------------------------------------------------------------------
@@ -134,40 +134,40 @@ public class StammdatenController {
 
     @GetMapping(&quot;/tags&quot;)
     public String tags(final Model model) {
-<span class="nc" id="L137">        final Map&lt;TagType, List&lt;TagView&gt;&gt; tagsByType = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc bnc" id="L138" title="All 2 branches missed.">        for (final TagType type : TagType.values()) {</span>
-<span class="nc" id="L139">            tagsByType.put(type, tagQueryService.findByType(type));</span>
+<span class="fc" id="L137">        final Map&lt;TagType, List&lt;TagView&gt;&gt; tagsByType = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        for (final TagType type : TagType.values()) {</span>
+<span class="fc" id="L139">            tagsByType.put(type, tagQueryService.findByType(type));</span>
         }
-<span class="nc" id="L141">        model.addAttribute(&quot;tagsByType&quot;, tagsByType);</span>
-<span class="nc" id="L142">        model.addAttribute(&quot;tagTypes&quot;, TagType.values());</span>
-<span class="nc" id="L143">        model.addAttribute(&quot;newTag&quot;, new Tag());</span>
-<span class="nc" id="L144">        model.addAttribute(&quot;activePage&quot;, &quot;admin&quot;);</span>
-<span class="nc" id="L145">        return &quot;admin/tags&quot;;</span>
+<span class="fc" id="L141">        model.addAttribute(&quot;tagsByType&quot;, tagsByType);</span>
+<span class="fc" id="L142">        model.addAttribute(&quot;tagTypes&quot;, TagType.values());</span>
+<span class="fc" id="L143">        model.addAttribute(&quot;newTag&quot;, new Tag());</span>
+<span class="fc" id="L144">        model.addAttribute(&quot;activePage&quot;, &quot;admin&quot;);</span>
+<span class="fc" id="L145">        return &quot;admin/tags&quot;;</span>
     }
 
     @PostMapping(&quot;/tags&quot;)
     public String createTag(@RequestParam final String tagname,
                             @RequestParam final String tagType) {
-<span class="nc" id="L151">        final Tag tag = new Tag(tagname, tagType);</span>
-<span class="nc" id="L152">        stammdatenCommandService.saveTag(tag);</span>
-<span class="nc" id="L153">        return &quot;redirect:/admin/tags&quot;;</span>
+<span class="fc" id="L151">        final Tag tag = new Tag(tagname, tagType);</span>
+<span class="fc" id="L152">        stammdatenCommandService.saveTag(tag);</span>
+<span class="fc" id="L153">        return &quot;redirect:/admin/tags&quot;;</span>
     }
 
     @PostMapping(&quot;/tags/{id}&quot;)
     public String updateTag(@PathVariable final long id,
                             @RequestParam final String tagname) {
-<span class="nc" id="L159">        stammdatenCommandService.findTagById(id).ifPresent(tag -&gt; {</span>
-<span class="nc" id="L160">            tag.setTagname(tagname);</span>
-<span class="nc" id="L161">            stammdatenCommandService.saveTag(tag);</span>
-<span class="nc" id="L162">        });</span>
-<span class="nc" id="L163">        return &quot;redirect:/admin/tags&quot;;</span>
+<span class="fc" id="L159">        stammdatenCommandService.findTagById(id).ifPresent(tag -&gt; {</span>
+<span class="fc" id="L160">            tag.setTagname(tagname);</span>
+<span class="fc" id="L161">            stammdatenCommandService.saveTag(tag);</span>
+<span class="fc" id="L162">        });</span>
+<span class="fc" id="L163">        return &quot;redirect:/admin/tags&quot;;</span>
     }
 
     @DeleteMapping(&quot;/tags/{id}&quot;)
     @ResponseBody
     public ResponseEntity&lt;Map&lt;String, Boolean&gt;&gt; deleteTag(@PathVariable final long id) {
-<span class="nc" id="L169">        stammdatenCommandService.deleteTag(id);</span>
-<span class="nc" id="L170">        return ResponseEntity.ok(Map.of(&quot;ok&quot;, true));</span>
+<span class="fc" id="L169">        stammdatenCommandService.deleteTag(id);</span>
+<span class="fc" id="L170">        return ResponseEntity.ok(Map.of(&quot;ok&quot;, true));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

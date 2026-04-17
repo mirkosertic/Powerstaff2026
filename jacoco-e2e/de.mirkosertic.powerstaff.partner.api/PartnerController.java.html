@@ -49,7 +49,7 @@ public class PartnerController {
     private static final String COOKIE_LAST_PARTNER_ID = &quot;lastPartnerId&quot;;
     private static final int COOKIE_MAX_AGE = 30 * 24 * 60 * 60; // 30 days
     private static final int PAGE_SIZE = 20;
-<span class="nc" id="L52">    private static final DateTimeFormatter AUDIT_DATE_FMT = DateTimeFormatter.ofPattern(&quot;dd.MM.yyyy&quot;);</span>
+<span class="fc" id="L52">    private static final DateTimeFormatter AUDIT_DATE_FMT = DateTimeFormatter.ofPattern(&quot;dd.MM.yyyy&quot;);</span>
 
     private final PartnerCommandService commandService;
     private final PartnerQueryService queryService;
@@ -63,14 +63,14 @@ public class PartnerController {
                              final FreelancerCommandService freelancerCommandService,
                              final HistoryTypeQueryService historyTypeQueryService,
                              final RememberedProjectService rememberedProjectService,
-<span class="nc" id="L66">                             final ObjectMapper objectMapper) {</span>
-<span class="nc" id="L67">        this.commandService = commandService;</span>
-<span class="nc" id="L68">        this.queryService = queryService;</span>
-<span class="nc" id="L69">        this.freelancerCommandService = freelancerCommandService;</span>
-<span class="nc" id="L70">        this.historyTypeQueryService = historyTypeQueryService;</span>
-<span class="nc" id="L71">        this.rememberedProjectService = rememberedProjectService;</span>
-<span class="nc" id="L72">        this.objectMapper = objectMapper;</span>
-<span class="nc" id="L73">    }</span>
+<span class="fc" id="L66">                             final ObjectMapper objectMapper) {</span>
+<span class="fc" id="L67">        this.commandService = commandService;</span>
+<span class="fc" id="L68">        this.queryService = queryService;</span>
+<span class="fc" id="L69">        this.freelancerCommandService = freelancerCommandService;</span>
+<span class="fc" id="L70">        this.historyTypeQueryService = historyTypeQueryService;</span>
+<span class="fc" id="L71">        this.rememberedProjectService = rememberedProjectService;</span>
+<span class="fc" id="L72">        this.objectMapper = objectMapper;</span>
+<span class="fc" id="L73">    }</span>
 
     // -------------------------------------------------------------------------
     // Navigation: index → redirect to last or first
@@ -120,65 +120,65 @@ public class PartnerController {
 
     @GetMapping(&quot;/{id}&quot;)
     public String show(@PathVariable final long id, final HttpServletResponse response, final Model model, final Principal principal) {
-<span class="nc" id="L123">        final var partner = commandService.findById(id).orElseThrow();</span>
-<span class="nc" id="L124">        final var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, String.valueOf(id));</span>
-<span class="nc" id="L125">        cookie.setPath(&quot;/partner&quot;);</span>
-<span class="nc" id="L126">        cookie.setMaxAge(COOKIE_MAX_AGE);</span>
-<span class="nc" id="L127">        response.addCookie(cookie);</span>
-<span class="nc" id="L128">        model.addAttribute(&quot;partner&quot;, partner);</span>
-<span class="nc" id="L129">        model.addAttribute(&quot;contacts&quot;, queryService.findContactsByPartner(id));</span>
-<span class="nc" id="L130">        model.addAttribute(&quot;history&quot;, queryService.findHistoryByPartner(id));</span>
-<span class="nc" id="L131">        model.addAttribute(&quot;freelancers&quot;, queryService.findFreelancersByPartner(id));</span>
-<span class="nc" id="L132">        model.addAttribute(&quot;projects&quot;, queryService.findProjectsByPartner(id));</span>
-<span class="nc" id="L133">        model.addAttribute(&quot;historyTypes&quot;, historyTypeQueryService.findAll());</span>
-<span class="nc" id="L134">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
-<span class="nc" id="L135">        model.addAttribute(&quot;activePage&quot;, &quot;partner&quot;);</span>
-<span class="nc" id="L136">        model.addAttribute(&quot;auditInfo&quot;, buildAuditInfo(</span>
-<span class="nc" id="L137">                partner.getId(),</span>
-<span class="nc" id="L138">                partner.getCreationDate(), partner.getCreationUser(),</span>
-<span class="nc" id="L139">                partner.getChangedDate(), partner.getChangedUser()));</span>
-<span class="nc" id="L140">        return &quot;partner/form&quot;;</span>
+<span class="fc" id="L123">        final var partner = commandService.findById(id).orElseThrow();</span>
+<span class="fc" id="L124">        final var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, String.valueOf(id));</span>
+<span class="fc" id="L125">        cookie.setPath(&quot;/partner&quot;);</span>
+<span class="fc" id="L126">        cookie.setMaxAge(COOKIE_MAX_AGE);</span>
+<span class="fc" id="L127">        response.addCookie(cookie);</span>
+<span class="fc" id="L128">        model.addAttribute(&quot;partner&quot;, partner);</span>
+<span class="fc" id="L129">        model.addAttribute(&quot;contacts&quot;, queryService.findContactsByPartner(id));</span>
+<span class="fc" id="L130">        model.addAttribute(&quot;history&quot;, queryService.findHistoryByPartner(id));</span>
+<span class="fc" id="L131">        model.addAttribute(&quot;freelancers&quot;, queryService.findFreelancersByPartner(id));</span>
+<span class="fc" id="L132">        model.addAttribute(&quot;projects&quot;, queryService.findProjectsByPartner(id));</span>
+<span class="fc" id="L133">        model.addAttribute(&quot;historyTypes&quot;, historyTypeQueryService.findAll());</span>
+<span class="fc" id="L134">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
+<span class="fc" id="L135">        model.addAttribute(&quot;activePage&quot;, &quot;partner&quot;);</span>
+<span class="fc" id="L136">        model.addAttribute(&quot;auditInfo&quot;, buildAuditInfo(</span>
+<span class="fc" id="L137">                partner.getId(),</span>
+<span class="fc" id="L138">                partner.getCreationDate(), partner.getCreationUser(),</span>
+<span class="fc" id="L139">                partner.getChangedDate(), partner.getChangedUser()));</span>
+<span class="fc" id="L140">        return &quot;partner/form&quot;;</span>
     }
 
     @GetMapping(&quot;/new&quot;)
     public String newForm(final HttpServletResponse response, final Model model, final Principal principal) {
-<span class="nc" id="L145">        final var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, &quot;&quot;);</span>
-<span class="nc" id="L146">        cookie.setPath(&quot;/partner&quot;);</span>
-<span class="nc" id="L147">        cookie.setMaxAge(0); // delete</span>
-<span class="nc" id="L148">        response.addCookie(cookie);</span>
-<span class="nc" id="L149">        final var partner = new Partner();</span>
-<span class="nc" id="L150">        model.addAttribute(&quot;partner&quot;, partner);</span>
-<span class="nc" id="L151">        model.addAttribute(&quot;contacts&quot;, List.of());</span>
-<span class="nc" id="L152">        model.addAttribute(&quot;history&quot;, List.of());</span>
-<span class="nc" id="L153">        model.addAttribute(&quot;freelancers&quot;, List.of());</span>
-<span class="nc" id="L154">        model.addAttribute(&quot;projects&quot;, List.of());</span>
-<span class="nc" id="L155">        model.addAttribute(&quot;historyTypes&quot;, historyTypeQueryService.findAll());</span>
-<span class="nc" id="L156">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
-<span class="nc" id="L157">        model.addAttribute(&quot;activePage&quot;, &quot;partner&quot;);</span>
-<span class="nc" id="L158">        model.addAttribute(&quot;auditInfo&quot;, buildAuditInfo(</span>
-<span class="nc" id="L159">                partner.getId(),</span>
-<span class="nc" id="L160">                partner.getCreationDate(), partner.getCreationUser(),</span>
-<span class="nc" id="L161">                partner.getChangedDate(), partner.getChangedUser()));</span>
-<span class="nc" id="L162">        return &quot;partner/form&quot;;</span>
+<span class="fc" id="L145">        final var cookie = new Cookie(COOKIE_LAST_PARTNER_ID, &quot;&quot;);</span>
+<span class="fc" id="L146">        cookie.setPath(&quot;/partner&quot;);</span>
+<span class="fc" id="L147">        cookie.setMaxAge(0); // delete</span>
+<span class="fc" id="L148">        response.addCookie(cookie);</span>
+<span class="fc" id="L149">        final var partner = new Partner();</span>
+<span class="fc" id="L150">        model.addAttribute(&quot;partner&quot;, partner);</span>
+<span class="fc" id="L151">        model.addAttribute(&quot;contacts&quot;, List.of());</span>
+<span class="fc" id="L152">        model.addAttribute(&quot;history&quot;, List.of());</span>
+<span class="fc" id="L153">        model.addAttribute(&quot;freelancers&quot;, List.of());</span>
+<span class="fc" id="L154">        model.addAttribute(&quot;projects&quot;, List.of());</span>
+<span class="fc" id="L155">        model.addAttribute(&quot;historyTypes&quot;, historyTypeQueryService.findAll());</span>
+<span class="fc" id="L156">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
+<span class="fc" id="L157">        model.addAttribute(&quot;activePage&quot;, &quot;partner&quot;);</span>
+<span class="fc" id="L158">        model.addAttribute(&quot;auditInfo&quot;, buildAuditInfo(</span>
+<span class="fc" id="L159">                partner.getId(),</span>
+<span class="fc" id="L160">                partner.getCreationDate(), partner.getCreationUser(),</span>
+<span class="fc" id="L161">                partner.getChangedDate(), partner.getChangedUser()));</span>
+<span class="fc" id="L162">        return &quot;partner/form&quot;;</span>
     }
 
     private String buildAuditInfo(final Long id, final LocalDateTime creationDate, final String creationUser,
                                   final LocalDateTime changedDate, final String changedUser) {
-<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (id == null) return &quot;Neu, noch nicht gespeichert&quot;;</span>
-<span class="nc bnc" id="L168" title="All 2 branches missed.">        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : &quot;?&quot;)</span>
-<span class="nc bnc" id="L169" title="All 2 branches missed.">                       + &quot; &quot; + (creationUser != null ? creationUser : &quot;?&quot;);</span>
-<span class="nc" id="L170">        String result = &quot;Erfasst: &quot; + created;</span>
-<span class="nc bnc" id="L171" title="All 4 branches missed.">        if (changedDate != null &amp;&amp; !changedDate.equals(creationDate)) {</span>
-<span class="nc" id="L172">            result += &quot;&lt;br&gt;Geändert: &quot;</span>
-<span class="nc" id="L173">                   + changedDate.format(AUDIT_DATE_FMT)</span>
-<span class="nc bnc" id="L174" title="All 2 branches missed.">                   + &quot; &quot; + (changedUser != null ? changedUser : &quot;?&quot;);</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (id == null) return &quot;Neu, noch nicht gespeichert&quot;;</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : &quot;?&quot;)</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">                       + &quot; &quot; + (creationUser != null ? creationUser : &quot;?&quot;);</span>
+<span class="fc" id="L170">        String result = &quot;Erfasst: &quot; + created;</span>
+<span class="pc bpc" id="L171" title="1 of 4 branches missed.">        if (changedDate != null &amp;&amp; !changedDate.equals(creationDate)) {</span>
+<span class="fc" id="L172">            result += &quot;&lt;br&gt;Geändert: &quot;</span>
+<span class="fc" id="L173">                   + changedDate.format(AUDIT_DATE_FMT)</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">                   + &quot; &quot; + (changedUser != null ? changedUser : &quot;?&quot;);</span>
         }
-<span class="nc" id="L176">        return result;</span>
+<span class="fc" id="L176">        return result;</span>
     }
 
     private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
-<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (principal == null) return null;</span>
-<span class="nc" id="L181">        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">        if (principal == null) return null;</span>
+<span class="fc" id="L181">        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);</span>
     }
 
     // -------------------------------------------------------------------------
@@ -192,13 +192,13 @@ public class PartnerController {
                                   @RequestParam(required = false, defaultValue = &quot;[]&quot;) final String historyJson,
                                   final HttpServletResponse response) throws IOException {
         try {
-<span class="nc" id="L195">            final List&lt;PartnerContactEntry&gt; contacts = objectMapper.readValue(</span>
-<span class="nc" id="L196">                    contactsJson, new TypeReference&lt;&gt;() {});</span>
-<span class="nc" id="L197">            final List&lt;PartnerHistoryEntry&gt; newHistory = objectMapper.readValue(</span>
-<span class="nc" id="L198">                    historyJson, new TypeReference&lt;&gt;() {});</span>
-<span class="nc" id="L199">            final var saved = commandService.save(partner, contacts, newHistory);</span>
-<span class="nc" id="L200">            response.sendRedirect(&quot;/partner/&quot; + saved.getId() + &quot;?saved=true&quot;);</span>
-<span class="nc" id="L201">            return null;</span>
+<span class="fc" id="L195">            final List&lt;PartnerContactEntry&gt; contacts = objectMapper.readValue(</span>
+<span class="fc" id="L196">                    contactsJson, new TypeReference&lt;&gt;() {});</span>
+<span class="fc" id="L197">            final List&lt;PartnerHistoryEntry&gt; newHistory = objectMapper.readValue(</span>
+<span class="fc" id="L198">                    historyJson, new TypeReference&lt;&gt;() {});</span>
+<span class="fc" id="L199">            final var saved = commandService.save(partner, contacts, newHistory);</span>
+<span class="fc" id="L200">            response.sendRedirect(&quot;/partner/&quot; + saved.getId() + &quot;?saved=true&quot;);</span>
+<span class="fc" id="L201">            return null;</span>
 <span class="nc" id="L202">        } catch (final OptimisticLockingFailureException e) {</span>
 <span class="nc" id="L203">            return ResponseEntity.status(HttpStatus.CONFLICT)</span>
 <span class="nc" id="L204">                    .body(Map.of(&quot;conflict&quot;, true));</span>
@@ -234,7 +234,7 @@ public class PartnerController {
                          @RequestParam(required = false, defaultValue = &quot;0&quot;) final int offset,
                          final Model model,
                          final HttpServletResponse response) {
-<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (offset &gt; 0) {</span>
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">        if (offset &gt; 0) {</span>
 <span class="nc" id="L238">            final var results = queryService.search(criteria, offset, PAGE_SIZE);</span>
 <span class="nc" id="L239">            final int nextOffset = offset + PAGE_SIZE;</span>
 <span class="nc" id="L240">            final long total = queryService.countSearch(criteria);</span>
@@ -245,42 +245,42 @@ public class PartnerController {
 <span class="nc" id="L245">            return &quot;partner/search-results :: results&quot;;</span>
         }
 
-<span class="nc" id="L248">        response.setHeader(&quot;Cache-Control&quot;, &quot;no-store, no-cache, must-revalidate&quot;);</span>
-<span class="nc" id="L249">        response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);</span>
-<span class="nc" id="L250">        response.setHeader(&quot;Expires&quot;, &quot;0&quot;);</span>
+<span class="fc" id="L248">        response.setHeader(&quot;Cache-Control&quot;, &quot;no-store, no-cache, must-revalidate&quot;);</span>
+<span class="fc" id="L249">        response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);</span>
+<span class="fc" id="L250">        response.setHeader(&quot;Expires&quot;, &quot;0&quot;);</span>
 
-<span class="nc" id="L252">        final var results = queryService.search(criteria, 0, PAGE_SIZE);</span>
-<span class="nc" id="L253">        final long total = queryService.countSearch(criteria);</span>
-<span class="nc" id="L254">        model.addAttribute(&quot;results&quot;, results);</span>
-<span class="nc" id="L255">        model.addAttribute(&quot;totalCount&quot;, total);</span>
-<span class="nc" id="L256">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
-<span class="nc" id="L257">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
-<span class="nc" id="L258">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
-<span class="nc bnc" id="L259" title="All 2 branches missed.">        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;</span>
-<span class="nc" id="L260">        model.addAttribute(&quot;nextUrl&quot;, nextUrl);</span>
-<span class="nc" id="L261">        model.addAttribute(&quot;editSearchUrl&quot;, buildEditSearchUrl(criteria));</span>
-<span class="nc" id="L262">        return &quot;partner/search-page&quot;;</span>
+<span class="fc" id="L252">        final var results = queryService.search(criteria, 0, PAGE_SIZE);</span>
+<span class="fc" id="L253">        final long total = queryService.countSearch(criteria);</span>
+<span class="fc" id="L254">        model.addAttribute(&quot;results&quot;, results);</span>
+<span class="fc" id="L255">        model.addAttribute(&quot;totalCount&quot;, total);</span>
+<span class="fc" id="L256">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
+<span class="fc" id="L257">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
+<span class="fc" id="L258">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;</span>
+<span class="fc" id="L260">        model.addAttribute(&quot;nextUrl&quot;, nextUrl);</span>
+<span class="fc" id="L261">        model.addAttribute(&quot;editSearchUrl&quot;, buildEditSearchUrl(criteria));</span>
+<span class="fc" id="L262">        return &quot;partner/search-page&quot;;</span>
     }
 
     private void appendCriteriaParams(final UriComponentsBuilder b, final PartnerSearchCriteria criteria) {
-<span class="nc bnc" id="L266" title="All 2 branches missed.">        if (criteria.company()    != null) b.queryParam(&quot;company&quot;,    criteria.company());</span>
-<span class="nc bnc" id="L267" title="All 2 branches missed.">        if (criteria.name1()      != null) b.queryParam(&quot;name1&quot;,      criteria.name1());</span>
-<span class="nc bnc" id="L268" title="All 2 branches missed.">        if (criteria.name2()      != null) b.queryParam(&quot;name2&quot;,      criteria.name2());</span>
-<span class="nc bnc" id="L269" title="All 2 branches missed.">        if (criteria.street()     != null) b.queryParam(&quot;street&quot;,     criteria.street());</span>
-<span class="nc bnc" id="L270" title="All 2 branches missed.">        if (criteria.country()    != null) b.queryParam(&quot;country&quot;,    criteria.country());</span>
-<span class="nc bnc" id="L271" title="All 2 branches missed.">        if (criteria.plz()        != null) b.queryParam(&quot;plz&quot;,        criteria.plz());</span>
-<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (criteria.city()       != null) b.queryParam(&quot;city&quot;,       criteria.city());</span>
-<span class="nc bnc" id="L273" title="All 2 branches missed.">        if (criteria.comments()   != null) b.queryParam(&quot;comments&quot;,   criteria.comments());</span>
-<span class="nc bnc" id="L274" title="All 2 branches missed.">        if (criteria.debitorNr()  != null) b.queryParam(&quot;debitorNr&quot;,  criteria.debitorNr());</span>
-<span class="nc bnc" id="L275" title="All 2 branches missed.">        if (criteria.kreditorNr() != null) b.queryParam(&quot;kreditorNr&quot;, criteria.kreditorNr());</span>
-<span class="nc bnc" id="L276" title="All 2 branches missed.">        if (criteria.sortField()  != null) b.queryParam(&quot;sortField&quot;,  criteria.sortField());</span>
-<span class="nc bnc" id="L277" title="All 2 branches missed.">        if (criteria.sortDir()    != null) b.queryParam(&quot;sortDir&quot;,    criteria.sortDir());</span>
-<span class="nc" id="L278">    }</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">        if (criteria.company()    != null) b.queryParam(&quot;company&quot;,    criteria.company());</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">        if (criteria.name1()      != null) b.queryParam(&quot;name1&quot;,      criteria.name1());</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (criteria.name2()      != null) b.queryParam(&quot;name2&quot;,      criteria.name2());</span>
+<span class="fc bfc" id="L269" title="All 2 branches covered.">        if (criteria.street()     != null) b.queryParam(&quot;street&quot;,     criteria.street());</span>
+<span class="fc bfc" id="L270" title="All 2 branches covered.">        if (criteria.country()    != null) b.queryParam(&quot;country&quot;,    criteria.country());</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">        if (criteria.plz()        != null) b.queryParam(&quot;plz&quot;,        criteria.plz());</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">        if (criteria.city()       != null) b.queryParam(&quot;city&quot;,       criteria.city());</span>
+<span class="fc bfc" id="L273" title="All 2 branches covered.">        if (criteria.comments()   != null) b.queryParam(&quot;comments&quot;,   criteria.comments());</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">        if (criteria.debitorNr()  != null) b.queryParam(&quot;debitorNr&quot;,  criteria.debitorNr());</span>
+<span class="fc bfc" id="L275" title="All 2 branches covered.">        if (criteria.kreditorNr() != null) b.queryParam(&quot;kreditorNr&quot;, criteria.kreditorNr());</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">        if (criteria.sortField()  != null) b.queryParam(&quot;sortField&quot;,  criteria.sortField());</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">        if (criteria.sortDir()    != null) b.queryParam(&quot;sortDir&quot;,    criteria.sortDir());</span>
+<span class="fc" id="L278">    }</span>
 
     private String buildEditSearchUrl(final PartnerSearchCriteria criteria) {
-<span class="nc" id="L281">        final var b = UriComponentsBuilder.fromPath(&quot;/partner/new&quot;);</span>
-<span class="nc" id="L282">        appendCriteriaParams(b, criteria);</span>
-<span class="nc" id="L283">        return b.encode().build().toUriString();</span>
+<span class="fc" id="L281">        final var b = UriComponentsBuilder.fromPath(&quot;/partner/new&quot;);</span>
+<span class="fc" id="L282">        appendCriteriaParams(b, criteria);</span>
+<span class="fc" id="L283">        return b.encode().build().toUriString();</span>
     }
 
     private String buildSearchMoreUrl(final PartnerSearchCriteria criteria, final int offset) {

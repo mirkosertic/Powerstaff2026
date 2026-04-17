@@ -102,7 +102,7 @@ public class ProfileSearchController {
 <span class="fc bfc" id="L102" title="All 4 branches covered.">        final boolean empty = (criteria.searchTerm() == null || criteria.searchTerm().isBlank())</span>
 <span class="fc bfc" id="L103" title="All 2 branches covered.">                &amp;&amp; criteria.salaryPerDayFrom() == null</span>
 <span class="pc bpc" id="L104" title="1 of 2 branches missed.">                &amp;&amp; criteria.salaryPerDayTo() == null</span>
-<span class="pc bpc" id="L105" title="3 of 4 branches missed.">                &amp;&amp; (criteria.tagIds() == null || criteria.tagIds().isBlank());</span>
+<span class="fc bfc" id="L105" title="All 4 branches covered.">                &amp;&amp; (criteria.tagIds() == null || criteria.tagIds().isBlank());</span>
 
 <span class="fc bfc" id="L107" title="All 2 branches covered.">        if (empty) {</span>
 <span class="fc" id="L108">            model.addAttribute(&quot;validationError&quot;, &quot;Bitte mindestens ein Suchkriterium angeben.&quot;);</span>
@@ -155,12 +155,12 @@ public class ProfileSearchController {
 
     private String buildSearchReturnUrl(final ProfileSearchCriteria c) {
 <span class="fc" id="L157">        final var b = UriComponentsBuilder.fromPath(&quot;/profilesearch/search&quot;);</span>
-<span class="pc bpc" id="L158" title="1 of 4 branches missed.">        if (c.searchTerm() != null &amp;&amp; !c.searchTerm().isBlank()) b.queryParam(&quot;searchTerm&quot;, c.searchTerm());</span>
+<span class="fc bfc" id="L158" title="All 4 branches covered.">        if (c.searchTerm() != null &amp;&amp; !c.searchTerm().isBlank()) b.queryParam(&quot;searchTerm&quot;, c.searchTerm());</span>
 <span class="fc bfc" id="L159" title="All 2 branches covered.">        if (c.salaryPerDayFrom() != null) b.queryParam(&quot;salaryPerDayFrom&quot;, c.salaryPerDayFrom());</span>
 <span class="pc bpc" id="L160" title="1 of 2 branches missed.">        if (c.salaryPerDayTo() != null) b.queryParam(&quot;salaryPerDayTo&quot;, c.salaryPerDayTo());</span>
-<span class="pc bpc" id="L161" title="3 of 4 branches missed.">        if (c.tagIds() != null &amp;&amp; !c.tagIds().isBlank()) b.queryParam(&quot;tagIds&quot;, c.tagIds());</span>
-<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        if (c.sortField() != null) b.queryParam(&quot;sortField&quot;, c.sortField());</span>
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if (c.sortDir() != null) b.queryParam(&quot;sortDir&quot;, c.sortDir());</span>
+<span class="fc bfc" id="L161" title="All 4 branches covered.">        if (c.tagIds() != null &amp;&amp; !c.tagIds().isBlank()) b.queryParam(&quot;tagIds&quot;, c.tagIds());</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        if (c.sortField() != null) b.queryParam(&quot;sortField&quot;, c.sortField());</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (c.sortDir() != null) b.queryParam(&quot;sortDir&quot;, c.sortDir());</span>
 <span class="fc" id="L164">        return b.encode().build().toUriString();</span>
     }
 

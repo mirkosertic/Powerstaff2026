@@ -18,14 +18,14 @@ import java.util.Optional;
 
 @Configuration
 @EnableConfigurationProperties({ProfileSearchProperties.class, McpConnectionProperties.class})
-<span class="nc" id="L21">public class ProfileSearchConfig {</span>
+<span class="fc" id="L21">public class ProfileSearchConfig {</span>
 
     @Bean
     public LlmService llmService(final List&lt;ChatModel&gt; modelsInContext, final McpClientFactory mcpClientFactory,
             final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService,
             final ObjectMapper objectMapper, final UserQueryService userQueryService,
             @Autowired(required = false) final OpenAiApi openAiApi) {
-<span class="nc bnc" id="L28" title="All 2 branches missed.">        for (final ChatModel model : modelsInContext) {</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        for (final ChatModel model : modelsInContext) {</span>
 <span class="nc bnc" id="L29" title="All 2 branches missed.">            if (model instanceof final OllamaChatModel ollamaModel) {</span>
                 // Ollama: local server, no API token concept — factory always returns the default client
 <span class="nc" id="L31">                final ChatClient defaultClient = ChatClient.builder(ollamaModel).build();</span>
@@ -47,7 +47,7 @@ import java.util.Optional;
             // Future: AnthropicChatModel — add analogous block here when spring-ai-starter-model-anthropic
             // is added to pom.xml. No changes to SpringAILlmService needed.
 <span class="nc" id="L49">        }</span>
-<span class="nc" id="L50">        return new MockLLmService();</span>
+<span class="fc" id="L50">        return new MockLLmService();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

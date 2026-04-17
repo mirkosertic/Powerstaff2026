@@ -10,22 +10,22 @@ public class ProjectPositionStatusQueryService {
 
     private final JdbcClient jdbcClient;
 
-<span class="nc" id="L13">    public ProjectPositionStatusQueryService(final JdbcClient jdbcClient) {</span>
-<span class="nc" id="L14">        this.jdbcClient = jdbcClient;</span>
-<span class="nc" id="L15">    }</span>
+<span class="fc" id="L13">    public ProjectPositionStatusQueryService(final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L14">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L15">    }</span>
 
     public List&lt;ProjectPositionStatusView&gt; findAll() {
-<span class="nc" id="L18">        return jdbcClient</span>
-<span class="nc" id="L19">                .sql(&quot;SELECT id, description, color, color_text, is_default FROM project_position_status ORDER BY description ASC&quot;)</span>
-<span class="nc" id="L20">                .query(ProjectPositionStatusView.class)</span>
-<span class="nc" id="L21">                .list();</span>
+<span class="fc" id="L18">        return jdbcClient</span>
+<span class="fc" id="L19">                .sql(&quot;SELECT id, description, color, color_text, is_default FROM project_position_status ORDER BY description ASC&quot;)</span>
+<span class="fc" id="L20">                .query(ProjectPositionStatusView.class)</span>
+<span class="fc" id="L21">                .list();</span>
     }
 
     public java.util.Optional&lt;ProjectPositionStatusView&gt; findDefault() {
-<span class="nc" id="L25">        return jdbcClient</span>
-<span class="nc" id="L26">                .sql(&quot;SELECT id, description, color, color_text, is_default FROM project_position_status WHERE is_default = TRUE LIMIT 1&quot;)</span>
-<span class="nc" id="L27">                .query(ProjectPositionStatusView.class)</span>
-<span class="nc" id="L28">                .optional();</span>
+<span class="fc" id="L25">        return jdbcClient</span>
+<span class="fc" id="L26">                .sql(&quot;SELECT id, description, color, color_text, is_default FROM project_position_status WHERE is_default = TRUE LIMIT 1&quot;)</span>
+<span class="fc" id="L27">                .query(ProjectPositionStatusView.class)</span>
+<span class="fc" id="L28">                .optional();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

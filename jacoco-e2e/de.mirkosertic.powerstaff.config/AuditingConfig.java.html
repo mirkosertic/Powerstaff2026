@@ -11,17 +11,17 @@ import java.util.Optional;
 
 @Configuration
 @EnableJdbcAuditing
-<span class="nc" id="L14">public class AuditingConfig {</span>
+<span class="fc" id="L14">public class AuditingConfig {</span>
 
     @Bean
     public AuditorAware&lt;String&gt; auditorProvider() {
-<span class="nc" id="L18">        return () -&gt; {</span>
-<span class="nc" id="L19">            final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
-<span class="nc bnc" id="L20" title="All 4 branches missed.">            if (authentication == null || !authentication.isAuthenticated()</span>
-<span class="nc bnc" id="L21" title="All 2 branches missed.">                    || &quot;anonymousUser&quot;.equals(authentication.getName())) {</span>
+<span class="fc" id="L18">        return () -&gt; {</span>
+<span class="fc" id="L19">            final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="pc bpc" id="L20" title="2 of 4 branches missed.">            if (authentication == null || !authentication.isAuthenticated()</span>
+<span class="pc bpc" id="L21" title="1 of 2 branches missed.">                    || &quot;anonymousUser&quot;.equals(authentication.getName())) {</span>
 <span class="nc" id="L22">                return Optional.of(&quot;system&quot;);</span>
             }
-<span class="nc" id="L24">            return Optional.of(authentication.getName());</span>
+<span class="fc" id="L24">            return Optional.of(authentication.getName());</span>
         };
     }
 }

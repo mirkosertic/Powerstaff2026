@@ -12,20 +12,20 @@ public class ProjectPositionQueryService {
 
     private final JdbcClient jdbcClient;
 
-<span class="nc" id="L15">    public ProjectPositionQueryService(final JdbcClient jdbcClient) {</span>
-<span class="nc" id="L16">        this.jdbcClient = jdbcClient;</span>
-<span class="nc" id="L17">    }</span>
+<span class="fc" id="L15">    public ProjectPositionQueryService(final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L16">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L17">    }</span>
 
     public List&lt;ProjectPositionView&gt; findByProjectId(final Long projectId, final String sortField, final String sortDir) {
-<span class="nc bnc" id="L20" title="All 6 branches missed.">        final var safeField = switch (sortField != null ? sortField : &quot;code&quot;) {</span>
+<span class="pc bpc" id="L20" title="4 of 6 branches missed.">        final var safeField = switch (sortField != null ? sortField : &quot;code&quot;) {</span>
 <span class="nc" id="L21">            case &quot;name1&quot; -&gt; &quot;f.name1&quot;;</span>
 <span class="nc" id="L22">            case &quot;name2&quot; -&gt; &quot;f.name2&quot;;</span>
 <span class="nc" id="L23">            case &quot;statusDescription&quot; -&gt; &quot;pps.description&quot;;</span>
-<span class="nc" id="L24">            default -&gt; &quot;f.code&quot;;</span>
+<span class="fc" id="L24">            default -&gt; &quot;f.code&quot;;</span>
         };
-<span class="nc bnc" id="L26" title="All 2 branches missed.">        final var safeDir = &quot;desc&quot;.equalsIgnoreCase(sortDir) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">        final var safeDir = &quot;desc&quot;.equalsIgnoreCase(sortDir) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
 
-<span class="nc" id="L28">        return jdbcClient.sql(</span>
+<span class="fc" id="L28">        return jdbcClient.sql(</span>
                 &quot;SELECT pp.id, pp.db_version, pp.freelancer_id, f.code, f.name1, f.name2,&quot;
                 + &quot; pp.status_id, pps.description AS status_description, pps.color AS status_color, pps.color_text AS status_color_text,&quot;
                 + &quot; pp.konditionen, pp.kommentar, f.contactforbidden&quot;
@@ -34,9 +34,9 @@ public class ProjectPositionQueryService {
                 + &quot; JOIN project_position_status pps ON pps.id = pp.status_id&quot;
                 + &quot; WHERE pp.project_id = :projectId&quot;
                 + &quot; ORDER BY &quot; + safeField + &quot; &quot; + safeDir)
-<span class="nc" id="L37">                .param(&quot;projectId&quot;, projectId)</span>
-<span class="nc" id="L38">                .query(ProjectPositionView.class)</span>
-<span class="nc" id="L39">                .list();</span>
+<span class="fc" id="L37">                .param(&quot;projectId&quot;, projectId)</span>
+<span class="fc" id="L38">                .query(ProjectPositionView.class)</span>
+<span class="fc" id="L39">                .list();</span>
     }
 
     public boolean existsPosition(final Long projectId, final Long freelancerId) {

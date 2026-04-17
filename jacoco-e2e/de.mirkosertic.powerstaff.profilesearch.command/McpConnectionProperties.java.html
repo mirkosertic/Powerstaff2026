@@ -18,22 +18,22 @@ import java.time.Duration;
  * &lt;/ul&gt;
  */
 @ConfigurationProperties(prefix = &quot;powerstaff.mcp&quot;)
-<span class="nc" id="L21">public class McpConnectionProperties {</span>
+<span class="fc" id="L21">public class McpConnectionProperties {</span>
 
-<span class="nc" id="L23">    private boolean enabled = false;</span>
-<span class="nc" id="L24">    private String url = &quot;http://localhost:9000&quot;;</span>
-<span class="nc" id="L25">    private String endpoint = &quot;/mcp/message&quot;;</span>
-<span class="nc" id="L26">    private Duration requestTimeout = Duration.ofSeconds(10);</span>
-<span class="nc" id="L27">    private int maxRetries = 2;</span>
-<span class="nc" id="L28">    private Duration retryDelay = Duration.ofMillis(500);</span>
+<span class="fc" id="L23">    private boolean enabled = false;</span>
+<span class="fc" id="L24">    private String url = &quot;http://localhost:9000&quot;;</span>
+<span class="fc" id="L25">    private String endpoint = &quot;/mcp/message&quot;;</span>
+<span class="fc" id="L26">    private Duration requestTimeout = Duration.ofSeconds(10);</span>
+<span class="fc" id="L27">    private int maxRetries = 2;</span>
+<span class="fc" id="L28">    private Duration retryDelay = Duration.ofMillis(500);</span>
 
     public boolean isEnabled() {
-<span class="nc" id="L31">        return enabled;</span>
+<span class="fc" id="L31">        return enabled;</span>
     }
 
     public void setEnabled(final boolean enabled) {
-<span class="nc" id="L35">        this.enabled = enabled;</span>
-<span class="nc" id="L36">    }</span>
+<span class="fc" id="L35">        this.enabled = enabled;</span>
+<span class="fc" id="L36">    }</span>
 
     public String getUrl() {
 <span class="nc" id="L39">        return url;</span>

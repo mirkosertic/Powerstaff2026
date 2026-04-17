@@ -26,13 +26,13 @@ public class UserCommandService {
 
     @Transactional
     public void updateSystemPrompt(final String username, final String prompt) {
-<span class="nc bnc" id="L29" title="All 2 branches missed.">        repository.updateSystemPrompt(username, prompt != null ? prompt : PsUser.DEFAULT_SYSTEM_PROMPT);</span>
-<span class="nc" id="L30">    }</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">        repository.updateSystemPrompt(username, prompt != null ? prompt : PsUser.DEFAULT_SYSTEM_PROMPT);</span>
+<span class="fc" id="L30">    }</span>
 
     @Transactional
     public void updateApiToken(final String username, final String token) {
-<span class="nc bnc" id="L34" title="All 4 branches missed.">        repository.updateApiToken(username, token != null &amp;&amp; !token.isBlank() ? token.trim() : null);</span>
-<span class="nc" id="L35">    }</span>
+<span class="pc bpc" id="L34" title="1 of 4 branches missed.">        repository.updateApiToken(username, token != null &amp;&amp; !token.isBlank() ? token.trim() : null);</span>
+<span class="fc" id="L35">    }</span>
 
     @Transactional
     public void updateUser(final String username, final boolean mustChangePassword, final boolean enabled) {

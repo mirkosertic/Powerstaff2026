@@ -11,23 +11,23 @@ public class UserQueryService {
 
     private final JdbcClient jdbcClient;
 
-<span class="nc" id="L14">    public UserQueryService(final JdbcClient jdbcClient) {</span>
-<span class="nc" id="L15">        this.jdbcClient = jdbcClient;</span>
-<span class="nc" id="L16">    }</span>
+<span class="fc" id="L14">    public UserQueryService(final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L15">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L16">    }</span>
 
     public List&lt;UserView&gt; findAll() {
-<span class="nc" id="L19">        return jdbcClient</span>
-<span class="nc" id="L20">                .sql(&quot;SELECT username, must_change_password, enabled, profile_search_system_prompt, is_admin AS admin, llm_api_token FROM ps_user ORDER BY username ASC&quot;)</span>
-<span class="nc" id="L21">                .query(UserView.class)</span>
-<span class="nc" id="L22">                .list();</span>
+<span class="fc" id="L19">        return jdbcClient</span>
+<span class="fc" id="L20">                .sql(&quot;SELECT username, must_change_password, enabled, profile_search_system_prompt, is_admin AS admin, llm_api_token FROM ps_user ORDER BY username ASC&quot;)</span>
+<span class="fc" id="L21">                .query(UserView.class)</span>
+<span class="fc" id="L22">                .list();</span>
     }
 
     public Optional&lt;UserView&gt; findByUsername(final String username) {
-<span class="nc" id="L26">        return jdbcClient</span>
-<span class="nc" id="L27">                .sql(&quot;SELECT username, must_change_password, enabled, profile_search_system_prompt, is_admin AS admin, llm_api_token FROM ps_user WHERE username = :username&quot;)</span>
-<span class="nc" id="L28">                .param(&quot;username&quot;, username)</span>
-<span class="nc" id="L29">                .query(UserView.class)</span>
-<span class="nc" id="L30">                .optional();</span>
+<span class="fc" id="L26">        return jdbcClient</span>
+<span class="fc" id="L27">                .sql(&quot;SELECT username, must_change_password, enabled, profile_search_system_prompt, is_admin AS admin, llm_api_token FROM ps_user WHERE username = :username&quot;)</span>
+<span class="fc" id="L28">                .param(&quot;username&quot;, username)</span>
+<span class="fc" id="L29">                .query(UserView.class)</span>
+<span class="fc" id="L30">                .optional();</span>
     }
 
     public Optional&lt;String&gt; findFirstAdminLlmApiToken() {

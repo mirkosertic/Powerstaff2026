@@ -165,7 +165,7 @@ public class KundeQueryService {
 <span class="fc" id="L165">    }</span>
 
     private static void appendLike(final StringBuilder sql, final Map&lt;String, Object&gt; params, final String column, final String value) {
-<span class="pc bpc" id="L168" title="1 of 4 branches missed.">        if (value != null &amp;&amp; !value.isBlank()) {</span>
+<span class="fc bfc" id="L168" title="All 4 branches covered.">        if (value != null &amp;&amp; !value.isBlank()) {</span>
 <span class="fc" id="L169">            final String paramName = &quot;p&quot; + (params.size() + 1);</span>
 <span class="fc" id="L170">            sql.append(&quot; AND &quot;).append(column).append(&quot; LIKE :&quot;).append(paramName);</span>
 <span class="fc" id="L171">            params.put(paramName, &quot;%&quot; + value + &quot;%&quot;);</span>

@@ -10,15 +10,15 @@ public class HistoryTypeQueryService {
 
     private final JdbcClient jdbcClient;
 
-<span class="nc" id="L13">    public HistoryTypeQueryService(final JdbcClient jdbcClient) {</span>
-<span class="nc" id="L14">        this.jdbcClient = jdbcClient;</span>
-<span class="nc" id="L15">    }</span>
+<span class="fc" id="L13">    public HistoryTypeQueryService(final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L14">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L15">    }</span>
 
     public List&lt;HistoryTypeView&gt; findAll() {
-<span class="nc" id="L18">        return jdbcClient</span>
-<span class="nc" id="L19">                .sql(&quot;SELECT id, description FROM historytype ORDER BY description ASC&quot;)</span>
-<span class="nc" id="L20">                .query(HistoryTypeView.class)</span>
-<span class="nc" id="L21">                .list();</span>
+<span class="fc" id="L18">        return jdbcClient</span>
+<span class="fc" id="L19">                .sql(&quot;SELECT id, description FROM historytype ORDER BY description ASC&quot;)</span>
+<span class="fc" id="L20">                .query(HistoryTypeView.class)</span>
+<span class="fc" id="L21">                .list();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -4,7 +4,7 @@ import de.mirkosertic.powerstaff.shared.ProjectStatus;
 
 import java.time.LocalDateTime;
 
-<span class="nc" id="L7">public record KundeProjectListItem(</span>
+<span class="fc" id="L7">public record KundeProjectListItem(</span>
         Long id,
         String projectNumber,
         String descriptionShort,
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
         int status
 ) {
     public String statusLabel() {
-<span class="nc" id="L16">        return ProjectStatus.fromInt(status).getLabel();</span>
+<span class="fc" id="L16">        return ProjectStatus.fromInt(status).getLabel();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

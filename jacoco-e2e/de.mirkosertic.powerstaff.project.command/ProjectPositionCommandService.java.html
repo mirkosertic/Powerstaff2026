@@ -14,10 +14,10 @@ public class ProjectPositionCommandService {
     private final ProjectPositionStatusQueryService positionStatusQueryService;
 
     public ProjectPositionCommandService(final ProjectPositionRepository repository,
-<span class="nc" id="L17">                                         final ProjectPositionStatusQueryService positionStatusQueryService) {</span>
-<span class="nc" id="L18">        this.repository = repository;</span>
-<span class="nc" id="L19">        this.positionStatusQueryService = positionStatusQueryService;</span>
-<span class="nc" id="L20">    }</span>
+<span class="fc" id="L17">                                         final ProjectPositionStatusQueryService positionStatusQueryService) {</span>
+<span class="fc" id="L18">        this.repository = repository;</span>
+<span class="fc" id="L19">        this.positionStatusQueryService = positionStatusQueryService;</span>
+<span class="fc" id="L20">    }</span>
 
     public ProjectPosition save(final ProjectPosition position) {
         try {
@@ -35,38 +35,38 @@ public class ProjectPositionCommandService {
      * If statusId is null, the configured default ProjectPositionStatus is used.
      */
     public void assignFreelancerToProject(final long freelancerId, final long projectId, final Long statusId, final String konditionen, final String kommentar) {
-<span class="nc" id="L38">        Long resolvedStatusId = statusId;</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (resolvedStatusId == null) {</span>
-<span class="nc" id="L40">            resolvedStatusId = positionStatusQueryService.findDefault()</span>
-<span class="nc" id="L41">                    .map(ProjectPositionStatusView::id)</span>
-<span class="nc" id="L42">                    .orElseThrow(() -&gt; new IllegalStateException(</span>
+<span class="fc" id="L38">        Long resolvedStatusId = statusId;</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (resolvedStatusId == null) {</span>
+<span class="fc" id="L40">            resolvedStatusId = positionStatusQueryService.findDefault()</span>
+<span class="fc" id="L41">                    .map(ProjectPositionStatusView::id)</span>
+<span class="pc" id="L42">                    .orElseThrow(() -&gt; new IllegalStateException(</span>
                             &quot;Kein Standard-Positionsstatus konfiguriert. Bitte im Administrationsbereich einen Standard-Status festlegen.&quot;));
         }
-<span class="nc" id="L45">        final var position = new ProjectPosition();</span>
-<span class="nc" id="L46">        position.setProjectId(projectId);</span>
-<span class="nc" id="L47">        position.setFreelancerId(freelancerId);</span>
-<span class="nc" id="L48">        position.setStatusId(resolvedStatusId);</span>
-<span class="nc" id="L49">        position.setKonditionen(konditionen);</span>
-<span class="nc" id="L50">        position.setKommentar(kommentar);</span>
+<span class="fc" id="L45">        final var position = new ProjectPosition();</span>
+<span class="fc" id="L46">        position.setProjectId(projectId);</span>
+<span class="fc" id="L47">        position.setFreelancerId(freelancerId);</span>
+<span class="fc" id="L48">        position.setStatusId(resolvedStatusId);</span>
+<span class="fc" id="L49">        position.setKonditionen(konditionen);</span>
+<span class="fc" id="L50">        position.setKommentar(kommentar);</span>
         try {
-<span class="nc" id="L52">            repository.save(position);</span>
-<span class="nc" id="L53">        } catch (final DataIntegrityViolationException e) {</span>
-<span class="nc" id="L54">            throw new FreelancerAlreadyAssignedException(freelancerId, projectId);</span>
-<span class="nc" id="L55">        }</span>
-<span class="nc" id="L56">    }</span>
+<span class="fc" id="L52">            repository.save(position);</span>
+<span class="fc" id="L53">        } catch (final DataIntegrityViolationException e) {</span>
+<span class="fc" id="L54">            throw new FreelancerAlreadyAssignedException(freelancerId, projectId);</span>
+<span class="fc" id="L55">        }</span>
+<span class="fc" id="L56">    }</span>
 
     /**
      * Aktualisiert die editierbaren Felder einer bestehenden Projektposition (Status, Konditionen, Kommentar).
      * Lädt den bestehenden Datensatz, um Audit-Informationen und die Freiberufler-Zuordnung zu erhalten.
      */
     public ProjectPosition updateEditable(final long positionId, final Long statusId, final String konditionen, final String kommentar, final Long dbVersion) {
-<span class="nc" id="L63">        final var position = repository.findById(positionId)</span>
-<span class="nc" id="L64">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Projektposition nicht gefunden: &quot; + positionId));</span>
-<span class="nc" id="L65">        position.setStatusId(statusId);</span>
-<span class="nc" id="L66">        position.setKonditionen(konditionen);</span>
-<span class="nc" id="L67">        position.setKommentar(kommentar);</span>
-<span class="nc" id="L68">        position.setDbVersion(dbVersion);</span>
-<span class="nc" id="L69">        return repository.save(position);</span>
+<span class="fc" id="L63">        final var position = repository.findById(positionId)</span>
+<span class="pc" id="L64">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Projektposition nicht gefunden: &quot; + positionId));</span>
+<span class="fc" id="L65">        position.setStatusId(statusId);</span>
+<span class="fc" id="L66">        position.setKonditionen(konditionen);</span>
+<span class="fc" id="L67">        position.setKommentar(kommentar);</span>
+<span class="fc" id="L68">        position.setDbVersion(dbVersion);</span>
+<span class="fc" id="L69">        return repository.save(position);</span>
     }
 
     public void delete(final Long positionId) {

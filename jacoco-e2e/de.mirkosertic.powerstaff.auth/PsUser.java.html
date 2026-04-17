@@ -33,16 +33,16 @@ public class PsUser implements Persistable&lt;String&gt; {
             &quot;Du bist ein freundlicher KI-Assistent für den Benutzer {user} und antwortest immer auf deutsch. Dein Name ist Staffi.&quot;;
 
     public PsUser(final String username, final String passwordHash, final boolean mustChangePassword, final boolean enabled,
-<span class="nc" id="L36">                  final String profileSearchSystemPrompt, final boolean admin, final String llmApiToken) {</span>
-<span class="nc" id="L37">        this.username = username;</span>
-<span class="nc" id="L38">        this.passwordHash = passwordHash;</span>
-<span class="nc" id="L39">        this.mustChangePassword = mustChangePassword;</span>
-<span class="nc" id="L40">        this.enabled = enabled;</span>
-<span class="nc bnc" id="L41" title="All 2 branches missed.">        this.profileSearchSystemPrompt = profileSearchSystemPrompt != null</span>
-<span class="nc" id="L42">                ? profileSearchSystemPrompt : DEFAULT_SYSTEM_PROMPT;</span>
-<span class="nc" id="L43">        this.admin = admin;</span>
-<span class="nc" id="L44">        this.llmApiToken = llmApiToken;</span>
-<span class="nc" id="L45">    }</span>
+<span class="fc" id="L36">                  final String profileSearchSystemPrompt, final boolean admin, final String llmApiToken) {</span>
+<span class="fc" id="L37">        this.username = username;</span>
+<span class="fc" id="L38">        this.passwordHash = passwordHash;</span>
+<span class="fc" id="L39">        this.mustChangePassword = mustChangePassword;</span>
+<span class="fc" id="L40">        this.enabled = enabled;</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        this.profileSearchSystemPrompt = profileSearchSystemPrompt != null</span>
+<span class="pc" id="L42">                ? profileSearchSystemPrompt : DEFAULT_SYSTEM_PROMPT;</span>
+<span class="fc" id="L43">        this.admin = admin;</span>
+<span class="fc" id="L44">        this.llmApiToken = llmApiToken;</span>
+<span class="fc" id="L45">    }</span>
 
     /**
      * Spring Data JDBC: String-PKs sind niemals null, daher würde isNew() ohne
@@ -52,28 +52,28 @@ public class PsUser implements Persistable&lt;String&gt; {
      */
     @Override
     public String getId() {
-<span class="nc" id="L55">        return username;</span>
+<span class="fc" id="L55">        return username;</span>
     }
 
     @Override
     public boolean isNew() {
-<span class="nc" id="L60">        return true;</span>
+<span class="fc" id="L60">        return true;</span>
     }
 
     public String getUsername() {
-<span class="nc" id="L64">        return username;</span>
+<span class="fc" id="L64">        return username;</span>
     }
 
     public String getPasswordHash() {
-<span class="nc" id="L68">        return passwordHash;</span>
+<span class="fc" id="L68">        return passwordHash;</span>
     }
 
     public boolean isMustChangePassword() {
-<span class="nc" id="L72">        return mustChangePassword;</span>
+<span class="fc" id="L72">        return mustChangePassword;</span>
     }
 
     public boolean isEnabled() {
-<span class="nc" id="L76">        return enabled;</span>
+<span class="fc" id="L76">        return enabled;</span>
     }
 
     public String getProfileSearchSystemPrompt() {
@@ -81,7 +81,7 @@ public class PsUser implements Persistable&lt;String&gt; {
     }
 
     public boolean isAdmin() {
-<span class="nc" id="L84">        return admin;</span>
+<span class="fc" id="L84">        return admin;</span>
     }
 
     public String getLlmApiToken() {

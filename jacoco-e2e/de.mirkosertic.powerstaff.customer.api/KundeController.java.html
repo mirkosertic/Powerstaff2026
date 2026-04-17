@@ -44,7 +44,7 @@ public class KundeController {
     private static final String COOKIE_LAST_KUNDE_ID = &quot;lastKundeId&quot;;
     private static final int COOKIE_MAX_AGE = 30 * 24 * 60 * 60; // 30 Tage
     private static final int PAGE_SIZE = 20;
-<span class="nc" id="L47">    private static final DateTimeFormatter AUDIT_DATE_FMT = DateTimeFormatter.ofPattern(&quot;dd.MM.yyyy&quot;);</span>
+<span class="fc" id="L47">    private static final DateTimeFormatter AUDIT_DATE_FMT = DateTimeFormatter.ofPattern(&quot;dd.MM.yyyy&quot;);</span>
 
     private final KundeCommandService commandService;
     private final KundeQueryService queryService;
@@ -56,13 +56,13 @@ public class KundeController {
                            final KundeQueryService queryService,
                            final HistoryTypeQueryService historyTypeQueryService,
                            final RememberedProjectService rememberedProjectService,
-<span class="nc" id="L59">                           final ObjectMapper objectMapper) {</span>
-<span class="nc" id="L60">        this.commandService = commandService;</span>
-<span class="nc" id="L61">        this.queryService = queryService;</span>
-<span class="nc" id="L62">        this.historyTypeQueryService = historyTypeQueryService;</span>
-<span class="nc" id="L63">        this.rememberedProjectService = rememberedProjectService;</span>
-<span class="nc" id="L64">        this.objectMapper = objectMapper;</span>
-<span class="nc" id="L65">    }</span>
+<span class="fc" id="L59">                           final ObjectMapper objectMapper) {</span>
+<span class="fc" id="L60">        this.commandService = commandService;</span>
+<span class="fc" id="L61">        this.queryService = queryService;</span>
+<span class="fc" id="L62">        this.historyTypeQueryService = historyTypeQueryService;</span>
+<span class="fc" id="L63">        this.rememberedProjectService = rememberedProjectService;</span>
+<span class="fc" id="L64">        this.objectMapper = objectMapper;</span>
+<span class="fc" id="L65">    }</span>
 
     // -------------------------------------------------------------------------
     // Navigation: index → redirect zu letztem oder erstem
@@ -112,62 +112,62 @@ public class KundeController {
 
     @GetMapping(&quot;/{id}&quot;)
     public String show(@PathVariable final long id, final HttpServletResponse response, final Model model, final Principal principal) {
-<span class="nc" id="L115">        final var kunde = commandService.findById(id).orElseThrow();</span>
-<span class="nc" id="L116">        final var cookie = new Cookie(COOKIE_LAST_KUNDE_ID, String.valueOf(id));</span>
-<span class="nc" id="L117">        cookie.setPath(&quot;/kunde&quot;);</span>
-<span class="nc" id="L118">        cookie.setMaxAge(COOKIE_MAX_AGE);</span>
-<span class="nc" id="L119">        response.addCookie(cookie);</span>
-<span class="nc" id="L120">        populateModel(model, kunde, id, principal);</span>
-<span class="nc" id="L121">        return &quot;kunde/form&quot;;</span>
+<span class="fc" id="L115">        final var kunde = commandService.findById(id).orElseThrow();</span>
+<span class="fc" id="L116">        final var cookie = new Cookie(COOKIE_LAST_KUNDE_ID, String.valueOf(id));</span>
+<span class="fc" id="L117">        cookie.setPath(&quot;/kunde&quot;);</span>
+<span class="fc" id="L118">        cookie.setMaxAge(COOKIE_MAX_AGE);</span>
+<span class="fc" id="L119">        response.addCookie(cookie);</span>
+<span class="fc" id="L120">        populateModel(model, kunde, id, principal);</span>
+<span class="fc" id="L121">        return &quot;kunde/form&quot;;</span>
     }
 
     @GetMapping(&quot;/new&quot;)
     public String newForm(final HttpServletResponse response, final Model model, final Principal principal) {
-<span class="nc" id="L126">        final var cookie = new Cookie(COOKIE_LAST_KUNDE_ID, &quot;&quot;);</span>
-<span class="nc" id="L127">        cookie.setPath(&quot;/kunde&quot;);</span>
-<span class="nc" id="L128">        cookie.setMaxAge(0); // löschen</span>
-<span class="nc" id="L129">        response.addCookie(cookie);</span>
-<span class="nc" id="L130">        populateModel(model, new Kunde(), null, principal);</span>
-<span class="nc" id="L131">        return &quot;kunde/form&quot;;</span>
+<span class="fc" id="L126">        final var cookie = new Cookie(COOKIE_LAST_KUNDE_ID, &quot;&quot;);</span>
+<span class="fc" id="L127">        cookie.setPath(&quot;/kunde&quot;);</span>
+<span class="fc" id="L128">        cookie.setMaxAge(0); // löschen</span>
+<span class="fc" id="L129">        response.addCookie(cookie);</span>
+<span class="fc" id="L130">        populateModel(model, new Kunde(), null, principal);</span>
+<span class="fc" id="L131">        return &quot;kunde/form&quot;;</span>
     }
 
     private void populateModel(final Model model, final Kunde kunde, final Long kundeId, final Principal principal) {
-<span class="nc" id="L135">        model.addAttribute(&quot;kunde&quot;, kunde);</span>
-<span class="nc bnc" id="L136" title="All 2 branches missed.">        if (kundeId != null) {</span>
-<span class="nc" id="L137">            model.addAttribute(&quot;contacts&quot;, queryService.findContactsByKundeId(kundeId));</span>
-<span class="nc" id="L138">            model.addAttribute(&quot;history&quot;, queryService.findHistoryByKundeId(kundeId));</span>
-<span class="nc" id="L139">            model.addAttribute(&quot;projects&quot;, queryService.findProjectsByKundeId(kundeId, null, null));</span>
+<span class="fc" id="L135">        model.addAttribute(&quot;kunde&quot;, kunde);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (kundeId != null) {</span>
+<span class="fc" id="L137">            model.addAttribute(&quot;contacts&quot;, queryService.findContactsByKundeId(kundeId));</span>
+<span class="fc" id="L138">            model.addAttribute(&quot;history&quot;, queryService.findHistoryByKundeId(kundeId));</span>
+<span class="fc" id="L139">            model.addAttribute(&quot;projects&quot;, queryService.findProjectsByKundeId(kundeId, null, null));</span>
         } else {
-<span class="nc" id="L141">            model.addAttribute(&quot;contacts&quot;, List.of());</span>
-<span class="nc" id="L142">            model.addAttribute(&quot;history&quot;, List.of());</span>
-<span class="nc" id="L143">            model.addAttribute(&quot;projects&quot;, List.of());</span>
+<span class="fc" id="L141">            model.addAttribute(&quot;contacts&quot;, List.of());</span>
+<span class="fc" id="L142">            model.addAttribute(&quot;history&quot;, List.of());</span>
+<span class="fc" id="L143">            model.addAttribute(&quot;projects&quot;, List.of());</span>
         }
-<span class="nc" id="L145">        model.addAttribute(&quot;historyTypes&quot;, historyTypeQueryService.findAll());</span>
-<span class="nc" id="L146">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
-<span class="nc" id="L147">        model.addAttribute(&quot;activePage&quot;, &quot;kunde&quot;);</span>
-<span class="nc" id="L148">        model.addAttribute(&quot;auditInfo&quot;, buildAuditInfo(</span>
+<span class="fc" id="L145">        model.addAttribute(&quot;historyTypes&quot;, historyTypeQueryService.findAll());</span>
+<span class="fc" id="L146">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
+<span class="fc" id="L147">        model.addAttribute(&quot;activePage&quot;, &quot;kunde&quot;);</span>
+<span class="fc" id="L148">        model.addAttribute(&quot;auditInfo&quot;, buildAuditInfo(</span>
                 kundeId,
-<span class="nc" id="L150">                kunde.getCreationDate(), kunde.getCreationUser(),</span>
-<span class="nc" id="L151">                kunde.getChangedDate(), kunde.getChangedUser()));</span>
-<span class="nc" id="L152">    }</span>
+<span class="fc" id="L150">                kunde.getCreationDate(), kunde.getCreationUser(),</span>
+<span class="fc" id="L151">                kunde.getChangedDate(), kunde.getChangedUser()));</span>
+<span class="fc" id="L152">    }</span>
 
     private String buildAuditInfo(final Long id, final LocalDateTime creationDate, final String creationUser,
                                   final LocalDateTime changedDate, final String changedUser) {
-<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (id == null) return &quot;Neu, noch nicht gespeichert&quot;;</span>
-<span class="nc bnc" id="L157" title="All 2 branches missed.">        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : &quot;?&quot;)</span>
-<span class="nc bnc" id="L158" title="All 2 branches missed.">                       + &quot; &quot; + (creationUser != null ? creationUser : &quot;?&quot;);</span>
-<span class="nc" id="L159">        String result = &quot;Erfasst: &quot; + created;</span>
-<span class="nc bnc" id="L160" title="All 4 branches missed.">        if (changedDate != null &amp;&amp; !changedDate.equals(creationDate)) {</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (id == null) return &quot;Neu, noch nicht gespeichert&quot;;</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : &quot;?&quot;)</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">                       + &quot; &quot; + (creationUser != null ? creationUser : &quot;?&quot;);</span>
+<span class="fc" id="L159">        String result = &quot;Erfasst: &quot; + created;</span>
+<span class="pc bpc" id="L160" title="2 of 4 branches missed.">        if (changedDate != null &amp;&amp; !changedDate.equals(creationDate)) {</span>
 <span class="nc" id="L161">            result += &quot;&lt;br&gt;Geändert: &quot;</span>
 <span class="nc" id="L162">                   + changedDate.format(AUDIT_DATE_FMT)</span>
 <span class="nc bnc" id="L163" title="All 2 branches missed.">                   + &quot; &quot; + (changedUser != null ? changedUser : &quot;?&quot;);</span>
         }
-<span class="nc" id="L165">        return result;</span>
+<span class="fc" id="L165">        return result;</span>
     }
 
     private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
-<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (principal == null) return null;</span>
-<span class="nc" id="L170">        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">        if (principal == null) return null;</span>
+<span class="fc" id="L170">        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);</span>
     }
 
     // -------------------------------------------------------------------------
@@ -181,13 +181,13 @@ public class KundeController {
                                   @RequestParam(required = false, defaultValue = &quot;[]&quot;) final String historyJson,
                                   final HttpServletResponse response) throws IOException {
         try {
-<span class="nc" id="L184">            final List&lt;KundeContactEntry&gt; contacts = objectMapper.readValue(</span>
-<span class="nc" id="L185">                    contactsJson, new TypeReference&lt;&gt;() {});</span>
-<span class="nc" id="L186">            final List&lt;KundeHistoryEntry&gt; newHistory = objectMapper.readValue(</span>
-<span class="nc" id="L187">                    historyJson, new TypeReference&lt;&gt;() {});</span>
-<span class="nc" id="L188">            final var saved = commandService.save(kunde, contacts, newHistory);</span>
-<span class="nc" id="L189">            response.sendRedirect(&quot;/kunde/&quot; + saved.getId() + &quot;?saved=true&quot;);</span>
-<span class="nc" id="L190">            return null;</span>
+<span class="fc" id="L184">            final List&lt;KundeContactEntry&gt; contacts = objectMapper.readValue(</span>
+<span class="fc" id="L185">                    contactsJson, new TypeReference&lt;&gt;() {});</span>
+<span class="fc" id="L186">            final List&lt;KundeHistoryEntry&gt; newHistory = objectMapper.readValue(</span>
+<span class="fc" id="L187">                    historyJson, new TypeReference&lt;&gt;() {});</span>
+<span class="fc" id="L188">            final var saved = commandService.save(kunde, contacts, newHistory);</span>
+<span class="fc" id="L189">            response.sendRedirect(&quot;/kunde/&quot; + saved.getId() + &quot;?saved=true&quot;);</span>
+<span class="fc" id="L190">            return null;</span>
 <span class="nc" id="L191">        } catch (final OptimisticLockingFailureException e) {</span>
 <span class="nc" id="L192">            return ResponseEntity.status(HttpStatus.CONFLICT)</span>
 <span class="nc" id="L193">                    .body(Map.of(&quot;conflict&quot;, true));</span>
@@ -223,7 +223,7 @@ public class KundeController {
                          @RequestParam(required = false, defaultValue = &quot;0&quot;) final int offset,
                          final Model model,
                          final HttpServletResponse response) {
-<span class="nc bnc" id="L226" title="All 2 branches missed.">        if (offset &gt; 0) {</span>
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">        if (offset &gt; 0) {</span>
 <span class="nc" id="L227">            final var results = queryService.search(criteria, offset, PAGE_SIZE);</span>
 <span class="nc" id="L228">            final int nextOffset = offset + PAGE_SIZE;</span>
 <span class="nc" id="L229">            final long total = queryService.countSearch(criteria);</span>
@@ -234,42 +234,42 @@ public class KundeController {
 <span class="nc" id="L234">            return &quot;kunde/search-results :: results&quot;;</span>
         }
 
-<span class="nc" id="L237">        response.setHeader(&quot;Cache-Control&quot;, &quot;no-store, no-cache, must-revalidate&quot;);</span>
-<span class="nc" id="L238">        response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);</span>
-<span class="nc" id="L239">        response.setHeader(&quot;Expires&quot;, &quot;0&quot;);</span>
+<span class="fc" id="L237">        response.setHeader(&quot;Cache-Control&quot;, &quot;no-store, no-cache, must-revalidate&quot;);</span>
+<span class="fc" id="L238">        response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);</span>
+<span class="fc" id="L239">        response.setHeader(&quot;Expires&quot;, &quot;0&quot;);</span>
 
-<span class="nc" id="L241">        final var results = queryService.search(criteria, 0, PAGE_SIZE);</span>
-<span class="nc" id="L242">        final long total = queryService.countSearch(criteria);</span>
-<span class="nc" id="L243">        model.addAttribute(&quot;results&quot;, results);</span>
-<span class="nc" id="L244">        model.addAttribute(&quot;totalCount&quot;, total);</span>
-<span class="nc" id="L245">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
-<span class="nc" id="L246">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
-<span class="nc" id="L247">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
-<span class="nc bnc" id="L248" title="All 2 branches missed.">        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;</span>
-<span class="nc" id="L249">        model.addAttribute(&quot;nextUrl&quot;, nextUrl);</span>
-<span class="nc" id="L250">        model.addAttribute(&quot;editSearchUrl&quot;, buildEditSearchUrl(criteria));</span>
-<span class="nc" id="L251">        return &quot;kunde/search-page&quot;;</span>
+<span class="fc" id="L241">        final var results = queryService.search(criteria, 0, PAGE_SIZE);</span>
+<span class="fc" id="L242">        final long total = queryService.countSearch(criteria);</span>
+<span class="fc" id="L243">        model.addAttribute(&quot;results&quot;, results);</span>
+<span class="fc" id="L244">        model.addAttribute(&quot;totalCount&quot;, total);</span>
+<span class="fc" id="L245">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
+<span class="fc" id="L246">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
+<span class="fc" id="L247">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;</span>
+<span class="fc" id="L249">        model.addAttribute(&quot;nextUrl&quot;, nextUrl);</span>
+<span class="fc" id="L250">        model.addAttribute(&quot;editSearchUrl&quot;, buildEditSearchUrl(criteria));</span>
+<span class="fc" id="L251">        return &quot;kunde/search-page&quot;;</span>
     }
 
     private void appendCriteriaParams(final UriComponentsBuilder b, final KundeSearchCriteria c) {
-<span class="nc bnc" id="L255" title="All 2 branches missed.">        if (c.company()    != null) b.queryParam(&quot;company&quot;,    c.company());</span>
-<span class="nc bnc" id="L256" title="All 2 branches missed.">        if (c.name1()      != null) b.queryParam(&quot;name1&quot;,      c.name1());</span>
-<span class="nc bnc" id="L257" title="All 2 branches missed.">        if (c.name2()      != null) b.queryParam(&quot;name2&quot;,      c.name2());</span>
-<span class="nc bnc" id="L258" title="All 2 branches missed.">        if (c.street()     != null) b.queryParam(&quot;street&quot;,     c.street());</span>
-<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (c.country()    != null) b.queryParam(&quot;country&quot;,    c.country());</span>
-<span class="nc bnc" id="L260" title="All 2 branches missed.">        if (c.plz()        != null) b.queryParam(&quot;plz&quot;,        c.plz());</span>
-<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (c.city()       != null) b.queryParam(&quot;city&quot;,       c.city());</span>
-<span class="nc bnc" id="L262" title="All 2 branches missed.">        if (c.comments()   != null) b.queryParam(&quot;comments&quot;,   c.comments());</span>
-<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (c.kreditorNr() != null) b.queryParam(&quot;kreditorNr&quot;, c.kreditorNr());</span>
-<span class="nc bnc" id="L264" title="All 2 branches missed.">        if (c.debitorNr()  != null) b.queryParam(&quot;debitorNr&quot;,  c.debitorNr());</span>
-<span class="nc bnc" id="L265" title="All 2 branches missed.">        if (c.sortField()  != null) b.queryParam(&quot;sortField&quot;,  c.sortField());</span>
-<span class="nc bnc" id="L266" title="All 2 branches missed.">        if (c.sortDir()    != null) b.queryParam(&quot;sortDir&quot;,    c.sortDir());</span>
-<span class="nc" id="L267">    }</span>
+<span class="fc bfc" id="L255" title="All 2 branches covered.">        if (c.company()    != null) b.queryParam(&quot;company&quot;,    c.company());</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        if (c.name1()      != null) b.queryParam(&quot;name1&quot;,      c.name1());</span>
+<span class="fc bfc" id="L257" title="All 2 branches covered.">        if (c.name2()      != null) b.queryParam(&quot;name2&quot;,      c.name2());</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">        if (c.street()     != null) b.queryParam(&quot;street&quot;,     c.street());</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">        if (c.country()    != null) b.queryParam(&quot;country&quot;,    c.country());</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">        if (c.plz()        != null) b.queryParam(&quot;plz&quot;,        c.plz());</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        if (c.city()       != null) b.queryParam(&quot;city&quot;,       c.city());</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        if (c.comments()   != null) b.queryParam(&quot;comments&quot;,   c.comments());</span>
+<span class="fc bfc" id="L263" title="All 2 branches covered.">        if (c.kreditorNr() != null) b.queryParam(&quot;kreditorNr&quot;, c.kreditorNr());</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">        if (c.debitorNr()  != null) b.queryParam(&quot;debitorNr&quot;,  c.debitorNr());</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        if (c.sortField()  != null) b.queryParam(&quot;sortField&quot;,  c.sortField());</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">        if (c.sortDir()    != null) b.queryParam(&quot;sortDir&quot;,    c.sortDir());</span>
+<span class="fc" id="L267">    }</span>
 
     private String buildEditSearchUrl(final KundeSearchCriteria c) {
-<span class="nc" id="L270">        final var b = UriComponentsBuilder.fromPath(&quot;/kunde/new&quot;);</span>
-<span class="nc" id="L271">        appendCriteriaParams(b, c);</span>
-<span class="nc" id="L272">        return b.encode().build().toUriString();</span>
+<span class="fc" id="L270">        final var b = UriComponentsBuilder.fromPath(&quot;/kunde/new&quot;);</span>
+<span class="fc" id="L271">        appendCriteriaParams(b, c);</span>
+<span class="fc" id="L272">        return b.encode().build().toUriString();</span>
     }
 
     private String buildSearchMoreUrl(final KundeSearchCriteria c, final int offset) {

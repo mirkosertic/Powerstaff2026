@@ -31,13 +31,13 @@ import java.net.http.HttpClient;
 @Component
 public class McpClientFactory {
 
-<span class="nc" id="L34">    private static final Logger logger = LoggerFactory.getLogger(McpClientFactory.class);</span>
+<span class="fc" id="L34">    private static final Logger logger = LoggerFactory.getLogger(McpClientFactory.class);</span>
 
     private final McpConnectionProperties properties;
 
-<span class="nc" id="L38">    public McpClientFactory(final McpConnectionProperties properties) {</span>
-<span class="nc" id="L39">        this.properties = properties;</span>
-<span class="nc" id="L40">    }</span>
+<span class="fc" id="L38">    public McpClientFactory(final McpConnectionProperties properties) {</span>
+<span class="fc" id="L39">        this.properties = properties;</span>
+<span class="fc" id="L40">    }</span>
 
     /**
      * Erstellt einen neuen MCP-Client mit Retry-Logik.

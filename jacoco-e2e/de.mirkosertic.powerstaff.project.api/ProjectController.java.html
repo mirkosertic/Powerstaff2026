@@ -40,7 +40,7 @@ import java.util.Map;
 public class ProjectController {
 
     private static final int PAGE_SIZE = 20;
-<span class="nc" id="L43">    private static final DateTimeFormatter AUDIT_DATE_FMT = DateTimeFormatter.ofPattern(&quot;dd.MM.yyyy&quot;);</span>
+<span class="fc" id="L43">    private static final DateTimeFormatter AUDIT_DATE_FMT = DateTimeFormatter.ofPattern(&quot;dd.MM.yyyy&quot;);</span>
 
     private final ProjectCommandService commandService;
     private final ProjectQueryService queryService;
@@ -56,15 +56,15 @@ public class ProjectController {
                              final ProjectPositionQueryService positionQueryService,
                              final ProjectPositionCommandService positionCommandService,
                              final ProjectPositionStatusQueryService statusQueryService,
-<span class="nc" id="L59">                             final RememberedProjectService rememberedProjectService) {</span>
-<span class="nc" id="L60">        this.commandService = commandService;</span>
-<span class="nc" id="L61">        this.queryService = queryService;</span>
-<span class="nc" id="L62">        this.historyQueryService = historyQueryService;</span>
-<span class="nc" id="L63">        this.positionQueryService = positionQueryService;</span>
-<span class="nc" id="L64">        this.positionCommandService = positionCommandService;</span>
-<span class="nc" id="L65">        this.statusQueryService = statusQueryService;</span>
-<span class="nc" id="L66">        this.rememberedProjectService = rememberedProjectService;</span>
-<span class="nc" id="L67">    }</span>
+<span class="fc" id="L59">                             final RememberedProjectService rememberedProjectService) {</span>
+<span class="fc" id="L60">        this.commandService = commandService;</span>
+<span class="fc" id="L61">        this.queryService = queryService;</span>
+<span class="fc" id="L62">        this.historyQueryService = historyQueryService;</span>
+<span class="fc" id="L63">        this.positionQueryService = positionQueryService;</span>
+<span class="fc" id="L64">        this.positionCommandService = positionCommandService;</span>
+<span class="fc" id="L65">        this.statusQueryService = statusQueryService;</span>
+<span class="fc" id="L66">        this.rememberedProjectService = rememberedProjectService;</span>
+<span class="fc" id="L67">    }</span>
 
     // -------------------------------------------------------------------------
     // Navigation
@@ -119,16 +119,16 @@ public class ProjectController {
 
     @GetMapping(&quot;/{id}&quot;)
     public String show(@PathVariable final long id, final Principal principal, final Model model) {
-<span class="nc" id="L122">        final var project = commandService.findById(id).orElseThrow();</span>
-<span class="nc" id="L123">        rememberedProjectService.set(principal.getName(), id);</span>
-<span class="nc" id="L124">        populateModel(model, project, id, principal);</span>
-<span class="nc" id="L125">        return &quot;project/form&quot;;</span>
+<span class="fc" id="L122">        final var project = commandService.findById(id).orElseThrow();</span>
+<span class="fc" id="L123">        rememberedProjectService.set(principal.getName(), id);</span>
+<span class="fc" id="L124">        populateModel(model, project, id, principal);</span>
+<span class="fc" id="L125">        return &quot;project/form&quot;;</span>
     }
 
     @GetMapping(&quot;/new&quot;)
     public String newForm(final Principal principal, final Model model) {
-<span class="nc" id="L130">        populateBlankModel(model, new Project(), principal);</span>
-<span class="nc" id="L131">        return &quot;project/form&quot;;</span>
+<span class="fc" id="L130">        populateBlankModel(model, new Project(), principal);</span>
+<span class="fc" id="L131">        return &quot;project/form&quot;;</span>
     }
 
     @GetMapping(&quot;/new-from-kunde/{kundeId}&quot;)
@@ -148,38 +148,38 @@ public class ProjectController {
     }
 
     private void populateModel(final Model model, final Project project, final Long projectId, final Principal principal) {
-<span class="nc" id="L151">        model.addAttribute(&quot;project&quot;, project);</span>
-<span class="nc bnc" id="L152" title="All 2 branches missed.">        model.addAttribute(&quot;history&quot;, projectId != null ? historyQueryService.findByProjectId(projectId) : List.of());</span>
-<span class="nc bnc" id="L153" title="All 2 branches missed.">        model.addAttribute(&quot;positions&quot;, projectId != null ? positionQueryService.findByProjectId(projectId, null, null) : List.of());</span>
-<span class="nc" id="L154">        model.addAttribute(&quot;positionStatuses&quot;, statusQueryService.findAll());</span>
-<span class="nc" id="L155">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
-<span class="nc" id="L156">        model.addAttribute(&quot;activePage&quot;, &quot;project&quot;);</span>
-<span class="nc" id="L157">        model.addAttribute(&quot;auditInfo&quot;, buildAuditInfo(</span>
+<span class="fc" id="L151">        model.addAttribute(&quot;project&quot;, project);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        model.addAttribute(&quot;history&quot;, projectId != null ? historyQueryService.findByProjectId(projectId) : List.of());</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        model.addAttribute(&quot;positions&quot;, projectId != null ? positionQueryService.findByProjectId(projectId, null, null) : List.of());</span>
+<span class="fc" id="L154">        model.addAttribute(&quot;positionStatuses&quot;, statusQueryService.findAll());</span>
+<span class="fc" id="L155">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
+<span class="fc" id="L156">        model.addAttribute(&quot;activePage&quot;, &quot;project&quot;);</span>
+<span class="fc" id="L157">        model.addAttribute(&quot;auditInfo&quot;, buildAuditInfo(</span>
                 projectId,
-<span class="nc" id="L159">                project.getCreationDate(), project.getCreationUser(),</span>
-<span class="nc" id="L160">                project.getChangedDate(), project.getChangedUser()));</span>
-<span class="nc" id="L161">    }</span>
+<span class="fc" id="L159">                project.getCreationDate(), project.getCreationUser(),</span>
+<span class="fc" id="L160">                project.getChangedDate(), project.getChangedUser()));</span>
+<span class="fc" id="L161">    }</span>
 
     private String buildAuditInfo(final Long id, final LocalDateTime creationDate, final String creationUser,
                                   final LocalDateTime changedDate, final String changedUser) {
-<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (id == null) return &quot;Neu, noch nicht gespeichert&quot;;</span>
-<span class="nc bnc" id="L166" title="All 2 branches missed.">        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : &quot;?&quot;)</span>
-<span class="nc bnc" id="L167" title="All 2 branches missed.">                       + &quot; &quot; + (creationUser != null ? creationUser : &quot;?&quot;);</span>
-<span class="nc" id="L168">        String result = &quot;Erfasst: &quot; + created;</span>
-<span class="nc bnc" id="L169" title="All 4 branches missed.">        if (changedDate != null &amp;&amp; !changedDate.equals(creationDate)) {</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (id == null) return &quot;Neu, noch nicht gespeichert&quot;;</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        final String created = (creationDate != null ? creationDate.format(AUDIT_DATE_FMT) : &quot;?&quot;)</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">                       + &quot; &quot; + (creationUser != null ? creationUser : &quot;?&quot;);</span>
+<span class="fc" id="L168">        String result = &quot;Erfasst: &quot; + created;</span>
+<span class="pc bpc" id="L169" title="2 of 4 branches missed.">        if (changedDate != null &amp;&amp; !changedDate.equals(creationDate)) {</span>
 <span class="nc" id="L170">            result += &quot;&lt;br&gt;Geändert: &quot;</span>
 <span class="nc" id="L171">                   + changedDate.format(AUDIT_DATE_FMT)</span>
 <span class="nc bnc" id="L172" title="All 2 branches missed.">                   + &quot; &quot; + (changedUser != null ? changedUser : &quot;?&quot;);</span>
         }
-<span class="nc" id="L174">        return result;</span>
+<span class="fc" id="L174">        return result;</span>
     }
 
     private void populateBlankModel(final Model model, final Project project, final Principal principal) {
-<span class="nc" id="L178">        populateModel(model, project, null, principal);</span>
-<span class="nc" id="L179">    }</span>
+<span class="fc" id="L178">        populateModel(model, project, null, principal);</span>
+<span class="fc" id="L179">    }</span>
 
     private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
-<span class="nc" id="L182">        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);</span>
+<span class="fc" id="L182">        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);</span>
     }
 
     // -------------------------------------------------------------------------
@@ -229,7 +229,7 @@ public class ProjectController {
                          @RequestParam(required = false, defaultValue = &quot;0&quot;) final int offset,
                          final Model model,
                          final HttpServletResponse response) {
-<span class="nc bnc" id="L232" title="All 2 branches missed.">        if (offset &gt; 0) {</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">        if (offset &gt; 0) {</span>
 <span class="nc" id="L233">            final var results = queryService.search(criteria, offset, PAGE_SIZE);</span>
 <span class="nc" id="L234">            final int nextOffset = offset + PAGE_SIZE;</span>
 <span class="nc" id="L235">            final long total = queryService.countSearch(criteria);</span>
@@ -240,21 +240,21 @@ public class ProjectController {
 <span class="nc" id="L240">            return &quot;project/search-results :: results&quot;;</span>
         }
 
-<span class="nc" id="L243">        response.setHeader(&quot;Cache-Control&quot;, &quot;no-store, no-cache, must-revalidate&quot;);</span>
-<span class="nc" id="L244">        response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);</span>
-<span class="nc" id="L245">        response.setHeader(&quot;Expires&quot;, &quot;0&quot;);</span>
+<span class="fc" id="L243">        response.setHeader(&quot;Cache-Control&quot;, &quot;no-store, no-cache, must-revalidate&quot;);</span>
+<span class="fc" id="L244">        response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);</span>
+<span class="fc" id="L245">        response.setHeader(&quot;Expires&quot;, &quot;0&quot;);</span>
 
-<span class="nc" id="L247">        final var results = queryService.search(criteria, 0, PAGE_SIZE);</span>
-<span class="nc" id="L248">        final long total = queryService.countSearch(criteria);</span>
-<span class="nc" id="L249">        model.addAttribute(&quot;results&quot;, results);</span>
-<span class="nc" id="L250">        model.addAttribute(&quot;totalCount&quot;, total);</span>
-<span class="nc" id="L251">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
-<span class="nc" id="L252">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
-<span class="nc" id="L253">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
-<span class="nc bnc" id="L254" title="All 2 branches missed.">        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;</span>
-<span class="nc" id="L255">        model.addAttribute(&quot;nextUrl&quot;, nextUrl);</span>
-<span class="nc" id="L256">        model.addAttribute(&quot;editSearchUrl&quot;, buildEditSearchUrl(criteria));</span>
-<span class="nc" id="L257">        return &quot;project/search-page&quot;;</span>
+<span class="fc" id="L247">        final var results = queryService.search(criteria, 0, PAGE_SIZE);</span>
+<span class="fc" id="L248">        final long total = queryService.countSearch(criteria);</span>
+<span class="fc" id="L249">        model.addAttribute(&quot;results&quot;, results);</span>
+<span class="fc" id="L250">        model.addAttribute(&quot;totalCount&quot;, total);</span>
+<span class="fc" id="L251">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
+<span class="fc" id="L252">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
+<span class="fc" id="L253">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
+<span class="pc bpc" id="L254" title="1 of 2 branches missed.">        final String nextUrl = results.size() == PAGE_SIZE ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;</span>
+<span class="fc" id="L255">        model.addAttribute(&quot;nextUrl&quot;, nextUrl);</span>
+<span class="fc" id="L256">        model.addAttribute(&quot;editSearchUrl&quot;, buildEditSearchUrl(criteria));</span>
+<span class="fc" id="L257">        return &quot;project/search-page&quot;;</span>
     }
 
     // -------------------------------------------------------------------------
@@ -269,7 +269,7 @@ public class ProjectController {
 <span class="nc" id="L269">        return ResponseEntity.ok(positionQueryService.findByProjectId(id, sortField, sortDir));</span>
     }
 
-<span class="nc" id="L272">    record PositionRequest(Long statusId, String konditionen, String kommentar, Long dbVersion) {}</span>
+<span class="fc" id="L272">    record PositionRequest(Long statusId, String konditionen, String kommentar, Long dbVersion) {}</span>
 
     @PostMapping(&quot;/{projectId}/positions/{posId}&quot;)
     @ResponseBody
@@ -277,8 +277,8 @@ public class ProjectController {
                                           @PathVariable final long posId,
                                           @RequestBody final PositionRequest request) {
         try {
-<span class="nc" id="L280">            positionCommandService.updateEditable(posId, request.statusId(), request.konditionen(), request.kommentar(), request.dbVersion());</span>
-<span class="nc" id="L281">            return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));</span>
+<span class="fc" id="L280">            positionCommandService.updateEditable(posId, request.statusId(), request.konditionen(), request.kommentar(), request.dbVersion());</span>
+<span class="fc" id="L281">            return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));</span>
 <span class="nc" id="L282">        } catch (final OptimisticLockingFailureException e) {</span>
 <span class="nc" id="L283">            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(&quot;conflict&quot;, true));</span>
         }
@@ -292,19 +292,19 @@ public class ProjectController {
 <span class="nc" id="L292">        return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));</span>
     }
 
-<span class="nc" id="L295">    record AssignByIdRequest(Long freelancerId) {}</span>
+<span class="fc" id="L295">    record AssignByIdRequest(Long freelancerId) {}</span>
 
     @PostMapping(&quot;/{projectId}/positions/assign&quot;)
     @ResponseBody
     public ResponseEntity&lt;?&gt; assignById(@PathVariable final long projectId,
                                         @RequestBody final AssignByIdRequest request) {
-<span class="nc bnc" id="L301" title="All 2 branches missed.">        if (request.freelancerId() == null) {</span>
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">        if (request.freelancerId() == null) {</span>
 <span class="nc" id="L302">            return ResponseEntity.badRequest().body(Map.of(&quot;error&quot;, &quot;freelancerId required&quot;));</span>
         }
         try {
-<span class="nc" id="L305">            positionCommandService.assignFreelancerToProject(</span>
-<span class="nc" id="L306">                    request.freelancerId(), projectId, null, null, null);</span>
-<span class="nc" id="L307">            return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));</span>
+<span class="fc" id="L305">            positionCommandService.assignFreelancerToProject(</span>
+<span class="fc" id="L306">                    request.freelancerId(), projectId, null, null, null);</span>
+<span class="fc" id="L307">            return ResponseEntity.ok(positionQueryService.findByProjectId(projectId, null, null));</span>
 <span class="nc" id="L308">        } catch (final FreelancerAlreadyAssignedException e) {</span>
 <span class="nc" id="L309">            return ResponseEntity.status(HttpStatus.CONFLICT)</span>
 <span class="nc" id="L310">                    .body(Map.of(&quot;alreadyAssigned&quot;, true));</span>
@@ -312,23 +312,23 @@ public class ProjectController {
     }
 
     private void appendCriteriaParams(final UriComponentsBuilder b, final ProjectSearchCriteria c) {
-<span class="nc bnc" id="L315" title="All 2 branches missed.">        if (c.projectNumber()    != null) b.queryParam(&quot;projectNumber&quot;,    c.projectNumber());</span>
-<span class="nc bnc" id="L316" title="All 2 branches missed.">        if (c.descriptionShort() != null) b.queryParam(&quot;descriptionShort&quot;, c.descriptionShort());</span>
-<span class="nc bnc" id="L317" title="All 2 branches missed.">        if (c.descriptionLong()  != null) b.queryParam(&quot;descriptionLong&quot;,  c.descriptionLong());</span>
-<span class="nc bnc" id="L318" title="All 2 branches missed.">        if (c.skills()           != null) b.queryParam(&quot;skills&quot;,           c.skills());</span>
-<span class="nc bnc" id="L319" title="All 2 branches missed.">        if (c.workplace()        != null) b.queryParam(&quot;workplace&quot;,        c.workplace());</span>
-<span class="nc bnc" id="L320" title="All 2 branches missed.">        if (c.duration()         != null) b.queryParam(&quot;duration&quot;,         c.duration());</span>
-<span class="nc bnc" id="L321" title="All 2 branches missed.">        if (c.status()           != null) b.queryParam(&quot;status&quot;,           c.status());</span>
-<span class="nc bnc" id="L322" title="All 2 branches missed.">        if (c.debitorNr()        != null) b.queryParam(&quot;debitorNr&quot;,        c.debitorNr());</span>
-<span class="nc bnc" id="L323" title="All 2 branches missed.">        if (c.kreditorNr()       != null) b.queryParam(&quot;kreditorNr&quot;,       c.kreditorNr());</span>
-<span class="nc bnc" id="L324" title="All 2 branches missed.">        if (c.sortField()        != null) b.queryParam(&quot;sortField&quot;,        c.sortField());</span>
-<span class="nc bnc" id="L325" title="All 2 branches missed.">        if (c.sortDir()          != null) b.queryParam(&quot;sortDir&quot;,          c.sortDir());</span>
-<span class="nc" id="L326">    }</span>
+<span class="fc bfc" id="L315" title="All 2 branches covered.">        if (c.projectNumber()    != null) b.queryParam(&quot;projectNumber&quot;,    c.projectNumber());</span>
+<span class="fc bfc" id="L316" title="All 2 branches covered.">        if (c.descriptionShort() != null) b.queryParam(&quot;descriptionShort&quot;, c.descriptionShort());</span>
+<span class="fc bfc" id="L317" title="All 2 branches covered.">        if (c.descriptionLong()  != null) b.queryParam(&quot;descriptionLong&quot;,  c.descriptionLong());</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        if (c.skills()           != null) b.queryParam(&quot;skills&quot;,           c.skills());</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">        if (c.workplace()        != null) b.queryParam(&quot;workplace&quot;,        c.workplace());</span>
+<span class="fc bfc" id="L320" title="All 2 branches covered.">        if (c.duration()         != null) b.queryParam(&quot;duration&quot;,         c.duration());</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">        if (c.status()           != null) b.queryParam(&quot;status&quot;,           c.status());</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">        if (c.debitorNr()        != null) b.queryParam(&quot;debitorNr&quot;,        c.debitorNr());</span>
+<span class="fc bfc" id="L323" title="All 2 branches covered.">        if (c.kreditorNr()       != null) b.queryParam(&quot;kreditorNr&quot;,       c.kreditorNr());</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">        if (c.sortField()        != null) b.queryParam(&quot;sortField&quot;,        c.sortField());</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">        if (c.sortDir()          != null) b.queryParam(&quot;sortDir&quot;,          c.sortDir());</span>
+<span class="fc" id="L326">    }</span>
 
     private String buildEditSearchUrl(final ProjectSearchCriteria c) {
-<span class="nc" id="L329">        final var b = UriComponentsBuilder.fromPath(&quot;/project/new&quot;);</span>
-<span class="nc" id="L330">        appendCriteriaParams(b, c);</span>
-<span class="nc" id="L331">        return b.encode().build().toUriString();</span>
+<span class="fc" id="L329">        final var b = UriComponentsBuilder.fromPath(&quot;/project/new&quot;);</span>
+<span class="fc" id="L330">        appendCriteriaParams(b, c);</span>
+<span class="fc" id="L331">        return b.encode().build().toUriString();</span>
     }
 
     private String buildSearchMoreUrl(final ProjectSearchCriteria c, final int offset) {

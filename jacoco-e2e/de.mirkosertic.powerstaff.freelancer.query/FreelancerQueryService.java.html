@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class FreelancerQueryService {
 
-<span class="nc" id="L22">    private static final Set&lt;String&gt; SORT_FIELDS_ALLOWLIST = Set.of(</span>
+<span class="fc" id="L22">    private static final Set&lt;String&gt; SORT_FIELDS_ALLOWLIST = Set.of(</span>
             &quot;name1&quot;, &quot;name2&quot;, &quot;company&quot;, &quot;city&quot;, &quot;availability_as_date&quot;,
             &quot;salary_per_day_long&quot;, &quot;code&quot;);
     private static final String DEFAULT_SORT = &quot;name1 ASC, name2 ASC&quot;;
@@ -39,21 +39,21 @@ public class FreelancerQueryService {
 
     private final JdbcClient jdbcClient;
 
-<span class="nc" id="L42">    public FreelancerQueryService(final JdbcClient jdbcClient) {</span>
-<span class="nc" id="L43">        this.jdbcClient = jdbcClient;</span>
-<span class="nc" id="L44">    }</span>
+<span class="fc" id="L42">    public FreelancerQueryService(final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L43">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L44">    }</span>
 
     public Optional&lt;FreelancerDetailView&gt; findById(final long id) {
-<span class="nc" id="L47">        return jdbcClient.sql(SELECT_FREELANCER + &quot;WHERE id = :id&quot;)</span>
-<span class="nc" id="L48">                .param(&quot;id&quot;, id)</span>
-<span class="nc" id="L49">                .query(FreelancerDetailView.class)</span>
-<span class="nc" id="L50">                .optional();</span>
+<span class="fc" id="L47">        return jdbcClient.sql(SELECT_FREELANCER + &quot;WHERE id = :id&quot;)</span>
+<span class="fc" id="L48">                .param(&quot;id&quot;, id)</span>
+<span class="fc" id="L49">                .query(FreelancerDetailView.class)</span>
+<span class="fc" id="L50">                .optional();</span>
     }
 
     public Optional&lt;FreelancerDetailView&gt; findFirst() {
-<span class="nc" id="L54">        return jdbcClient.sql(SELECT_FREELANCER + &quot;ORDER BY id ASC LIMIT 1&quot;)</span>
-<span class="nc" id="L55">                .query(FreelancerDetailView.class)</span>
-<span class="nc" id="L56">                .optional();</span>
+<span class="fc" id="L54">        return jdbcClient.sql(SELECT_FREELANCER + &quot;ORDER BY id ASC LIMIT 1&quot;)</span>
+<span class="fc" id="L55">                .query(FreelancerDetailView.class)</span>
+<span class="fc" id="L56">                .optional();</span>
     }
 
     public Optional&lt;FreelancerDetailView&gt; findLast() {
@@ -77,107 +77,107 @@ public class FreelancerQueryService {
     }
 
     public List&lt;FreelancerSearchResult&gt; search(final FreelancerSearchCriteria criteria, final int offset, final int limit) {
-<span class="nc" id="L80">        record Row(Long id, String code, String name1, String name2, String company, String city,</span>
+<span class="fc" id="L80">        record Row(Long id, String code, String name1, String name2, String company, String city,</span>
                    LocalDateTime availabilityAsDate, Long salaryLong, Long salaryPerDayLong,
                    String skills, Boolean contactForbidden) {}
 
-<span class="nc" id="L84">        final var sql = new StringBuilder(&quot;&quot;&quot;</span>
+<span class="fc" id="L84">        final var sql = new StringBuilder(&quot;&quot;&quot;</span>
                 SELECT id, code, name1, name2, company, city,
                        availability_as_date, salary_long, salary_per_day_long, skills, contactforbidden
                 FROM freelancer f
                 WHERE 1=1
                 &quot;&quot;&quot;);
-<span class="nc" id="L90">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L91">        appendStringCriteria(sql, params, criteria);</span>
-<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (criteria.salaryLongMax() != null) {</span>
+<span class="fc" id="L90">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L91">        appendStringCriteria(sql, params, criteria);</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">        if (criteria.salaryLongMax() != null) {</span>
 <span class="nc" id="L93">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
 <span class="nc" id="L94">            sql.append(&quot; AND salary_long &lt;= :&quot;).append(pName);</span>
 <span class="nc" id="L95">            params.put(pName, criteria.salaryLongMax());</span>
         }
-<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (criteria.salaryPerDayLongMax() != null) {</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (criteria.salaryPerDayLongMax() != null) {</span>
 <span class="nc" id="L98">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
 <span class="nc" id="L99">            sql.append(&quot; AND salary_per_day_long &lt;= :&quot;).append(pName);</span>
 <span class="nc" id="L100">            params.put(pName, criteria.salaryPerDayLongMax());</span>
         }
-<span class="nc bnc" id="L102" title="All 2 branches missed.">        if (criteria.tagId() != null) {</span>
-<span class="nc" id="L103">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
-<span class="nc" id="L104">            sql.append(&quot; AND EXISTS (SELECT 1 FROM freelancer_tags WHERE freelancer_id = f.id AND tag_id = :&quot;).append(pName).append(&quot;)&quot;);</span>
-<span class="nc" id="L105">            params.put(pName, criteria.tagId());</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (criteria.tagId() != null) {</span>
+<span class="fc" id="L103">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="fc" id="L104">            sql.append(&quot; AND EXISTS (SELECT 1 FROM freelancer_tags WHERE freelancer_id = f.id AND tag_id = :&quot;).append(pName).append(&quot;)&quot;);</span>
+<span class="fc" id="L105">            params.put(pName, criteria.tagId());</span>
         }
         final String orderBy;
-<span class="nc bnc" id="L108" title="All 4 branches missed.">        if (criteria.sortField() != null &amp;&amp; SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {</span>
-<span class="nc bnc" id="L109" title="All 2 branches missed.">            final String dir = &quot;desc&quot;.equalsIgnoreCase(criteria.sortDir()) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
-<span class="nc" id="L110">            orderBy = criteria.sortField() + &quot; &quot; + dir;</span>
-<span class="nc" id="L111">        } else {</span>
-<span class="nc" id="L112">            orderBy = DEFAULT_SORT;</span>
+<span class="pc bpc" id="L108" title="1 of 4 branches missed.">        if (criteria.sortField() != null &amp;&amp; SORT_FIELDS_ALLOWLIST.contains(criteria.sortField())) {</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">            final String dir = &quot;desc&quot;.equalsIgnoreCase(criteria.sortDir()) ? &quot;DESC&quot; : &quot;ASC&quot;;</span>
+<span class="fc" id="L110">            orderBy = criteria.sortField() + &quot; &quot; + dir;</span>
+<span class="fc" id="L111">        } else {</span>
+<span class="fc" id="L112">            orderBy = DEFAULT_SORT;</span>
         }
-<span class="nc" id="L114">        final String pLimit = &quot;p&quot; + (params.size() + 1);</span>
-<span class="nc" id="L115">        final String pOffset = &quot;p&quot; + (params.size() + 2);</span>
-<span class="nc" id="L116">        sql.append(&quot; ORDER BY &quot;).append(orderBy).append(&quot; LIMIT :&quot;).append(pLimit).append(&quot; OFFSET :&quot;).append(pOffset);</span>
-<span class="nc" id="L117">        params.put(pLimit, limit);</span>
-<span class="nc" id="L118">        params.put(pOffset, offset);</span>
+<span class="fc" id="L114">        final String pLimit = &quot;p&quot; + (params.size() + 1);</span>
+<span class="fc" id="L115">        final String pOffset = &quot;p&quot; + (params.size() + 2);</span>
+<span class="fc" id="L116">        sql.append(&quot; ORDER BY &quot;).append(orderBy).append(&quot; LIMIT :&quot;).append(pLimit).append(&quot; OFFSET :&quot;).append(pOffset);</span>
+<span class="fc" id="L117">        params.put(pLimit, limit);</span>
+<span class="fc" id="L118">        params.put(pOffset, offset);</span>
 
-<span class="nc" id="L120">        var stmt = jdbcClient.sql(sql.toString());</span>
-<span class="nc bnc" id="L121" title="All 2 branches missed.">        for (final var entry : params.entrySet()) {</span>
-<span class="nc" id="L122">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
-<span class="nc" id="L123">        }</span>
-<span class="nc" id="L124">        final List&lt;Row&gt; rows = stmt.query(Row.class).list();</span>
+<span class="fc" id="L120">        var stmt = jdbcClient.sql(sql.toString());</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        for (final var entry : params.entrySet()) {</span>
+<span class="fc" id="L122">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L123">        }</span>
+<span class="fc" id="L124">        final List&lt;Row&gt; rows = stmt.query(Row.class).list();</span>
 
         // Batch-Load Tags für alle gefundenen Freiberufler
-<span class="nc" id="L127">        final List&lt;Long&gt; freelancerIds = rows.stream().map(Row::id).toList();</span>
-<span class="nc" id="L128">        final Map&lt;Long, List&lt;TagView&gt;&gt; tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);</span>
+<span class="fc" id="L127">        final List&lt;Long&gt; freelancerIds = rows.stream().map(Row::id).toList();</span>
+<span class="fc" id="L128">        final Map&lt;Long, List&lt;TagView&gt;&gt; tagsByFreelancerId = findTagsByFreelancerIdsInBatch(freelancerIds);</span>
 
-<span class="nc" id="L130">        return rows.stream()</span>
-<span class="nc" id="L131">                .map(r -&gt; new FreelancerSearchResult(</span>
-<span class="nc" id="L132">                        r.id(), r.code(), r.name1(), r.name2(), r.company(), r.city(),</span>
-<span class="nc" id="L133">                        r.availabilityAsDate(), r.salaryLong(), r.salaryPerDayLong(),</span>
-<span class="nc" id="L134">                        r.skills(), r.contactForbidden(),</span>
-<span class="nc" id="L135">                        tagsByFreelancerId.getOrDefault(r.id(), List.of())</span>
+<span class="fc" id="L130">        return rows.stream()</span>
+<span class="fc" id="L131">                .map(r -&gt; new FreelancerSearchResult(</span>
+<span class="fc" id="L132">                        r.id(), r.code(), r.name1(), r.name2(), r.company(), r.city(),</span>
+<span class="fc" id="L133">                        r.availabilityAsDate(), r.salaryLong(), r.salaryPerDayLong(),</span>
+<span class="fc" id="L134">                        r.skills(), r.contactForbidden(),</span>
+<span class="fc" id="L135">                        tagsByFreelancerId.getOrDefault(r.id(), List.of())</span>
                 ))
-<span class="nc" id="L137">                .toList();</span>
+<span class="fc" id="L137">                .toList();</span>
     }
 
     public long countSearch(final FreelancerSearchCriteria criteria) {
-<span class="nc" id="L141">        final var sql = new StringBuilder(&quot;SELECT COUNT(*) FROM freelancer WHERE 1=1&quot;);</span>
-<span class="nc" id="L142">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L143">        appendStringCriteria(sql, params, criteria);</span>
-<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (criteria.salaryLongMax() != null) {</span>
+<span class="fc" id="L141">        final var sql = new StringBuilder(&quot;SELECT COUNT(*) FROM freelancer WHERE 1=1&quot;);</span>
+<span class="fc" id="L142">        final Map&lt;String, Object&gt; params = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L143">        appendStringCriteria(sql, params, criteria);</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">        if (criteria.salaryLongMax() != null) {</span>
 <span class="nc" id="L145">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
 <span class="nc" id="L146">            sql.append(&quot; AND salary_long &lt;= :&quot;).append(pName);</span>
 <span class="nc" id="L147">            params.put(pName, criteria.salaryLongMax());</span>
         }
-<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (criteria.salaryPerDayLongMax() != null) {</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">        if (criteria.salaryPerDayLongMax() != null) {</span>
 <span class="nc" id="L150">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
 <span class="nc" id="L151">            sql.append(&quot; AND salary_per_day_long &lt;= :&quot;).append(pName);</span>
 <span class="nc" id="L152">            params.put(pName, criteria.salaryPerDayLongMax());</span>
         }
-<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (criteria.tagId() != null) {</span>
-<span class="nc" id="L155">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
-<span class="nc" id="L156">            sql.append(&quot; AND EXISTS (SELECT 1 FROM freelancer_tags WHERE freelancer_id = id AND tag_id = :&quot;).append(pName).append(&quot;)&quot;);</span>
-<span class="nc" id="L157">            params.put(pName, criteria.tagId());</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (criteria.tagId() != null) {</span>
+<span class="fc" id="L155">            final String pName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="fc" id="L156">            sql.append(&quot; AND EXISTS (SELECT 1 FROM freelancer_tags WHERE freelancer_id = id AND tag_id = :&quot;).append(pName).append(&quot;)&quot;);</span>
+<span class="fc" id="L157">            params.put(pName, criteria.tagId());</span>
         }
 
-<span class="nc" id="L160">        var stmt = jdbcClient.sql(sql.toString());</span>
-<span class="nc bnc" id="L161" title="All 2 branches missed.">        for (final var entry : params.entrySet()) {</span>
-<span class="nc" id="L162">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
-<span class="nc" id="L163">        }</span>
-<span class="nc" id="L164">        return stmt.query(Long.class).single();</span>
+<span class="fc" id="L160">        var stmt = jdbcClient.sql(sql.toString());</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        for (final var entry : params.entrySet()) {</span>
+<span class="fc" id="L162">            stmt = stmt.param(entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L163">        }</span>
+<span class="fc" id="L164">        return stmt.query(Long.class).single();</span>
     }
 
     public List&lt;FreelancerContactView&gt; findContactsByFreelancerId(final long freelancerId) {
-<span class="nc" id="L168">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L168">        return jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT id, type, value, freelancer_id
                 FROM freelancer_contact
                 WHERE freelancer_id = :freelancerId
                 ORDER BY type ASC, value ASC
                 &quot;&quot;&quot;)
-<span class="nc" id="L174">                .param(&quot;freelancerId&quot;, freelancerId)</span>
-<span class="nc" id="L175">                .query(FreelancerContactView.class)</span>
-<span class="nc" id="L176">                .list();</span>
+<span class="fc" id="L174">                .param(&quot;freelancerId&quot;, freelancerId)</span>
+<span class="fc" id="L175">                .query(FreelancerContactView.class)</span>
+<span class="fc" id="L176">                .list();</span>
     }
 
     public List&lt;FreelancerHistoryView&gt; findHistoryByFreelancerId(final long freelancerId) {
-<span class="nc" id="L180">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L180">        return jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT fh.id, fh.creation_date, fh.creation_user, fh.changed_date, fh.changed_user,
                        fh.description, fh.type_id, ht.description AS type_description, fh.freelancer_id
                 FROM freelancer_history fh
@@ -185,43 +185,43 @@ public class FreelancerQueryService {
                 WHERE fh.freelancer_id = :freelancerId
                 ORDER BY fh.creation_date DESC
                 &quot;&quot;&quot;)
-<span class="nc" id="L188">                .param(&quot;freelancerId&quot;, freelancerId)</span>
-<span class="nc" id="L189">                .query(FreelancerHistoryView.class)</span>
-<span class="nc" id="L190">                .list();</span>
+<span class="fc" id="L188">                .param(&quot;freelancerId&quot;, freelancerId)</span>
+<span class="fc" id="L189">                .query(FreelancerHistoryView.class)</span>
+<span class="fc" id="L190">                .list();</span>
     }
 
     public List&lt;TagInfo&gt; findTagsByFreelancerId(final long freelancerId) {
-<span class="nc" id="L194">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L194">        return jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT t.id, t.tagname AS name, t.type
                 FROM freelancer_tags ft
                 JOIN tags t ON t.id = ft.tag_id
                 WHERE ft.freelancer_id = :freelancerId
                 &quot;&quot;&quot;)
-<span class="nc" id="L200">                .param(&quot;freelancerId&quot;, freelancerId)</span>
-<span class="nc" id="L201">                .query((rs, rowNum) -&gt; new TagInfo(</span>
-<span class="nc" id="L202">                        rs.getLong(&quot;id&quot;),</span>
-<span class="nc" id="L203">                        rs.getString(&quot;name&quot;),</span>
-<span class="nc" id="L204">                        TagType.valueOf(rs.getString(&quot;type&quot;))))</span>
-<span class="nc" id="L205">                .list()</span>
-<span class="nc" id="L206">                .stream()</span>
-<span class="nc" id="L207">                .sorted(Comparator.comparingInt((TagInfo ti) -&gt; ti.type().getOrder())</span>
-<span class="nc" id="L208">                        .thenComparing(TagInfo::name))</span>
-<span class="nc" id="L209">                .toList();</span>
+<span class="fc" id="L200">                .param(&quot;freelancerId&quot;, freelancerId)</span>
+<span class="fc" id="L201">                .query((rs, rowNum) -&gt; new TagInfo(</span>
+<span class="fc" id="L202">                        rs.getLong(&quot;id&quot;),</span>
+<span class="fc" id="L203">                        rs.getString(&quot;name&quot;),</span>
+<span class="fc" id="L204">                        TagType.valueOf(rs.getString(&quot;type&quot;))))</span>
+<span class="fc" id="L205">                .list()</span>
+<span class="fc" id="L206">                .stream()</span>
+<span class="fc" id="L207">                .sorted(Comparator.comparingInt((TagInfo ti) -&gt; ti.type().getOrder())</span>
+<span class="fc" id="L208">                        .thenComparing(TagInfo::name))</span>
+<span class="fc" id="L209">                .toList();</span>
     }
 
     public Optional&lt;FreelancerPartnerView&gt; findPartnerById(final long partnerId) {
-<span class="nc" id="L213">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L213">        return jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT id, company, name1, name2
                 FROM partner
                 WHERE id = :partnerId
                 &quot;&quot;&quot;)
-<span class="nc" id="L218">                .param(&quot;partnerId&quot;, partnerId)</span>
-<span class="nc" id="L219">                .query(FreelancerPartnerView.class)</span>
-<span class="nc" id="L220">                .optional();</span>
+<span class="fc" id="L218">                .param(&quot;partnerId&quot;, partnerId)</span>
+<span class="fc" id="L219">                .query(FreelancerPartnerView.class)</span>
+<span class="fc" id="L220">                .optional();</span>
     }
 
     public List&lt;TagInfo&gt; findAvailableTagsByFreelancerIdAndType(final long freelancerId, final TagType type) {
-<span class="nc" id="L224">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L224">        return jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT t.id, t.tagname AS name, t.type
                 FROM tags t
                 WHERE t.type = :type
@@ -230,13 +230,13 @@ public class FreelancerQueryService {
                   )
                 ORDER BY t.tagname ASC
                 &quot;&quot;&quot;)
-<span class="nc" id="L233">                .param(&quot;type&quot;, type.name())</span>
-<span class="nc" id="L234">                .param(&quot;freelancerId&quot;, freelancerId)</span>
-<span class="nc" id="L235">                .query((rs, rowNum) -&gt; new TagInfo(</span>
-<span class="nc" id="L236">                        rs.getLong(&quot;id&quot;),</span>
-<span class="nc" id="L237">                        rs.getString(&quot;name&quot;),</span>
-<span class="nc" id="L238">                        TagType.valueOf(rs.getString(&quot;type&quot;))))</span>
-<span class="nc" id="L239">                .list();</span>
+<span class="fc" id="L233">                .param(&quot;type&quot;, type.name())</span>
+<span class="fc" id="L234">                .param(&quot;freelancerId&quot;, freelancerId)</span>
+<span class="fc" id="L235">                .query((rs, rowNum) -&gt; new TagInfo(</span>
+<span class="fc" id="L236">                        rs.getLong(&quot;id&quot;),</span>
+<span class="fc" id="L237">                        rs.getString(&quot;name&quot;),</span>
+<span class="fc" id="L238">                        TagType.valueOf(rs.getString(&quot;type&quot;))))</span>
+<span class="fc" id="L239">                .list();</span>
     }
 
     /**
@@ -244,52 +244,52 @@ public class FreelancerQueryService {
      * Package-private für Tests.
      */
     Map&lt;Long, List&lt;TagView&gt;&gt; findTagsByFreelancerIdsInBatch(final List&lt;Long&gt; ids) {
-<span class="nc bnc" id="L247" title="All 2 branches missed.">        if (ids.isEmpty()) {</span>
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        if (ids.isEmpty()) {</span>
 <span class="nc" id="L248">            return Map.of();</span>
         }
-<span class="nc" id="L250">        record TagRow(Long freelancerId, Long tagId, String tagname, String type) {}</span>
-<span class="nc" id="L251">        return jdbcClient.sql(&quot;&quot;&quot;</span>
+<span class="fc" id="L250">        record TagRow(Long freelancerId, Long tagId, String tagname, String type) {}</span>
+<span class="fc" id="L251">        return jdbcClient.sql(&quot;&quot;&quot;</span>
                 SELECT ft.freelancer_id, t.id AS tag_id, t.tagname, t.type
                 FROM freelancer_tags ft
                 JOIN tags t ON t.id = ft.tag_id
                 WHERE ft.freelancer_id IN (:ids)
                 ORDER BY t.tagname
                 &quot;&quot;&quot;)
-<span class="nc" id="L258">                .param(&quot;ids&quot;, ids)</span>
-<span class="nc" id="L259">                .query(TagRow.class)</span>
-<span class="nc" id="L260">                .list()</span>
-<span class="nc" id="L261">                .stream()</span>
-<span class="nc" id="L262">                .collect(Collectors.groupingBy(</span>
+<span class="fc" id="L258">                .param(&quot;ids&quot;, ids)</span>
+<span class="fc" id="L259">                .query(TagRow.class)</span>
+<span class="fc" id="L260">                .list()</span>
+<span class="fc" id="L261">                .stream()</span>
+<span class="fc" id="L262">                .collect(Collectors.groupingBy(</span>
                         TagRow::freelancerId,
-<span class="nc" id="L264">                        Collectors.mapping(r -&gt; new TagView(r.tagId(), r.tagname(), r.type()), Collectors.toList())));</span>
+<span class="fc" id="L264">                        Collectors.mapping(r -&gt; new TagView(r.tagId(), r.tagname(), r.type()), Collectors.toList())));</span>
     }
 
     private static void appendStringCriteria(final StringBuilder sql, final Map&lt;String, Object&gt; params, final FreelancerSearchCriteria c) {
-<span class="nc" id="L268">        appendLike(sql, params, &quot;name1&quot;, c.name1());</span>
-<span class="nc" id="L269">        appendLike(sql, params, &quot;name2&quot;, c.name2());</span>
-<span class="nc" id="L270">        appendLike(sql, params, &quot;company&quot;, c.company());</span>
-<span class="nc" id="L271">        appendLike(sql, params, &quot;street&quot;, c.street());</span>
-<span class="nc" id="L272">        appendLike(sql, params, &quot;country&quot;, c.country());</span>
-<span class="nc" id="L273">        appendLike(sql, params, &quot;plz&quot;, c.plz());</span>
-<span class="nc" id="L274">        appendLike(sql, params, &quot;city&quot;, c.city());</span>
-<span class="nc" id="L275">        appendLike(sql, params, &quot;nationalitaet&quot;, c.nationalitaet());</span>
-<span class="nc" id="L276">        appendLike(sql, params, &quot;comments&quot;, c.comments());</span>
-<span class="nc" id="L277">        appendLike(sql, params, &quot;einsatzdetails&quot;, c.einsatzdetails());</span>
-<span class="nc" id="L278">        appendLike(sql, params, &quot;contact_person&quot;, c.contactPerson());</span>
-<span class="nc" id="L279">        appendLike(sql, params, &quot;contact_reason&quot;, c.contactReason());</span>
-<span class="nc" id="L280">        appendLike(sql, params, &quot;kontaktart&quot;, c.kontaktart());</span>
-<span class="nc" id="L281">        appendLike(sql, params, &quot;debitor_nr&quot;, c.debitorNr());</span>
-<span class="nc" id="L282">        appendLike(sql, params, &quot;gulp_id&quot;, c.gulpId());</span>
-<span class="nc" id="L283">        appendLike(sql, params, &quot;code&quot;, c.code());</span>
-<span class="nc" id="L284">        appendLike(sql, params, &quot;skills&quot;, c.skills());</span>
-<span class="nc" id="L285">    }</span>
+<span class="fc" id="L268">        appendLike(sql, params, &quot;name1&quot;, c.name1());</span>
+<span class="fc" id="L269">        appendLike(sql, params, &quot;name2&quot;, c.name2());</span>
+<span class="fc" id="L270">        appendLike(sql, params, &quot;company&quot;, c.company());</span>
+<span class="fc" id="L271">        appendLike(sql, params, &quot;street&quot;, c.street());</span>
+<span class="fc" id="L272">        appendLike(sql, params, &quot;country&quot;, c.country());</span>
+<span class="fc" id="L273">        appendLike(sql, params, &quot;plz&quot;, c.plz());</span>
+<span class="fc" id="L274">        appendLike(sql, params, &quot;city&quot;, c.city());</span>
+<span class="fc" id="L275">        appendLike(sql, params, &quot;nationalitaet&quot;, c.nationalitaet());</span>
+<span class="fc" id="L276">        appendLike(sql, params, &quot;comments&quot;, c.comments());</span>
+<span class="fc" id="L277">        appendLike(sql, params, &quot;einsatzdetails&quot;, c.einsatzdetails());</span>
+<span class="fc" id="L278">        appendLike(sql, params, &quot;contact_person&quot;, c.contactPerson());</span>
+<span class="fc" id="L279">        appendLike(sql, params, &quot;contact_reason&quot;, c.contactReason());</span>
+<span class="fc" id="L280">        appendLike(sql, params, &quot;kontaktart&quot;, c.kontaktart());</span>
+<span class="fc" id="L281">        appendLike(sql, params, &quot;debitor_nr&quot;, c.debitorNr());</span>
+<span class="fc" id="L282">        appendLike(sql, params, &quot;gulp_id&quot;, c.gulpId());</span>
+<span class="fc" id="L283">        appendLike(sql, params, &quot;code&quot;, c.code());</span>
+<span class="fc" id="L284">        appendLike(sql, params, &quot;skills&quot;, c.skills());</span>
+<span class="fc" id="L285">    }</span>
 
     private static void appendLike(final StringBuilder sql, final Map&lt;String, Object&gt; params, final String column, final String value) {
-<span class="nc bnc" id="L288" title="All 4 branches missed.">        if (value != null &amp;&amp; !value.isBlank()) {</span>
-<span class="nc" id="L289">            final String paramName = &quot;p&quot; + (params.size() + 1);</span>
-<span class="nc" id="L290">            sql.append(&quot; AND &quot;).append(column).append(&quot; LIKE :&quot;).append(paramName);</span>
-<span class="nc" id="L291">            params.put(paramName, &quot;%&quot; + value + &quot;%&quot;);</span>
+<span class="fc bfc" id="L288" title="All 4 branches covered.">        if (value != null &amp;&amp; !value.isBlank()) {</span>
+<span class="fc" id="L289">            final String paramName = &quot;p&quot; + (params.size() + 1);</span>
+<span class="fc" id="L290">            sql.append(&quot; AND &quot;).append(column).append(&quot; LIKE :&quot;).append(paramName);</span>
+<span class="fc" id="L291">            params.put(paramName, &quot;%&quot; + value + &quot;%&quot;);</span>
         }
-<span class="nc" id="L293">    }</span>
+<span class="fc" id="L293">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

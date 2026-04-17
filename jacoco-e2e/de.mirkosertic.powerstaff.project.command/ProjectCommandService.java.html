@@ -14,10 +14,10 @@ public class ProjectCommandService {
     private final ProjectValidator projectValidator;
 
     public ProjectCommandService(final ProjectRepository projectRepository,
-<span class="nc" id="L17">                                 final ProjectValidator projectValidator) {</span>
-<span class="nc" id="L18">        this.projectRepository = projectRepository;</span>
-<span class="nc" id="L19">        this.projectValidator = projectValidator;</span>
-<span class="nc" id="L20">    }</span>
+<span class="fc" id="L17">                                 final ProjectValidator projectValidator) {</span>
+<span class="fc" id="L18">        this.projectRepository = projectRepository;</span>
+<span class="fc" id="L19">        this.projectValidator = projectValidator;</span>
+<span class="fc" id="L20">    }</span>
 
     public Project save(final Project project) {
 <span class="nc" id="L23">        final var errors = new BeanPropertyBindingResult(project, &quot;project&quot;);</span>
@@ -30,7 +30,7 @@ public class ProjectCommandService {
 
     @Transactional(readOnly = true)
     public Optional&lt;Project&gt; findById(final long id) {
-<span class="nc" id="L33">        return projectRepository.findById(id);</span>
+<span class="fc" id="L33">        return projectRepository.findById(id);</span>
     }
 
     public void deleteById(final long id) {

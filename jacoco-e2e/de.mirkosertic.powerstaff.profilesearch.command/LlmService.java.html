@@ -23,7 +23,7 @@ public interface LlmService {
 <span class="nc" id="L23">        record ThinkingToken(String token) implements ChatStreamEvent {}</span>
 
         // token = ein Antwort-Chunk des Modells
-<span class="nc" id="L26">        record ContentToken(String token) implements ChatStreamEvent {}</span>
+<span class="fc" id="L26">        record ContentToken(String token) implements ChatStreamEvent {}</span>
 
         // name = msg.content() im Template, jsonPayload = msg.jsonPayload()
 <span class="nc" id="L29">        record ToolCall(String name, String jsonPayload) implements ChatStreamEvent {}</span>
@@ -32,7 +32,7 @@ public interface LlmService {
 <span class="nc" id="L32">        record ToolResult(String names, String jsonPayload) implements ChatStreamEvent {}</span>
 
         // id = data-msg-id der persistierten Assistant-Nachricht
-<span class="nc" id="L35">        record MessageComplete(long id, int promptTokens, int completionTokens, int maxContextTokens) implements ChatStreamEvent {}</span>
+<span class="fc" id="L35">        record MessageComplete(long id, int promptTokens, int completionTokens, int maxContextTokens) implements ChatStreamEvent {}</span>
 
 <span class="nc" id="L37">        record StreamError(String message) implements ChatStreamEvent {}</span>
     }

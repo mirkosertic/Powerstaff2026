@@ -50,8 +50,8 @@ public class ProjectPositionCommandService {
 <span class="fc" id="L50">        position.setKommentar(kommentar);</span>
         try {
 <span class="fc" id="L52">            repository.save(position);</span>
-<span class="nc" id="L53">        } catch (final DataIntegrityViolationException e) {</span>
-<span class="nc" id="L54">            throw new FreelancerAlreadyAssignedException(freelancerId, projectId);</span>
+<span class="fc" id="L53">        } catch (final DataIntegrityViolationException e) {</span>
+<span class="fc" id="L54">            throw new FreelancerAlreadyAssignedException(freelancerId, projectId);</span>
 <span class="fc" id="L55">        }</span>
 <span class="fc" id="L56">    }</span>
 

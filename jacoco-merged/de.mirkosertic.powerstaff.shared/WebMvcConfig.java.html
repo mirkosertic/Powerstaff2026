@@ -16,7 +16,7 @@ import java.time.format.DateTimeParseException;
     public void addFormatters(final FormatterRegistry registry) {
         // HTML &lt;input type=&quot;date&quot;&gt; sends yyyy-MM-dd; also accept dd.MM.yyyy (German format)
 <span class="fc" id="L18">        registry.addConverter(String.class, LocalDate.class, source -&gt; {</span>
-<span class="nc bnc" id="L19" title="All 4 branches missed.">            if (source == null || source.isBlank()) return null;</span>
+<span class="pc bpc" id="L19" title="2 of 4 branches missed.">            if (source == null || source.isBlank()) return null;</span>
             // Try ISO format (yyyy-MM-dd) — standard HTML date input
             try {
 <span class="nc" id="L22">                return LocalDate.parse(source.trim(), DateTimeFormatter.ISO_LOCAL_DATE);</span>
@@ -32,10 +32,10 @@ import java.time.format.DateTimeParseException;
 
         // LocalDateTime: HTML date input sends yyyy-MM-dd (no time) → treat as midnight
 <span class="fc" id="L34">        registry.addConverter(String.class, LocalDateTime.class, source -&gt; {</span>
-<span class="nc bnc" id="L35" title="All 4 branches missed.">            if (source == null || source.isBlank()) return null;</span>
+<span class="pc bpc" id="L35" title="1 of 4 branches missed.">            if (source == null || source.isBlank()) return null;</span>
             // Try ISO format (yyyy-MM-dd) → midnight
             try {
-<span class="nc" id="L38">                return LocalDate.parse(source.trim(), DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();</span>
+<span class="fc" id="L38">                return LocalDate.parse(source.trim(), DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();</span>
 <span class="nc" id="L39">            } catch (final DateTimeParseException e1) {</span>
                 // Try German format (dd.MM.yyyy) → midnight
                 try {
