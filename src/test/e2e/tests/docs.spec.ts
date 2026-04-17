@@ -120,9 +120,11 @@ test.describe('Handbuch-Screenshots', () => {
     });
 
     test('Profilsuche – Klassische Suche Ergebnisse', async ({ page }) => {
-        await page.goto('/profilesearch/search');
+        // Suchergebnisse werden auf /profilesearch/search mit Query-Parametern angezeigt (kein separates URL-Segment)
+        await page.goto('/profilesearch/search', { waitUntil: 'networkidle' });
+        await page.locator('[data-testid="input-search-term"]').fill('Mock');
         await page.locator('[data-testid="btn-search"]').click();
-        await page.waitForURL(/\/profilesearch\/search-results/);
+        await page.waitForURL(/\/profilesearch\/search\?.*searchTerm=Mock/);
         await page.waitForLoadState('networkidle');
         await page.screenshot({ path: `${SCREENSHOTS}/profilsuche-klassisch-ergebnisse.png`, fullPage: true });
     });
