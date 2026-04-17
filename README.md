@@ -73,6 +73,50 @@ Die jeweils aktuellen **E2E-Testergebnisse** (Playwright-Report mit Screenshots,
 - **[https://mirkosertic.github.io/Powerstaff2026/jacoco-e2e](https://mirkosertic.github.io/Powerstaff2026/jacoco-e2e)**
 - **[https://mirkosertic.github.io/Powerstaff2026/jacoco-merged](https://mirkosertic.github.io/Powerstaff2026/jacoco-merged)**
 
+## Wie E2E-Tests und Code-Coverage funktionieren
+
+Die Qualitätssicherung basiert auf einer vollständig automatisierten, mehrschichtigen Teststrategie:
+
+**Testinfrastruktur:**
+- Playwright (Chromium + Firefox) startet gegen eine **echte Spring-Boot-Instanz** mit **MySQL via Docker Compose**
+- Die Anwendung wird als fertiges JAR gestartet – identisch zur Produktivumgebung
+- Ein **JaCoCo-Agent** ist in der laufenden Spring-Boot-Instanz aktiv und misst, welcher Quellcode während der Browser-Interaktion tatsächlich ausgeführt wird
+
+**Ablauf bei jedem CI-Push:**
+1. Docker Compose startet MySQL
+2. Spring Boot startet mit JaCoCo-Agent (Port 8100)
+3. Playwright führt alle E2E-Tests in Chromium und Firefox aus
+4. Nach Testende: Playwright-Blob-Reports werden zu einem HTML-Report gemergt
+5. JaCoCo schreibt die E2E-Coverage-Datei bei Prozessende (SIGTERM-Handler)
+6. Maven erzeugt vier Coverage-Reports: unit / IT / e2e / merged
+
+**Veröffentlichte Berichte (GitHub Pages):**
+- **[E2E-Testergebnisse (Playwright)](https://mirkosertic.github.io/Powerstaff2026/playwright-report)**
+- **[Coverage Unit-Tests](https://mirkosertic.github.io/Powerstaff2026/jacoco-unit)**
+- **[Coverage Integrationstests](https://mirkosertic.github.io/Powerstaff2026/jacoco-it)**
+- **[Coverage E2E-Tests](https://mirkosertic.github.io/Powerstaff2026/jacoco-e2e)**
+- **[Coverage gesamt (merged)](https://mirkosertic.github.io/Powerstaff2026/jacoco-merged)**
+
+---
+
+## Benutzerhandbuch
+
+Das Benutzerhandbuch richtet sich an Sachbearbeiter und Administratoren und beschreibt alle
+Funktionen von Powerstaff 2026 in Nutzersprache.
+
+**[→ Zum Benutzerhandbuch](docs/index.md)**
+
+Die Screenshots im Handbuch werden automatisch mit Playwright gegen eine laufende App-Instanz
+im Dev-Mode generiert (`-Ddevmode=true` mit realistischen Beispieldaten):
+
+```bash
+# Voraussetzung: JAR gebaut
+./mvnw package -DskipTests
+
+# Screenshots neu generieren (startet MySQL + App automatisch)
+npx playwright test --config src/test/e2e/playwright.config.docs.ts
+```
+
 ---
 
 ## Konfiguration für JDBC Metadaten-Extraktion im MCPLuceneServer
