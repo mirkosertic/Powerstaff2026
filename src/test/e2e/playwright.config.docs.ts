@@ -45,7 +45,7 @@ export default defineConfig({
         },
     ],
 
-    reporter: [['html', { open: 'never', outputFolder: '../../target/docs-report' }]],
+    reporter: [['html', { open: 'never', outputFolder: path.resolve(__dirname, '../../../target/docs-report') }]],
     workers: 1,
     forbidOnly: !!process.env.CI,
 });

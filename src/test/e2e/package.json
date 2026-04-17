@@ -5,7 +5,8 @@
   "scripts": {
     "test": "playwright test",
     "test:headed": "playwright test --headed",
-    "codegen": "playwright codegen http://localhost:8090"
+    "codegen": "playwright codegen http://localhost:8090",
+    "docs": "playwright test --config playwright.config.docs.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.51.0"
