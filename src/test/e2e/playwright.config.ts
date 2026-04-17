@@ -3,6 +3,7 @@ import * as path from 'path';
 
 const SCRIPT = path.resolve(__dirname, '../../../target/start-e2e-with-jacoco.sh');
 const PORT = 8100;
+const MGMT_PORT = 8090; // management.server.port in application.yml
 
 export default defineConfig({
     globalSetup: './global-setup.ts',
@@ -10,7 +11,9 @@ export default defineConfig({
 
     webServer: {
         command: `bash "${SCRIPT}" ${PORT} > ../../../target/e2e-application.log 2>&1`,
-        url: `http://localhost:${PORT}/actuator/health`,
+        // /login is in permitAll() → reliably returns HTTP 200 without authentication.
+        // Actuator health on port 8090 requires auth (SecurityConfig.anyRequest().authenticated()).
+        url: `http://localhost:${PORT}/login`,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
     },

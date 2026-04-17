@@ -9,6 +9,7 @@ PORT="${1:-8100}"
 JAR="@project.build.directory@/@project.build.finalName@.jar"
 JACOCO_AGENT="@settings.localRepository@/org/jacoco/org.jacoco.agent/@jacoco.version@/org.jacoco.agent-@jacoco.version@-runtime.jar"
 JACOCO_EXEC="@project.build.directory@/jacoco-e2e.exec"
+PID_FILE="@project.build.directory@/e2e-app.pid"
 
 # Validation
 if [ ! -f "$JAR" ]; then
@@ -21,9 +22,27 @@ if [ ! -f "$JACOCO_AGENT" ]; then
   exit 1
 fi
 
-# Start Spring Boot with JaCoCo agent
-exec java \
+# Forward SIGTERM/SIGINT to the JVM so JaCoCo's shutdown hook runs and
+# writes jacoco-e2e.exec before the process exits.
+cleanup() {
+  if [ -n "$APP_PID" ]; then
+    kill -TERM "$APP_PID" 2>/dev/null || true
+    wait "$APP_PID" 2>/dev/null || true
+  fi
+  rm -f "$PID_FILE"
+}
+trap cleanup TERM INT
+
+# Start JVM in the background, write its PID so global-teardown.ts can
+# send SIGTERM directly and wait for graceful shutdown + JaCoCo flush.
+java \
   -javaagent:"$JACOCO_AGENT=destfile=$JACOCO_EXEC" \
   -Dspring.profiles.active=e2e \
   -Dserver.port="$PORT" \
-  -jar "$JAR"
+  -jar "$JAR" &
+
+APP_PID=$!
+echo "$APP_PID" > "$PID_FILE"
+
+# Block until the JVM exits (either via cleanup trap or direct kill by teardown).
+wait "$APP_PID"
