@@ -12,12 +12,12 @@
 
 ## Ergebnistabelle
 
-| Spalte | Inhalt |
-|--------|--------|
-| **Firma** | Firmenname der Agentur |
+| Spalte     | Inhalt                   |
+|------------|--------------------------|
+| **Firma**  | Firmenname der Agentur   |
 | **Name 1** | Nachname Ansprechpartner |
-| **Name 2** | Vorname Ansprechpartner |
-| **Ort** | Standort |
+| **Name 2** | Vorname Ansprechpartner  |
+| **Ort**    | Standort                 |
 
 Klicken Sie auf eine Zeile, um den Partner zu öffnen.
 

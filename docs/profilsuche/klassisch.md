@@ -13,13 +13,13 @@ Die klassische Suche ermöglicht die gezielte Filterung nach mehreren Kriterien 
 
 ## Suchkriterien
 
-| Feld | Beschreibung |
-|------|-------------|
-| **Suchbegriff** | Freitextsuche in Name, Skills, Kommentaren |
-| **Tagessatz von (€)** | Mindest-Tagessatz (Schritte: 50 €) |
-| **Tagessatz bis (€)** | Maximal-Tagessatz (Schritte: 50 €) |
-| **Tags** | Klicken Sie auf Tag-Chips, um nach Skills zu filtern (Mehrfachauswahl möglich) |
-| **Verfügbar ab** | Nur Freiberufler, die ab diesem Datum verfügbar sind |
+| Feld                  | Beschreibung                                                                   |
+|-----------------------|--------------------------------------------------------------------------------|
+| **Suchbegriff**       | Freitextsuche in Name, Skills, Kommentaren                                     |
+| **Tagessatz von (€)** | Mindest-Tagessatz (Schritte: 50 €)                                             |
+| **Tagessatz bis (€)** | Maximal-Tagessatz (Schritte: 50 €)                                             |
+| **Tags**              | Klicken Sie auf Tag-Chips, um nach Skills zu filtern (Mehrfachauswahl möglich) |
+| **Verfügbar ab**      | Nur Freiberufler, die ab diesem Datum verfügbar sind                           |
 
 ---
 

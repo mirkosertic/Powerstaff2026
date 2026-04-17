@@ -12,13 +12,13 @@ Das Freiberufler-Modul ist das zentrale Verzeichnis aller zu vermittelnden Spezi
 
 Jeder Freiberufler-Datensatz enthält:
 
-| Bereich | Inhalte |
-|---------|---------|
-| **Adresse** | Name, Firma, Anschrift, Nationalität, Geburtsdatum, zugeordneter Partner |
-| **Kontaktinformationen** | Kontaktart, Kontaktgrund, Letzter Kontakt, Kontaktsperre, Wiedervorlage |
-| **Kommentar** | Freie Notizen |
-| **Einsatzdetails** | Einsatzmöglichkeiten und Präferenzen |
-| **Verfügbarkeit & Konditionen** | Verfügbarkeitsdatum, DSGVO-Einwilligung, Gehalt, Tagessatz, Remote-Satz |
-| **Kodierung & Skills** | Eindeutiger Code, Tags nach Kategorien, Skills-Freitext |
-| **Kontaktmöglichkeiten** | E-Mail, Telefon, Fax, Website, XING, GULP |
-| **Kontakthistorie** | Chronologische Gesprächsnotizen mit Typ und Zeitstempel |
+| Bereich                         | Inhalte                                                                  |
+|---------------------------------|--------------------------------------------------------------------------|
+| **Adresse**                     | Name, Firma, Anschrift, Nationalität, Geburtsdatum, zugeordneter Partner |
+| **Kontaktinformationen**        | Kontaktart, Kontaktgrund, Letzter Kontakt, Kontaktsperre, Wiedervorlage  |
+| **Kommentar**                   | Freie Notizen                                                            |
+| **Einsatzdetails**              | Einsatzmöglichkeiten und Präferenzen                                     |
+| **Verfügbarkeit & Konditionen** | Verfügbarkeitsdatum, DSGVO-Einwilligung, Gehalt, Tagessatz, Remote-Satz  |
+| **Kodierung & Skills**          | Eindeutiger Code, Tags nach Kategorien, Skills-Freitext                  |
+| **Kontaktmöglichkeiten**        | E-Mail, Telefon, Fax, Website, XING, GULP                                |
+| **Kontakthistorie**             | Chronologische Gesprächsnotizen mit Typ und Zeitstempel                  |

@@ -13,27 +13,27 @@
 
 ### Allgemein
 
-| Feld | Pflicht | Beschreibung |
-|------|---------|-------------|
-| **Projektnummer** | **Ja** | Eindeutige interne Nummer |
-| **Eingangsdatum** | Nein | Datum des Auftragseingangs |
-| **Startdatum** | Nein | Geplanter Projektstart |
-| **Laufzeit** | Nein | Geplante Projektlaufzeit |
-| **Status** | Nein | *Offen / Verloren / Canceled / Besetzt / Search zu* |
-| **Auf Website** | Nein | Projekt auf der Website veröffentlichen |
+| Feld              | Pflicht | Beschreibung                                        |
+|-------------------|---------|-----------------------------------------------------|
+| **Projektnummer** | **Ja**  | Eindeutige interne Nummer                           |
+| **Eingangsdatum** | Nein    | Datum des Auftragseingangs                          |
+| **Startdatum**    | Nein    | Geplanter Projektstart                              |
+| **Laufzeit**      | Nein    | Geplante Projektlaufzeit                            |
+| **Status**        | Nein    | *Offen / Verloren / Canceled / Besetzt / Search zu* |
+| **Auf Website**   | Nein    | Projekt auf der Website veröffentlichen             |
 
 ### Beschreibung
 
-| Feld | Pflicht | Beschreibung |
-|------|---------|-------------|
-| **Kurzbeschreibung** | **Ja** | Kurze Projektbeschreibung (erscheint in der Ergebnisliste) |
-| **Beschreibung** | Nein | Ausführliche Projektbeschreibung |
-| **Anforderungen** | Nein | Gefragte Skills und Anforderungen |
+| Feld                 | Pflicht | Beschreibung                                               |
+|----------------------|---------|------------------------------------------------------------|
+| **Kurzbeschreibung** | **Ja**  | Kurze Projektbeschreibung (erscheint in der Ergebnisliste) |
+| **Beschreibung**     | Nein    | Ausführliche Projektbeschreibung                           |
+| **Anforderungen**    | Nein    | Gefragte Skills und Anforderungen                          |
 
 ### Einsatz
 
-| Feld | Beschreibung |
-|------|-------------|
+| Feld           | Beschreibung                 |
+|----------------|------------------------------|
 | **Einsatzort** | Arbeitsort des Freiberuflers |
 
 ### Zuordnung
@@ -43,11 +43,11 @@ Danach sind diese Felder schreibgeschützt und werden als Links angezeigt.
 
 ### Konditionen
 
-| Feld | Beschreibung |
-|------|-------------|
-| **Stundensatz VK (EUR)** | Verkaufs-Stundensatz |
-| **Debitor-Nr** | Interne Debitorennummer |
-| **Kreditor-Nr** | Interne Kreditorennummer |
+| Feld                     | Beschreibung             |
+|--------------------------|--------------------------|
+| **Stundensatz VK (EUR)** | Verkaufs-Stundensatz     |
+| **Debitor-Nr**           | Interne Debitorennummer  |
+| **Kreditor-Nr**          | Interne Kreditorennummer |
 
 ---
 
@@ -67,14 +67,14 @@ Klicken Sie auf **💾 Speichern**. Nach dem ersten Speichern erscheint der Absc
 
 ### Ergebnistabelle
 
-| Spalte | Inhalt |
-|--------|--------|
-| **Projektnummer** | Interne Nummer |
-| **Kurzbeschreibung** | Kurze Beschreibung |
-| **Einsatzort** | Arbeitsort |
-| **Startdatum** | Geplanter Start |
-| **Status** | Projektstatus als Text |
-| **Stundensatz VK** | Verkaufs-Stundensatz in EUR/h |
+| Spalte               | Inhalt                        |
+|----------------------|-------------------------------|
+| **Projektnummer**    | Interne Nummer                |
+| **Kurzbeschreibung** | Kurze Beschreibung            |
+| **Einsatzort**       | Arbeitsort                    |
+| **Startdatum**       | Geplanter Start               |
+| **Status**           | Projektstatus als Text        |
+| **Stundensatz VK**   | Verkaufs-Stundensatz in EUR/h |
 
 ---
 

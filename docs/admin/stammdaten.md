@@ -42,14 +42,14 @@ für den farbigen Badge in der Positionstabelle.
 
 ### Tabellenspalten
 
-| Spalte | Beschreibung |
-|--------|-------------|
-| **ID** | Interne ID |
-| **Vorschau** | Farbiger Badge wie er in der Positionstabelle erscheint |
-| **Bezeichnung** | Name des Status |
+| Spalte              | Beschreibung                                                |
+|---------------------|-------------------------------------------------------------|
+| **ID**              | Interne ID                                                  |
+| **Vorschau**        | Farbiger Badge wie er in der Positionstabelle erscheint     |
+| **Bezeichnung**     | Name des Status                                             |
 | **Hintergr.-Farbe** | Hintergrundfarbe des Badges (CSS-Farbwert, z. B. `#22c55e`) |
-| **Textfarbe** | Textfarbe des Badges |
-| **Standard** | Wird dieser Status bei neuen Zuordnungen vorausgewählt? |
+| **Textfarbe**       | Textfarbe des Badges                                        |
+| **Standard**        | Wird dieser Status bei neuen Zuordnungen vorausgewählt?     |
 
 ### Status anlegen, bearbeiten, löschen
 

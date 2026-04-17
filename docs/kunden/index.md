@@ -10,10 +10,10 @@ Kunden sind Unternehmen, die konkrete Projektanfragen stellen.
 
 ## Überblick
 
-| Bereich | Inhalte |
-|---------|---------|
-| **Adresse** | Firma, Name 1, Name 2, Anschrift |
-| **Kontaktinformationen** | Kontaktsperre, Wiedervorlage |
-| **Kommentar** | Freie Notizen |
+| Bereich                  | Inhalte                                   |
+|--------------------------|-------------------------------------------|
+| **Adresse**              | Firma, Name 1, Name 2, Anschrift          |
+| **Kontaktinformationen** | Kontaktsperre, Wiedervorlage              |
+| **Kommentar**            | Freie Notizen                             |
 | **Kontaktmöglichkeiten** | E-Mail, Telefon, Fax, Website, XING, GULP |
-| **Kontakthistorie** | Chronologische Gesprächsnotizen |
+| **Kontakthistorie**      | Chronologische Gesprächsnotizen           |

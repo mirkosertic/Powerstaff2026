@@ -20,32 +20,32 @@ Nach dem Login sehen Sie die Hauptoberfläche mit zwei zentralen Bereichen:
 
 Die obere Navigationsleiste enthält:
 
-| Element | Funktion |
-|---------|---------|
-| **Freiberufler** | Zur Freiberuflerverwaltung |
-| **Partner** | Zur Partnerverwaltung |
-| **Kunden** | Zur Kundenverwaltung |
-| **Projekte** | Zur Projektverwaltung |
-| **Profilsuche** | KI-Chat und klassische Filtersuche |
-| **Administration** | Stammdaten, Benutzer, API-Tokens (nur Admins) |
-| **◐** | Hell-/Dunkel-Modus wechseln |
-| **[Benutzername] abmelden** | Ausloggen |
+| Element                     | Funktion                                      |
+|-----------------------------|-----------------------------------------------|
+| **Freiberufler**            | Zur Freiberuflerverwaltung                    |
+| **Partner**                 | Zur Partnerverwaltung                         |
+| **Kunden**                  | Zur Kundenverwaltung                          |
+| **Projekte**                | Zur Projektverwaltung                         |
+| **Profilsuche**             | KI-Chat und klassische Filtersuche            |
+| **Administration**          | Stammdaten, Benutzer, API-Tokens (nur Admins) |
+| **◐**                       | Hell-/Dunkel-Modus wechseln                   |
+| **[Benutzername] abmelden** | Ausloggen                                     |
 
 ### Toolbar (unter der Navigation)
 
 Jedes Formular hat eine Toolbar mit folgenden Funktionen:
 
-| Schaltfläche | Funktion |
-|-------------|---------|
-| ⏮ | Zum ersten Datensatz springen |
-| ◀ | Zum vorherigen Datensatz |
-| [ID-Feld] | ID direkt eingeben und mit Enter aufrufen |
-| ▶ | Zum nächsten Datensatz |
-| ⏭ | Zum letzten Datensatz |
-| 🔍 **Suchen** | QBE-Suche mit den aktuellen Formularfeldern starten |
-| ＋ **Neu** | Leeres Formular für Neuanlage öffnen |
-| 💾 **Speichern** | Änderungen speichern |
-| 🗑 **Löschen** | Datensatz löschen (mit Bestätigungsdialog) |
+| Schaltfläche     | Funktion                                            |
+|------------------|-----------------------------------------------------|
+| ⏮                | Zum ersten Datensatz springen                       |
+| ◀                | Zum vorherigen Datensatz                            |
+| [ID-Feld]        | ID direkt eingeben und mit Enter aufrufen           |
+| ▶                | Zum nächsten Datensatz                              |
+| ⏭                | Zum letzten Datensatz                               |
+| 🔍 **Suchen**    | QBE-Suche mit den aktuellen Formularfeldern starten |
+| ＋ **Neu**        | Leeres Formular für Neuanlage öffnen                |
+| 💾 **Speichern** | Änderungen speichern                                |
+| 🗑 **Löschen**   | Datensatz löschen (mit Bestätigungsdialog)          |
 
 ---
 

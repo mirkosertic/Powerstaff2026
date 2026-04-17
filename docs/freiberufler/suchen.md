@@ -17,16 +17,16 @@ Lassen Sie alle Felder leer, um alle Freiberufler anzuzeigen.
 
 Die Treffer werden in einer Tabelle angezeigt:
 
-| Spalte | Inhalt |
-|--------|--------|
-| **Name 1** | Nachname |
-| **Name 2** | Vorname |
-| **Firma** | Firmenname |
-| **Ort** | Wohnort |
-| **Verfügbar ab** | Nächste Verfügbarkeit |
-| **Tagessatz** | Gewünschter Tagessatz in € |
-| **Code** | Eindeutiger interner Code |
-| **Tags** | Zugeordnete Schlagworte |
+| Spalte           | Inhalt                     |
+|------------------|----------------------------|
+| **Name 1**       | Nachname                   |
+| **Name 2**       | Vorname                    |
+| **Firma**        | Firmenname                 |
+| **Ort**          | Wohnort                    |
+| **Verfügbar ab** | Nächste Verfügbarkeit      |
+| **Tagessatz**    | Gewünschter Tagessatz in € |
+| **Code**         | Eindeutiger interner Code  |
+| **Tags**         | Zugeordnete Schlagworte    |
 
 Alle Spaltenüberschriften sind anklickbar und sortieren die Ergebnisse auf- oder absteigend.
 

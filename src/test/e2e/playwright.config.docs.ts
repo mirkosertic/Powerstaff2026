@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as path from 'path';
 
-const SCRIPT = path.resolve(__dirname, '../../target/start-docs.sh');
+const SCRIPT = path.resolve(__dirname, 'start-docs.sh');
+const LOG = path.resolve(__dirname, '../../../target/docs-application.log');
 const PORT = 8200;
 
 export default defineConfig({
@@ -9,7 +10,7 @@ export default defineConfig({
     globalTeardown: './global-teardown-docs.ts',
 
     webServer: {
-        command: `bash "${SCRIPT}" ${PORT} > ../../target/docs-application.log 2>&1`,
+        command: `bash "${SCRIPT}" ${PORT} > "${LOG}" 2>&1`,
         url: `http://localhost:${PORT}/login`,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,

@@ -11,14 +11,14 @@ Klicken Sie in der Navigation auf **Administration** → Tab **Benutzer**.
 
 ## Benutzertabelle
 
-| Spalte | Beschreibung |
-|--------|-------------|
-| **Benutzername** | Eindeutiger Login-Name |
-| **Aktiv** | ✔ Aktiv / ✖ Inaktiv – Inaktive Benutzer können sich nicht einloggen |
-| **Passwort-Reset erforderlich** | Ja: Benutzer muss Passwort beim nächsten Login ändern |
-| **Administrator** | ✔ Admin / Nein – Admins haben Zugriff auf alle Stammdaten und Benutzerverwaltung |
-| **LLM API-Token** | ✔ Gesetzt / Nicht gesetzt – Nur für Admins sichtbar |
-| **Aktionen** | Bearbeiten / Passwort ändern |
+| Spalte                          | Beschreibung                                                                     |
+|---------------------------------|----------------------------------------------------------------------------------|
+| **Benutzername**                | Eindeutiger Login-Name                                                           |
+| **Aktiv**                       | ✔ Aktiv / ✖ Inaktiv – Inaktive Benutzer können sich nicht einloggen              |
+| **Passwort-Reset erforderlich** | Ja: Benutzer muss Passwort beim nächsten Login ändern                            |
+| **Administrator**               | ✔ Admin / Nein – Admins haben Zugriff auf alle Stammdaten und Benutzerverwaltung |
+| **LLM API-Token**               | ✔ Gesetzt / Nicht gesetzt – Nur für Admins sichtbar                              |
+| **Aktionen**                    | Bearbeiten / Passwort ändern                                                     |
 
 ---
 

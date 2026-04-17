@@ -13,22 +13,22 @@
 
 ### Adresse
 
-| Feld | Pflicht | Beschreibung |
-|------|---------|-------------|
-| **Firma** | **Ja** | Firmenname des Kunden |
-| **Name 1** | Nein | Nachname Ansprechpartner |
-| **Name 2** | Nein | Vorname Ansprechpartner |
-| **Straße** | Nein | Straße und Hausnummer |
-| **Land** | Nein | Länderkürzel, max. 3 Zeichen |
-| **PLZ** | Nein | Postleitzahl, max. 5 Zeichen |
-| **Ort** | Nein | Ort |
+| Feld       | Pflicht | Beschreibung                 |
+|------------|---------|------------------------------|
+| **Firma**  | **Ja**  | Firmenname des Kunden        |
+| **Name 1** | Nein    | Nachname Ansprechpartner     |
+| **Name 2** | Nein    | Vorname Ansprechpartner      |
+| **Straße** | Nein    | Straße und Hausnummer        |
+| **Land**   | Nein    | Länderkürzel, max. 3 Zeichen |
+| **PLZ**    | Nein    | Postleitzahl, max. 5 Zeichen |
+| **Ort**    | Nein    | Ort                          |
 
 ### Kontaktinformationen
 
-| Feld | Beschreibung |
-|------|-------------|
+| Feld                 | Beschreibung                                            |
+|----------------------|---------------------------------------------------------|
 | **🚫 Kontaktsperre** | Wenn aktiv: roter Banner, Kontaktaufnahme nicht erlaubt |
-| **🔔 Wiedervorlage** | Markiert den Kunden zur erneuten Kontaktaufnahme |
+| **🔔 Wiedervorlage** | Markiert den Kunden zur erneuten Kontaktaufnahme        |
 
 ### Kommentar
 

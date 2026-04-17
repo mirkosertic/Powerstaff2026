@@ -6,15 +6,15 @@ Die **Freiberufler**-Tabelle im Projekt zeigt alle zugeordneten Positionen und d
 
 ## Positionstabelle
 
-| Spalte | Inhalt |
-|--------|--------|
-| **Kodierung** | Code des Freiberuflers (anklickbar → öffnet Freiberufler-Formular) |
-| **Name** | Nachname |
-| **Vorname** | Vorname |
-| **Status** | Farbiger Status-Badge (konfigurierbar in [Stammdaten → Positionsstatus](../admin/stammdaten.md)) |
-| **Konditionen** | Vereinbarte Konditionen |
-| **Kommentar** | Interne Notiz zur Position |
-| **Aktionen** | Bearbeiten / Löschen |
+| Spalte          | Inhalt                                                                                           |
+|-----------------|--------------------------------------------------------------------------------------------------|
+| **Kodierung**   | Code des Freiberuflers (anklickbar → öffnet Freiberufler-Formular)                               |
+| **Name**        | Nachname                                                                                         |
+| **Vorname**     | Vorname                                                                                          |
+| **Status**      | Farbiger Status-Badge (konfigurierbar in [Stammdaten → Positionsstatus](../admin/stammdaten.md)) |
+| **Konditionen** | Vereinbarte Konditionen                                                                          |
+| **Kommentar**   | Interne Notiz zur Position                                                                       |
+| **Aktionen**    | Bearbeiten / Löschen                                                                             |
 
 ---
 

@@ -4,22 +4,22 @@ Willkommen bei **Powerstaff 2026**, dem webbasierten Personalvermittlungs-Manage
 
 ## Inhalt
 
-| Bereich | Beschreibung |
-|---------|-------------|
-| [Erste Schritte](erste-schritte.md) | Login, Oberfläche, Navigation, Grundkonzepte |
-| [Freiberufler](freiberufler/index.md) | Profile anlegen, suchen und verwalten |
-| [Partner](partner/index.md) | Partnervermittlungsagenturen verwalten |
-| [Kunden](kunden/index.md) | Kundenunternehmen verwalten |
-| [Projekte](projekte/index.md) | Projekte und Positionen verwalten |
-| [Profilsuche](profilsuche/ki-chat.md) | KI-gestützte und klassische Profilsuche |
-| [Administration](admin/stammdaten.md) | Stammdaten, Benutzer, API-Tokens |
+| Bereich                               | Beschreibung                                 |
+|---------------------------------------|----------------------------------------------|
+| [Erste Schritte](erste-schritte.md)   | Login, Oberfläche, Navigation, Grundkonzepte |
+| [Freiberufler](freiberufler/index.md) | Profile anlegen, suchen und verwalten        |
+| [Partner](partner/index.md)           | Partnervermittlungsagenturen verwalten       |
+| [Kunden](kunden/index.md)             | Kundenunternehmen verwalten                  |
+| [Projekte](projekte/index.md)         | Projekte und Positionen verwalten            |
+| [Profilsuche](profilsuche/ki-chat.md) | KI-gestützte und klassische Profilsuche      |
+| [Administration](admin/stammdaten.md) | Stammdaten, Benutzer, API-Tokens             |
 
 ## Kurzübersicht: Die vier zentralen Entitäten
 
 ```
 Freiberufler ──── wird zugeordnet zu ──── Projektposition ──── gehört zu ──── Projekt
      │                                                                            │
-     └── wird vermittelt über ──── Partner          Kunde ── beauftragt ─────────┘
+     └── wird vermittelt über ──── Partner          Kunde ── beauftragt ──────────┘
 ```
 
 - **Freiberufler** – Die zu vermittelnden Spezialisten mit Profilen, Skills und Konditionen

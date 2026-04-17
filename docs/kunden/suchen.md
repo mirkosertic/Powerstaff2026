@@ -12,12 +12,12 @@
 
 ## Ergebnistabelle
 
-| Spalte | Inhalt |
-|--------|--------|
-| **Firma** | Firmenname |
+| Spalte     | Inhalt                   |
+|------------|--------------------------|
+| **Firma**  | Firmenname               |
 | **Name 1** | Nachname Ansprechpartner |
-| **Name 2** | Vorname Ansprechpartner |
-| **Ort** | Standort |
+| **Name 2** | Vorname Ansprechpartner  |
+| **Ort**    | Standort                 |
 
 Klicken Sie auf eine Zeile, um den Kunden zu öffnen.
 
