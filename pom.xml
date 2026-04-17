@@ -408,6 +408,7 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>start-e2e-with-jacoco.sh</include>
+                                        <include>start-docs.sh</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -431,6 +432,7 @@
                             <skip>${skipE2E}</skip>
                             <target>
                                 <chmod file="${project.build.directory}/start-e2e-with-jacoco.sh" perm="755"/>
+                                <chmod file="${project.build.directory}/start-docs.sh" perm="755"/>
                             </target>
                         </configuration>
                     </execution>

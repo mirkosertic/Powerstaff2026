@@ -8,6 +8,7 @@ const MGMT_PORT = 8090; // management.server.port in application.yml
 export default defineConfig({
     globalSetup: './global-setup.ts',
     globalTeardown: './global-teardown.ts',
+    testIgnore: /docs\.spec\.ts/,
 
     webServer: {
         command: `bash "${SCRIPT}" ${PORT} > ../../../target/e2e-application.log 2>&1`,
