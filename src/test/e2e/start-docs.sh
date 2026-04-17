@@ -21,6 +21,12 @@ fi
 
 echo "Starting docs app: $JAR on port $PORT"
 
+# MySQL via Docker Compose starten (idempotent – läuft bei bereits laufendem Container durch).
+COMPOSE_FILE="${SCRIPT_DIR}/docker-compose-e2e.yml"
+echo "Ensuring MySQL is running via Docker Compose..."
+docker compose -f "${COMPOSE_FILE}" up -d --wait
+echo "MySQL is healthy."
+
 # Forward SIGTERM/SIGINT to the JVM so it shuts down cleanly.
 cleanup() {
   if [ -n "$APP_PID" ]; then
