@@ -304,3 +304,209 @@ test.describe('Komponenten-Screenshots', () => {
     });
 
 });
+
+// ===========================================================================
+// Partner-Komponenten-Screenshots
+// ===========================================================================
+
+test.describe('Partner-Komponenten-Screenshots', () => {
+
+    // Partner 10001 – Codewald GmbH: hat Kontakte + Historieneintrag im Dev-Seed
+    async function openPartner10001(page: any): Promise<void> {
+        await page.goto('/partner/10001', { waitUntil: 'networkidle' });
+    }
+
+    test('Partner – Formular-Karte Adresse', async ({ page }) => {
+        await openPartner10001(page);
+        await page.locator('.fcard:has(#fcard-adresse)').screenshot({ path: `${COMPONENTS}/partner-fcard-adresse.png` });
+    });
+
+    test('Partner – Formular-Karte Konditionen', async ({ page }) => {
+        await openPartner10001(page);
+        await page.locator('.fcard:has(#fcard-konditionen)').screenshot({ path: `${COMPONENTS}/partner-fcard-konditionen.png` });
+    });
+
+    test('Partner – Formular-Karte Kontaktmöglichkeiten', async ({ page }) => {
+        await openPartner10001(page);
+        await page.locator('#contacts-card').screenshot({ path: `${COMPONENTS}/partner-fcard-kontaktmoeglichkeiten.png` });
+    });
+
+    test('Partner – Kontakt-Eintrag (einzeln)', async ({ page }) => {
+        await openPartner10001(page);
+        await expect(page.locator('#contacts-list .citem').first()).toBeVisible({ timeout: 5_000 });
+        await page.locator('#contacts-list .citem').first().screenshot({ path: `${COMPONENTS}/partner-contact-item.png` });
+    });
+
+    test('Partner – Formular-Karte Zugeordnete Freiberufler', async ({ page }) => {
+        await openPartner10001(page);
+        await page.locator('#freelancers-card').screenshot({ path: `${COMPONENTS}/partner-fcard-freiberufler.png` });
+    });
+
+    test('Partner – Formular-Karte Kontakthistorie', async ({ page }) => {
+        await openPartner10001(page);
+        await page.locator('#history-card').screenshot({ path: `${COMPONENTS}/partner-fcard-kontakthistorie.png` });
+    });
+
+    test('Partner – Historieneintrag (einzeln)', async ({ page }) => {
+        await openPartner10001(page);
+        await expect(page.locator('#history-list .hitem').first()).toBeVisible({ timeout: 5_000 });
+        await page.locator('#history-list .hitem').first().screenshot({ path: `${COMPONENTS}/partner-history-item.png` });
+    });
+
+    test('Partner – Banner Kontaktsperre', async ({ page }) => {
+        // Partner 10007 (Bitsalat AG) hat contactForbidden=TRUE im Dev-Seed
+        await page.goto('/partner/10007', { waitUntil: 'networkidle' });
+        await page.locator('.banner-forbidden').screenshot({ path: `${COMPONENTS}/partner-banner-kontaktsperre.png` });
+    });
+
+    test('Partner – Modal Kontakt hinzufügen', async ({ page }) => {
+        await openPartner10001(page);
+        await page.locator('[data-testid="btn-add-contact"]').click();
+        await expect(page.locator('.mbk:not(.hidden) .mbox')).toBeVisible({ timeout: 5_000 });
+        await page.locator('.mbk:not(.hidden) .mbox').screenshot({ path: `${COMPONENTS}/partner-modal-kontakt-hinzufuegen.png` });
+    });
+
+    test('Partner – Modal Historieneintrag', async ({ page }) => {
+        await openPartner10001(page);
+        await page.locator('[data-testid="btn-add-history"]').click();
+        await expect(page.locator('.mbk:not(.hidden) .mbox')).toBeVisible({ timeout: 5_000 });
+        await page.locator('.mbk:not(.hidden) .mbox').screenshot({ path: `${COMPONENTS}/partner-modal-historieneintrag.png` });
+    });
+
+});
+
+// ===========================================================================
+// Kunden-Komponenten-Screenshots
+// ===========================================================================
+
+test.describe('Kunden-Komponenten-Screenshots', () => {
+
+    // Kunde 30001 – Mondfahrt Automobil: hat Kontakte + Historieneintrag im Dev-Seed
+    async function openKunde30001(page: any): Promise<void> {
+        await page.goto('/kunde/30001', { waitUntil: 'networkidle' });
+    }
+
+    test('Kunden – Formular-Karte Adresse', async ({ page }) => {
+        await openKunde30001(page);
+        await page.locator('.fcard:has(#fcard-adresse)').screenshot({ path: `${COMPONENTS}/kunden-fcard-adresse.png` });
+    });
+
+    test('Kunden – Formular-Karte Kontaktinformationen', async ({ page }) => {
+        await openKunde30001(page);
+        await page.locator('.fcard:has(#fcard-kontakt)').screenshot({ path: `${COMPONENTS}/kunden-fcard-kontaktinformationen.png` });
+    });
+
+    test('Kunden – Formular-Karte Konditionen', async ({ page }) => {
+        await openKunde30001(page);
+        await page.locator('.fcard:has(#fcard-konditionen)').screenshot({ path: `${COMPONENTS}/kunden-fcard-konditionen.png` });
+    });
+
+    test('Kunden – Formular-Karte Projekte', async ({ page }) => {
+        await openKunde30001(page);
+        await page.locator('.fcard:has(#fcard-projekte)').screenshot({ path: `${COMPONENTS}/kunden-fcard-projekte.png` });
+    });
+
+    test('Kunden – Formular-Karte Kontaktmöglichkeiten', async ({ page }) => {
+        await openKunde30001(page);
+        await page.locator('#contacts-card').screenshot({ path: `${COMPONENTS}/kunden-fcard-kontaktmoeglichkeiten.png` });
+    });
+
+    test('Kunden – Kontakt-Eintrag (einzeln)', async ({ page }) => {
+        await openKunde30001(page);
+        await expect(page.locator('#contacts-list .citem').first()).toBeVisible({ timeout: 5_000 });
+        await page.locator('#contacts-list .citem').first().screenshot({ path: `${COMPONENTS}/kunden-contact-item.png` });
+    });
+
+    test('Kunden – Formular-Karte Kontakthistorie', async ({ page }) => {
+        await openKunde30001(page);
+        await page.locator('#history-card').screenshot({ path: `${COMPONENTS}/kunden-fcard-kontakthistorie.png` });
+    });
+
+    test('Kunden – Historieneintrag (einzeln)', async ({ page }) => {
+        await openKunde30001(page);
+        await expect(page.locator('#history-list .hitem').first()).toBeVisible({ timeout: 5_000 });
+        await page.locator('#history-list .hitem').first().screenshot({ path: `${COMPONENTS}/kunden-history-item.png` });
+    });
+
+    test('Kunden – Banner Kontaktsperre', async ({ page }) => {
+        // Kunde 30008 (Modebombe SE) hat contactForbidden=TRUE im Dev-Seed
+        await page.goto('/kunde/30008', { waitUntil: 'networkidle' });
+        await page.locator('.banner-forbidden').screenshot({ path: `${COMPONENTS}/kunden-banner-kontaktsperre.png` });
+    });
+
+    test('Kunden – Modal Kontakt hinzufügen', async ({ page }) => {
+        await openKunde30001(page);
+        await page.locator('[data-testid="btn-add-contact"]').click();
+        await expect(page.locator('.mbk:not(.hidden) .mbox')).toBeVisible({ timeout: 5_000 });
+        await page.locator('.mbk:not(.hidden) .mbox').screenshot({ path: `${COMPONENTS}/kunden-modal-kontakt-hinzufuegen.png` });
+    });
+
+    test('Kunden – Modal Historieneintrag', async ({ page }) => {
+        await openKunde30001(page);
+        await page.locator('[data-testid="btn-add-history"]').click();
+        await expect(page.locator('.mbk:not(.hidden) .mbox')).toBeVisible({ timeout: 5_000 });
+        await page.locator('.mbk:not(.hidden) .mbox').screenshot({ path: `${COMPONENTS}/kunden-modal-historieneintrag.png` });
+    });
+
+});
+
+// ===========================================================================
+// Projekt-Komponenten-Screenshots
+// ===========================================================================
+
+test.describe('Projekt-Komponenten-Screenshots', () => {
+
+    // Projekt 40001 – PRJ-2026-001: hat Positionen, Kunde 30001, im Dev-Seed
+    async function openProjekt40001(page: any): Promise<void> {
+        await page.goto('/project/40001', { waitUntil: 'networkidle' });
+    }
+
+    test('Projekt – Formular-Karte Allgemein', async ({ page }) => {
+        await openProjekt40001(page);
+        await page.locator('.fcard:has(#fcard-allgemein)').screenshot({ path: `${COMPONENTS}/projekt-fcard-allgemein.png` });
+    });
+
+    test('Projekt – Formular-Karte Beschreibung', async ({ page }) => {
+        await openProjekt40001(page);
+        await page.locator('.fcard:has(#fcard-beschreibung)').screenshot({ path: `${COMPONENTS}/projekt-fcard-beschreibung.png` });
+    });
+
+    test('Projekt – Formular-Karte Einsatz', async ({ page }) => {
+        await openProjekt40001(page);
+        await page.locator('.fcard:has(#fcard-einsatz)').screenshot({ path: `${COMPONENTS}/projekt-fcard-einsatz.png` });
+    });
+
+    test('Projekt – Formular-Karte Konditionen', async ({ page }) => {
+        await openProjekt40001(page);
+        await page.locator('.fcard:has(#fcard-konditionen)').screenshot({ path: `${COMPONENTS}/projekt-fcard-konditionen.png` });
+    });
+
+    test('Projekt – Formular-Karte Zuordnung', async ({ page }) => {
+        await openProjekt40001(page);
+        await page.locator('.fcard:has(#fcard-zuordnung)').screenshot({ path: `${COMPONENTS}/projekt-fcard-zuordnung.png` });
+    });
+
+    test('Projekt – Formular-Karte Positionen', async ({ page }) => {
+        await openProjekt40001(page);
+        await page.locator('#positions-card').screenshot({ path: `${COMPONENTS}/projekt-fcard-positionen.png` });
+    });
+
+    test('Projekt – Positions-Zeile (einzeln)', async ({ page }) => {
+        await openProjekt40001(page);
+        await expect(page.locator('#fcard-positions tbody tr').first()).toBeVisible({ timeout: 5_000 });
+        await page.locator('#fcard-positions tbody tr').first().screenshot({ path: `${COMPONENTS}/projekt-position-row.png` });
+    });
+
+    test('Projekt – Formular-Karte Projekthistorie', async ({ page }) => {
+        await openProjekt40001(page);
+        await page.locator('#history-card').screenshot({ path: `${COMPONENTS}/projekt-fcard-historie.png` });
+    });
+
+    test('Projekt – Modal Historieneintrag', async ({ page }) => {
+        await openProjekt40001(page);
+        await page.locator('[data-testid="btn-add-history"]').click();
+        await expect(page.locator('.mbk:not(.hidden) .mbox')).toBeVisible({ timeout: 5_000 });
+        await page.locator('.mbk:not(.hidden) .mbox').screenshot({ path: `${COMPONENTS}/projekt-modal-historieneintrag.png` });
+    });
+
+});

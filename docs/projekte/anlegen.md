@@ -13,6 +13,8 @@
 
 ### Allgemein
 
+![Formular-Karte Allgemein](../screenshots/components/projekt-fcard-allgemein.png)
+
 | Feld              | Pflicht | Beschreibung                                        |
 |-------------------|---------|-----------------------------------------------------|
 | **Projektnummer** | **Ja**  | Eindeutige interne Nummer                           |
@@ -24,6 +26,8 @@
 
 ### Beschreibung
 
+![Formular-Karte Beschreibung](../screenshots/components/projekt-fcard-beschreibung.png)
+
 | Feld                 | Pflicht | Beschreibung                                               |
 |----------------------|---------|------------------------------------------------------------|
 | **Kurzbeschreibung** | **Ja**  | Kurze Projektbeschreibung (erscheint in der Ergebnisliste) |
@@ -31,6 +35,8 @@
 | **Anforderungen**    | Nein    | Gefragte Skills und Anforderungen                          |
 
 ### Einsatz
+
+![Formular-Karte Einsatz](../screenshots/components/projekt-fcard-einsatz.png)
 
 | Feld           | Beschreibung                 |
 |----------------|------------------------------|
@@ -41,7 +47,11 @@
 Beim **ersten Speichern** können Kunde und/oder Partner verknüpft werden.
 Danach sind diese Felder schreibgeschützt und werden als Links angezeigt.
 
+![Formular-Karte Zuordnung](../screenshots/components/projekt-fcard-zuordnung.png)
+
 ### Konditionen
+
+![Formular-Karte Konditionen](../screenshots/components/projekt-fcard-konditionen.png)
 
 | Feld                     | Beschreibung             |
 |--------------------------|--------------------------|
@@ -75,6 +85,18 @@ Klicken Sie auf **💾 Speichern**. Nach dem ersten Speichern erscheint der Absc
 | **Startdatum**       | Geplanter Start               |
 | **Status**           | Projektstatus als Text        |
 | **Stundensatz VK**   | Verkaufs-Stundensatz in EUR/h |
+
+---
+
+## Projekthistorie
+
+Nach dem ersten Speichern steht die **Projekthistorie** zur Verfügung:
+
+![Formular-Karte Projekthistorie](../screenshots/components/projekt-fcard-historie.png)
+
+Klicken Sie auf **+ Neuer Eintrag**, um eine Notiz zu hinterlegen:
+
+![Dialog Historieneintrag anlegen](../screenshots/components/projekt-modal-historieneintrag.png)
 
 ---
 

@@ -214,6 +214,7 @@
       <div class="list-hd">
         <button class="btn btn-sm btn-ghost"
                 type="button"
+                data-testid="btn-add-contact"
                 th:onclick="'openModal(\'modal-contact\')'">+ Hinzufügen</button>
       </div>
       <div class="clist" id="contacts-list">
@@ -254,6 +255,7 @@
       <div class="fcard-body" id="fcard-history">
       <div class="list-hd">
         <button type="button" class="btn btn-sm btn-ghost"
+                data-testid="btn-add-history"
                 th:onclick="'openModal(\'modal-history\')'">+ Neuer Eintrag</button>
       </div>
       <div class="hlist" id="history-list">

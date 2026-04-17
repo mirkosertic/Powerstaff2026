@@ -2,7 +2,11 @@
 
 Die **Freiberufler**-Tabelle im Projekt zeigt alle zugeordneten Positionen und deren Status.
 
-![Projekte Formular mit Positionen](../screenshots/projekte-formular.png)
+![Formular-Karte Positionen](../screenshots/components/projekt-fcard-positionen.png)
+
+Eine einzelne Positions-Zeile mit Status-Badge, Konditionen und Aktionsbuttons:
+
+![Positions-Zeile](../screenshots/components/projekt-position-row.png)
 
 ## Positionstabelle
 
