@@ -56,3 +56,5 @@ Ein Chat kann über das **🗑**-Symbol gelöscht werden.
 ## Wechsel zur klassischen Suche
 
 Klicken Sie auf den Tab **Volltextsuche**, um zur filtergestützten Suche zu wechseln.
+
+Weitere Informationen: [Klassische Filtersuche](klassisch.md)
