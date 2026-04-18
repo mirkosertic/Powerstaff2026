@@ -39,7 +39,7 @@ trap cleanup TERM INT
 
 # Start JVM with dev mode enabled (realistic seed data, no JaCoCo overhead).
 java \
-  -Dspring.profiles.active=e2e \
+  -Dspring.profiles.active=docs \
   -Ddevmode=true \
   -Dserver.port="$PORT" \
   -jar "$JAR" &

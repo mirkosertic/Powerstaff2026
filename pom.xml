@@ -602,7 +602,7 @@
                             <executable>bash</executable>
                             <arguments>
                                 <argument>-c</argument>
-                                <argument>npx playwright test --project=setup --project=chromium --project=non-admin-chromium --reporter=blob; echo $? &gt; "$EXIT_FILE"; exit 0</argument>
+                                <argument>npx playwright test --config playwright.config.ts --project=setup --project=chromium --project=non-admin-chromium --reporter=blob; echo $? &gt; "$EXIT_FILE"; exit 0</argument>
                             </arguments>
                             <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
                             <environmentVariables>
@@ -662,7 +662,7 @@
                             <executable>bash</executable>
                             <arguments>
                                 <argument>-c</argument>
-                                <argument>npx playwright test --project=setup --project=firefox --project=non-admin-firefox --reporter=blob; echo $? &gt; "$EXIT_FILE"; exit 0</argument>
+                                <argument>npx playwright test --config playwright.config.ts --project=setup --project=firefox --project=non-admin-firefox --reporter=blob; echo $? &gt; "$EXIT_FILE"; exit 0</argument>
                             </arguments>
                             <workingDirectory>${project.basedir}/src/test/e2e</workingDirectory>
                             <environmentVariables>

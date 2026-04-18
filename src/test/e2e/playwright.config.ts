@@ -43,7 +43,7 @@ export default defineConfig({
         // Alle Admin-Tests: Chromium mit fester Auflösung 1280×1024
         {
             name: 'chromium',
-            testIgnore: /admin-noadmin\.spec\.ts/,
+            testIgnore: [/admin-noadmin\.spec\.ts/, /docs\.spec\.ts/],
             use: {
                 ...devices['Desktop Chrome'],
                 viewport: { width: 1280, height: 1024 },
@@ -53,7 +53,7 @@ export default defineConfig({
         // Firefox mit gleicher Auflösung
         {
             name: 'firefox',
-            testIgnore: /admin-noadmin\.spec\.ts/,
+            testIgnore: [/admin-noadmin\.spec\.ts/, /docs\.spec\.ts/],
             use: {
                 ...devices['Desktop Firefox'],
                 viewport: { width: 1280, height: 1024 },
