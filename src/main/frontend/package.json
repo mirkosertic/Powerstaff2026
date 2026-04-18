@@ -10,6 +10,6 @@
     "vite": "^6.4.2"
   },
   "dependencies": {
-    "marked": "^17.0.5"
+    "marked": "^18.0.1"
   }
 }
