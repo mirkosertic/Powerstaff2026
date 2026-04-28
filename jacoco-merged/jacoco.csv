@@ -161,7 +161,7 @@ Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profi
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,688,102,57,13,155,26,42,8,12,3
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,MockLLmService,0,51,0,2,0,6,0,4,0,3
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.StreamError,6,0,0,0,1,0,1,0,1,0
-Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,82,13,11,1,14,3,8,2,2,2
+Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,131,13,9,1,33,3,7,2,2,2
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,PersistentUserMessage,0,4,0,0,0,2,0,1,0,1
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchProperties,0,13,0,0,0,5,0,3,0,3
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService.new ChatProgressCollector() {...},35,0,2,0,9,0,4,0,3,0
