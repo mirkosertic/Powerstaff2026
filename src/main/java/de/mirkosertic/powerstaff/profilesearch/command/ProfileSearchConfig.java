@@ -35,46 +35,48 @@ public class ProfileSearchConfig {
                 final LlmChatClientFactory factory = token -> defaultClient;
                 return new SpringAILlmService(defaultClient, factory, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);
             }
-            if (model instanceof final OpenAiChatModel openAiModel) {
-                // Default-Client: verwendet das Auto-konfigurierte OpenAiChatModel Bean (mit allen Properties aus application.yml)
-                final ChatClient defaultClient = ChatClient.builder(openAiModel).build();
-
-                // Properties aus Environment lesen (nur wenn OpenAiChatModel Bean existiert)
+            if (model instanceof OpenAiChatModel) {
+                // Properties aus Environment lesen
                 final String baseUrl = env.getProperty("spring.ai.openai.base-url", "https://api.openai.com");
+                final String apiKey = env.getProperty("spring.ai.openai.api-key", "dummy");
                 final String modelName = env.getProperty("spring.ai.openai.chat.options.model", "gpt-4o");
                 final Double temperature = env.getProperty("spring.ai.openai.chat.options.temperature", Double.class, 0.7);
                 final Boolean streamUsage = env.getProperty("spring.ai.openai.chat.options.stream-usage", Boolean.class, false);
 
-                // Per-User-Client Factory: erstellt neue Instanzen mit User-Token
+                final Timeout timeout = Timeout.builder()
+                    .read(Duration.ZERO)
+                    .request(profileSearchProperties.getStreamingTimeout())
+                    .build();
+
+                final OpenAiChatOptions chatOptions = OpenAiChatOptions.builder()
+                    .model(modelName)
+                    .temperature(temperature)
+                    .streamUsage(streamUsage)
+                    .build();
+
+                // Default-Client mit explizitem Timeout — verhindert SDK-Default von 1 Minute
+                final OpenAIClient defaultApiClient = OpenAIOkHttpClient.builder()
+                    .baseUrl(baseUrl)
+                    .apiKey(apiKey)
+                    .timeout(timeout)
+                    .build();
+                final ChatClient defaultClient = ChatClient.builder(
+                    OpenAiChatModel.builder().openAiClient(defaultApiClient).options(chatOptions).build()
+                ).build();
+
+                // Per-User-Client Factory: User-Token überschreibt den konfigurierten API-Key
                 final LlmChatClientFactory factory = token -> {
                     if (token == null || token.isBlank()) {
                         return defaultClient;
                     }
-
-                    // OpenAiChatOptions aus Properties bauen (identisch zum Auto-konfigurierten Bean)
-                    final OpenAiChatOptions chatOptions = OpenAiChatOptions.builder()
-                        .model(modelName)
-                        .temperature(temperature)
-                        .streamUsage(streamUsage)
-                        .build();
-
-                    // OpenAI Java SDK Client mit User-Token und Base-URL erstellen
                     final OpenAIClient perUserClient = OpenAIOkHttpClient.builder()
-                        .baseUrl(baseUrl)  // KRITISCH: localhost:1234 in application-local.yml
+                        .baseUrl(baseUrl)
                         .apiKey(token)
-                        .timeout(Timeout.builder()
-                            .read(Duration.ZERO)
-                            .request(profileSearchProperties.getStreamingTimeout())
-                            .build())
+                        .timeout(timeout)
                         .build();
-
-                    // OpenAiChatModel mit per-User Client und Options erstellen
-                    final OpenAiChatModel perUserModel = OpenAiChatModel.builder()
-                        .openAiClient(perUserClient)
-                        .options(chatOptions)
-                        .build();
-
-                    return ChatClient.builder(perUserModel).build();
+                    return ChatClient.builder(
+                        OpenAiChatModel.builder().openAiClient(perUserClient).options(chatOptions).build()
+                    ).build();
                 };
 
                 return new SpringAILlmService(defaultClient, factory, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);
