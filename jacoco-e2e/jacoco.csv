@@ -134,7 +134,7 @@ E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.customer.command,KundeH
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController.SendResponse,15,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController.SendResponseWrapper,15,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController.SendRequest,0,6,0,0,0,1,0,1,0,1
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController,435,596,45,39,72,123,35,27,5,13
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController,450,599,51,39,77,123,39,27,6,13
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,HistoryTypeView,0,9,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,ProjectPositionStatusQueryService,0,22,0,0,0,11,0,3,0,3
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.shared.query,TagQueryService,0,26,0,0,0,12,0,3,0,3
@@ -161,9 +161,9 @@ E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,L
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,790,0,70,0,181,0,50,0,15,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,MockLLmService,13,38,0,2,1,5,1,3,1,2
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.StreamError,6,0,0,0,1,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,131,13,9,1,33,3,7,2,2,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,151,13,9,1,37,3,8,2,3,2
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,PersistentUserMessage,4,0,0,0,2,0,1,0,1,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchProperties,4,9,0,0,2,3,1,2,1,2
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchProperties,4,20,0,0,2,7,1,4,1,4
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService.new ChatProgressCollector() {...},35,0,2,0,9,0,4,0,3,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchChat,35,10,0,0,10,3,10,3,10,3
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService.StreamingChatProgressCollector,66,0,2,0,18,0,7,0,6,0
@@ -182,5 +182,5 @@ E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,P
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.MessageComplete,0,15,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ToolCall,9,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ChatProgressCollector,8,0,0,0,7,0,7,0,7,0
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SimpleLoggerAdvisor,50,0,0,0,15,0,8,0,8,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SimpleLoggerAdvisor,76,0,8,0,21,0,14,0,10,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.Reply,21,0,0,0,1,0,1,0,1,0

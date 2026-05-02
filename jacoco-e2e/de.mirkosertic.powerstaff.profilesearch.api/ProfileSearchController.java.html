@@ -31,6 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.UncheckedIOException;
 import java.security.Principal;
 import java.util.List;
@@ -57,33 +58,33 @@ public class ProfileSearchController {
                                    final RememberedProjectService rememberedProjectService,
                                    final ProfileSearchProperties profileSearchProperties,
                                    final TagQueryService tagQueryService,
-<span class="fc" id="L60">                                   final ObjectMapper objectMapper) {</span>
-<span class="fc" id="L61">        this.commandService = commandService;</span>
-<span class="fc" id="L62">        this.queryService = queryService;</span>
-<span class="fc" id="L63">        this.llmService = llmService;</span>
-<span class="fc" id="L64">        this.rememberedProjectService = rememberedProjectService;</span>
-<span class="fc" id="L65">        this.profileSearchProperties = profileSearchProperties;</span>
-<span class="fc" id="L66">        this.tagQueryService = tagQueryService;</span>
-<span class="fc" id="L67">        this.objectMapper = objectMapper;</span>
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L61">                                   final ObjectMapper objectMapper) {</span>
+<span class="fc" id="L62">        this.commandService = commandService;</span>
+<span class="fc" id="L63">        this.queryService = queryService;</span>
+<span class="fc" id="L64">        this.llmService = llmService;</span>
+<span class="fc" id="L65">        this.rememberedProjectService = rememberedProjectService;</span>
+<span class="fc" id="L66">        this.profileSearchProperties = profileSearchProperties;</span>
+<span class="fc" id="L67">        this.tagQueryService = tagQueryService;</span>
+<span class="fc" id="L68">        this.objectMapper = objectMapper;</span>
+<span class="fc" id="L69">    }</span>
 
     @GetMapping
     public String index() {
-<span class="fc" id="L72">        return &quot;redirect:/profilesearch/chat&quot;;</span>
+<span class="fc" id="L73">        return &quot;redirect:/profilesearch/chat&quot;;</span>
     }
 
     @GetMapping(&quot;/chat&quot;)
     public void chatIndex(final Principal principal, final HttpServletResponse response) throws IOException {
-<span class="fc" id="L77">        final String userId = principal.getName();</span>
-<span class="fc" id="L78">        final var latestChatId = queryService.findLatestChatByUser(userId);</span>
-<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (latestChatId.isPresent()) {</span>
-<span class="fc" id="L80">            response.sendRedirect(&quot;/profilesearch/chat/&quot; + latestChatId.get());</span>
+<span class="fc" id="L78">        final String userId = principal.getName();</span>
+<span class="fc" id="L79">        final var latestChatId = queryService.findLatestChatByUser(userId);</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (latestChatId.isPresent()) {</span>
+<span class="fc" id="L81">            response.sendRedirect(&quot;/profilesearch/chat/&quot; + latestChatId.get());</span>
         } else {
-<span class="fc" id="L82">            final Long projectId = rememberedProjectService.get(userId).orElse(null);</span>
-<span class="fc" id="L83">            final Long chatId = commandService.createChat(userId, projectId);</span>
-<span class="fc" id="L84">            response.sendRedirect(&quot;/profilesearch/chat/&quot; + chatId);</span>
+<span class="fc" id="L83">            final Long projectId = rememberedProjectService.get(userId).orElse(null);</span>
+<span class="fc" id="L84">            final Long chatId = commandService.createChat(userId, projectId);</span>
+<span class="fc" id="L85">            response.sendRedirect(&quot;/profilesearch/chat/&quot; + chatId);</span>
         }
-<span class="fc" id="L86">    }</span>
+<span class="fc" id="L87">    }</span>
 
     @GetMapping(&quot;/search&quot;)
     public String search(@RequestParam(required = false) final String searchTerm,
@@ -98,97 +99,97 @@ public class ProfileSearchController {
                          final Principal principal,
                          final Model model,
                          final HttpServletResponse response) {
-<span class="fc" id="L101">        final ProfileSearchCriteria criteria = new ProfileSearchCriteria(searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch, similarityThreshold);</span>
-<span class="fc bfc" id="L102" title="All 4 branches covered.">        final boolean empty = (criteria.searchTerm() == null || criteria.searchTerm().isBlank())</span>
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">                &amp;&amp; criteria.salaryPerDayFrom() == null</span>
-<span class="pc bpc" id="L104" title="1 of 2 branches missed.">                &amp;&amp; criteria.salaryPerDayTo() == null</span>
-<span class="fc bfc" id="L105" title="All 4 branches covered.">                &amp;&amp; (criteria.tagIds() == null || criteria.tagIds().isBlank());</span>
+<span class="fc" id="L102">        final ProfileSearchCriteria criteria = new ProfileSearchCriteria(searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch, similarityThreshold);</span>
+<span class="fc bfc" id="L103" title="All 4 branches covered.">        final boolean empty = (criteria.searchTerm() == null || criteria.searchTerm().isBlank())</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">                &amp;&amp; criteria.salaryPerDayFrom() == null</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">                &amp;&amp; criteria.salaryPerDayTo() == null</span>
+<span class="fc bfc" id="L106" title="All 4 branches covered.">                &amp;&amp; (criteria.tagIds() == null || criteria.tagIds().isBlank());</span>
 
-<span class="fc bfc" id="L107" title="All 2 branches covered.">        if (empty) {</span>
-<span class="fc" id="L108">            model.addAttribute(&quot;validationError&quot;, &quot;Bitte mindestens ein Suchkriterium angeben.&quot;);</span>
-<span class="fc" id="L109">            model.addAttribute(&quot;results&quot;, List.of());</span>
-<span class="fc" id="L110">            model.addAttribute(&quot;totalCount&quot;, 0L);</span>
-<span class="fc" id="L111">            model.addAttribute(&quot;criteria&quot;, criteria);</span>
-<span class="fc" id="L112">            model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
-<span class="fc" id="L113">            model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
-<span class="fc" id="L114">            model.addAttribute(&quot;nextUrl&quot;, null);</span>
-<span class="fc" id="L115">            model.addAttribute(&quot;allTags&quot;, tagQueryService.findAll());</span>
-<span class="fc" id="L116">            model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
-<span class="fc" id="L117">            return &quot;profilesearch/search-page&quot;;</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (empty) {</span>
+<span class="fc" id="L109">            model.addAttribute(&quot;validationError&quot;, &quot;Bitte mindestens ein Suchkriterium angeben.&quot;);</span>
+<span class="fc" id="L110">            model.addAttribute(&quot;results&quot;, List.of());</span>
+<span class="fc" id="L111">            model.addAttribute(&quot;totalCount&quot;, 0L);</span>
+<span class="fc" id="L112">            model.addAttribute(&quot;criteria&quot;, criteria);</span>
+<span class="fc" id="L113">            model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
+<span class="fc" id="L114">            model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
+<span class="fc" id="L115">            model.addAttribute(&quot;nextUrl&quot;, null);</span>
+<span class="fc" id="L116">            model.addAttribute(&quot;allTags&quot;, tagQueryService.findAll());</span>
+<span class="fc" id="L117">            model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
+<span class="fc" id="L118">            return &quot;profilesearch/search-page&quot;;</span>
         }
 
-<span class="fc" id="L120">        final String returnTo = buildSearchReturnUrl(criteria);</span>
+<span class="fc" id="L121">        final String returnTo = buildSearchReturnUrl(criteria);</span>
 
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (offset &gt; 0) {</span>
-<span class="nc" id="L123">            final ProfileSearchPage page = queryService.searchFreelancers(criteria, offset, PAGE_SIZE);</span>
-<span class="nc" id="L124">            final var results = page.results();</span>
-<span class="nc" id="L125">            final long total = page.totalHits();</span>
-<span class="nc" id="L126">            final int nextOffset = offset + PAGE_SIZE;</span>
-<span class="nc bnc" id="L127" title="All 2 branches missed.">            if (nextOffset &lt; total) {</span>
-<span class="nc" id="L128">                response.setHeader(&quot;X-Next-Url&quot;, buildSearchMoreUrl(criteria, nextOffset));</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        if (offset &gt; 0) {</span>
+<span class="nc" id="L124">            final ProfileSearchPage page = queryService.searchFreelancers(criteria, offset, PAGE_SIZE);</span>
+<span class="nc" id="L125">            final var results = page.results();</span>
+<span class="nc" id="L126">            final long total = page.totalHits();</span>
+<span class="nc" id="L127">            final int nextOffset = offset + PAGE_SIZE;</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (nextOffset &lt; total) {</span>
+<span class="nc" id="L129">                response.setHeader(&quot;X-Next-Url&quot;, buildSearchMoreUrl(criteria, nextOffset));</span>
             }
-<span class="nc" id="L130">            model.addAttribute(&quot;results&quot;, results);</span>
-<span class="nc" id="L131">            model.addAttribute(&quot;returnTo&quot;, returnTo);</span>
-<span class="nc" id="L132">            return &quot;profilesearch/search-results :: results&quot;;</span>
+<span class="nc" id="L131">            model.addAttribute(&quot;results&quot;, results);</span>
+<span class="nc" id="L132">            model.addAttribute(&quot;returnTo&quot;, returnTo);</span>
+<span class="nc" id="L133">            return &quot;profilesearch/search-results :: results&quot;;</span>
         }
 
-<span class="fc" id="L135">        response.setHeader(&quot;Cache-Control&quot;, &quot;no-store, no-cache, must-revalidate&quot;);</span>
-<span class="fc" id="L136">        response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);</span>
-<span class="fc" id="L137">        response.setHeader(&quot;Expires&quot;, &quot;0&quot;);</span>
+<span class="fc" id="L136">        response.setHeader(&quot;Cache-Control&quot;, &quot;no-store, no-cache, must-revalidate&quot;);</span>
+<span class="fc" id="L137">        response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);</span>
+<span class="fc" id="L138">        response.setHeader(&quot;Expires&quot;, &quot;0&quot;);</span>
 
-<span class="fc" id="L139">        final ProfileSearchPage page = queryService.searchFreelancers(criteria, 0, PAGE_SIZE);</span>
-<span class="fc" id="L140">        final var results = page.results();</span>
-<span class="fc" id="L141">        final long total = page.totalHits();</span>
-<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        final String nextUrl = PAGE_SIZE &lt; total ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;</span>
+<span class="fc" id="L140">        final ProfileSearchPage page = queryService.searchFreelancers(criteria, 0, PAGE_SIZE);</span>
+<span class="fc" id="L141">        final var results = page.results();</span>
+<span class="fc" id="L142">        final long total = page.totalHits();</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        final String nextUrl = PAGE_SIZE &lt; total ? buildSearchMoreUrl(criteria, PAGE_SIZE) : null;</span>
 
-<span class="fc" id="L144">        model.addAttribute(&quot;results&quot;, results);</span>
-<span class="fc" id="L145">        model.addAttribute(&quot;totalCount&quot;, total);</span>
-<span class="fc" id="L146">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
-<span class="fc" id="L147">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
-<span class="fc" id="L148">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
-<span class="fc" id="L149">        model.addAttribute(&quot;nextUrl&quot;, nextUrl);</span>
-<span class="fc" id="L150">        model.addAttribute(&quot;allTags&quot;, tagQueryService.findAll());</span>
-<span class="fc" id="L151">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
-<span class="fc" id="L152">        model.addAttribute(&quot;returnTo&quot;, returnTo);</span>
-<span class="fc" id="L153">        return &quot;profilesearch/search-page&quot;;</span>
+<span class="fc" id="L145">        model.addAttribute(&quot;results&quot;, results);</span>
+<span class="fc" id="L146">        model.addAttribute(&quot;totalCount&quot;, total);</span>
+<span class="fc" id="L147">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
+<span class="fc" id="L148">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
+<span class="fc" id="L149">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
+<span class="fc" id="L150">        model.addAttribute(&quot;nextUrl&quot;, nextUrl);</span>
+<span class="fc" id="L151">        model.addAttribute(&quot;allTags&quot;, tagQueryService.findAll());</span>
+<span class="fc" id="L152">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
+<span class="fc" id="L153">        model.addAttribute(&quot;returnTo&quot;, returnTo);</span>
+<span class="fc" id="L154">        return &quot;profilesearch/search-page&quot;;</span>
     }
 
     private String buildSearchReturnUrl(final ProfileSearchCriteria c) {
-<span class="fc" id="L157">        final var b = UriComponentsBuilder.fromPath(&quot;/profilesearch/search&quot;);</span>
-<span class="fc bfc" id="L158" title="All 4 branches covered.">        if (c.searchTerm() != null &amp;&amp; !c.searchTerm().isBlank()) b.queryParam(&quot;searchTerm&quot;, c.searchTerm());</span>
-<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (c.salaryPerDayFrom() != null) b.queryParam(&quot;salaryPerDayFrom&quot;, c.salaryPerDayFrom());</span>
-<span class="pc bpc" id="L160" title="1 of 2 branches missed.">        if (c.salaryPerDayTo() != null) b.queryParam(&quot;salaryPerDayTo&quot;, c.salaryPerDayTo());</span>
-<span class="fc bfc" id="L161" title="All 4 branches covered.">        if (c.tagIds() != null &amp;&amp; !c.tagIds().isBlank()) b.queryParam(&quot;tagIds&quot;, c.tagIds());</span>
-<span class="fc bfc" id="L162" title="All 2 branches covered.">        if (c.sortField() != null) b.queryParam(&quot;sortField&quot;, c.sortField());</span>
-<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (c.sortDir() != null) b.queryParam(&quot;sortDir&quot;, c.sortDir());</span>
-<span class="fc" id="L164">        return b.encode().build().toUriString();</span>
+<span class="fc" id="L158">        final var b = UriComponentsBuilder.fromPath(&quot;/profilesearch/search&quot;);</span>
+<span class="fc bfc" id="L159" title="All 4 branches covered.">        if (c.searchTerm() != null &amp;&amp; !c.searchTerm().isBlank()) b.queryParam(&quot;searchTerm&quot;, c.searchTerm());</span>
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">        if (c.salaryPerDayFrom() != null) b.queryParam(&quot;salaryPerDayFrom&quot;, c.salaryPerDayFrom());</span>
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (c.salaryPerDayTo() != null) b.queryParam(&quot;salaryPerDayTo&quot;, c.salaryPerDayTo());</span>
+<span class="fc bfc" id="L162" title="All 4 branches covered.">        if (c.tagIds() != null &amp;&amp; !c.tagIds().isBlank()) b.queryParam(&quot;tagIds&quot;, c.tagIds());</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (c.sortField() != null) b.queryParam(&quot;sortField&quot;, c.sortField());</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        if (c.sortDir() != null) b.queryParam(&quot;sortDir&quot;, c.sortDir());</span>
+<span class="fc" id="L165">        return b.encode().build().toUriString();</span>
     }
 
     private String buildSearchMoreUrl(final ProfileSearchCriteria c, final int offset) {
-<span class="nc" id="L168">        final var b = UriComponentsBuilder.fromPath(&quot;/profilesearch/search&quot;).queryParam(&quot;offset&quot;, offset);</span>
-<span class="nc bnc" id="L169" title="All 4 branches missed.">        if (c.searchTerm() != null &amp;&amp; !c.searchTerm().isBlank()) {</span>
-<span class="nc" id="L170">            b.queryParam(&quot;searchTerm&quot;, c.searchTerm());</span>
+<span class="nc" id="L169">        final var b = UriComponentsBuilder.fromPath(&quot;/profilesearch/search&quot;).queryParam(&quot;offset&quot;, offset);</span>
+<span class="nc bnc" id="L170" title="All 4 branches missed.">        if (c.searchTerm() != null &amp;&amp; !c.searchTerm().isBlank()) {</span>
+<span class="nc" id="L171">            b.queryParam(&quot;searchTerm&quot;, c.searchTerm());</span>
         }
-<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (c.salaryPerDayFrom() != null) {</span>
-<span class="nc" id="L173">            b.queryParam(&quot;salaryPerDayFrom&quot;, c.salaryPerDayFrom());</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (c.salaryPerDayFrom() != null) {</span>
+<span class="nc" id="L174">            b.queryParam(&quot;salaryPerDayFrom&quot;, c.salaryPerDayFrom());</span>
         }
-<span class="nc bnc" id="L175" title="All 2 branches missed.">        if (c.salaryPerDayTo() != null) {</span>
-<span class="nc" id="L176">            b.queryParam(&quot;salaryPerDayTo&quot;, c.salaryPerDayTo());</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        if (c.salaryPerDayTo() != null) {</span>
+<span class="nc" id="L177">            b.queryParam(&quot;salaryPerDayTo&quot;, c.salaryPerDayTo());</span>
         }
-<span class="nc bnc" id="L178" title="All 4 branches missed.">        if (c.tagIds() != null &amp;&amp; !c.tagIds().isBlank()) {</span>
-<span class="nc" id="L179">            b.queryParam(&quot;tagIds&quot;, c.tagIds());</span>
+<span class="nc bnc" id="L179" title="All 4 branches missed.">        if (c.tagIds() != null &amp;&amp; !c.tagIds().isBlank()) {</span>
+<span class="nc" id="L180">            b.queryParam(&quot;tagIds&quot;, c.tagIds());</span>
         }
-<span class="nc bnc" id="L181" title="All 2 branches missed.">        if (c.sortField() != null) {</span>
-<span class="nc" id="L182">            b.queryParam(&quot;sortField&quot;, c.sortField());</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if (c.sortField() != null) {</span>
+<span class="nc" id="L183">            b.queryParam(&quot;sortField&quot;, c.sortField());</span>
         }
-<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (c.sortDir() != null) {</span>
-<span class="nc" id="L185">            b.queryParam(&quot;sortDir&quot;, c.sortDir());</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (c.sortDir() != null) {</span>
+<span class="nc" id="L186">            b.queryParam(&quot;sortDir&quot;, c.sortDir());</span>
         }
-<span class="nc bnc" id="L187" title="All 2 branches missed.">        if (Boolean.TRUE.equals(c.semanticSearch())) {</span>
-<span class="nc" id="L188">            b.queryParam(&quot;semanticSearch&quot;, &quot;true&quot;);</span>
-<span class="nc" id="L189">            b.queryParam(&quot;similarityThreshold&quot;, c.effectiveSimilarityThreshold());</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        if (Boolean.TRUE.equals(c.semanticSearch())) {</span>
+<span class="nc" id="L189">            b.queryParam(&quot;semanticSearch&quot;, &quot;true&quot;);</span>
+<span class="nc" id="L190">            b.queryParam(&quot;similarityThreshold&quot;, c.effectiveSimilarityThreshold());</span>
         }
-<span class="nc" id="L191">        return b.encode().build().toUriString();</span>
+<span class="nc" id="L192">        return b.encode().build().toUriString();</span>
     }
 
     @GetMapping(&quot;/chat/{chatId}&quot;)
@@ -197,60 +198,60 @@ public class ProfileSearchController {
                        final Principal principal,
                        final Model model,
                        final HttpServletResponse response) {
-<span class="fc" id="L200">        final String userId = principal.getName();</span>
-<span class="fc" id="L201">        final List&lt;ChatListView&gt; sidebar = queryService.findChatsByUser(userId, offset, PAGE_SIZE);</span>
-<span class="fc" id="L202">        final long totalChats = queryService.countChatsByUser(userId);</span>
-<span class="fc" id="L203">        final List&lt;MessageView&gt; messages = queryService.findMessagesByChat(chatId);</span>
+<span class="fc" id="L201">        final String userId = principal.getName();</span>
+<span class="fc" id="L202">        final List&lt;ChatListView&gt; sidebar = queryService.findChatsByUser(userId, offset, PAGE_SIZE);</span>
+<span class="fc" id="L203">        final long totalChats = queryService.countChatsByUser(userId);</span>
+<span class="fc" id="L204">        final List&lt;MessageView&gt; messages = queryService.findMessagesByChat(chatId);</span>
 
         // Set X-Next-Url header for infinite scroll if more data available
-<span class="fc" id="L206">        final int nextOffset = offset + PAGE_SIZE;</span>
-<span class="pc bpc" id="L207" title="1 of 2 branches missed.">        if (nextOffset &lt; totalChats) {</span>
-<span class="nc" id="L208">            response.setHeader(&quot;X-Next-Url&quot;, &quot;/profilesearch/chat/&quot; + chatId + &quot;?offset=&quot; + nextOffset);</span>
+<span class="fc" id="L207">        final int nextOffset = offset + PAGE_SIZE;</span>
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">        if (nextOffset &lt; totalChats) {</span>
+<span class="nc" id="L209">            response.setHeader(&quot;X-Next-Url&quot;, &quot;/profilesearch/chat/&quot; + chatId + &quot;?offset=&quot; + nextOffset);</span>
         }
 
-<span class="fc" id="L211">        model.addAttribute(&quot;chatId&quot;, chatId);</span>
-<span class="fc" id="L212">        model.addAttribute(&quot;messages&quot;, messages);</span>
-<span class="fc" id="L213">        model.addAttribute(&quot;sidebar&quot;, sidebar);</span>
-<span class="fc" id="L214">        model.addAttribute(&quot;totalChats&quot;, totalChats);</span>
-<span class="fc" id="L215">        model.addAttribute(&quot;pageSize&quot;, PAGE_SIZE);</span>
-<span class="fc" id="L216">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
+<span class="fc" id="L212">        model.addAttribute(&quot;chatId&quot;, chatId);</span>
+<span class="fc" id="L213">        model.addAttribute(&quot;messages&quot;, messages);</span>
+<span class="fc" id="L214">        model.addAttribute(&quot;sidebar&quot;, sidebar);</span>
+<span class="fc" id="L215">        model.addAttribute(&quot;totalChats&quot;, totalChats);</span>
+<span class="fc" id="L216">        model.addAttribute(&quot;pageSize&quot;, PAGE_SIZE);</span>
+<span class="fc" id="L217">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
 
         // Return fragment for infinite scroll requests, full page otherwise
-<span class="pc bpc" id="L219" title="1 of 2 branches missed.">        return offset == 0 ? &quot;profilesearch/form&quot; : &quot;profilesearch/sidebar-entry&quot;;</span>
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        return offset == 0 ? &quot;profilesearch/form&quot; : &quot;profilesearch/sidebar-entry&quot;;</span>
     }
 
     @PostMapping(&quot;/chat/new&quot;)
     public String newChat(final Principal principal) {
-<span class="fc" id="L224">        final String userId = principal.getName();</span>
-<span class="fc" id="L225">        final Long projectId = rememberedProjectService.get(userId).orElse(null);</span>
-<span class="fc" id="L226">        final Long chatId = commandService.createChat(userId, projectId);</span>
-<span class="fc" id="L227">        return &quot;redirect:/profilesearch/chat/&quot; + chatId;</span>
+<span class="fc" id="L225">        final String userId = principal.getName();</span>
+<span class="fc" id="L226">        final Long projectId = rememberedProjectService.get(userId).orElse(null);</span>
+<span class="fc" id="L227">        final Long chatId = commandService.createChat(userId, projectId);</span>
+<span class="fc" id="L228">        return &quot;redirect:/profilesearch/chat/&quot; + chatId;</span>
     }
 
     @DeleteMapping(&quot;/chat/{chatId}&quot;)
     @ResponseBody
     public Map&lt;String, String&gt; deleteChat(@PathVariable final Long chatId, final Principal principal) {
-<span class="fc" id="L233">        final String userId = principal.getName();</span>
-<span class="fc" id="L234">        commandService.deleteChat(chatId);</span>
+<span class="fc" id="L234">        final String userId = principal.getName();</span>
+<span class="fc" id="L235">        commandService.deleteChat(chatId);</span>
 
         // Navigate to most recently modified remaining chat, or create a new one
-<span class="fc" id="L237">        final var nextChatId = queryService.findLatestChatByUser(userId);</span>
+<span class="fc" id="L238">        final var nextChatId = queryService.findLatestChatByUser(userId);</span>
         final String redirectTo;
-<span class="pc bpc" id="L239" title="1 of 2 branches missed.">        if (nextChatId.isPresent()) {</span>
-<span class="fc" id="L240">            redirectTo = &quot;/profilesearch/chat/&quot; + nextChatId.get();</span>
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">        if (nextChatId.isPresent()) {</span>
+<span class="fc" id="L241">            redirectTo = &quot;/profilesearch/chat/&quot; + nextChatId.get();</span>
         } else {
-<span class="nc" id="L242">            final Long projectId = rememberedProjectService.get(userId).orElse(null);</span>
-<span class="nc" id="L243">            final Long newId = commandService.createChat(userId, projectId);</span>
-<span class="nc" id="L244">            redirectTo = &quot;/profilesearch/chat/&quot; + newId;</span>
+<span class="nc" id="L243">            final Long projectId = rememberedProjectService.get(userId).orElse(null);</span>
+<span class="nc" id="L244">            final Long newId = commandService.createChat(userId, projectId);</span>
+<span class="nc" id="L245">            redirectTo = &quot;/profilesearch/chat/&quot; + newId;</span>
         }
-<span class="fc" id="L246">        return Map.of(&quot;redirectTo&quot;, redirectTo);</span>
+<span class="fc" id="L247">        return Map.of(&quot;redirectTo&quot;, redirectTo);</span>
     }
 
-<span class="fc" id="L249">    record SendRequest(String message) {}</span>
+<span class="fc" id="L250">    record SendRequest(String message) {}</span>
 
-<span class="nc" id="L251">    record SendResponse(Long id, String role, String content, String jsonPayload) {}</span>
+<span class="nc" id="L252">    record SendResponse(Long id, String role, String content, String jsonPayload) {}</span>
 
-<span class="nc" id="L253">    record SendResponseWrapper(List&lt;SendResponse&gt; messages, int promptTokens, int completionTokens, int maxContextTokens) {}</span>
+<span class="nc" id="L254">    record SendResponseWrapper(List&lt;SendResponse&gt; messages, int promptTokens, int completionTokens, int maxContextTokens) {}</span>
 
     @PostMapping(value = &quot;/chat/{chatId}/stream&quot;,
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -260,58 +261,57 @@ public class ProfileSearchController {
                                     @RequestBody final SendRequest request,
                                     final Principal principal,
                                     final HttpSession session) {
-<span class="fc" id="L263">        final SseEmitter emitter = new SseEmitter(180_000L);</span>
-<span class="fc" id="L264">        final AtomicReference&lt;Thread&gt; threadRef = new AtomicReference&lt;&gt;();</span>
+<span class="fc" id="L264">        final SseEmitter emitter = new SseEmitter(profileSearchProperties.getStreamingTimeout().toMillis());</span>
+<span class="fc" id="L265">        final AtomicReference&lt;Thread&gt; threadRef = new AtomicReference&lt;&gt;();</span>
 
-<span class="fc" id="L266">        final Runnable cancelStream = () -&gt; {</span>
-<span class="fc" id="L267">            final Thread t = threadRef.get();</span>
-<span class="pc bpc" id="L268" title="1 of 2 branches missed.">            if (t != null) {</span>
-<span class="fc" id="L269">                t.interrupt();</span>
+<span class="fc" id="L267">        final Runnable cancelStream = () -&gt; {</span>
+<span class="fc" id="L268">            final Thread t = threadRef.get();</span>
+<span class="pc bpc" id="L269" title="1 of 2 branches missed.">            if (t != null) {</span>
+<span class="fc" id="L270">                t.interrupt();</span>
             }
-<span class="fc" id="L271">        };</span>
-<span class="fc" id="L272">        emitter.onCompletion(cancelStream);</span>
-<span class="fc" id="L273">        emitter.onTimeout(cancelStream);</span>
-<span class="pc" id="L274">        emitter.onError(e -&gt; cancelStream.run());</span>
+<span class="fc" id="L272">        };</span>
+<span class="fc" id="L273">        emitter.onCompletion(cancelStream);</span>
+<span class="fc" id="L274">        emitter.onTimeout(cancelStream);</span>
+<span class="pc" id="L275">        emitter.onError(e -&gt; cancelStream.run());</span>
 
-<span class="fc" id="L276">        final Thread thread = Thread.ofVirtual().unstarted(() -&gt; {</span>
+<span class="fc" id="L277">        final Thread thread = Thread.ofVirtual().unstarted(() -&gt; {</span>
             try {
-<span class="fc" id="L278">                final var context = queryService.buildLlmContext(principal.getName());</span>
-<span class="fc" id="L279">                final int maxCtx = profileSearchProperties.getMaxContextTokens();</span>
+<span class="fc" id="L279">                final var context = queryService.buildLlmContext(principal.getName());</span>
+<span class="fc" id="L280">                final int maxCtx = profileSearchProperties.getMaxContextTokens();</span>
 
-<span class="fc" id="L281">                llmService.sendMessageStreaming(principal, session.getId(),</span>
-<span class="fc" id="L282">                        chatId.toString(), context, request.message(),</span>
+<span class="fc" id="L282">                llmService.sendMessageStreaming(principal, session.getId(),</span>
+<span class="fc" id="L283">                        chatId.toString(), context, request.message(),</span>
                         event -&gt; {
                             try {
                                 // Enrich MessageComplete with maxContextTokens (known only in controller)
-<span class="fc bfc" id="L286" title="All 2 branches covered.">                                final LlmService.ChatStreamEvent enriched = switch (event) {</span>
-<span class="fc" id="L287">                                    case final LlmService.ChatStreamEvent.MessageComplete m -&gt;</span>
-<span class="fc" id="L288">                                            new LlmService.ChatStreamEvent.MessageComplete(</span>
-<span class="fc" id="L289">                                                    m.id(), m.promptTokens(), m.completionTokens(), maxCtx);</span>
-<span class="fc" id="L290">                                    default -&gt; event;</span>
-<span class="fc" id="L291">                                };</span>
-<span class="pc bpc" id="L292" title="4 of 6 branches missed.">                                final String eventName = switch (enriched) {</span>
-<span class="nc" id="L293">                                    case final LlmService.ChatStreamEvent.ThinkingToken t   -&gt; &quot;thinking_token&quot;;</span>
-<span class="fc" id="L294">                                    case final LlmService.ChatStreamEvent.ContentToken c    -&gt; &quot;content_token&quot;;</span>
-<span class="nc" id="L295">                                    case final LlmService.ChatStreamEvent.ToolCall tc       -&gt; &quot;tool_call&quot;;</span>
-<span class="nc" id="L296">                                    case final LlmService.ChatStreamEvent.ToolResult tr     -&gt; &quot;tool_result&quot;;</span>
-<span class="fc" id="L297">                                    case final LlmService.ChatStreamEvent.MessageComplete m -&gt; &quot;message_complete&quot;;</span>
-<span class="nc" id="L298">                                    case final LlmService.ChatStreamEvent.StreamError e     -&gt; &quot;error&quot;;</span>
-<span class="fc" id="L299">                                };</span>
-<span class="fc" id="L300">                                emitter.send(SseEmitter.event()</span>
-<span class="fc" id="L301">                                        .name(eventName)</span>
-<span class="fc" id="L302">                                        .data(objectMapper.writeValueAsString(enriched)));</span>
-<span class="nc" id="L303">                            } catch (final IOException ex) {</span>
-<span class="nc" id="L304">                                throw new UncheckedIOException(ex);</span>
-<span class="fc" id="L305">                            }</span>
-<span class="fc" id="L306">                        });</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">                                final LlmService.ChatStreamEvent enriched = switch (event) {</span>
+<span class="fc" id="L288">                                    case final LlmService.ChatStreamEvent.MessageComplete m -&gt;</span>
+<span class="fc" id="L289">                                            new LlmService.ChatStreamEvent.MessageComplete(</span>
+<span class="fc" id="L290">                                                    m.id(), m.promptTokens(), m.completionTokens(), maxCtx);</span>
+<span class="fc" id="L291">                                    default -&gt; event;</span>
+<span class="fc" id="L292">                                };</span>
+<span class="pc bpc" id="L293" title="4 of 6 branches missed.">                                final String eventName = switch (enriched) {</span>
+<span class="nc" id="L294">                                    case final LlmService.ChatStreamEvent.ThinkingToken t   -&gt; &quot;thinking_token&quot;;</span>
+<span class="fc" id="L295">                                    case final LlmService.ChatStreamEvent.ContentToken c    -&gt; &quot;content_token&quot;;</span>
+<span class="nc" id="L296">                                    case final LlmService.ChatStreamEvent.ToolCall tc       -&gt; &quot;tool_call&quot;;</span>
+<span class="nc" id="L297">                                    case final LlmService.ChatStreamEvent.ToolResult tr     -&gt; &quot;tool_result&quot;;</span>
+<span class="fc" id="L298">                                    case final LlmService.ChatStreamEvent.MessageComplete m -&gt; &quot;message_complete&quot;;</span>
+<span class="nc" id="L299">                                    case final LlmService.ChatStreamEvent.StreamError e     -&gt; &quot;error&quot;;</span>
+<span class="fc" id="L300">                                };</span>
+<span class="fc" id="L301">                                emitter.send(SseEmitter.event()</span>
+<span class="fc" id="L302">                                        .name(eventName)</span>
+<span class="fc" id="L303">                                        .data(objectMapper.writeValueAsString(enriched)));</span>
+<span class="nc" id="L304">                            } catch (final IOException ex) {</span>
+<span class="nc" id="L305">                                throw new UncheckedIOException(ex);</span>
+<span class="fc" id="L306">                            }</span>
+<span class="fc" id="L307">                        });</span>
 
-<span class="fc" id="L308">                emitter.send(SseEmitter.event().name(&quot;done&quot;).data(&quot;{}&quot;));</span>
-<span class="fc" id="L309">                emitter.complete();</span>
-<span class="nc" id="L310">            } catch (final UncheckedIOException ignored) {</span>
+<span class="fc" id="L309">                emitter.send(SseEmitter.event().name(&quot;done&quot;).data(&quot;{}&quot;));</span>
+<span class="fc" id="L310">                emitter.complete();</span>
+<span class="nc" id="L311">            } catch (final UncheckedIOException ignored) {</span>
                 // Client hat Verbindung getrennt (IOException beim emitter.send())
-<span class="nc" id="L312">            } catch (final RuntimeException ex) {</span>
-                // blockLast() wirft RuntimeException(InterruptedException) bei Thread-Interrupt
-<span class="nc bnc" id="L314" title="All 4 branches missed.">                if (ex.getCause() instanceof InterruptedException || Thread.currentThread().isInterrupted()) {</span>
+<span class="nc" id="L313">            } catch (final RuntimeException ex) {</span>
+<span class="nc bnc" id="L314" title="All 4 branches missed.">                if (isCausedByInterrupt(ex) || Thread.currentThread().isInterrupted()) {</span>
 <span class="nc" id="L315">                    return;</span>
                 }
                 try {
@@ -360,9 +360,19 @@ public class ProfileSearchController {
 <span class="nc" id="L360">        return new SendResponseWrapper(responses, promptTokens, completionTokens, profileSearchProperties.getMaxContextTokens());</span>
     }
 
+    private static boolean isCausedByInterrupt(Throwable t) {
+<span class="nc bnc" id="L364" title="All 2 branches missed.">        while (t != null) {</span>
+<span class="nc bnc" id="L365" title="All 4 branches missed.">            if (t instanceof InterruptedException || t instanceof InterruptedIOException) {</span>
+<span class="nc" id="L366">                return true;</span>
+            }
+<span class="nc" id="L368">            t = t.getCause();</span>
+        }
+<span class="nc" id="L370">        return false;</span>
+    }
+
     private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {
-<span class="pc bpc" id="L364" title="1 of 2 branches missed.">        if (principal == null) return null;</span>
-<span class="fc" id="L365">        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);</span>
+<span class="pc bpc" id="L374" title="1 of 2 branches missed.">        if (principal == null) return null;</span>
+<span class="fc" id="L375">        return rememberedProjectService.getRememberedProjectInfo(principal.getName()).orElse(null);</span>
     }
 
     /**
@@ -383,19 +393,19 @@ public class ProfileSearchController {
                                            @RequestParam(required = false) final Float similarityThreshold,
                                            final Principal principal,
                                            final Model model) {
-<span class="nc" id="L386">        final ProfileSearchCriteria criteria = new ProfileSearchCriteria(</span>
+<span class="nc" id="L396">        final ProfileSearchCriteria criteria = new ProfileSearchCriteria(</span>
                 searchTerm, salaryPerDayFrom, salaryPerDayTo, tagIds, sortField, sortDir, semanticSearch, similarityThreshold);
 
-<span class="nc" id="L389">        model.addAttribute(&quot;error&quot;, ex.getMessage());</span>
-<span class="nc" id="L390">        model.addAttribute(&quot;results&quot;, List.of());</span>
-<span class="nc" id="L391">        model.addAttribute(&quot;totalCount&quot;, 0L);</span>
-<span class="nc" id="L392">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
-<span class="nc" id="L393">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
-<span class="nc" id="L394">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
-<span class="nc" id="L395">        model.addAttribute(&quot;nextUrl&quot;, null);</span>
-<span class="nc" id="L396">        model.addAttribute(&quot;allTags&quot;, tagQueryService.findAll());</span>
-<span class="nc" id="L397">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
-<span class="nc" id="L398">        return &quot;profilesearch/search-page&quot;;</span>
+<span class="nc" id="L399">        model.addAttribute(&quot;error&quot;, ex.getMessage());</span>
+<span class="nc" id="L400">        model.addAttribute(&quot;results&quot;, List.of());</span>
+<span class="nc" id="L401">        model.addAttribute(&quot;totalCount&quot;, 0L);</span>
+<span class="nc" id="L402">        model.addAttribute(&quot;criteria&quot;, criteria);</span>
+<span class="nc" id="L403">        model.addAttribute(&quot;sortField&quot;, criteria.sortField());</span>
+<span class="nc" id="L404">        model.addAttribute(&quot;sortDir&quot;, criteria.sortDir());</span>
+<span class="nc" id="L405">        model.addAttribute(&quot;nextUrl&quot;, null);</span>
+<span class="nc" id="L406">        model.addAttribute(&quot;allTags&quot;, tagQueryService.findAll());</span>
+<span class="nc" id="L407">        model.addAttribute(&quot;rememberedProject&quot;, buildRememberedProjectInfo(principal));</span>
+<span class="nc" id="L408">        return &quot;profilesearch/search-page&quot;;</span>
     }
 
 }

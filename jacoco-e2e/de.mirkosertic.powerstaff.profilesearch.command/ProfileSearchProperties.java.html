@@ -2,17 +2,28 @@
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = &quot;powerstaff.profilesearch&quot;)
-<span class="fc" id="L6">public class ProfileSearchProperties {</span>
+import java.time.Duration;
 
-<span class="fc" id="L8">    private int maxContextTokens = 128000;</span>
+@ConfigurationProperties(prefix = &quot;powerstaff.profilesearch&quot;)
+<span class="fc" id="L8">public class ProfileSearchProperties {</span>
+
+<span class="fc" id="L10">    private int maxContextTokens = 128000;</span>
+<span class="fc" id="L11">    private Duration streamingTimeout = Duration.ofMinutes(5);</span>
 
     public int getMaxContextTokens() {
-<span class="fc" id="L11">        return maxContextTokens;</span>
+<span class="fc" id="L14">        return maxContextTokens;</span>
     }
 
     public void setMaxContextTokens(final int maxContextTokens) {
-<span class="nc" id="L15">        this.maxContextTokens = maxContextTokens;</span>
-<span class="nc" id="L16">    }</span>
+<span class="nc" id="L18">        this.maxContextTokens = maxContextTokens;</span>
+<span class="nc" id="L19">    }</span>
+
+    public Duration getStreamingTimeout() {
+<span class="fc" id="L22">        return streamingTimeout;</span>
+    }
+
+    public void setStreamingTimeout(final Duration streamingTimeout) {
+<span class="fc" id="L26">        this.streamingTimeout = streamingTimeout;</span>
+<span class="fc" id="L27">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

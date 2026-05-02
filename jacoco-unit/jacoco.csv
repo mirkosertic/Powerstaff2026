@@ -134,7 +134,7 @@ Unit-Test Coverage,de.mirkosertic.powerstaff.customer.command,KundeHasProjectsEx
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController.SendResponse,0,15,0,0,0,1,0,1,0,1
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController.SendResponseWrapper,0,15,0,0,0,1,0,1,0,1
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController.SendRequest,0,6,0,0,0,1,0,1,0,1
-Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController,550,481,44,40,100,95,42,20,9,9
+Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.api,ProfileSearchController,568,481,50,40,105,95,46,20,10,9
 Unit-Test Coverage,de.mirkosertic.powerstaff.shared.query,HistoryTypeView,9,0,0,0,1,0,1,0,1,0
 Unit-Test Coverage,de.mirkosertic.powerstaff.shared.query,ProjectPositionStatusQueryService,22,0,0,0,11,0,3,0,3,0
 Unit-Test Coverage,de.mirkosertic.powerstaff.shared.query,TagQueryService,26,0,0,0,12,0,3,0,3,0
@@ -161,9 +161,9 @@ Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,LlmService.Ch
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,688,102,57,13,155,26,42,8,12,3
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,MockLLmService,35,16,2,0,4,2,2,2,1,2
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.StreamError,6,0,0,0,1,0,1,0,1,0
-Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,144,0,10,0,36,0,9,0,4,0
+Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,164,0,10,0,40,0,10,0,5,0
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,PersistentUserMessage,4,0,0,0,2,0,1,0,1,0
-Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchProperties,0,13,0,0,0,5,0,3,0,3
+Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchProperties,0,24,0,0,0,9,0,5,0,5
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService.new ChatProgressCollector() {...},35,0,2,0,9,0,4,0,3,0
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchChat,45,0,0,0,13,0,13,0,13,0
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService.StreamingChatProgressCollector,0,66,0,2,0,18,0,7,0,6
@@ -182,5 +182,5 @@ Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,ProfileSearch
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.MessageComplete,15,0,0,0,1,0,1,0,1,0
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ToolCall,0,9,0,0,0,1,0,1,0,1
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,ChatProgressCollector,6,2,0,0,5,2,5,2,5,2
-Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,SimpleLoggerAdvisor,50,0,0,0,15,0,8,0,8,0
+Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,SimpleLoggerAdvisor,76,0,8,0,21,0,14,0,10,0
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,LlmService.Reply,0,21,0,0,0,1,0,1,0,1

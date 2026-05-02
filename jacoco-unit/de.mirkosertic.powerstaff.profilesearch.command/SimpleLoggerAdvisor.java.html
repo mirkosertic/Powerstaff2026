@@ -13,49 +13,62 @@ import org.springframework.ai.chat.client.advisor.api.StreamAdvisor;
 import org.springframework.ai.chat.client.advisor.api.StreamAdvisorChain;
 import reactor.core.publisher.Flux;
 
-<span class="nc" id="L16">public class SimpleLoggerAdvisor implements CallAdvisor, StreamAdvisor {</span>
+import java.io.InterruptedIOException;
 
-<span class="nc" id="L18">    private static final Logger logger = LoggerFactory.getLogger(SimpleLoggerAdvisor.class);</span>
+<span class="nc" id="L18">public class SimpleLoggerAdvisor implements CallAdvisor, StreamAdvisor {</span>
+
+<span class="nc" id="L20">    private static final Logger logger = LoggerFactory.getLogger(SimpleLoggerAdvisor.class);</span>
 
     @Override
     public String getName() {
-<span class="nc" id="L22">        return this.getClass().getSimpleName();</span>
+<span class="nc" id="L24">        return this.getClass().getSimpleName();</span>
     }
 
     @Override
     public int getOrder() {
-<span class="nc" id="L27">        return BaseAdvisor.HIGHEST_PRECEDENCE + 100;</span>
+<span class="nc" id="L29">        return BaseAdvisor.HIGHEST_PRECEDENCE + 100;</span>
     }
 
 
     @Override
     public ChatClientResponse adviseCall(@NonNull final ChatClientRequest chatClientRequest, final CallAdvisorChain callAdvisorChain) {
-<span class="nc" id="L33">        logRequest(chatClientRequest);</span>
+<span class="nc" id="L35">        logRequest(chatClientRequest);</span>
 
-<span class="nc" id="L35">        final ChatClientResponse chatClientResponse = callAdvisorChain.nextCall(chatClientRequest);</span>
+<span class="nc" id="L37">        final ChatClientResponse chatClientResponse = callAdvisorChain.nextCall(chatClientRequest);</span>
 
-<span class="nc" id="L37">        logResponse(chatClientResponse);</span>
+<span class="nc" id="L39">        logResponse(chatClientResponse);</span>
 
-<span class="nc" id="L39">        return chatClientResponse;</span>
+<span class="nc" id="L41">        return chatClientResponse;</span>
     }
 
     @Override
     public Flux&lt;ChatClientResponse&gt; adviseStream(@NonNull final ChatClientRequest chatClientRequest,
                                                  final StreamAdvisorChain streamAdvisorChain) {
-<span class="nc" id="L45">        logRequest(chatClientRequest);</span>
+<span class="nc" id="L47">        logRequest(chatClientRequest);</span>
 
-<span class="nc" id="L47">        final Flux&lt;ChatClientResponse&gt; chatClientResponses = streamAdvisorChain.nextStream(chatClientRequest);</span>
+<span class="nc" id="L49">        final Flux&lt;ChatClientResponse&gt; chatClientResponses = streamAdvisorChain.nextStream(chatClientRequest)</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">                .onErrorResume(ex -&gt; isCausedByInterrupt(ex) ? Flux.empty() : Flux.error(ex));</span>
 
-<span class="nc" id="L49">        return new ChatClientMessageAggregator().aggregateChatClientResponse(chatClientResponses, this::logResponse);</span>
+<span class="nc" id="L52">        return new ChatClientMessageAggregator().aggregateChatClientResponse(chatClientResponses, this::logResponse);</span>
+    }
+
+    private static boolean isCausedByInterrupt(Throwable t) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        while (t != null) {</span>
+<span class="nc bnc" id="L57" title="All 4 branches missed.">            if (t instanceof InterruptedException || t instanceof InterruptedIOException) {</span>
+<span class="nc" id="L58">                return true;</span>
+            }
+<span class="nc" id="L60">            t = t.getCause();</span>
+        }
+<span class="nc" id="L62">        return false;</span>
     }
 
     private void logRequest(final ChatClientRequest request) {
-<span class="nc" id="L53">        logger.debug(&quot;request: {}&quot;, request);</span>
-<span class="nc" id="L54">    }</span>
+<span class="nc" id="L66">        logger.debug(&quot;request: {}&quot;, request);</span>
+<span class="nc" id="L67">    }</span>
 
     private void logResponse(final ChatClientResponse chatClientResponse) {
-<span class="nc" id="L57">        logger.debug(&quot;response: {}&quot;, chatClientResponse);</span>
-<span class="nc" id="L58">    }</span>
+<span class="nc" id="L70">        logger.debug(&quot;response: {}&quot;, chatClientResponse);</span>
+<span class="nc" id="L71">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
