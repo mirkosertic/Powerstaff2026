@@ -31,6 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.UncheckedIOException;
 import java.security.Principal;
 import java.util.List;
@@ -260,7 +261,7 @@ public class ProfileSearchController {
                                     @RequestBody final SendRequest request,
                                     final Principal principal,
                                     final HttpSession session) {
-        final SseEmitter emitter = new SseEmitter(180_000L);
+        final SseEmitter emitter = new SseEmitter(profileSearchProperties.getStreamingTimeout().toMillis());
         final AtomicReference<Thread> threadRef = new AtomicReference<>();
 
         final Runnable cancelStream = () -> {
@@ -310,8 +311,7 @@ public class ProfileSearchController {
             } catch (final UncheckedIOException ignored) {
                 // Client hat Verbindung getrennt (IOException beim emitter.send())
             } catch (final RuntimeException ex) {
-                // blockLast() wirft RuntimeException(InterruptedException) bei Thread-Interrupt
-                if (ex.getCause() instanceof InterruptedException || Thread.currentThread().isInterrupted()) {
+                if (isCausedByInterrupt(ex) || Thread.currentThread().isInterrupted()) {
                     return;
                 }
                 try {
@@ -358,6 +358,16 @@ public class ProfileSearchController {
         }
 
         return new SendResponseWrapper(responses, promptTokens, completionTokens, profileSearchProperties.getMaxContextTokens());
+    }
+
+    private static boolean isCausedByInterrupt(Throwable t) {
+        while (t != null) {
+            if (t instanceof InterruptedException || t instanceof InterruptedIOException) {
+                return true;
+            }
+            t = t.getCause();
+        }
+        return false;
     }
 
     private RememberedProjectInfo buildRememberedProjectInfo(final Principal principal) {

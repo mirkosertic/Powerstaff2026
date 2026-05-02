@@ -27,7 +27,7 @@ public class ProfileSearchConfig {
     public LlmService llmService(final List<ChatModel> modelsInContext, final McpClientFactory mcpClientFactory,
             final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService,
             final ObjectMapper objectMapper, final UserQueryService userQueryService,
-            final Environment env) {
+            final Environment env, final ProfileSearchProperties profileSearchProperties) {
         for (final ChatModel model : modelsInContext) {
             if (model instanceof final OllamaChatModel ollamaModel) {
                 // Ollama: local server, no API token concept — factory always returns the default client
@@ -63,8 +63,8 @@ public class ProfileSearchConfig {
                         .baseUrl(baseUrl)  // KRITISCH: localhost:1234 in application-local.yml
                         .apiKey(token)
                         .timeout(Timeout.builder()
-                            .read(Duration.ZERO)           // Kein Timeout zwischen Datenpaketen
-                            .request(Duration.ofMinutes(5)) // Max 5 Minuten Gesamtzeit
+                            .read(Duration.ZERO)
+                            .request(profileSearchProperties.getStreamingTimeout())
                             .build())
                         .build();
 

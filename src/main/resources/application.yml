@@ -46,6 +46,8 @@ spring:
 powerstaff:
   mcp:
     enabled: false
+  profilesearch:
+    streaming-timeout: 5m
 
 # Server – Bind-Adresse und Session-Cookie-Flags
 server:

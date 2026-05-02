@@ -13,6 +13,8 @@ import org.springframework.ai.chat.client.advisor.api.StreamAdvisor;
 import org.springframework.ai.chat.client.advisor.api.StreamAdvisorChain;
 import reactor.core.publisher.Flux;
 
+import java.io.InterruptedIOException;
+
 public class SimpleLoggerAdvisor implements CallAdvisor, StreamAdvisor {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleLoggerAdvisor.class);
@@ -44,9 +46,20 @@ public class SimpleLoggerAdvisor implements CallAdvisor, StreamAdvisor {
                                                  final StreamAdvisorChain streamAdvisorChain) {
         logRequest(chatClientRequest);
 
-        final Flux<ChatClientResponse> chatClientResponses = streamAdvisorChain.nextStream(chatClientRequest);
+        final Flux<ChatClientResponse> chatClientResponses = streamAdvisorChain.nextStream(chatClientRequest)
+                .onErrorResume(ex -> isCausedByInterrupt(ex) ? Flux.empty() : Flux.error(ex));
 
         return new ChatClientMessageAggregator().aggregateChatClientResponse(chatClientResponses, this::logResponse);
+    }
+
+    private static boolean isCausedByInterrupt(Throwable t) {
+        while (t != null) {
+            if (t instanceof InterruptedException || t instanceof InterruptedIOException) {
+                return true;
+            }
+            t = t.getCause();
+        }
+        return false;
     }
 
     private void logRequest(final ChatClientRequest request) {
