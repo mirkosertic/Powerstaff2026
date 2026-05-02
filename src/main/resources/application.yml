@@ -79,4 +79,7 @@ logging:
   level:
     de.mirkosertic.powerstaff: INFO
     org.springframework: WARN
+    # Stream-Abbrüche (SSE-Timeout, Browser-Disconnect) werden im Controller behandelt;
+    # der MessageAggregator würde denselben Fehler doppelt als ERROR loggen.
+    org.springframework.ai.chat.model.MessageAggregator: OFF
     root: WARN
