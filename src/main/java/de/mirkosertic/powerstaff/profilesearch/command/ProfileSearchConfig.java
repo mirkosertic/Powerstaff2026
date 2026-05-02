@@ -8,7 +8,9 @@ import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import com.openai.client.OpenAIClient;
+import com.openai.client.OpenAIClientAsync;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
 import com.openai.core.Timeout;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -55,29 +57,13 @@ public class ProfileSearchConfig {
                     .build();
 
                 // Default-Client mit explizitem Timeout — verhindert SDK-Default von 1 Minute
-                final OpenAIClient defaultApiClient = OpenAIOkHttpClient.builder()
-                    .baseUrl(baseUrl)
-                    .apiKey(apiKey)
-                    .timeout(timeout)
-                    .build();
-                final ChatClient defaultClient = ChatClient.builder(
-                    OpenAiChatModel.builder().openAiClient(defaultApiClient).options(chatOptions).build()
-                ).build();
+                final ChatClient defaultClient = buildChatClient(baseUrl, apiKey, timeout, chatOptions);
 
                 // Per-User-Client Factory: User-Token überschreibt den konfigurierten API-Key
-                final LlmChatClientFactory factory = token -> {
-                    if (token == null || token.isBlank()) {
-                        return defaultClient;
-                    }
-                    final OpenAIClient perUserClient = OpenAIOkHttpClient.builder()
-                        .baseUrl(baseUrl)
-                        .apiKey(token)
-                        .timeout(timeout)
-                        .build();
-                    return ChatClient.builder(
-                        OpenAiChatModel.builder().openAiClient(perUserClient).options(chatOptions).build()
-                    ).build();
-                };
+                final LlmChatClientFactory factory = token ->
+                    (token == null || token.isBlank())
+                        ? defaultClient
+                        : buildChatClient(baseUrl, token, timeout, chatOptions);
 
                 return new SpringAILlmService(defaultClient, factory, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);
             }
@@ -85,5 +71,20 @@ public class ProfileSearchConfig {
             // is added to pom.xml. No changes to SpringAILlmService needed.
         }
         return new MockLLmService();
+    }
+
+    private static ChatClient buildChatClient(final String baseUrl, final String apiKey,
+            final Timeout timeout, final OpenAiChatOptions options) {
+        final OpenAIClient syncClient = OpenAIOkHttpClient.builder()
+            .baseUrl(baseUrl).apiKey(apiKey).timeout(timeout).build();
+        final OpenAIClientAsync asyncClient = OpenAIOkHttpClientAsync.builder()
+            .baseUrl(baseUrl).apiKey(apiKey).timeout(timeout).build();
+        return ChatClient.builder(
+            OpenAiChatModel.builder()
+                .openAiClient(syncClient)
+                .openAiClientAsync(asyncClient)
+                .options(options)
+                .build()
+        ).build();
     }
 }
