@@ -29,7 +29,7 @@ spring:
       api-key: "dummy"
       chat:
         options:
-          model: qwen/qwen3-30b-a3b-2507
+          model: unsloth-deepseek-r1-distill-qwen-14b
           temperature: 0.7
           stream-usage: true
     #ollama:
