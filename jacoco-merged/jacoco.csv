@@ -6,8 +6,8 @@ Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profi
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},15,0,0,0,1,0,1,0,1,0
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.query,LlmFreelancerContext,0,27,0,0,0,1,0,1,0,1
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchPage,0,9,0,0,0,1,0,1,0,1
-Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},0,15,0,0,0,1,0,1,0,1
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.query,MessageView,0,27,0,0,0,1,0,1,0,1
+Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},0,15,0,0,0,1,0,1,0,1
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},0,27,0,0,0,1,0,1,0,1
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},27,0,0,0,1,0,1,0,1,0
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.query,ProfileSearchQueryService.new Record() {...},0,30,0,0,0,1,0,1,0,1
