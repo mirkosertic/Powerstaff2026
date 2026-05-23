@@ -158,7 +158,7 @@ Unit-Test Coverage,de.mirkosertic.powerstaff.partner.api,PartnerController.new T
 Unit-Test Coverage,de.mirkosertic.powerstaff.partner.api,PartnerController.new TypeReference() {...},8,0,0,0,1,0,1,0,1,0
 Unit-Test Coverage,de.mirkosertic.powerstaff.partner.api,PartnerController,845,0,54,0,152,0,52,0,25,0
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ContentToken,0,6,0,0,0,1,0,1,0,1
-Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,688,102,57,13,155,26,42,8,12,3
+Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,702,102,57,13,155,26,44,8,14,3
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,MockLLmService,35,16,2,0,4,2,2,2,1,2
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.StreamError,6,0,0,0,1,0,1,0,1,0
 Unit-Test Coverage,de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,164,0,10,0,40,0,10,0,5,0

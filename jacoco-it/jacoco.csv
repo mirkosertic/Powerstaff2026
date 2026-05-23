@@ -158,7 +158,7 @@ Integrationstest Coverage,de.mirkosertic.powerstaff.partner.api,PartnerControlle
 Integrationstest Coverage,de.mirkosertic.powerstaff.partner.api,PartnerController.new TypeReference() {...},0,8,0,0,0,1,0,1,0,1
 Integrationstest Coverage,de.mirkosertic.powerstaff.partner.api,PartnerController,135,710,20,34,3,149,20,32,2,23
 Integrationstest Coverage,de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ContentToken,0,6,0,0,0,1,0,1,0,1
-Integrationstest Coverage,de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,790,0,70,0,181,0,50,0,15,0
+Integrationstest Coverage,de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,804,0,70,0,181,0,52,0,17,0
 Integrationstest Coverage,de.mirkosertic.powerstaff.profilesearch.command,MockLLmService,48,3,2,0,5,1,3,1,2,1
 Integrationstest Coverage,de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.StreamError,6,0,0,0,1,0,1,0,1,0
 Integrationstest Coverage,de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,151,13,9,1,37,3,8,2,3,2

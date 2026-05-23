@@ -158,7 +158,7 @@ Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.partn
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.partner.api,PartnerController.new TypeReference() {...},0,8,0,0,0,1,0,1,0,1
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.partner.api,PartnerController,16,829,5,49,0,152,7,45,2,23
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ContentToken,0,6,0,0,0,1,0,1,0,1
-Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,688,102,57,13,155,26,42,8,12,3
+Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,702,102,57,13,155,26,44,8,14,3
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,MockLLmService,0,51,0,2,0,6,0,4,0,3
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.StreamError,6,0,0,0,1,0,1,0,1,0
 Gesamte Test Coverage (Unit + Integration + e2e),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,151,13,9,1,37,3,8,2,3,2

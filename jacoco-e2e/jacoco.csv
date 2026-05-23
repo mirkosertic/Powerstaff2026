@@ -158,7 +158,7 @@ E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.api,PartnerCont
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.api,PartnerController.new TypeReference() {...},0,8,0,0,0,1,0,1,0,1
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.partner.api,PartnerController,301,544,19,35,60,92,28,24,15,10
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.ContentToken,0,6,0,0,0,1,0,1,0,1
-E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,790,0,70,0,181,0,50,0,15,0
+E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,SpringAILlmService,804,0,70,0,181,0,52,0,17,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,MockLLmService,13,38,0,2,1,5,1,3,1,2
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,LlmService.ChatStreamEvent.StreamError,6,0,0,0,1,0,1,0,1,0
 E2E-Test Coverage (Playwright),de.mirkosertic.powerstaff.profilesearch.command,ProfileSearchConfig,151,13,9,1,37,3,8,2,3,2
