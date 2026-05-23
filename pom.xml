@@ -37,7 +37,7 @@
             <dependency>
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-bom</artifactId>
-                <version>2.0.0-M5</version>
+                <version>2.0.0-M7</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -608,6 +608,7 @@
                             <environmentVariables>
                                 <PLAYWRIGHT_BLOB_OUTPUT_DIR>${project.build.directory}/e2e-blob-chromium</PLAYWRIGHT_BLOB_OUTPUT_DIR>
                                 <EXIT_FILE>${project.build.directory}/playwright-chromium-exit.txt</EXIT_FILE>
+                                <NODE_OPTIONS>--disable-warning=DEP0205</NODE_OPTIONS>
                             </environmentVariables>
                         </configuration>
                     </execution>
@@ -668,6 +669,7 @@
                             <environmentVariables>
                                 <PLAYWRIGHT_BLOB_OUTPUT_DIR>${project.build.directory}/e2e-blob-firefox</PLAYWRIGHT_BLOB_OUTPUT_DIR>
                                 <EXIT_FILE>${project.build.directory}/playwright-firefox-exit.txt</EXIT_FILE>
+                                <NODE_OPTIONS>--disable-warning=DEP0205</NODE_OPTIONS>
                             </environmentVariables>
                         </configuration>
                     </execution>

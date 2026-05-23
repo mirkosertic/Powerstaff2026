@@ -13,6 +13,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.ToolCallAdvisor;
 import org.springframework.ai.chat.client.advisor.api.BaseAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
@@ -185,14 +186,14 @@ public class SpringAILlmService implements LlmService {
                                             .maxMessages(10)
                                             .chatMemoryRepository(chatRepository)
                                             .build())
-                                    .conversationId(conversationId)
                                     .build(),
                             new SimpleLoggerAdvisor()
                     )
+                    .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
                     .system(resolveSystemPrompt(principal, context))
                     .user(userMessage);
             if (mcpClient != null) {
-                promptSpec = promptSpec.toolCallbacks(SyncMcpToolCallbackProvider.builder().addMcpClient(mcpClient).build());
+                promptSpec = promptSpec.tools(SyncMcpToolCallbackProvider.builder().addMcpClient(mcpClient).build());
             }
             chatClientResponse = promptSpec
                     .stream()
@@ -280,14 +281,14 @@ public class SpringAILlmService implements LlmService {
                                             .maxMessages(10)
                                             .chatMemoryRepository(chatRepository)
                                             .build())
-                                    .conversationId(conversationId)
                                     .build(),
                             new SimpleLoggerAdvisor()
                     )
+                    .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
                     .system(resolveSystemPrompt(principal, context))
                     .user(userMessage);
             if (mcpClient != null) {
-                promptSpec = promptSpec.toolCallbacks(SyncMcpToolCallbackProvider.builder().addMcpClient(mcpClient).build());
+                promptSpec = promptSpec.tools(SyncMcpToolCallbackProvider.builder().addMcpClient(mcpClient).build());
             }
             chatClientResponse = promptSpec
                     .stream()
