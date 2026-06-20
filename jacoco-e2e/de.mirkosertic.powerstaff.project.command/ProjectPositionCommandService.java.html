@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProjectPositionCommandService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">E2E-Test Coverage (Playwright)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.project.command</a> &gt; <span class="el_source">ProjectPositionCommandService.java</span></div><h1>ProjectPositionCommandService.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.project.command;
+
+import de.mirkosertic.powerstaff.shared.query.ProjectPositionStatusQueryService;
+import de.mirkosertic.powerstaff.shared.query.ProjectPositionStatusView;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+public class ProjectPositionCommandService {
+
+    private final ProjectPositionRepository repository;
+    private final ProjectPositionStatusQueryService positionStatusQueryService;
+
+    public ProjectPositionCommandService(final ProjectPositionRepository repository,
+<span class="fc" id="L17">                                         final ProjectPositionStatusQueryService positionStatusQueryService) {</span>
+<span class="fc" id="L18">        this.repository = repository;</span>
+<span class="fc" id="L19">        this.positionStatusQueryService = positionStatusQueryService;</span>
+<span class="fc" id="L20">    }</span>
+
+    public ProjectPosition save(final ProjectPosition position) {
+        try {
+<span class="nc" id="L24">            return repository.save(position);</span>
+<span class="nc" id="L25">        } catch (final DataIntegrityViolationException e) {</span>
+<span class="nc bnc" id="L26" title="All 4 branches missed.">            if (position.getProjectId() != null &amp;&amp; position.getFreelancerId() != null) {</span>
+<span class="nc" id="L27">                throw new FreelancerAlreadyAssignedException(position.getFreelancerId(), position.getProjectId());</span>
+            }
+<span class="nc" id="L29">            throw e;</span>
+        }
+    }
+
+    /**
+     * Assigns a freelancer to a project. Delegates from FreelancerController (ADR-018).
+     * If statusId is null, the configured default ProjectPositionStatus is used.
+     */
+    public void assignFreelancerToProject(final long freelancerId, final long projectId, final Long statusId, final String konditionen, final String kommentar) {
+<span class="fc" id="L38">        Long resolvedStatusId = statusId;</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (resolvedStatusId == null) {</span>
+<span class="fc" id="L40">            resolvedStatusId = positionStatusQueryService.findDefault()</span>
+<span class="fc" id="L41">                    .map(ProjectPositionStatusView::id)</span>
+<span class="pc" id="L42">                    .orElseThrow(() -&gt; new IllegalStateException(</span>
+                            &quot;Kein Standard-Positionsstatus konfiguriert. Bitte im Administrationsbereich einen Standard-Status festlegen.&quot;));
+        }
+<span class="fc" id="L45">        final var position = new ProjectPosition();</span>
+<span class="fc" id="L46">        position.setProjectId(projectId);</span>
+<span class="fc" id="L47">        position.setFreelancerId(freelancerId);</span>
+<span class="fc" id="L48">        position.setStatusId(resolvedStatusId);</span>
+<span class="fc" id="L49">        position.setKonditionen(konditionen);</span>
+<span class="fc" id="L50">        position.setKommentar(kommentar);</span>
+        try {
+<span class="fc" id="L52">            repository.save(position);</span>
+<span class="fc" id="L53">        } catch (final DataIntegrityViolationException e) {</span>
+<span class="fc" id="L54">            throw new FreelancerAlreadyAssignedException(freelancerId, projectId);</span>
+<span class="fc" id="L55">        }</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Aktualisiert die editierbaren Felder einer bestehenden Projektposition (Status, Konditionen, Kommentar).
+     * Lädt den bestehenden Datensatz, um Audit-Informationen und die Freiberufler-Zuordnung zu erhalten.
+     */
+    public ProjectPosition updateEditable(final long positionId, final Long statusId, final String konditionen, final String kommentar, final Long dbVersion) {
+<span class="fc" id="L63">        final var position = repository.findById(positionId)</span>
+<span class="pc" id="L64">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Projektposition nicht gefunden: &quot; + positionId));</span>
+<span class="fc" id="L65">        position.setStatusId(statusId);</span>
+<span class="fc" id="L66">        position.setKonditionen(konditionen);</span>
+<span class="fc" id="L67">        position.setKommentar(kommentar);</span>
+<span class="fc" id="L68">        position.setDbVersion(dbVersion);</span>
+<span class="fc" id="L69">        return repository.save(position);</span>
+    }
+
+    public void delete(final Long positionId) {
+<span class="nc" id="L73">        repository.deleteById(positionId);</span>
+<span class="nc" id="L74">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

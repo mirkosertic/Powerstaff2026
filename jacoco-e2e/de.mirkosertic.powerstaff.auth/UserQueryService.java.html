@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserQueryService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">E2E-Test Coverage (Playwright)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.auth</a> &gt; <span class="el_source">UserQueryService.java</span></div><h1>UserQueryService.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.auth;
+
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class UserQueryService {
+
+    private final JdbcClient jdbcClient;
+
+<span class="fc" id="L14">    public UserQueryService(final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L15">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L16">    }</span>
+
+    public List&lt;UserView&gt; findAll() {
+<span class="fc" id="L19">        return jdbcClient</span>
+<span class="fc" id="L20">                .sql(&quot;SELECT username, must_change_password, enabled, profile_search_system_prompt, is_admin AS admin, llm_api_token FROM ps_user ORDER BY username ASC&quot;)</span>
+<span class="fc" id="L21">                .query(UserView.class)</span>
+<span class="fc" id="L22">                .list();</span>
+    }
+
+    public Optional&lt;UserView&gt; findByUsername(final String username) {
+<span class="fc" id="L26">        return jdbcClient</span>
+<span class="fc" id="L27">                .sql(&quot;SELECT username, must_change_password, enabled, profile_search_system_prompt, is_admin AS admin, llm_api_token FROM ps_user WHERE username = :username&quot;)</span>
+<span class="fc" id="L28">                .param(&quot;username&quot;, username)</span>
+<span class="fc" id="L29">                .query(UserView.class)</span>
+<span class="fc" id="L30">                .optional();</span>
+    }
+
+    public Optional&lt;String&gt; findFirstAdminLlmApiToken() {
+<span class="nc" id="L34">        return jdbcClient</span>
+<span class="nc" id="L35">                .sql(&quot;SELECT llm_api_token FROM ps_user WHERE is_admin = TRUE AND llm_api_token IS NOT NULL AND llm_api_token &lt;&gt; '' ORDER BY username ASC LIMIT 1&quot;)</span>
+<span class="nc" id="L36">                .query(String.class)</span>
+<span class="nc" id="L37">                .optional();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FreelancerCommandService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Gesamte Test Coverage (Unit + Integration + e2e)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.freelancer.command</a> &gt; <span class="el_source">FreelancerCommandService.java</span></div><h1>FreelancerCommandService.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.freelancer.command;
+
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@Transactional
+public class FreelancerCommandService {
+
+    private final FreelancerRepository freelancerRepository;
+    private final FreelancerContactRepository contactRepository;
+    private final FreelancerHistoryRepository historyRepository;
+    private final FreelancerTagCommandService tagCommandService;
+    private final JdbcClient jdbcClient;
+
+    public FreelancerCommandService(final FreelancerRepository freelancerRepository,
+                                    final FreelancerContactRepository contactRepository,
+                                    final FreelancerHistoryRepository historyRepository,
+                                    final FreelancerTagCommandService tagCommandService,
+<span class="fc" id="L24">                                    final JdbcClient jdbcClient) {</span>
+<span class="fc" id="L25">        this.freelancerRepository = freelancerRepository;</span>
+<span class="fc" id="L26">        this.contactRepository = contactRepository;</span>
+<span class="fc" id="L27">        this.historyRepository = historyRepository;</span>
+<span class="fc" id="L28">        this.tagCommandService = tagCommandService;</span>
+<span class="fc" id="L29">        this.jdbcClient = jdbcClient;</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * Speichert Freiberufler-Stammdaten, Kontakte, Historie und Tags via Delta-Commands.
+     * Nur Einträge mit op=&quot;ADD&quot; oder op=&quot;DELETE&quot; werden verarbeitet;
+     * unveränderte Einträge erhalten keinen neuen Audit-Timestamp.
+     * Leerer Code wird als NULL gespeichert. Wirft {@link DuplicateCodeException}
+     * wenn der Code bereits von einem anderen Freiberufler verwendet wird.
+     */
+    /** Convenience-Methode für Tests und interne Aufrufe ohne Delta-Listen. */
+    public Freelancer save(final Freelancer freelancer) {
+<span class="fc" id="L41">        return save(freelancer, List.of(), List.of(), List.of());</span>
+    }
+
+    public Freelancer save(final Freelancer freelancer,
+                           final List&lt;FreelancerContactEntry&gt; contactChanges,
+                           final List&lt;FreelancerHistoryEntry&gt; historyChanges,
+                           final List&lt;FreelancerTagEntry&gt; tagChanges) {
+        // partner_id wird ausschließlich über das Partner-Modul gesetzt – beim Speichern
+        // des Freiberufler-Formulars bestehenden Wert aus der DB übernehmen.
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (freelancer.getId() != null) {</span>
+<span class="fc" id="L51">            freelancerRepository.findById(freelancer.getId())</span>
+<span class="fc" id="L52">                    .ifPresent(existing -&gt; freelancer.setPartnerId(existing.getPartnerId()));</span>
+        }
+        // Leeren Code → NULL normalisieren (verhindert UNIQUE-Constraint-Verletzung)
+<span class="pc bpc" id="L55" title="1 of 4 branches missed.">        if (freelancer.getCode() != null &amp;&amp; freelancer.getCode().isBlank()) {</span>
+<span class="nc" id="L56">            freelancer.setCode(null);</span>
+        }
+        // Dubletten-Prüfung nur wenn Code gesetzt
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (freelancer.getCode() != null) {</span>
+<span class="fc" id="L60">            freelancerRepository.findByCode(freelancer.getCode()).ifPresent(existing -&gt; {</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">                if (!existing.getId().equals(freelancer.getId())) {</span>
+<span class="nc" id="L62">                    throw new DuplicateCodeException(freelancer.getCode());</span>
+                }
+<span class="fc" id="L64">            });</span>
+        }
+
+<span class="fc" id="L67">        final Freelancer saved = freelancerRepository.save(freelancer);</span>
+<span class="fc" id="L68">        final long freelancerId = saved.getId();</span>
+
+        // Kontakt-Delta verarbeiten
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for (final FreelancerContactEntry cmd : contactChanges) {</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            if (&quot;ADD&quot;.equals(cmd.op())) {</span>
+<span class="fc" id="L73">                final FreelancerContact contact = new FreelancerContact();</span>
+<span class="fc" id="L74">                contact.setType(cmd.type());</span>
+<span class="fc" id="L75">                contact.setValue(cmd.value());</span>
+<span class="fc" id="L76">                contact.setFreelancerId(freelancerId);</span>
+<span class="fc" id="L77">                contactRepository.save(contact);</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">            } else if (&quot;DELETE&quot;.equals(cmd.op())) {</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">                if (cmd.id() == null) {</span>
+<span class="fc" id="L80">                    throw new IllegalArgumentException(&quot;DELETE Kontakt erfordert eine ID&quot;);</span>
+                }
+<span class="fc" id="L82">                contactRepository.deleteById(cmd.id());</span>
+            }
+<span class="fc" id="L84">        }</span>
+
+        // Historie-Delta verarbeiten
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        for (final FreelancerHistoryEntry cmd : historyChanges) {</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">            if (&quot;ADD&quot;.equals(cmd.op())) {</span>
+<span class="fc" id="L89">                final FreelancerHistory history = new FreelancerHistory();</span>
+<span class="fc" id="L90">                history.setDescription(cmd.description());</span>
+<span class="fc" id="L91">                history.setTypeId(cmd.typeId());</span>
+<span class="fc" id="L92">                history.setFreelancerId(freelancerId);</span>
+<span class="fc" id="L93">                historyRepository.save(history);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">            } else if (&quot;UPDATE&quot;.equals(cmd.op())) {</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">                if (cmd.id() == null) {</span>
+<span class="fc" id="L96">                    throw new IllegalArgumentException(&quot;UPDATE Kontakthistorie erfordert eine ID&quot;);</span>
+                }
+<span class="fc" id="L98">                historyRepository.findById(cmd.id()).ifPresent(history -&gt; {</span>
+<span class="fc" id="L99">                    history.setDescription(cmd.description());</span>
+<span class="fc" id="L100">                    history.setTypeId(cmd.typeId());</span>
+<span class="fc" id="L101">                    historyRepository.save(history);</span>
+<span class="fc" id="L102">                });</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">            } else if (&quot;DELETE&quot;.equals(cmd.op())) {</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">                if (cmd.id() == null) {</span>
+<span class="fc" id="L105">                    throw new IllegalArgumentException(&quot;DELETE Kontakthistorie erfordert eine ID&quot;);</span>
+                }
+<span class="fc" id="L107">                historyRepository.deleteById(cmd.id());</span>
+            }
+<span class="fc" id="L109">        }</span>
+
+        // Tag-Delta verarbeiten
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        for (final FreelancerTagEntry cmd : tagChanges) {</span>
+<span class="pc bpc" id="L113" title="1 of 4 branches missed.">            if (&quot;ADD&quot;.equals(cmd.op()) &amp;&amp; cmd.tagId() != null) {</span>
+                try {
+<span class="fc" id="L115">                    tagCommandService.addTag(freelancerId, cmd.tagId());</span>
+<span class="fc" id="L116">                } catch (final DuplicateTagException ignored) {</span>
+                    // Tag bereits zugeordnet – ignorieren (idempotent)
+<span class="fc" id="L118">                }</span>
+<span class="pc bpc" id="L119" title="2 of 4 branches missed.">            } else if (&quot;DELETE&quot;.equals(cmd.op()) &amp;&amp; cmd.tagId() != null) {</span>
+<span class="fc" id="L120">                tagCommandService.removeTagByTagId(freelancerId, cmd.tagId());</span>
+            }
+<span class="fc" id="L122">        }</span>
+
+<span class="fc" id="L124">        return saved;</span>
+    }
+
+    @Transactional(readOnly = true)
+    public Optional&lt;Freelancer&gt; findById(final long id) {
+<span class="fc" id="L129">        return freelancerRepository.findById(id);</span>
+    }
+
+    /**
+     * Sucht einen Freiberufler anhand seines anonymisierten Codes.
+     * Liefert ein öffentliches Lookup-Ergebnis für Cross-Modul-Nutzung.
+     */
+    @Transactional(readOnly = true)
+    public Optional&lt;FreelancerLookupResult&gt; findByCode(final String code) {
+<span class="fc" id="L138">        return freelancerRepository.findByCode(code)</span>
+<span class="fc" id="L139">                .map(f -&gt; new FreelancerLookupResult(f.getId(), f.getPartnerId(), f.getCompany()));</span>
+    }
+
+    /**
+     * Löscht einen Freiberufler. Wirft {@link FreelancerHasPositionsException} wenn aktive
+     * Projektpositionen auf diesen Freiberufler verweisen.
+     */
+    public void deleteById(final long id) {
+<span class="fc" id="L147">        final List&lt;Long&gt; linkedProjectIds = jdbcClient</span>
+<span class="fc" id="L148">                .sql(&quot;SELECT project_id FROM project_position WHERE freelancer_id = :freelancerId&quot;)</span>
+<span class="fc" id="L149">                .param(&quot;freelancerId&quot;, id)</span>
+<span class="fc" id="L150">                .query(Long.class)</span>
+<span class="fc" id="L151">                .list();</span>
+
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (!linkedProjectIds.isEmpty()) {</span>
+<span class="fc" id="L154">            throw new FreelancerHasPositionsException(linkedProjectIds);</span>
+        }
+
+<span class="fc" id="L157">        freelancerRepository.deleteById(id);</span>
+<span class="fc" id="L158">    }</span>
+
+    /**
+     * Ordnet einen Freiberufler einem Partner zu.
+     * Targeted UPDATE — kein vollständiges Aggregate-Save, um den Audit-Trail zu schützen.
+     */
+    public void assignToPartner(final long freelancerId, final long partnerId) {
+<span class="fc" id="L165">        jdbcClient.sql(&quot;UPDATE freelancer SET partner_id = :partnerId WHERE id = :freelancerId&quot;)</span>
+<span class="fc" id="L166">                .param(&quot;partnerId&quot;, partnerId)</span>
+<span class="fc" id="L167">                .param(&quot;freelancerId&quot;, freelancerId)</span>
+<span class="fc" id="L168">                .update();</span>
+<span class="fc" id="L169">    }</span>
+
+    /**
+     * Löst die Zuordnung eines Freiberuflers zu einem Partner auf.
+     */
+    public void removeFromPartner(final long freelancerId, final long partnerId) {
+<span class="fc" id="L175">        jdbcClient.sql(&quot;UPDATE freelancer SET partner_id = NULL WHERE id = :freelancerId AND partner_id = :partnerId&quot;)</span>
+<span class="fc" id="L176">                .param(&quot;freelancerId&quot;, freelancerId)</span>
+<span class="fc" id="L177">                .param(&quot;partnerId&quot;, partnerId)</span>
+<span class="fc" id="L178">                .update();</span>
+<span class="fc" id="L179">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

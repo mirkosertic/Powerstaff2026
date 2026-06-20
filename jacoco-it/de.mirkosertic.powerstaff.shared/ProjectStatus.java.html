@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProjectStatus.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Integrationstest Coverage</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.shared</a> &gt; <span class="el_source">ProjectStatus.java</span></div><h1>ProjectStatus.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.shared;
+
+<span class="fc" id="L3">public enum ProjectStatus {</span>
+
+<span class="fc" id="L5">    OFFEN(1) {</span>
+        @Override
+        public String getLabel() {
+<span class="fc" id="L8">            return &quot;Offen&quot;;</span>
+        }
+    },
+
+<span class="fc" id="L12">    VERLOREN(2) {</span>
+        @Override
+        public String getLabel() {
+<span class="nc" id="L15">            return &quot;Verloren&quot;;</span>
+        }
+    },
+
+<span class="fc" id="L19">    CANCELED(3) {</span>
+        @Override
+        public String getLabel() {
+<span class="nc" id="L22">            return &quot;Storniert&quot;;</span>
+        }
+    },
+
+<span class="fc" id="L26">    BESETZT(4) {</span>
+        @Override
+        public String getLabel() {
+<span class="nc" id="L29">            return &quot;Besetzt&quot;;</span>
+        }
+    },
+
+<span class="fc" id="L33">    SEARCH_ZU(5) {</span>
+        @Override
+        public String getLabel() {
+<span class="nc" id="L36">            return &quot;Suche abgeschlossen&quot;;</span>
+        }
+    };
+
+    private final int code;
+
+<span class="fc" id="L42">    ProjectStatus(final int code) {</span>
+<span class="fc" id="L43">        this.code = code;</span>
+<span class="fc" id="L44">    }</span>
+
+    public int getCode() {
+<span class="nc" id="L47">        return code;</span>
+    }
+
+    public abstract String getLabel();
+
+    public static ProjectStatus fromInt(final int code) {
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        for (final ProjectStatus status : values()) {</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">            if (status.code == code) {</span>
+<span class="fc" id="L55">                return status;</span>
+            }
+        }
+<span class="nc" id="L58">        throw new IllegalArgumentException(&quot;Unknown ProjectStatus code: &quot; + code);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

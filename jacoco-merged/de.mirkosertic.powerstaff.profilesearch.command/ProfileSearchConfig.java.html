@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProfileSearchConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Gesamte Test Coverage (Unit + Integration + e2e)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.profilesearch.command</a> &gt; <span class="el_source">ProfileSearchConfig.java</span></div><h1>ProfileSearchConfig.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.profilesearch.command;
+
+import de.mirkosertic.powerstaff.auth.UserQueryService;
+import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.ai.openai.OpenAiChatOptions;
+import com.openai.client.OpenAIClient;
+import com.openai.client.OpenAIClientAsync;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
+import com.openai.core.Timeout;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import tools.jackson.databind.ObjectMapper;
+
+import java.time.Duration;
+import java.util.List;
+
+@Configuration
+@EnableConfigurationProperties({ProfileSearchProperties.class, McpConnectionProperties.class})
+<span class="fc" id="L26">public class ProfileSearchConfig {</span>
+
+    @Bean
+    public LlmService llmService(final List&lt;ChatModel&gt; modelsInContext, final McpClientFactory mcpClientFactory,
+            final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService,
+            final ObjectMapper objectMapper, final UserQueryService userQueryService,
+            final Environment env, final ProfileSearchProperties profileSearchProperties) {
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        for (final ChatModel model : modelsInContext) {</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">            if (model instanceof final OllamaChatModel ollamaModel) {</span>
+                // Ollama: local server, no API token concept — factory always returns the default client
+<span class="nc" id="L36">                final ChatClient defaultClient = ChatClient.builder(ollamaModel).build();</span>
+<span class="nc" id="L37">                final LlmChatClientFactory factory = token -&gt; defaultClient;</span>
+<span class="nc" id="L38">                return new SpringAILlmService(defaultClient, factory, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);</span>
+            }
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            if (model instanceof OpenAiChatModel) {</span>
+                // Properties aus Environment lesen
+<span class="nc" id="L42">                final String baseUrl = env.getProperty(&quot;spring.ai.openai.base-url&quot;, &quot;https://api.openai.com&quot;);</span>
+<span class="nc" id="L43">                final String apiKey = env.getProperty(&quot;spring.ai.openai.api-key&quot;, &quot;dummy&quot;);</span>
+<span class="nc" id="L44">                final String modelName = env.getProperty(&quot;spring.ai.openai.chat.options.model&quot;, &quot;gpt-4o&quot;);</span>
+<span class="nc" id="L45">                final Double temperature = env.getProperty(&quot;spring.ai.openai.chat.options.temperature&quot;, Double.class, 0.7);</span>
+<span class="nc" id="L46">                final Boolean streamUsage = env.getProperty(&quot;spring.ai.openai.chat.options.stream-usage&quot;, Boolean.class, false);</span>
+
+<span class="nc" id="L48">                final Timeout timeout = Timeout.builder()</span>
+<span class="nc" id="L49">                    .read(Duration.ZERO)</span>
+<span class="nc" id="L50">                    .request(profileSearchProperties.getStreamingTimeout())</span>
+<span class="nc" id="L51">                    .build();</span>
+
+<span class="nc" id="L53">                final OpenAiChatOptions chatOptions = OpenAiChatOptions.builder()</span>
+<span class="nc" id="L54">                    .model(modelName)</span>
+<span class="nc" id="L55">                    .temperature(temperature)</span>
+<span class="nc" id="L56">                    .streamUsage(streamUsage)</span>
+<span class="nc" id="L57">                    .build();</span>
+
+                // Default-Client mit explizitem Timeout — verhindert SDK-Default von 1 Minute
+<span class="nc" id="L60">                final ChatClient defaultClient = buildChatClient(baseUrl, apiKey, timeout, chatOptions);</span>
+
+                // Per-User-Client Factory: User-Token überschreibt den konfigurierten API-Key
+<span class="nc" id="L63">                final LlmChatClientFactory factory = token -&gt;</span>
+<span class="nc bnc" id="L64" title="All 4 branches missed.">                    (token == null || token.isBlank())</span>
+<span class="nc" id="L65">                        ? defaultClient</span>
+<span class="nc" id="L66">                        : buildChatClient(baseUrl, token, timeout, chatOptions);</span>
+
+<span class="nc" id="L68">                return new SpringAILlmService(defaultClient, factory, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);</span>
+            }
+            // Future: AnthropicChatModel — add analogous block here when spring-ai-starter-model-anthropic
+            // is added to pom.xml. No changes to SpringAILlmService needed.
+<span class="nc" id="L72">        }</span>
+<span class="fc" id="L73">        return new MockLLmService();</span>
+    }
+
+    private static ChatClient buildChatClient(final String baseUrl, final String apiKey,
+            final Timeout timeout, final OpenAiChatOptions options) {
+<span class="nc" id="L78">        final OpenAIClient syncClient = OpenAIOkHttpClient.builder()</span>
+<span class="nc" id="L79">            .baseUrl(baseUrl).apiKey(apiKey).timeout(timeout).build();</span>
+<span class="nc" id="L80">        final OpenAIClientAsync asyncClient = OpenAIOkHttpClientAsync.builder()</span>
+<span class="nc" id="L81">            .baseUrl(baseUrl).apiKey(apiKey).timeout(timeout).build();</span>
+<span class="nc" id="L82">        return ChatClient.builder(</span>
+<span class="nc" id="L83">            OpenAiChatModel.builder()</span>
+<span class="nc" id="L84">                .openAiClient(syncClient)</span>
+<span class="nc" id="L85">                .openAiClientAsync(asyncClient)</span>
+<span class="nc" id="L86">                .options(options)</span>
+<span class="nc" id="L87">                .build()</span>
+<span class="nc" id="L88">        ).build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

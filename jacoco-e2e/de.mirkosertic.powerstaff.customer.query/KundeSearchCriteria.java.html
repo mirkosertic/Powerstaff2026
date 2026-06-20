@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KundeSearchCriteria.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">E2E-Test Coverage (Playwright)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.customer.query</a> &gt; <span class="el_source">KundeSearchCriteria.java</span></div><h1>KundeSearchCriteria.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.customer.query;
+
+<span class="fc" id="L3">public record KundeSearchCriteria(</span>
+        String company,
+        String name1,
+        String name2,
+        String street,
+        String country,
+        String plz,
+        String city,
+        String comments,
+        String kreditorNr,
+        String debitorNr,
+        String sortField,
+        String sortDir
+) {
+    public static KundeSearchCriteria empty() {
+<span class="nc" id="L18">        return new KundeSearchCriteria(null, null, null, null, null, null, null, null, null, null, null, null);</span>
+    }
+
+<span class="nc" id="L21">    public KundeSearchCriteria withCompany(final String v) { return new KundeSearchCriteria(v, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }</span>
+<span class="nc" id="L22">    public KundeSearchCriteria withName1(final String v) { return new KundeSearchCriteria(company, v, name2, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }</span>
+<span class="nc" id="L23">    public KundeSearchCriteria withName2(final String v) { return new KundeSearchCriteria(company, name1, v, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }</span>
+<span class="nc" id="L24">    public KundeSearchCriteria withStreet(final String v) { return new KundeSearchCriteria(company, name1, name2, v, country, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }</span>
+<span class="nc" id="L25">    public KundeSearchCriteria withCountry(final String v) { return new KundeSearchCriteria(company, name1, name2, street, v, plz, city, comments, kreditorNr, debitorNr, sortField, sortDir); }</span>
+<span class="nc" id="L26">    public KundeSearchCriteria withPlz(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, v, city, comments, kreditorNr, debitorNr, sortField, sortDir); }</span>
+<span class="nc" id="L27">    public KundeSearchCriteria withCity(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, v, comments, kreditorNr, debitorNr, sortField, sortDir); }</span>
+<span class="nc" id="L28">    public KundeSearchCriteria withComments(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, v, kreditorNr, debitorNr, sortField, sortDir); }</span>
+<span class="nc" id="L29">    public KundeSearchCriteria withKreditorNr(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, v, debitorNr, sortField, sortDir); }</span>
+<span class="nc" id="L30">    public KundeSearchCriteria withDebitorNr(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, kreditorNr, v, sortField, sortDir); }</span>
+<span class="nc" id="L31">    public KundeSearchCriteria withSortField(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr, v, sortDir); }</span>
+<span class="nc" id="L32">    public KundeSearchCriteria withSortDir(final String v) { return new KundeSearchCriteria(company, name1, name2, street, country, plz, city, comments, kreditorNr, debitorNr, sortField, v); }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

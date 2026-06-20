@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpringAILlmService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Gesamte Test Coverage (Unit + Integration + e2e)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.profilesearch.command</a> &gt; <span class="el_source">SpringAILlmService.java</span></div><h1>SpringAILlmService.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.profilesearch.command;
+
+import de.mirkosertic.powerstaff.auth.UserQueryService;
+import de.mirkosertic.powerstaff.auth.PsUser;
+import de.mirkosertic.powerstaff.auth.UserView;
+import de.mirkosertic.powerstaff.profilesearch.query.LlmFreelancerContext;
+import de.mirkosertic.powerstaff.profilesearch.query.LlmProjectContext;
+import de.mirkosertic.powerstaff.profilesearch.query.ProfileSearchQueryService;
+import io.modelcontextprotocol.client.McpSyncClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.ToolCallAdvisor;
+import org.springframework.ai.chat.client.advisor.api.BaseAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.ToolResponseMessage;
+import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.metadata.EmptyUsage;
+import org.springframework.ai.chat.metadata.Usage;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
+import tools.jackson.databind.ObjectMapper;
+
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+
+public class SpringAILlmService implements LlmService {
+
+<span class="fc" id="L39">    private static final Logger logger = LoggerFactory.getLogger(SpringAILlmService.class);</span>
+
+    private final ChatClient chatClient;
+    private final LlmChatClientFactory chatClientFactory;
+    private final McpClientFactory mcpClientFactory;
+    private final ProfileSearchCommandService commandService;
+    private final ProfileSearchQueryService queryService;
+    private final ObjectMapper objectMapper;
+    private final UserQueryService userQueryService;
+
+    public SpringAILlmService(final ChatClient chatClient, final LlmChatClientFactory chatClientFactory,
+            final McpClientFactory mcpClientFactory, final ProfileSearchCommandService commandService,
+            final ProfileSearchQueryService queryService, final ObjectMapper objectMapper,
+<span class="fc" id="L52">            final UserQueryService userQueryService) {</span>
+<span class="fc" id="L53">        this.chatClient = chatClient;</span>
+<span class="fc" id="L54">        this.chatClientFactory = chatClientFactory;</span>
+<span class="fc" id="L55">        this.mcpClientFactory = mcpClientFactory;</span>
+<span class="fc" id="L56">        this.commandService = commandService;</span>
+<span class="fc" id="L57">        this.queryService = queryService;</span>
+<span class="fc" id="L58">        this.objectMapper = objectMapper;</span>
+<span class="fc" id="L59">        this.userQueryService = userQueryService;</span>
+<span class="fc" id="L60">    }</span>
+
+    private ChatClient resolveChatClient(final Principal principal) {
+<span class="nc" id="L63">        final String token = userQueryService.findByUsername(principal.getName())</span>
+<span class="nc" id="L64">                .map(UserView::llmApiToken)</span>
+<span class="nc bnc" id="L65" title="All 4 branches missed.">                .filter(t -&gt; t != null &amp;&amp; !t.isBlank())</span>
+<span class="nc" id="L66">                .or(() -&gt; userQueryService.findFirstAdminLlmApiToken())</span>
+<span class="nc" id="L67">                .orElse(null);</span>
+<span class="nc" id="L68">        return chatClientFactory.create(token);</span>
+    }
+
+    private McpSyncClient tryCreateMcpClient() {
+        try {
+<span class="nc" id="L73">            final McpSyncClient client = mcpClientFactory.createClient();</span>
+<span class="nc" id="L74">            client.initialize();</span>
+<span class="nc" id="L75">            return client;</span>
+<span class="nc" id="L76">        } catch (final McpConnectionException e) {</span>
+<span class="nc" id="L77">            logger.warn(&quot;MCP nicht verfügbar, Chat läuft ohne Tools: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L78">            return null;</span>
+        }
+    }
+
+    private static void closeMcpClientQuietly(final McpSyncClient client) {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (client != null) {</span>
+            try {
+<span class="nc" id="L85">                client.close();</span>
+<span class="nc" id="L86">            } catch (final Exception e) {</span>
+<span class="nc" id="L87">                logger.warn(&quot;Fehler beim Schließen des MCP Clients&quot;, e);</span>
+<span class="nc" id="L88">            }</span>
+        }
+<span class="nc" id="L90">    }</span>
+
+    // package-private für Tests: Routing von ChatResponse-Tokens auf ChatProgressCollector-Callbacks
+    void routeTokenToCollector(final ChatResponse response, final ChatProgressCollector collector) {
+<span class="fc" id="L94">        final Usage usage = response.getMetadata().getUsage();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (!(usage instanceof EmptyUsage)) {</span>
+<span class="fc" id="L96">            collector.reportUsage(usage.getPromptTokens(), usage.getCompletionTokens(), usage.getTotalTokens());</span>
+        }
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        for (final var result : response.getResults()) {</span>
+<span class="fc" id="L99">            final AssistantMessage output = result.getOutput();</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">            if (output.getText() == null) {</span>
+<span class="fc" id="L101">                final Object reasoningContent = output.getMetadata().get(&quot;reasoningContent&quot;);</span>
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">                if (reasoningContent != null &amp;&amp; !reasoningContent.toString().isEmpty()) {</span>
+<span class="fc" id="L103">                    collector.thinkingToken(reasoningContent.toString());</span>
+                } else {
+<span class="fc" id="L105">                    logger.debug(&quot;ChatResponse ohne Text und ohne reasoningContent – ignoriert&quot;);</span>
+                }
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">            } else if (!output.getText().isEmpty()) {</span>
+<span class="fc" id="L108">                collector.assistantResponseToken(output.getText());</span>
+            }
+<span class="pc bpc" id="L110" title="1 of 4 branches missed.">            if (result.getMetadata().getFinishReason() != null &amp;&amp; &quot;STOP&quot;.equals(result.getMetadata().getFinishReason())) {</span>
+<span class="fc" id="L111">                collector.stopped();</span>
+            }
+<span class="fc" id="L113">        }</span>
+<span class="fc" id="L114">    }</span>
+
+    private static void nullsafeAttributeAppend(final String attribute, final String value, final StringBuilder sb) {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        sb.append(attribute).append(&quot;: &quot;).append(value != null ? value : &quot;--Unbekannt--&quot;).append(&quot;\n&quot;);</span>
+<span class="nc" id="L118">    }</span>
+
+    private String resolveSystemPrompt(final Principal principal, final Optional&lt;LlmProjectContext&gt; context) {
+<span class="nc" id="L121">        final var template = userQueryService.findByUsername(principal.getName())</span>
+<span class="nc" id="L122">                .flatMap(u -&gt; Optional.ofNullable(u.profileSearchSystemPrompt()))</span>
+<span class="nc" id="L123">                .orElse(PsUser.DEFAULT_SYSTEM_PROMPT);</span>
+
+<span class="nc" id="L125">        final StringBuilder result = new StringBuilder(new PromptTemplate(template).render(Map.of(&quot;user&quot;, principal.getName())));</span>
+<span class="nc" id="L126">        result.append(&quot;\nWenn Du nach Freiberuflern oder Kandidaten suchst, kannst Du im Lucene Index suchen!\n&quot;);</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (context.isPresent()) {</span>
+<span class="nc" id="L128">            final LlmProjectContext project = context.get();</span>
+<span class="nc" id="L129">            result.append(&quot;\nDas aktuelle Projekt ist:\n&quot;);</span>
+<span class="nc" id="L130">            nullsafeAttributeAppend(&quot;**Projektnummer**&quot;, project.projectNumber(), result);</span>
+<span class="nc" id="L131">            nullsafeAttributeAppend(&quot;**Kurzbeschreibung**&quot;, project.descriptionShort(), result);</span>
+<span class="nc" id="L132">            nullsafeAttributeAppend(&quot;**Beschreibung**&quot;, project.descriptionLong(), result);</span>
+<span class="nc" id="L133">            nullsafeAttributeAppend(&quot;**Einsatzort**&quot;, project.workplace(), result);</span>
+<span class="nc" id="L134">            nullsafeAttributeAppend(&quot;**Benötigte Skills**&quot;, project.skills(), result);</span>
+<span class="nc" id="L135">            nullsafeAttributeAppend(&quot;**Dauer**&quot;, project.duration(), result);</span>
+
+<span class="nc bnc" id="L137" title="All 4 branches missed.">            if (project.positions() != null &amp;&amp; !project.positions().isEmpty()) {</span>
+<span class="nc" id="L138">                result.append(&quot;\n\nBereits dem aktuellen Projekt zugewiesen\n&quot;);</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                for (final LlmFreelancerContext position : project.positions()) {</span>
+<span class="nc" id="L140">                    result.append(&quot; - &quot;);</span>
+<span class="nc" id="L141">                    nullsafeAttributeAppend(&quot;**Kodierung bzw. Dateiname**&quot;, position.code(), result);</span>
+<span class="nc" id="L142">                    result.append(&quot;   &quot;);</span>
+<span class="nc" id="L143">                    nullsafeAttributeAppend(&quot;**Status**&quot;, position.positionStatus(), result);</span>
+<span class="nc" id="L144">                    result.append(&quot;   &quot;);</span>
+<span class="nc" id="L145">                    nullsafeAttributeAppend(&quot;**Skills**&quot;, position.skills(), result);</span>
+<span class="nc" id="L146">                }</span>
+            }
+        }
+<span class="nc" id="L149">        return result.toString();</span>
+    }
+
+    @Override
+    public List&lt;Reply&gt; sendMessage(final Principal principal, final String sessionId, final String conversationId, final Optional&lt;LlmProjectContext&gt; context, final String userMessage) {
+<span class="nc" id="L154">        final var progressCollector = new ChatProgressCollector() {</span>
+<span class="nc" id="L155">            final StringBuilder assistantThoughts = new StringBuilder();</span>
+
+            @Override
+            public void thinkingToken(final String token) {
+<span class="nc" id="L159">                assistantThoughts.append(token);</span>
+<span class="nc" id="L160">            }</span>
+
+            @Override
+            public String getAssistantThoughtsAndReset() {
+<span class="nc bnc" id="L164" title="All 2 branches missed.">                if (!assistantThoughts.isEmpty()) {</span>
+<span class="nc" id="L165">                    final String result = assistantThoughts.toString();</span>
+<span class="nc" id="L166">                    assistantThoughts.setLength(0);</span>
+<span class="nc" id="L167">                    return result;</span>
+                }
+<span class="nc" id="L169">                return &quot;&quot;;</span>
+            }
+        };
+
+<span class="nc" id="L173">        final var chatRepository = new SpringAIChatRepository(conversationId, queryService, commandService, objectMapper, progressCollector);</span>
+
+<span class="nc" id="L175">        final McpSyncClient mcpClient = tryCreateMcpClient();</span>
+        final ChatResponse chatClientResponse;
+        try {
+<span class="nc" id="L178">            var promptSpec = resolveChatClient(principal).prompt()</span>
+<span class="nc" id="L179">                    .advisors(</span>
+<span class="nc" id="L180">                            ToolCallAdvisor.builder()</span>
+<span class="nc" id="L181">                                    .disableInternalConversationHistory()</span>
+<span class="nc" id="L182">                                    .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)</span>
+<span class="nc" id="L183">                                    .build(),</span>
+<span class="nc" id="L184">                            MessageChatMemoryAdvisor.builder(</span>
+<span class="nc" id="L185">                                    MessageWindowChatMemory.builder()</span>
+<span class="nc" id="L186">                                            .maxMessages(10)</span>
+<span class="nc" id="L187">                                            .chatMemoryRepository(chatRepository)</span>
+<span class="nc" id="L188">                                            .build())</span>
+<span class="nc" id="L189">                                    .build(),</span>
+                            new SimpleLoggerAdvisor()
+                    )
+<span class="nc" id="L192">                    .advisors(a -&gt; a.param(ChatMemory.CONVERSATION_ID, conversationId))</span>
+<span class="nc" id="L193">                    .system(resolveSystemPrompt(principal, context))</span>
+<span class="nc" id="L194">                    .user(userMessage);</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            if (mcpClient != null) {</span>
+<span class="nc" id="L196">                promptSpec = promptSpec.tools(SyncMcpToolCallbackProvider.builder().addMcpClient(mcpClient).build());</span>
+            }
+<span class="nc" id="L198">            chatClientResponse = promptSpec</span>
+<span class="nc" id="L199">                    .stream()</span>
+<span class="nc" id="L200">                    .chatResponse()</span>
+<span class="nc" id="L201">                    .filter(t -&gt; {</span>
+<span class="nc" id="L202">                        routeTokenToCollector(t, progressCollector);</span>
+<span class="nc" id="L203">                        return true;</span>
+                    })
+<span class="nc" id="L205">                    .blockLast();</span>
+        } finally {
+<span class="nc" id="L207">            closeMcpClientQuietly(mcpClient);</span>
+        }
+
+<span class="nc" id="L210">        int promptTokens = 0;</span>
+<span class="nc" id="L211">        int completionTokens = 0;</span>
+<span class="nc bnc" id="L212" title="All 4 branches missed.">        if (chatClientResponse != null &amp;&amp; chatClientResponse.getMetadata() != null) {</span>
+<span class="nc" id="L213">            final Usage usage = chatClientResponse.getMetadata().getUsage();</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">            if (usage != null) {</span>
+<span class="nc" id="L215">                logger.info(&quot;Collected chat usage: {}&quot;, usage);</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">                promptTokens = usage.getPromptTokens() != null ? usage.getPromptTokens() : 0;</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">                completionTokens = usage.getCompletionTokens() != null ? usage.getCompletionTokens() : 0;</span>
+            }
+        }
+
+<span class="nc" id="L221">        final List&lt;Message&gt; persistedMessages = chatRepository.getNewMessages();</span>
+<span class="nc" id="L222">        final List&lt;Reply&gt; replies = new ArrayList&lt;&gt;();</span>
+        // Skip the first message (index 0 = user message, already shown on frontend)
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        for (int i = 1; i &lt; persistedMessages.size(); i++) {</span>
+<span class="nc" id="L225">            final var message = persistedMessages.get(i);</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">            if (message instanceof final UserMessage msg) {</span>
+<span class="nc" id="L227">                replies.add(new Reply(-1, LlmService.ROLE_USER, msg.getText(), null, null, null));</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">            } else if (message instanceof final AssistantMessage msg) {</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">                if (msg.hasToolCalls()) {</span>
+<span class="nc" id="L230">                    final List&lt;Map&lt;String, Object&gt;&gt; toolCallOptions = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">                    for (final AssistantMessage.ToolCall toolCall : msg.getToolCalls()) {</span>
+<span class="nc" id="L232">                        final Map&lt;String, Object&gt; call = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L233">                        call.put(&quot;name&quot;, toolCall.name());</span>
+<span class="nc" id="L234">                        call.put(&quot;arguments&quot;, toolCall.arguments());</span>
+<span class="nc" id="L235">                        call.put(&quot;type&quot;, toolCall.type());</span>
+<span class="nc" id="L236">                        call.put(&quot;id&quot;, toolCall.id());</span>
+<span class="nc" id="L237">                        toolCallOptions.add(call);</span>
+<span class="nc" id="L238">                    }</span>
+<span class="nc" id="L239">                    replies.add(new Reply(-1, LlmService.ROLE_TOOL_CALL, msg.getText(), objectMapper.writeValueAsString(toolCallOptions), null, null));</span>
+<span class="nc" id="L240">                } else {</span>
+<span class="nc" id="L241">                    replies.add(new Reply(-1, LlmService.ROLE_ASSISTANT, msg.getText(), null, promptTokens, completionTokens));</span>
+                }
+<span class="nc bnc" id="L243" title="All 2 branches missed.">            } else if (message instanceof final ToolResponseMessage msg) {</span>
+<span class="nc" id="L244">                final List&lt;Map&lt;String, Object&gt;&gt; toolCallResponses = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L245">                final List&lt;String&gt; toolCallNames = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                for (final ToolResponseMessage.ToolResponse toolResponse : msg.getResponses()) {</span>
+<span class="nc" id="L247">                    final Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L248">                    response.put(&quot;id&quot;, toolResponse.id());</span>
+<span class="nc" id="L249">                    response.put(&quot;name&quot;, toolResponse.name());</span>
+<span class="nc" id="L250">                    response.put(&quot;responseData&quot;, toolResponse.responseData());</span>
+<span class="nc" id="L251">                    toolCallResponses.add(response);</span>
+<span class="nc" id="L252">                    toolCallNames.add(toolResponse.name());</span>
+<span class="nc" id="L253">                }</span>
+<span class="nc" id="L254">                replies.add(new Reply(-1, LlmService.ROLE_TOOL_RESULT, objectMapper.writeValueAsString(toolCallNames), objectMapper.writeValueAsString(toolCallResponses), null, null));</span>
+<span class="nc" id="L255">            } else {</span>
+<span class="nc" id="L256">                logger.warn(&quot;Unsupported message type: {}&quot;, message);</span>
+            }
+        }
+<span class="nc" id="L259">        return replies;</span>
+    }
+
+    @Override
+    public void sendMessageStreaming(final Principal principal, final String sessionId, final String conversationId,
+            final Optional&lt;LlmProjectContext&gt; context, final String userMessage,
+            final Consumer&lt;LlmService.ChatStreamEvent&gt; eventSink) {
+
+<span class="nc" id="L267">        final var progressCollector = new StreamingChatProgressCollector(eventSink);</span>
+<span class="nc" id="L268">        final var chatRepository = new SpringAIChatRepository(conversationId, queryService, commandService, objectMapper, progressCollector);</span>
+
+<span class="nc" id="L270">        final McpSyncClient mcpClient = tryCreateMcpClient();</span>
+        final ChatResponse chatClientResponse;
+        try {
+<span class="nc" id="L273">            var promptSpec = resolveChatClient(principal).prompt()</span>
+<span class="nc" id="L274">                    .advisors(</span>
+<span class="nc" id="L275">                            ToolCallAdvisor.builder()</span>
+<span class="nc" id="L276">                                    .disableInternalConversationHistory()</span>
+<span class="nc" id="L277">                                    .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)</span>
+<span class="nc" id="L278">                                    .build(),</span>
+<span class="nc" id="L279">                            MessageChatMemoryAdvisor.builder(</span>
+<span class="nc" id="L280">                                    MessageWindowChatMemory.builder()</span>
+<span class="nc" id="L281">                                            .maxMessages(10)</span>
+<span class="nc" id="L282">                                            .chatMemoryRepository(chatRepository)</span>
+<span class="nc" id="L283">                                            .build())</span>
+<span class="nc" id="L284">                                    .build(),</span>
+                            new SimpleLoggerAdvisor()
+                    )
+<span class="nc" id="L287">                    .advisors(a -&gt; a.param(ChatMemory.CONVERSATION_ID, conversationId))</span>
+<span class="nc" id="L288">                    .system(resolveSystemPrompt(principal, context))</span>
+<span class="nc" id="L289">                    .user(userMessage);</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">            if (mcpClient != null) {</span>
+<span class="nc" id="L291">                promptSpec = promptSpec.tools(SyncMcpToolCallbackProvider.builder().addMcpClient(mcpClient).build());</span>
+            }
+<span class="nc" id="L293">            chatClientResponse = promptSpec</span>
+<span class="nc" id="L294">                    .stream()</span>
+<span class="nc" id="L295">                    .chatResponse()</span>
+<span class="nc" id="L296">                    .filter(t -&gt; {</span>
+<span class="nc" id="L297">                        routeTokenToCollector(t, progressCollector);</span>
+<span class="nc" id="L298">                        return true;</span>
+                    })
+<span class="nc" id="L300">                    .blockLast();</span>
+        } finally {
+<span class="nc" id="L302">            closeMcpClientQuietly(mcpClient);</span>
+        }
+
+<span class="nc" id="L305">        int promptTokens = 0;</span>
+<span class="nc" id="L306">        int completionTokens = 0;</span>
+<span class="nc bnc" id="L307" title="All 4 branches missed.">        if (chatClientResponse != null &amp;&amp; chatClientResponse.getMetadata() != null) {</span>
+<span class="nc" id="L308">            final Usage usage = chatClientResponse.getMetadata().getUsage();</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">            if (usage != null) {</span>
+<span class="nc" id="L310">                logger.info(&quot;Collected streaming chat usage: {}&quot;, usage);</span>
+<span class="nc bnc" id="L311" title="All 2 branches missed.">                promptTokens = usage.getPromptTokens() != null ? usage.getPromptTokens() : 0;</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">                completionTokens = usage.getCompletionTokens() != null ? usage.getCompletionTokens() : 0;</span>
+            }
+        }
+
+        // maxContextTokens wird vom Controller ergänzt (er kennt ProfileSearchProperties)
+<span class="nc" id="L317">        eventSink.accept(new LlmService.ChatStreamEvent.MessageComplete(</span>
+<span class="nc" id="L318">                chatRepository.getLastAssistantMessageId(), promptTokens, completionTokens, 0));</span>
+<span class="nc" id="L319">    }</span>
+
+    // package-private für Tests
+    static final class StreamingChatProgressCollector implements ChatProgressCollector {
+
+        private final Consumer&lt;LlmService.ChatStreamEvent&gt; eventSink;
+<span class="fc" id="L325">        private final StringBuilder assistantThoughts = new StringBuilder();</span>
+
+<span class="fc" id="L327">        StreamingChatProgressCollector(final Consumer&lt;LlmService.ChatStreamEvent&gt; eventSink) {</span>
+<span class="fc" id="L328">            this.eventSink = eventSink;</span>
+<span class="fc" id="L329">        }</span>
+
+        @Override
+        public void thinkingToken(final String token) {
+<span class="fc" id="L333">            assistantThoughts.append(token);</span>
+<span class="fc" id="L334">            eventSink.accept(new LlmService.ChatStreamEvent.ThinkingToken(token));</span>
+<span class="fc" id="L335">        }</span>
+
+        @Override
+        public void assistantResponseToken(final String token) {
+<span class="fc" id="L339">            eventSink.accept(new LlmService.ChatStreamEvent.ContentToken(token));</span>
+<span class="fc" id="L340">        }</span>
+
+        @Override
+        public void toolInvocation(final String toolName, final String jsonPayload) {
+<span class="fc" id="L344">            eventSink.accept(new LlmService.ChatStreamEvent.ToolCall(toolName, jsonPayload));</span>
+<span class="fc" id="L345">        }</span>
+
+        @Override
+        public void toolResponses(final String toolNames, final String jsonPayload) {
+<span class="fc" id="L349">            eventSink.accept(new LlmService.ChatStreamEvent.ToolResult(toolNames, jsonPayload));</span>
+<span class="fc" id="L350">        }</span>
+
+        @Override
+        public String getAssistantThoughtsAndReset() {
+<span class="fc bfc" id="L354" title="All 2 branches covered.">            if (!assistantThoughts.isEmpty()) {</span>
+<span class="fc" id="L355">                final String result = assistantThoughts.toString();</span>
+<span class="fc" id="L356">                assistantThoughts.setLength(0);</span>
+<span class="fc" id="L357">                return result;</span>
+            }
+<span class="fc" id="L359">            return &quot;&quot;;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

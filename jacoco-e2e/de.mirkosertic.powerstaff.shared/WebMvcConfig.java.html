@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebMvcConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">E2E-Test Coverage (Playwright)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.shared</a> &gt; <span class="el_source">WebMvcConfig.java</span></div><h1>WebMvcConfig.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.shared;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+@Configuration
+<span class="fc" id="L13">public class WebMvcConfig implements WebMvcConfigurer {</span>
+
+    @Override
+    public void addFormatters(final FormatterRegistry registry) {
+        // HTML &lt;input type=&quot;date&quot;&gt; sends yyyy-MM-dd; also accept dd.MM.yyyy (German format)
+<span class="fc" id="L18">        registry.addConverter(String.class, LocalDate.class, source -&gt; {</span>
+<span class="pc bpc" id="L19" title="2 of 4 branches missed.">            if (source == null || source.isBlank()) return null;</span>
+            // Try ISO format (yyyy-MM-dd) — standard HTML date input
+            try {
+<span class="nc" id="L22">                return LocalDate.parse(source.trim(), DateTimeFormatter.ISO_LOCAL_DATE);</span>
+<span class="nc" id="L23">            } catch (final DateTimeParseException e1) {</span>
+                // Try German format (dd.MM.yyyy)
+                try {
+<span class="nc" id="L26">                    return LocalDate.parse(source.trim(), DateTimeFormatter.ofPattern(&quot;dd.MM.yyyy&quot;));</span>
+<span class="nc" id="L27">                } catch (final DateTimeParseException e2) {</span>
+<span class="nc" id="L28">                    throw new IllegalArgumentException(&quot;Ungültiges Datum: &quot; + source + &quot;. Erwartet: TT.MM.JJJJ&quot;);</span>
+                }
+            }
+        });
+
+        // LocalDateTime: HTML date input sends yyyy-MM-dd (no time) → treat as midnight
+<span class="fc" id="L34">        registry.addConverter(String.class, LocalDateTime.class, source -&gt; {</span>
+<span class="pc bpc" id="L35" title="1 of 4 branches missed.">            if (source == null || source.isBlank()) return null;</span>
+            // Try ISO format (yyyy-MM-dd) → midnight
+            try {
+<span class="fc" id="L38">                return LocalDate.parse(source.trim(), DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();</span>
+<span class="nc" id="L39">            } catch (final DateTimeParseException e1) {</span>
+                // Try German format (dd.MM.yyyy) → midnight
+                try {
+<span class="nc" id="L42">                    return LocalDate.parse(source.trim(), DateTimeFormatter.ofPattern(&quot;dd.MM.yyyy&quot;)).atStartOfDay();</span>
+<span class="nc" id="L43">                } catch (final DateTimeParseException e2) {</span>
+                    // Try full ISO datetime (yyyy-MM-ddTHH:mm:ss)
+                    try {
+<span class="nc" id="L46">                        return LocalDateTime.parse(source.trim(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);</span>
+<span class="nc" id="L47">                    } catch (final DateTimeParseException e3) {</span>
+<span class="nc" id="L48">                        throw new IllegalArgumentException(&quot;Ungültiges Datum: &quot; + source + &quot;. Erwartet: TT.MM.JJJJ&quot;);</span>
+                    }
+                }
+            }
+        });
+<span class="fc" id="L53">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

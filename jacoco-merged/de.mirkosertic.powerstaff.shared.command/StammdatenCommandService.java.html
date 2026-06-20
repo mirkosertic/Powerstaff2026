@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StammdatenCommandService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Gesamte Test Coverage (Unit + Integration + e2e)</a> &gt; <a href="index.source.html" class="el_package">de.mirkosertic.powerstaff.shared.command</a> &gt; <span class="el_source">StammdatenCommandService.java</span></div><h1>StammdatenCommandService.java</h1><pre class="source lang-java linenums">package de.mirkosertic.powerstaff.shared.command;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+@Service
+public class StammdatenCommandService {
+
+    private final HistoryTypeRepository historyTypeRepository;
+    private final ProjectPositionStatusRepository projectPositionStatusRepository;
+    private final TagRepository tagRepository;
+
+    public StammdatenCommandService(
+            final HistoryTypeRepository historyTypeRepository,
+            final ProjectPositionStatusRepository projectPositionStatusRepository,
+<span class="fc" id="L18">            final TagRepository tagRepository) {</span>
+<span class="fc" id="L19">        this.historyTypeRepository = historyTypeRepository;</span>
+<span class="fc" id="L20">        this.projectPositionStatusRepository = projectPositionStatusRepository;</span>
+<span class="fc" id="L21">        this.tagRepository = tagRepository;</span>
+<span class="fc" id="L22">    }</span>
+
+    public HistoryType saveHistoryType(final HistoryType ht) {
+<span class="fc" id="L25">        return historyTypeRepository.save(ht);</span>
+    }
+
+    public void deleteHistoryType(final Long id) {
+<span class="fc" id="L29">        historyTypeRepository.deleteById(id);</span>
+<span class="fc" id="L30">    }</span>
+
+    public Optional&lt;HistoryType&gt; findHistoryTypeById(final Long id) {
+<span class="fc" id="L33">        return historyTypeRepository.findById(id);</span>
+    }
+
+    @Transactional
+    public ProjectPositionStatus saveProjectPositionStatus(final ProjectPositionStatus pps) {
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (pps.isDefaultStatus()) {</span>
+<span class="fc" id="L39">            projectPositionStatusRepository.findByDefaultStatusTrue().ifPresent(existing -&gt; {</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">                if (!existing.getId().equals(pps.getId())) {</span>
+<span class="fc" id="L41">                    existing.setDefaultStatus(false);</span>
+<span class="fc" id="L42">                    projectPositionStatusRepository.save(existing);</span>
+                }
+<span class="fc" id="L44">            });</span>
+        }
+<span class="fc" id="L46">        return projectPositionStatusRepository.save(pps);</span>
+    }
+
+    public Optional&lt;ProjectPositionStatus&gt; findProjectPositionStatusById(final Long id) {
+<span class="fc" id="L50">        return projectPositionStatusRepository.findById(id);</span>
+    }
+
+    public Optional&lt;ProjectPositionStatus&gt; findDefaultProjectPositionStatus() {
+<span class="fc" id="L54">        return projectPositionStatusRepository.findByDefaultStatusTrue();</span>
+    }
+
+    public void deleteProjectPositionStatus(final Long id) {
+<span class="fc" id="L58">        projectPositionStatusRepository.deleteById(id);</span>
+<span class="fc" id="L59">    }</span>
+
+    public Tag saveTag(final Tag tag) {
+<span class="fc" id="L62">        return tagRepository.save(tag);</span>
+    }
+
+    public void deleteTag(final Long id) {
+<span class="fc" id="L66">        tagRepository.deleteById(id);</span>
+<span class="fc" id="L67">    }</span>
+
+    public Optional&lt;Tag&gt; findTagById(final Long id) {
+<span class="fc" id="L70">        return tagRepository.findById(id);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
