@@ -37,8 +37,17 @@ jobs:
       run: npm ci
       working-directory: src/test/e2e
 
+    - name: Install Playwright system dependencies
+      run: |
+        sudo systemctl stop unattended-upgrades || true
+        sudo systemctl disable unattended-upgrades || true
+        sudo apt-get -y -q purge unattended-upgrades || true
+        npx playwright install-deps chromium firefox
+      working-directory: src/test/e2e
+      timeout-minutes: 5
+
     - name: Install Playwright browsers
-      run: npx playwright install --with-deps chromium firefox
+      run: npx playwright install chromium firefox
       working-directory: src/test/e2e
       timeout-minutes: 10
 
