@@ -1,5 +1,7 @@
 # Powerstaff 2026
 
+[![Build and Release](https://github.com/mirkosertic/Powerstaff2026/actions/workflows/build.yml/badge.svg)](https://github.com/mirkosertic/Powerstaff2026/actions/workflows/build.yml)
+
 ## Was ist Powerstaff 2026?
 
 Powerstaff 2026 ist ein webbasiertes **Personalvermittlungs-Managementsystem** für Unternehmen, die selbstständige Freiberufler an Kundenprojekte vermitteln. Es digitalisiert und beschleunigt den gesamten Vermittlungsprozess – von der Erfassung und Pflege der Stammdaten über die strukturierte Kontakthistorie bis hin zur Besetzung offener Projektstellen.

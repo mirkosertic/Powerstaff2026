@@ -30,8 +30,17 @@ jobs:
       uses: actions/cache@v5
       with:
         path: ~/.cache/ms-playwright
-        key: playwright-${{ runner.os }}-${{ hashFiles('src/test/e2e/package.json') }}
+        key: playwright-${{ runner.os }}-${{ hashFiles('src/test/e2e/package-lock.json') }}
         restore-keys: playwright-${{ runner.os }}-
+
+    - name: Install E2E npm dependencies
+      run: npm ci
+      working-directory: src/test/e2e
+
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps chromium firefox
+      working-directory: src/test/e2e
+      timeout-minutes: 10
 
     - name: Build with Maven
       run: ./mvnw clean package verify
