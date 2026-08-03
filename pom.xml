@@ -24,7 +24,7 @@
         <gmavenplus.version>4.3.1</gmavenplus.version>
         <pitest.version>1.25.0</pitest.version>
         <pitest-junit5.version>1.2.3</pitest-junit5.version>
-        <jacoco.version>0.8.14</jacoco.version>
+        <jacoco.version>0.8.15</jacoco.version>
         <!-- Standardmäßig leer; JaCoCo überschreibt diese Properties zur Laufzeit -->
         <jacocoArgLine></jacocoArgLine>
         <jacocoItArgLine></jacocoItArgLine>
