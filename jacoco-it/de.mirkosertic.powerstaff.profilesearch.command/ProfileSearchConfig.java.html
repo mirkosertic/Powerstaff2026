@@ -7,10 +7,6 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import com.openai.client.OpenAIClient;
-import com.openai.client.OpenAIClientAsync;
-import com.openai.client.okhttp.OpenAIOkHttpClient;
-import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
 import com.openai.core.Timeout;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -23,69 +19,66 @@ import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties({ProfileSearchProperties.class, McpConnectionProperties.class})
-<span class="fc" id="L26">public class ProfileSearchConfig {</span>
+<span class="fc" id="L22">public class ProfileSearchConfig {</span>
 
     @Bean
     public LlmService llmService(final List&lt;ChatModel&gt; modelsInContext, final McpClientFactory mcpClientFactory,
             final ProfileSearchCommandService commandService, final ProfileSearchQueryService queryService,
             final ObjectMapper objectMapper, final UserQueryService userQueryService,
             final Environment env, final ProfileSearchProperties profileSearchProperties) {
-<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        for (final ChatModel model : modelsInContext) {</span>
-<span class="nc bnc" id="L34" title="All 2 branches missed.">            if (model instanceof final OllamaChatModel ollamaModel) {</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">        for (final ChatModel model : modelsInContext) {</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">            if (model instanceof final OllamaChatModel ollamaModel) {</span>
                 // Ollama: local server, no API token concept — factory always returns the default client
-<span class="nc" id="L36">                final ChatClient defaultClient = ChatClient.builder(ollamaModel).build();</span>
-<span class="nc" id="L37">                final LlmChatClientFactory factory = token -&gt; defaultClient;</span>
-<span class="nc" id="L38">                return new SpringAILlmService(defaultClient, factory, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);</span>
+<span class="nc" id="L32">                final ChatClient defaultClient = ChatClient.builder(ollamaModel).build();</span>
+<span class="nc" id="L33">                final LlmChatClientFactory factory = token -&gt; defaultClient;</span>
+<span class="nc" id="L34">                return new SpringAILlmService(defaultClient, factory, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);</span>
             }
-<span class="nc bnc" id="L40" title="All 2 branches missed.">            if (model instanceof OpenAiChatModel) {</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">            if (model instanceof OpenAiChatModel) {</span>
                 // Properties aus Environment lesen
-<span class="nc" id="L42">                final String baseUrl = env.getProperty(&quot;spring.ai.openai.base-url&quot;, &quot;https://api.openai.com&quot;);</span>
-<span class="nc" id="L43">                final String apiKey = env.getProperty(&quot;spring.ai.openai.api-key&quot;, &quot;dummy&quot;);</span>
-<span class="nc" id="L44">                final String modelName = env.getProperty(&quot;spring.ai.openai.chat.options.model&quot;, &quot;gpt-4o&quot;);</span>
-<span class="nc" id="L45">                final Double temperature = env.getProperty(&quot;spring.ai.openai.chat.options.temperature&quot;, Double.class, 0.7);</span>
-<span class="nc" id="L46">                final Boolean streamUsage = env.getProperty(&quot;spring.ai.openai.chat.options.stream-usage&quot;, Boolean.class, false);</span>
+<span class="nc" id="L38">                final String baseUrl = env.getProperty(&quot;spring.ai.openai.base-url&quot;, &quot;https://api.openai.com&quot;);</span>
+<span class="nc" id="L39">                final String apiKey = env.getProperty(&quot;spring.ai.openai.api-key&quot;, &quot;dummy&quot;);</span>
+<span class="nc" id="L40">                final String modelName = env.getProperty(&quot;spring.ai.openai.chat.options.model&quot;, &quot;gpt-4o&quot;);</span>
+<span class="nc" id="L41">                final Double temperature = env.getProperty(&quot;spring.ai.openai.chat.options.temperature&quot;, Double.class, 0.7);</span>
+<span class="nc" id="L42">                final Boolean streamUsage = env.getProperty(&quot;spring.ai.openai.chat.options.stream-usage&quot;, Boolean.class, false);</span>
 
-<span class="nc" id="L48">                final Timeout timeout = Timeout.builder()</span>
-<span class="nc" id="L49">                    .read(Duration.ZERO)</span>
-<span class="nc" id="L50">                    .request(profileSearchProperties.getStreamingTimeout())</span>
-<span class="nc" id="L51">                    .build();</span>
+                // Explizites Timeout — verhindert SDK-Default von 1 Minute
+<span class="nc" id="L45">                final Timeout timeout = Timeout.builder()</span>
+<span class="nc" id="L46">                    .read(Duration.ZERO)</span>
+<span class="nc" id="L47">                    .request(profileSearchProperties.getStreamingTimeout())</span>
+<span class="nc" id="L48">                    .build();</span>
 
-<span class="nc" id="L53">                final OpenAiChatOptions chatOptions = OpenAiChatOptions.builder()</span>
-<span class="nc" id="L54">                    .model(modelName)</span>
-<span class="nc" id="L55">                    .temperature(temperature)</span>
-<span class="nc" id="L56">                    .streamUsage(streamUsage)</span>
-<span class="nc" id="L57">                    .build();</span>
-
-                // Default-Client mit explizitem Timeout — verhindert SDK-Default von 1 Minute
-<span class="nc" id="L60">                final ChatClient defaultClient = buildChatClient(baseUrl, apiKey, timeout, chatOptions);</span>
+                // Default-Client
+<span class="nc" id="L51">                final ChatClient defaultClient = buildChatClient(baseUrl, apiKey, modelName, temperature, streamUsage, timeout);</span>
 
                 // Per-User-Client Factory: User-Token überschreibt den konfigurierten API-Key
-<span class="nc" id="L63">                final LlmChatClientFactory factory = token -&gt;</span>
-<span class="nc bnc" id="L64" title="All 4 branches missed.">                    (token == null || token.isBlank())</span>
-<span class="nc" id="L65">                        ? defaultClient</span>
-<span class="nc" id="L66">                        : buildChatClient(baseUrl, token, timeout, chatOptions);</span>
+<span class="nc" id="L54">                final LlmChatClientFactory factory = token -&gt;</span>
+<span class="nc bnc" id="L55" title="All 4 branches missed.">                    (token == null || token.isBlank())</span>
+<span class="nc" id="L56">                        ? defaultClient</span>
+<span class="nc" id="L57">                        : buildChatClient(baseUrl, token, modelName, temperature, streamUsage, timeout);</span>
 
-<span class="nc" id="L68">                return new SpringAILlmService(defaultClient, factory, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);</span>
+<span class="nc" id="L59">                return new SpringAILlmService(defaultClient, factory, mcpClientFactory, commandService, queryService, objectMapper, userQueryService);</span>
             }
             // Future: AnthropicChatModel — add analogous block here when spring-ai-starter-model-anthropic
             // is added to pom.xml. No changes to SpringAILlmService needed.
-<span class="nc" id="L72">        }</span>
-<span class="fc" id="L73">        return new MockLLmService();</span>
+<span class="nc" id="L63">        }</span>
+<span class="fc" id="L64">        return new MockLLmService();</span>
     }
 
-    private static ChatClient buildChatClient(final String baseUrl, final String apiKey,
-            final Timeout timeout, final OpenAiChatOptions options) {
-<span class="nc" id="L78">        final OpenAIClient syncClient = OpenAIOkHttpClient.builder()</span>
-<span class="nc" id="L79">            .baseUrl(baseUrl).apiKey(apiKey).timeout(timeout).build();</span>
-<span class="nc" id="L80">        final OpenAIClientAsync asyncClient = OpenAIOkHttpClientAsync.builder()</span>
-<span class="nc" id="L81">            .baseUrl(baseUrl).apiKey(apiKey).timeout(timeout).build();</span>
-<span class="nc" id="L82">        return ChatClient.builder(</span>
-<span class="nc" id="L83">            OpenAiChatModel.builder()</span>
-<span class="nc" id="L84">                .openAiClient(syncClient)</span>
-<span class="nc" id="L85">                .openAiClientAsync(asyncClient)</span>
-<span class="nc" id="L86">                .options(options)</span>
-<span class="nc" id="L87">                .build()</span>
-<span class="nc" id="L88">        ).build();</span>
+    private static ChatClient buildChatClient(final String baseUrl, final String apiKey, final String modelName,
+            final Double temperature, final Boolean streamUsage, final Timeout timeout) {
+<span class="nc" id="L69">        final OpenAiChatOptions chatOptions = OpenAiChatOptions.builder()</span>
+<span class="nc" id="L70">            .baseUrl(baseUrl)</span>
+<span class="nc" id="L71">            .apiKey(apiKey)</span>
+<span class="nc" id="L72">            .model(modelName)</span>
+<span class="nc" id="L73">            .temperature(temperature)</span>
+<span class="nc" id="L74">            .streamUsage(streamUsage)</span>
+<span class="nc" id="L75">            .build();</span>
+<span class="nc" id="L76">        return ChatClient.builder(</span>
+<span class="nc" id="L77">            OpenAiChatModel.builder()</span>
+<span class="nc" id="L78">                .options(chatOptions)</span>
+<span class="nc" id="L79">                .httpClientBuilderCustomizer(httpClientBuilder -&gt; httpClientBuilder.timeout(timeout))</span>
+<span class="nc" id="L80">                .build()</span>
+<span class="nc" id="L81">        ).build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
